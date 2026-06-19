@@ -1,0 +1,28 @@
+node_modules
+
+# Output
+.output
+.vercel
+.netlify
+.wrangler
+/.svelte-kit
+/build
+/qa-screenshots
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local agent/editor runtime
+.vscode/
+.claude/
+.playwright-mcp/
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
