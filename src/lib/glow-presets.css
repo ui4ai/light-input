@@ -16415,6 +16415,13 @@
 		0 0 7px rgba(255, 255, 255, 0.32),
 		0 0 22px rgba(176, 186, 220, 0.16);
 	--tail-color: transparent;
+	--spoiler-letter-hot: rgba(244, 247, 255, 0.98);
+	--spoiler-letter-mid: rgba(212, 220, 240, 0.86);
+	--spoiler-letter-soft: rgba(158, 168, 198, 0.58);
+	--spoiler-dust-strong: rgba(214, 222, 244, 0.58);
+	--spoiler-dust: rgba(158, 168, 198, 0.48);
+	--spoiler-dust-soft: rgba(114, 124, 154, 0.34);
+	--spoiler-shadow: rgba(220, 228, 248, 0.18);
 }
 
 .field[data-theme='light'][data-glow='spoiler'] {
@@ -16426,6 +16433,13 @@
 	--next-shadow:
 		0 0 1px rgba(255, 255, 255, 0.9),
 		0 0 12px rgba(70, 82, 112, 0.12);
+	--spoiler-letter-hot: rgba(35, 42, 60, 0.9);
+	--spoiler-letter-mid: rgba(54, 64, 88, 0.72);
+	--spoiler-letter-soft: rgba(92, 104, 134, 0.46);
+	--spoiler-dust-strong: rgba(44, 54, 78, 0.48);
+	--spoiler-dust: rgba(72, 84, 112, 0.36);
+	--spoiler-dust-soft: rgba(110, 122, 150, 0.24);
+	--spoiler-shadow: rgba(40, 52, 78, 0.1);
 }
 
 .stage[data-glow='spoiler'] .field[data-glow] .caret-origin-glow[data-mode='ready'],
@@ -18412,4 +18426,144 @@
 	display: none;
 	opacity: 0;
 	animation: none;
+}
+
+/* Spoiler typography pass: near dots resolve into letters, distant dots become drifting dust. */
+.stage[data-glow='spoiler'] .field[data-glow] .next-word {
+	color: transparent;
+	text-shadow: none;
+}
+
+.stage[data-glow='spoiler'] .field[data-glow] .next-word .glyph,
+.stage[data-glow='spoiler'] .field[data-glow] .tail .glyph {
+	z-index: 5;
+	color: transparent;
+	background:
+		radial-gradient(circle at center, var(--spoiler-letter-hot, rgba(120, 246, 132, 0.98)) 0 0.047em, transparent 0.06em),
+		radial-gradient(circle at center, var(--spoiler-letter-mid, rgba(40, 166, 74, 0.92)) 0 0.033em, transparent 0.047em),
+		radial-gradient(circle at center, var(--spoiler-letter-soft, rgba(78, 205, 92, 0.62)) 0 0.024em, transparent 0.036em);
+	background-position:
+		0.01em 0.02em,
+		0.095em 0.065em,
+		0.035em 0.11em;
+	background-size:
+		0.185em 0.18em,
+		0.23em 0.215em,
+		0.31em 0.27em;
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	filter:
+		blur(var(--spoiler-letter-blur, 0px))
+		saturate(1.18)
+		drop-shadow(0 0 0.08em var(--spoiler-shadow, rgba(220, 228, 248, 0.18)));
+	text-shadow: none;
+	animation: spoiler-letter-drift 1.18s steps(2, end) infinite;
+	animation-delay: calc(var(--i) * -37ms);
+}
+
+.stage[data-glow='spoiler'] .field[data-glow] .next-word .glyph {
+	--spoiler-letter-blur: 0px;
+	--spoiler-jitter: 0.004em;
+	opacity: 0.98;
+}
+
+.stage[data-glow='spoiler'] .field[data-glow] .tail .glyph {
+	--spoiler-letter-blur: clamp(0.02px, calc(var(--i) * 0.026px), 1.18px);
+	--spoiler-jitter: clamp(0.006em, calc(var(--i) * 0.00155em), 0.068em);
+	opacity: clamp(0.045, calc(1.02 - var(--i) * 0.038), 0.86);
+}
+
+.stage[data-glow='spoiler'] .field[data-glow] .tail .glyph:nth-child(3n + 1) {
+	background-position:
+		0.06em 0.01em,
+		0.02em 0.1em,
+		0.12em 0.045em;
+	animation-duration: 1.02s;
+}
+
+.stage[data-glow='spoiler'] .field[data-glow] .tail .glyph:nth-child(3n + 2) {
+	background-position:
+		0.03em 0.08em,
+		0.14em 0.03em,
+		0.07em 0.16em;
+	animation-duration: 1.34s;
+}
+
+.stage[data-glow='spoiler'] .field[data-glow] .tail::before {
+	z-index: 2;
+	inset: -0.36em -0.58em -0.3em -0.18em;
+	background:
+		radial-gradient(circle at center, var(--spoiler-dust-strong, rgba(50, 174, 74, 0.68)) 0 0.024em, transparent 0.034em),
+		radial-gradient(circle at center, var(--spoiler-dust, rgba(24, 128, 56, 0.62)) 0 0.018em, transparent 0.028em),
+		radial-gradient(circle at center, var(--spoiler-dust-soft, rgba(98, 208, 104, 0.42)) 0 0.014em, transparent 0.024em);
+	background-position:
+		0.07em 0.03em,
+		0.2em 0.12em,
+		0.04em 0.19em;
+	background-size:
+		0.34em 0.29em,
+		0.27em 0.24em,
+		0.43em 0.37em;
+	filter: contrast(1.08) saturate(1.04) drop-shadow(0 0 1px var(--spoiler-shadow, rgba(220, 228, 248, 0.14)));
+	-webkit-mask-image: linear-gradient(90deg, transparent 0, rgba(0, 0, 0, 0.14) 0.9em, rgba(0, 0, 0, 0.82) 4.8em, #000 100%);
+	mask-image: linear-gradient(90deg, transparent 0, rgba(0, 0, 0, 0.14) 0.9em, rgba(0, 0, 0, 0.82) 4.8em, #000 100%);
+	opacity: 0.84;
+	animation: spoiler-dust-field 720ms steps(2, end) infinite;
+}
+
+.field[data-theme='light'][data-glow='spoiler'] {
+	--spoiler-letter-hot: rgba(35, 42, 60, 0.9);
+	--spoiler-letter-mid: rgba(54, 64, 88, 0.72);
+	--spoiler-letter-soft: rgba(92, 104, 134, 0.46);
+	--spoiler-dust-strong: rgba(44, 54, 78, 0.48);
+	--spoiler-dust: rgba(72, 84, 112, 0.36);
+	--spoiler-dust-soft: rgba(110, 122, 150, 0.24);
+	--spoiler-shadow: rgba(40, 52, 78, 0.1);
+}
+
+@keyframes spoiler-letter-drift {
+	0%,
+	100% {
+		background-position:
+			0.01em 0.02em,
+			0.095em 0.065em,
+			0.035em 0.11em;
+		transform: translate3d(0, 0, 0);
+	}
+
+	40% {
+		background-position:
+			0.045em 0.005em,
+			0.055em 0.105em,
+			0.095em 0.075em;
+		transform: translate3d(var(--spoiler-jitter, 0.01em), calc(var(--spoiler-jitter, 0.01em) * -0.68), 0);
+	}
+
+	72% {
+		background-position:
+			-0.015em 0.055em,
+			0.13em 0.02em,
+			0.005em 0.155em;
+		transform: translate3d(calc(var(--spoiler-jitter, 0.01em) * -0.72), calc(var(--spoiler-jitter, 0.01em) * 0.52), 0);
+	}
+}
+
+@keyframes spoiler-dust-field {
+	0%,
+	100% {
+		background-position:
+			0.07em 0.03em,
+			0.2em 0.12em,
+			0.04em 0.19em;
+		transform: translate3d(0, 0, 0);
+	}
+
+	50% {
+		background-position:
+			0.13em -0.01em,
+			0.15em 0.18em,
+			0.1em 0.12em;
+		transform: translate3d(0.026em, -0.014em, 0);
+	}
 }
