@@ -326,6 +326,21 @@
 				</span>
 			</button>
 		</div>
+
+		<a
+			class="github-link"
+			href="https://github.com/ui4ai/light-input"
+			target="_blank"
+			rel="noreferrer"
+			aria-label="Open ui4ai/light-input on GitHub"
+			title="ui4ai/light-input"
+		>
+			<svg viewBox="0 0 24 24" aria-hidden="true">
+				<path
+					d="M12 2C6.48 2 2 6.58 2 12.24c0 4.52 2.87 8.35 6.84 9.7.5.1.68-.22.68-.5v-1.88c-2.78.62-3.37-1.22-3.37-1.22-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.56 2.35 1.11 2.92.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05A9.33 9.33 0 0 1 12 6.94c.85 0 1.7.12 2.5.34 1.9-1.32 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.79-4.57 5.04.36.32.68.94.68 1.9v2.81c0 .28.18.6.69.5A10.06 10.06 0 0 0 22 12.24C22 6.58 17.52 2 12 2Z"
+				/>
+			</svg>
+		</a>
 	</section>
 
 	<section class="demo" aria-label="Autocomplete demo">
@@ -518,6 +533,7 @@
 
 	.segment,
 	.flow-toggle,
+	.github-link,
 	.glow-trigger,
 	.glow-option {
 		display: inline-grid;
@@ -527,6 +543,7 @@
 		color: var(--control-muted);
 		background: transparent;
 		cursor: pointer;
+		text-decoration: none;
 		-webkit-tap-highlight-color: transparent;
 		transition:
 			color 180ms ease,
@@ -1018,6 +1035,79 @@
 			0 0 14px rgba(255, 132, 58, 0.52),
 			0 2px 8px rgba(0, 0, 0, 0.2);
 		transform: translateX(18px);
+	}
+
+	.github-link {
+		position: relative;
+		width: 42px;
+		place-items: center;
+		overflow: hidden;
+		border-radius: 16px;
+		background:
+			radial-gradient(circle at 28% 18%, rgba(255, 255, 255, 0.12), transparent 36%),
+			var(--segment-bg);
+		color: var(--control-ink);
+		box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset;
+		isolation: isolate;
+	}
+
+	.github-link::before,
+	.github-link::after {
+		position: absolute;
+		content: '';
+		pointer-events: none;
+		transition:
+			opacity 180ms ease,
+			transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	.github-link::before {
+		inset: -1px;
+		z-index: -2;
+		border-radius: inherit;
+		background:
+			radial-gradient(circle at 50% 20%, rgba(255, 240, 215, 0.2), transparent 38%),
+			linear-gradient(135deg, rgba(255, 145, 72, 0.2), rgba(255, 224, 160, 0.08));
+		opacity: 0;
+	}
+
+	.github-link::after {
+		left: 10px;
+		right: 10px;
+		bottom: 5px;
+		height: 2px;
+		border-radius: 999px;
+		background: linear-gradient(90deg, transparent, rgba(255, 166, 92, 0.78), transparent);
+		filter: blur(1.5px);
+		opacity: 0;
+		transform: scaleX(0.5);
+	}
+
+	.github-link svg {
+		width: 20px;
+		height: 20px;
+		fill: currentColor;
+		filter: drop-shadow(0 0 10px rgba(255, 178, 110, 0.16));
+	}
+
+	.github-link:hover,
+	.github-link:focus-visible {
+		border-color: rgba(255, 190, 122, 0.32);
+		box-shadow:
+			0 0 24px rgba(255, 132, 58, 0.14),
+			0 1px 0 rgba(255, 255, 255, 0.14) inset;
+	}
+
+	.github-link:hover::before,
+	.github-link:focus-visible::before,
+	.github-link:hover::after,
+	.github-link:focus-visible::after {
+		opacity: 1;
+		transform: scaleX(1);
+	}
+
+	.github-link:active {
+		transform: scale(0.97);
 	}
 
 	.demo {
