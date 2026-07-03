@@ -708,86 +708,6 @@
 	--tail-color: rgba(204, 229, 234, 0.34);
 }
 
-.field[data-glow='flame'] {
-	--ready-border: rgba(255, 106, 45, 0.42);
-	--ready-shadow:
-		0 1px 0 rgba(255, 255, 255, 0.07) inset,
-		0 -38px 96px rgba(35, 5, 2, 0.64) inset,
-		0 36px 74px rgba(0, 0, 0, 0.48),
-		0 0 146px rgba(255, 64, 20, 0.24);
-	--field-wash:
-		radial-gradient(ellipse 32% 92% at 20% 52%, rgba(255, 94, 24, 0.18), transparent 72%),
-		linear-gradient(90deg, rgba(255, 49, 14, 0.12), rgba(255, 181, 44, 0.08) 48%, transparent 82%);
-	--caret-gradient: linear-gradient(180deg, rgb(255, 255, 236), rgb(255, 223, 88) 26%, rgb(255, 92, 25) 58%, rgb(138, 10, 5));
-	--caret-shadow:
-		0 0 9px rgba(255, 248, 198, 0.82),
-		0 0 30px rgba(255, 103, 25, 0.58),
-		0 0 58px rgba(255, 28, 12, 0.34);
-	--haze-width: 10.2em;
-	--haze-height: 2.85em;
-	--haze-bg:
-		radial-gradient(ellipse 30% 58% at 6% 52%, rgba(255, 250, 190, 0.4), transparent 62%),
-		linear-gradient(90deg, rgba(255, 212, 56, 0.28), rgba(255, 85, 19, 0.28) 38%, rgba(158, 12, 6, 0.16) 72%, transparent 94%);
-	--haze-filter: blur(27px) saturate(1.28);
-	--haze-opacity: 0.94;
-	--haze-motion: hellfire 2.45s ease-in-out 620ms infinite;
-	--torch-haze-motion: hellfire 1.8s ease-in-out infinite;
-	--body-width: 8em;
-	--body-height: 1.82em;
-	--body-bg:
-		radial-gradient(ellipse 56% 62% at 0% 50%, rgba(255, 250, 198, 0.58), rgba(255, 128, 28, 0.42) 40%, rgba(180, 18, 6, 0.18) 74%, transparent),
-		linear-gradient(90deg, rgba(255, 210, 52, 0.28), rgba(255, 49, 14, 0.22), transparent 88%);
-	--body-filter: blur(17px) saturate(1.22);
-	--body-opacity: 0.96;
-	--core-width: 3.8em;
-	--core-height: 1.08em;
-	--core-bg: radial-gradient(ellipse 68% 54% at 0% 50%, rgba(255, 255, 220, 0.98), rgba(255, 201, 52, 0.7) 34%, rgba(255, 58, 16, 0.22) 72%, transparent 90%);
-	--core-filter: blur(7px);
-	--core-opacity: 1;
-	--core-motion: flame-core 1.5s ease-in-out 520ms infinite;
-	--torch-core-motion: flame-core 1.1s ease-in-out infinite;
-	--flow-width: 9.8em;
-	--flow-height: 2.15em;
-	--flow-bg: linear-gradient(90deg, transparent, rgba(255, 244, 153, 0.24) 12%, rgba(255, 98, 20, 0.3) 38%, rgba(170, 18, 7, 0.16) 70%, transparent 94%);
-	--flow-filter: blur(18px) saturate(1.2);
-	--flow-low: 0.14;
-	--flow-high: 0.68;
-	--flow-motion: flame-lash 2.85s ease-in-out infinite;
-	--spark-width: 8.8em;
-	--spark-height: 2em;
-	--spark-bg:
-		radial-gradient(circle at 9% 52%, rgba(255, 255, 218, 0.82), transparent 3.2%),
-		radial-gradient(circle at 22% 32%, rgba(255, 219, 53, 0.68), transparent 4%),
-		radial-gradient(circle at 45% 64%, rgba(255, 92, 22, 0.56), transparent 4%),
-		radial-gradient(circle at 68% 36%, rgba(255, 35, 12, 0.42), transparent 4.2%),
-		radial-gradient(circle at 86% 58%, rgba(255, 150, 28, 0.28), transparent 3.8%);
-	--spark-filter: blur(0.65px) drop-shadow(0 0 13px rgba(255, 83, 18, 0.66));
-	--spark-low: 0.08;
-	--spark-high: 0.62;
-	--spark-motion: solar-sparks 2.35s ease-in-out infinite;
-	--smoke-bg:
-		radial-gradient(ellipse 34% 58% at 16% 46%, rgba(255, 112, 28, 0.18), transparent 70%),
-		radial-gradient(ellipse 54% 78% at 62% 58%, rgba(44, 22, 14, 0.34), transparent 82%);
-	--smoke-opacity: 0.38;
-	--smoke-filter: blur(23px);
-	--smoke-motion: smoke-roll 6.4s ease-in-out infinite;
-	--aux-width: 8.6em;
-	--aux-height: 2.85em;
-	--aux-bg:
-		radial-gradient(ellipse 12% 64% at 10% 72%, rgba(255, 246, 163, 0.62), rgba(255, 103, 19, 0.36) 48%, transparent 78%),
-		radial-gradient(ellipse 14% 78% at 24% 70%, rgba(255, 206, 46, 0.5), rgba(255, 46, 13, 0.28) 52%, transparent 80%),
-		radial-gradient(ellipse 16% 66% at 43% 72%, rgba(255, 134, 27, 0.46), rgba(180, 10, 5, 0.28) 50%, transparent 80%),
-		radial-gradient(ellipse 11% 58% at 63% 70%, rgba(255, 224, 82, 0.36), rgba(255, 60, 14, 0.22) 52%, transparent 78%);
-	--aux-filter: blur(4px) saturate(1.34) drop-shadow(0 0 18px rgba(255, 68, 14, 0.46));
-	--aux-opacity: 0.78;
-	--aux-motion: flame-tongues 2.2s ease-in-out infinite;
-	--next-color: rgba(255, 238, 190, 0.96);
-	--next-shadow:
-		0 0 12px rgba(255, 215, 82, 0.48),
-		0 0 40px rgba(255, 45, 14, 0.26);
-	--tail-color: rgba(240, 190, 160, 0.34);
-}
-
 .field[data-glow='matrix'] {
 	--ready-border: rgba(93, 255, 147, 0.36);
 	--ready-shadow:
@@ -1071,69 +991,6 @@
 
 /* Refined hero glows: each keeps the shared beam anatomy, but pushes
    texture, movement, and color language further than the base presets. */
-
-.field[data-glow='flame'] {
-	--ready-border: rgba(255, 104, 35, 0.48);
-	--ready-shadow:
-		0 1px 0 rgba(255, 245, 204, 0.08) inset,
-		0 -40px 102px rgba(42, 5, 0, 0.7) inset,
-		0 36px 74px rgba(0, 0, 0, 0.5),
-		0 0 166px rgba(255, 52, 14, 0.3);
-	--field-wash:
-		radial-gradient(ellipse 18% 94% at 20% 54%, rgba(255, 231, 104, 0.24), transparent 70%),
-		radial-gradient(ellipse 38% 96% at 26% 54%, rgba(255, 68, 18, 0.2), transparent 78%),
-		linear-gradient(90deg, rgba(104, 7, 2, 0.22), rgba(255, 164, 35, 0.08) 52%, transparent 84%);
-	--haze-width: 11.2em;
-	--haze-height: 3.2em;
-	--haze-bg:
-		radial-gradient(ellipse 14% 62% at 5% 62%, rgba(255, 255, 214, 0.62), rgba(255, 179, 48, 0.42) 48%, transparent 74%),
-		radial-gradient(ellipse 24% 72% at 18% 58%, rgba(255, 124, 24, 0.5), rgba(184, 18, 4, 0.22) 56%, transparent 82%),
-		linear-gradient(90deg, rgba(255, 218, 62, 0.3), rgba(255, 71, 15, 0.34) 38%, rgba(100, 6, 3, 0.18) 76%, transparent 96%);
-	--haze-filter: blur(25px) saturate(1.42);
-	--haze-opacity: 0.98;
-	--haze-motion: flame-billow 2.55s ease-in-out 420ms infinite;
-	--torch-haze-motion: flame-billow 1.7s ease-in-out infinite;
-	--body-width: 8.8em;
-	--body-height: 2.1em;
-	--body-bg:
-		radial-gradient(ellipse 46% 58% at 0% 50%, rgba(255, 255, 212, 0.68), rgba(255, 172, 36, 0.44) 38%, rgba(255, 48, 12, 0.22) 70%, transparent),
-		linear-gradient(90deg, rgba(255, 218, 56, 0.28), rgba(255, 50, 12, 0.26), rgba(100, 8, 2, 0.08) 78%, transparent);
-	--body-filter: blur(15px) saturate(1.34);
-	--core-width: 4em;
-	--core-height: 1.22em;
-	--core-bg:
-		radial-gradient(ellipse 62% 50% at 0% 50%, rgba(255, 255, 236, 1), rgba(255, 221, 78, 0.76) 34%, rgba(255, 76, 18, 0.32) 68%, transparent 90%);
-	--core-motion: flame-heartbeat 1.35s ease-in-out infinite;
-	--torch-core-motion: flame-heartbeat 1.05s ease-in-out infinite;
-	--flow-width: 10.6em;
-	--flow-height: 2.5em;
-	--flow-bg:
-		linear-gradient(90deg, transparent, rgba(255, 245, 155, 0.22) 12%, rgba(255, 101, 20, 0.34) 36%, rgba(177, 13, 5, 0.18) 72%, transparent 94%);
-	--flow-filter: blur(17px) saturate(1.4);
-	--flow-high: 0.76;
-	--flow-motion: flame-lash 2.6s ease-in-out infinite;
-	--spark-bg:
-		radial-gradient(circle at 8% 58%, rgba(255, 255, 218, 0.92), transparent 3%),
-		radial-gradient(circle at 19% 28%, rgba(255, 223, 58, 0.78), transparent 3.8%),
-		radial-gradient(circle at 35% 68%, rgba(255, 115, 20, 0.68), transparent 4.2%),
-		radial-gradient(circle at 58% 34%, rgba(255, 42, 11, 0.5), transparent 4.4%),
-		radial-gradient(circle at 81% 64%, rgba(255, 142, 22, 0.34), transparent 3.8%);
-	--spark-motion: flame-embers 2.3s ease-in-out infinite;
-	--smoke-bg:
-		radial-gradient(ellipse 34% 60% at 16% 40%, rgba(255, 118, 22, 0.18), transparent 70%),
-		radial-gradient(ellipse 58% 84% at 62% 58%, rgba(45, 19, 8, 0.42), transparent 84%);
-	--aux-width: 8.8em;
-	--aux-height: 3.65em;
-	--aux-bg:
-		radial-gradient(ellipse 9% 60% at 10% 74%, rgba(255, 255, 190, 0.72), rgba(255, 135, 24, 0.44) 46%, transparent 78%),
-		radial-gradient(ellipse 11% 78% at 22% 76%, rgba(255, 229, 68, 0.58), rgba(255, 54, 12, 0.32) 52%, transparent 82%),
-		radial-gradient(ellipse 13% 68% at 39% 74%, rgba(255, 148, 26, 0.54), rgba(164, 10, 4, 0.32) 52%, transparent 82%),
-		radial-gradient(ellipse 9% 60% at 59% 72%, rgba(255, 224, 84, 0.42), rgba(255, 56, 13, 0.24) 54%, transparent 80%),
-		radial-gradient(ellipse 11% 72% at 76% 76%, rgba(255, 112, 24, 0.34), rgba(118, 7, 3, 0.2) 54%, transparent 82%);
-	--aux-filter: blur(3.2px) saturate(1.48) drop-shadow(0 0 19px rgba(255, 63, 12, 0.58));
-	--aux-opacity: 0.86;
-	--aux-motion: flame-tongues 1.9s ease-in-out infinite;
-}
 
 .field[data-glow='matrix'] {
 	--ready-border: rgba(78, 255, 122, 0.42);
@@ -1484,24 +1341,6 @@
 
 /* Second-pass polish from screenshot QA. */
 
-.field[data-glow='flame'] {
-	--haze-opacity: 0.86;
-	--body-opacity: 0.88;
-	--flow-high: 0.56;
-	--haze-bg:
-		radial-gradient(ellipse 12% 60% at 6% 66%, rgba(255, 255, 214, 0.58), rgba(255, 172, 38, 0.34) 46%, transparent 74%),
-		radial-gradient(ellipse 20% 74% at 18% 62%, rgba(255, 110, 22, 0.42), rgba(174, 15, 4, 0.2) 56%, transparent 82%),
-		linear-gradient(90deg, rgba(255, 218, 62, 0.2), rgba(255, 71, 15, 0.25) 38%, rgba(100, 6, 3, 0.12) 76%, transparent 96%);
-	--aux-bg:
-		conic-gradient(from 212deg at 11% 100%, transparent 0 22deg, rgba(255, 255, 196, 0.74) 24deg 38deg, rgba(255, 116, 22, 0.42) 42deg 55deg, transparent 60deg 100%),
-		conic-gradient(from 210deg at 24% 100%, transparent 0 24deg, rgba(255, 229, 68, 0.6) 26deg 42deg, rgba(255, 54, 12, 0.36) 46deg 62deg, transparent 66deg 100%),
-		conic-gradient(from 216deg at 42% 100%, transparent 0 26deg, rgba(255, 150, 28, 0.52) 28deg 44deg, rgba(164, 10, 4, 0.34) 48deg 64deg, transparent 68deg 100%),
-		conic-gradient(from 208deg at 62% 100%, transparent 0 24deg, rgba(255, 222, 84, 0.42) 27deg 40deg, rgba(255, 56, 13, 0.26) 45deg 61deg, transparent 66deg 100%),
-		radial-gradient(ellipse 18% 42% at 18% 76%, rgba(255, 246, 160, 0.42), transparent 72%);
-	--aux-filter: blur(1.7px) saturate(1.55) drop-shadow(0 0 20px rgba(255, 58, 10, 0.62));
-	--aux-opacity: 0.96;
-}
-
 .field[data-glow='snow'] {
 	--field-wash:
 		radial-gradient(ellipse 28% 86% at 20% 50%, rgba(255, 255, 255, 0.14), transparent 70%),
@@ -1516,82 +1355,6 @@
 }
 
 /* Final hero-effect pass: richer concepts, soft masks, no visible layer edges. */
-
-.field[data-glow='flame'] {
-	--ready-border: rgba(255, 92, 28, 0.38);
-	--field-wash:
-		radial-gradient(ellipse 28% 88% at 20% 55%, rgba(255, 167, 22, 0.13), transparent 70%),
-		linear-gradient(90deg, rgba(255, 70, 13, 0.13), rgba(95, 8, 4, 0.06) 62%, transparent 88%);
-	--haze-width: 9.8em;
-	--haze-height: 2.8em;
-	--haze-bg:
-		radial-gradient(ellipse 10% 70% at 4% 72%, rgba(255, 255, 210, 0.72), rgba(255, 169, 18, 0.48) 44%, transparent 76%),
-		radial-gradient(ellipse 18% 86% at 18% 64%, rgba(255, 98, 12, 0.58), rgba(165, 12, 3, 0.28) 58%, transparent 84%),
-		radial-gradient(ellipse 26% 96% at 36% 70%, rgba(255, 181, 22, 0.42), rgba(255, 58, 9, 0.2) 56%, transparent 86%),
-		linear-gradient(90deg, rgba(255, 203, 54, 0.22), rgba(255, 58, 12, 0.28) 42%, rgba(74, 5, 2, 0.1) 78%, transparent 98%);
-	--haze-filter: blur(18px) saturate(1.55) contrast(1.08);
-	--haze-opacity: 0.9;
-	--haze-motion: flame-wild 2.4s ease-in-out 340ms infinite;
-	--torch-haze-motion: flame-wild 1.8s ease-in-out infinite;
-	--haze-mask: radial-gradient(ellipse 86% 90% at 22% 62%, black 0 50%, rgba(0, 0, 0, 0.68) 70%, transparent 100%);
-	--body-width: 7.4em;
-	--body-height: 1.62em;
-	--body-bg:
-		linear-gradient(90deg, rgba(255, 255, 218, 0.56), rgba(255, 172, 22, 0.44) 24%, rgba(255, 60, 12, 0.28) 52%, rgba(92, 8, 2, 0.08) 82%, transparent),
-		radial-gradient(ellipse 34% 80% at 19% 70%, rgba(255, 244, 142, 0.38), transparent 68%);
-	--body-filter: blur(11px) saturate(1.45);
-	--body-opacity: 0.92;
-	--core-width: 3.4em;
-	--core-height: 1.08em;
-	--core-bg: radial-gradient(ellipse 68% 60% at 2% 58%, rgba(255, 255, 221, 0.98), rgba(255, 189, 42, 0.72) 38%, rgba(255, 51, 10, 0.18) 68%, transparent 84%);
-	--core-filter: blur(5px) saturate(1.2);
-	--core-opacity: 0.98;
-	--core-motion: flame-heartbeat 1.18s ease-in-out infinite;
-	--flow-width: 9.2em;
-	--flow-height: 1.86em;
-	--flow-bg:
-		linear-gradient(92deg, transparent, rgba(255, 237, 126, 0.24) 14%, rgba(255, 92, 12, 0.3) 39%, rgba(128, 9, 4, 0.16) 70%, transparent 94%),
-		radial-gradient(ellipse 26% 70% at 14% 70%, rgba(255, 255, 190, 0.24), transparent 70%);
-	--flow-filter: blur(13px) saturate(1.55);
-	--flow-low: 0.18;
-	--flow-high: 0.62;
-	--flow-motion: flame-wild-flow 2.9s ease-in-out infinite;
-	--spark-width: 8.4em;
-	--spark-height: 2.1em;
-	--spark-bg:
-		radial-gradient(circle at 8% 68%, rgba(255, 255, 218, 0.9), transparent 2.8%),
-		radial-gradient(circle at 18% 28%, rgba(255, 206, 58, 0.82), transparent 2.8%),
-		radial-gradient(circle at 34% 62%, rgba(255, 86, 15, 0.66), transparent 2.5%),
-		radial-gradient(circle at 52% 36%, rgba(255, 156, 24, 0.52), transparent 2.3%),
-		radial-gradient(circle at 72% 58%, rgba(255, 66, 12, 0.34), transparent 2.1%);
-	--spark-filter: blur(0.6px) drop-shadow(0 0 12px rgba(255, 93, 14, 0.84));
-	--spark-low: 0.1;
-	--spark-high: 0.62;
-	--spark-motion: flame-embers-rise 2.4s ease-in-out infinite;
-	--smoke-width: 9.2em;
-	--smoke-height: 2.9em;
-	--smoke-bg:
-		radial-gradient(ellipse 34% 72% at 16% 24%, rgba(112, 75, 64, 0.18), transparent 72%),
-		radial-gradient(ellipse 48% 80% at 46% 34%, rgba(45, 38, 40, 0.16), transparent 78%);
-	--smoke-filter: blur(24px);
-	--smoke-opacity: 0.2;
-	--aux-width: 8.2em;
-	--aux-height: 2.38em;
-	--aux-bg:
-		conic-gradient(from 210deg at 9% 105%, transparent 0 18deg, rgba(255, 255, 206, 0.82) 22deg 36deg, rgba(255, 136, 18, 0.54) 40deg 58deg, transparent 66deg 100%),
-		conic-gradient(from 214deg at 26% 108%, transparent 0 20deg, rgba(255, 225, 76, 0.68) 24deg 42deg, rgba(255, 56, 9, 0.48) 48deg 66deg, transparent 74deg 100%),
-		conic-gradient(from 208deg at 45% 108%, transparent 0 22deg, rgba(255, 174, 28, 0.58) 28deg 46deg, rgba(176, 12, 4, 0.42) 52deg 70deg, transparent 78deg 100%),
-		radial-gradient(ellipse 28% 42% at 22% 78%, rgba(255, 248, 150, 0.42), transparent 74%);
-	--aux-filter: blur(1.1px) saturate(1.7) drop-shadow(0 0 20px rgba(255, 64, 10, 0.74));
-	--aux-opacity: 0.98;
-	--aux-motion: flame-tongue-dance 1.9s ease-in-out infinite;
-	--aux-mask: radial-gradient(ellipse 92% 88% at 24% 70%, black 0 46%, rgba(0, 0, 0, 0.68) 67%, transparent 100%);
-	--next-color: rgba(255, 239, 188, 0.97);
-	--next-shadow:
-		0 0 9px rgba(255, 218, 116, 0.46),
-		0 0 26px rgba(255, 71, 12, 0.28);
-	--tail-color: rgba(239, 190, 156, 0.34);
-}
 
 .field[data-glow='matrix'] {
 	--ready-border: rgba(58, 255, 120, 0.32);
@@ -2086,7 +1849,6 @@
 
 /* Edge polish for high-energy variants: dissolve light before layer bounds. */
 .field[data-glow='blackhole'],
-.field[data-glow='flame'],
 .field[data-glow='matrix'],
 .field[data-glow='snow'],
 .field[data-glow='toxic'],
@@ -2107,14 +1869,6 @@
 .field[data-glow='blueprint'] {
 	--layer-radius: 999px;
 	--layer-clip: inset(0 round 999px);
-}
-
-.field[data-glow='flame'] {
-	--haze-mask: radial-gradient(ellipse 86% 90% at 22% 62%, black 0 42%, rgba(0, 0, 0, 0.5) 60%, transparent 78%);
-	--body-mask: linear-gradient(90deg, transparent 0%, black 7%, black 48%, rgba(0, 0, 0, 0.3) 66%, transparent 82%);
-	--flow-mask: linear-gradient(90deg, transparent 0%, black 7%, black 46%, rgba(0, 0, 0, 0.28) 64%, transparent 80%);
-	--aux-mask: radial-gradient(ellipse 88% 86% at 24% 70%, black 0 42%, rgba(0, 0, 0, 0.52) 60%, transparent 78%);
-	--smoke-mask: radial-gradient(ellipse 82% 82% at 28% 44%, black 0 38%, rgba(0, 0, 0, 0.4) 58%, transparent 78%);
 }
 
 .field[data-glow='matrix'],
@@ -2146,222 +1900,6 @@
 }
 
 /* Deep polish pass: custom looks for the special variants only. */
-.field[data-glow='flame'] {
-	--layer-clip: none;
-	--ready-border: rgba(255, 103, 27, 0.44);
-	--ready-shadow:
-		0 1px 0 rgba(255, 246, 211, 0.06) inset,
-		0 -34px 92px rgba(52, 6, 1, 0.62) inset,
-		0 34px 70px rgba(0, 0, 0, 0.46),
-		0 0 72px rgba(255, 72, 12, 0.14);
-	--field-wash:
-		radial-gradient(ellipse 16% 76% at 20% 62%, rgba(255, 192, 36, 0.11), transparent 70%),
-		linear-gradient(90deg, rgba(255, 54, 6, 0.1), rgba(85, 8, 2, 0.06) 58%, transparent 84%);
-	--haze-width: 7.6em;
-	--haze-height: 2.7em;
-	--haze-bg:
-		radial-gradient(ellipse 10% 48% at 4% 62%, rgba(255, 255, 220, 0.58), rgba(255, 174, 22, 0.34) 42%, transparent 72%),
-		radial-gradient(ellipse 34% 60% at 22% 58%, rgba(255, 83, 10, 0.34), rgba(128, 11, 3, 0.14) 58%, transparent 82%),
-		repeating-linear-gradient(104deg, transparent 0 16px, rgba(255, 224, 102, 0.12) 17px 19px, transparent 20px 36px),
-		linear-gradient(90deg, rgba(255, 194, 34, 0.1), rgba(255, 58, 8, 0.16) 42%, rgba(72, 5, 2, 0.08) 72%, transparent 92%);
-	--haze-filter: blur(19px) saturate(1.55) contrast(1.08);
-	--haze-opacity: 0.3;
-	--haze-motion: flame-plume-live 1.9s ease-in-out infinite;
-	--torch-haze-motion: flame-plume-live 1.55s ease-in-out infinite;
-	--body-width: 6.6em;
-	--body-height: 1.28em;
-	--body-bg:
-		linear-gradient(90deg, rgba(255, 255, 218, 0.5), rgba(255, 170, 18, 0.42) 22%, rgba(255, 54, 8, 0.22) 52%, rgba(87, 7, 2, 0.07) 78%, transparent 92%),
-		repeating-linear-gradient(112deg, transparent 0 18px, rgba(255, 238, 148, 0.12) 19px 21px, transparent 22px 38px);
-	--body-filter: blur(10px) saturate(1.45);
-	--body-opacity: 0.34;
-	--core-width: 1.65em;
-	--core-height: 0.64em;
-	--core-bg:
-		linear-gradient(90deg, rgba(255, 255, 232, 0.98), rgba(255, 218, 48, 0.66) 32%, rgba(255, 72, 8, 0.16) 66%, transparent 86%),
-		radial-gradient(ellipse 20% 70% at 8% 58%, rgba(255, 255, 240, 0.5), transparent 68%);
-	--core-filter: blur(2.5px) saturate(1.2);
-	--core-opacity: 0.52;
-	--core-motion: flame-kernel-live 1.05s ease-in-out infinite;
-	--flow-width: 7.4em;
-	--flow-height: 1.56em;
-	--flow-bg:
-		linear-gradient(92deg, transparent, rgba(255, 239, 120, 0.18) 12%, rgba(255, 86, 8, 0.25) 34%, rgba(111, 7, 2, 0.1) 66%, transparent 88%),
-		repeating-linear-gradient(106deg, transparent 0 20px, rgba(255, 206, 80, 0.1) 21px 23px, transparent 24px 42px);
-	--flow-filter: blur(13px) saturate(1.55);
-	--flow-low: 0.12;
-	--flow-high: 0.28;
-	--flow-motion: flame-plume-flow-live 2.2s ease-in-out infinite;
-	--spark-width: 7em;
-	--spark-height: 2.2em;
-	--spark-bg:
-		radial-gradient(circle at 10% 70%, rgba(255, 252, 214, 0.86), transparent 2%),
-		radial-gradient(circle at 21% 28%, rgba(255, 198, 38, 0.72), transparent 2.2%),
-		radial-gradient(circle at 38% 58%, rgba(255, 85, 12, 0.48), transparent 2%),
-		radial-gradient(circle at 58% 22%, rgba(255, 154, 20, 0.34), transparent 1.8%),
-		radial-gradient(circle at 76% 44%, rgba(255, 72, 10, 0.22), transparent 1.7%);
-	--spark-low: 0.06;
-	--spark-high: 0.44;
-	--spark-motion: flame-ember-lift-live 1.8s ease-in-out infinite;
-	--aux-width: 6.1em;
-	--aux-height: 2.45em;
-	--aux-bg:
-		url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20360%20170%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22a%22%20x1%3D%220%22%20y1%3D%221%22%20x2%3D%221%22%20y2%3D%220%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23ff2f05%22%20stop-opacity%3D%22.66%22%2F%3E%3Cstop%20offset%3D%22.42%22%20stop-color%3D%22%23ff9e12%22%20stop-opacity%3D%22.86%22%2F%3E%3Cstop%20offset%3D%22.78%22%20stop-color%3D%22%23fff2a4%22%20stop-opacity%3D%22.9%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23fffef2%22%20stop-opacity%3D%22.98%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22b%22%20x1%3D%220%22%20y1%3D%221%22%20x2%3D%221%22%20y2%3D%220%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%238f0702%22%20stop-opacity%3D%22.52%22%2F%3E%3Cstop%20offset%3D%22.52%22%20stop-color%3D%22%23ff4d06%22%20stop-opacity%3D%22.72%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23ffc928%22%20stop-opacity%3D%22.84%22%2F%3E%3C%2FlinearGradient%3E%3Cfilter%20id%3D%22s%22%3E%3CfeGaussianBlur%20stdDeviation%3D%221.2%22%2F%3E%3C%2Ffilter%3E%3C%2Fdefs%3E%3Cg%20filter%3D%22url(%23s)%22%3E%3Cpath%20d%3D%22M26%20158C16%20112%2050%20106%2042%2072C70%2098%2078%2052%2094%2020C118%2066%20142%2082%20130%20158Z%22%20fill%3D%22url(%23a)%22%2F%3E%3Cpath%20d%3D%22M92%20160C78%20118%20114%20108%20104%2074C134%2096%20146%2048%20166%2018C184%2072%20214%2086%20194%20160Z%22%20fill%3D%22url(%23b)%22%2F%3E%3Cpath%20d%3D%22M164%20160C154%20120%20184%20112%20178%2084C202%20102%20218%2060%20232%2034C250%2082%20276%2098%20254%20160Z%22%20fill%3D%22url(%23a)%22%20opacity%3D%22.76%22%2F%3E%3Cpath%20d%3D%22M232%20160C224%20126%20248%20110%20244%2082C264%2098%20278%2072%20290%2046C306%2090%20324%20112%20304%20160Z%22%20fill%3D%22url(%23b)%22%20opacity%3D%22.58%22%2F%3E%3C%2Fg%3E%3Cg%20opacity%3D%22.72%22%3E%3Ccircle%20cx%3D%2234%22%20cy%3D%2242%22%20r%3D%224%22%20fill%3D%22%23fff2a0%22%2F%3E%3Ccircle%20cx%3D%22154%22%20cy%3D%2228%22%20r%3D%223%22%20fill%3D%22%23ffb21a%22%2F%3E%3Ccircle%20cx%3D%22258%22%20cy%3D%2254%22%20r%3D%222.5%22%20fill%3D%22%23ff5d08%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E"),
-		radial-gradient(ellipse 56% 42% at 20% 86%, rgba(255, 236, 92, 0.18), transparent 76%);
-	--aux-size: 100% 100%, 100% 100%;
-	--aux-filter: blur(2.1px) saturate(1.7) contrast(1.04) drop-shadow(0 0 15px rgba(255, 58, 8, 0.5));
-	--aux-opacity: 0.62;
-	--aux-motion: flame-tongue-live 1.55s ease-in-out infinite;
-	--haze-mask: radial-gradient(ellipse 74% 76% at 23% 66%, black 0 30%, rgba(0, 0, 0, 0.42) 50%, transparent 74%);
-	--body-mask: linear-gradient(90deg, transparent 0%, black 6%, black 32%, rgba(0, 0, 0, 0.16) 56%, transparent 78%);
-	--flow-mask: linear-gradient(90deg, transparent 0%, black 7%, black 38%, rgba(0, 0, 0, 0.18) 62%, transparent 84%);
-	--aux-mask: radial-gradient(ellipse 86% 82% at 24% 64%, black 0 42%, rgba(0, 0, 0, 0.52) 62%, transparent 82%);
-	--spark-mask: linear-gradient(90deg, transparent 0%, black 5%, black 74%, transparent 96%);
-}
-
-.field[data-glow='flame'] {
-	--ready-border: rgba(255, 132, 42, 0.5);
-	--ready-shadow:
-		0 1px 0 rgba(255, 244, 206, 0.08) inset,
-		0 -38px 112px rgba(52, 5, 0, 0.74) inset,
-		0 34px 76px rgba(0, 0, 0, 0.5),
-		0 0 88px rgba(255, 68, 8, 0.18),
-		0 0 168px rgba(255, 120, 18, 0.12);
-	--field-wash:
-		radial-gradient(ellipse 38% 150% at 78% 54%, rgba(255, 164, 28, 0.22), transparent 68%),
-		radial-gradient(ellipse 26% 96% at 65% 70%, rgba(255, 48, 8, 0.18), transparent 76%),
-		linear-gradient(90deg, rgba(33, 5, 2, 0.66), rgba(80, 12, 4, 0.4) 48%, rgba(220, 58, 8, 0.16) 100%);
-	--caret-gradient: linear-gradient(180deg, rgb(255, 255, 234), rgb(255, 224, 72) 28%, rgb(255, 86, 11) 62%, rgb(82, 6, 0));
-	--caret-shadow:
-		0 0 9px rgba(255, 247, 196, 0.86),
-		0 0 26px rgba(255, 142, 28, 0.68),
-		0 0 56px rgba(255, 42, 6, 0.42);
-	--next-color: rgba(255, 239, 184, 0.98);
-	--tail-color: rgba(255, 156, 92, 0.26);
-}
-
-.stage[data-glow='flame'] .field[data-glow] .caret-origin-glow[data-mode='ready'],
-.stage[data-glow='flame'] .field[data-glow] .prediction > .beam {
-	display: none;
-}
-
-.stage[data-glow='flame'] .field[data-glow]::before {
-	background:
-		radial-gradient(ellipse 30% 130% at 80% 102%, rgba(255, 218, 82, 0.24), rgba(255, 82, 8, 0.16) 42%, transparent 72%),
-		radial-gradient(ellipse 48% 110% at 72% 50%, rgba(255, 118, 18, 0.14), transparent 74%),
-		radial-gradient(circle at 68% 28%, rgba(255, 228, 102, 0.28) 0 0.055em, transparent 0.09em),
-		radial-gradient(circle at 82% 36%, rgba(255, 116, 22, 0.24) 0 0.047em, transparent 0.082em),
-		radial-gradient(circle at 88% 68%, rgba(255, 194, 54, 0.2) 0 0.043em, transparent 0.078em),
-		linear-gradient(90deg, rgba(0, 0, 0, 0.34), rgba(80, 10, 2, 0.08) 48%, rgba(255, 90, 10, 0.09));
-	background-size: 112% 100%;
-	opacity: 1;
-	mix-blend-mode: screen;
-	animation: flame-field-heat 4.2s ease-in-out infinite;
-}
-
-.stage[data-glow='flame'] .field[data-glow] .edge-left,
-.stage[data-glow='flame'] .field[data-glow] .edge-right {
-	opacity: 0;
-}
-
-.stage[data-glow='flame'] .field[data-glow] .paint {
-	overflow: visible;
-	clip-path: inset(-4em -5.4em -4em 0);
-}
-
-.stage[data-glow='flame'] .field[data-glow] .prediction {
-	isolation: isolate;
-}
-
-.stage[data-glow='flame'] .field[data-glow] .prediction::before {
-	position: absolute;
-	left: -0.72em;
-	top: -1.58em;
-	z-index: -3;
-	width: 12.6em;
-	height: 4em;
-	content: '';
-	background:
-		radial-gradient(ellipse 9% 72% at 18% 78%, rgba(255, 255, 228, 0.96), rgba(255, 212, 58, 0.62) 30%, rgba(255, 88, 12, 0.34) 56%, transparent 78%),
-		radial-gradient(ellipse 12% 86% at 34% 68%, rgba(255, 236, 96, 0.82), rgba(255, 110, 14, 0.58) 38%, rgba(172, 12, 2, 0.22) 68%, transparent 86%),
-		radial-gradient(ellipse 14% 78% at 51% 76%, rgba(255, 178, 36, 0.68), rgba(255, 64, 8, 0.48) 42%, rgba(105, 5, 0, 0.16) 72%, transparent 90%),
-		radial-gradient(ellipse 10% 66% at 58% 82%, rgba(255, 226, 78, 0.5), rgba(255, 83, 12, 0.34) 44%, transparent 84%),
-		radial-gradient(ellipse 42% 30% at 27% 84%, rgba(255, 255, 218, 0.84), rgba(255, 185, 32, 0.44) 40%, rgba(255, 46, 5, 0.18) 68%, transparent 86%),
-		linear-gradient(90deg, rgba(255, 225, 92, 0.12), rgba(255, 66, 8, 0.22) 34%, rgba(86, 5, 0, 0.08) 62%, transparent 86%);
-	clip-path: none;
-	filter: blur(5px) saturate(1.75) contrast(1.06) drop-shadow(0 0 20px rgba(255, 72, 8, 0.62));
-	-webkit-mask-image: linear-gradient(90deg, transparent 0%, black 7%, black 46%, rgba(0, 0, 0, 0.5) 62%, transparent 82%);
-	mask-image: linear-gradient(90deg, transparent 0%, black 7%, black 46%, rgba(0, 0, 0, 0.5) 62%, transparent 82%);
-	opacity: 0.94;
-	mix-blend-mode: screen;
-	transform-origin: 18% 84%;
-	animation: flame-new-tongues 1.65s ease-in-out infinite;
-	pointer-events: none;
-}
-
-.stage[data-glow='flame'] .field[data-glow] .prediction::after {
-	position: absolute;
-	left: -0.72em;
-	top: -1.52em;
-	z-index: -2;
-	width: 12em;
-	height: 3.9em;
-	content: '';
-	background:
-		radial-gradient(circle at 13% 50%, rgba(255, 255, 220, 0.9) 0 0.85%, transparent 1.25%),
-		radial-gradient(circle at 25% 18%, rgba(255, 211, 48, 0.78) 0 0.72%, transparent 1.08%),
-		radial-gradient(circle at 37% 36%, rgba(255, 110, 14, 0.66) 0 0.6%, transparent 0.98%),
-		radial-gradient(circle at 52% 12%, rgba(255, 178, 28, 0.5) 0 0.52%, transparent 0.88%),
-		radial-gradient(circle at 56% 42%, rgba(255, 72, 8, 0.42) 0 0.5%, transparent 0.84%),
-		radial-gradient(circle at 72% 30%, rgba(255, 180, 34, 0.26) 0 0.38%, transparent 0.72%),
-		radial-gradient(ellipse 48% 30% at 25% 88%, rgba(255, 184, 42, 0.22), transparent 70%),
-		radial-gradient(ellipse 64% 64% at 32% 58%, rgba(118, 18, 4, 0.24), transparent 78%);
-	filter: blur(0.36px) drop-shadow(0 0 9px rgba(255, 126, 18, 0.68));
-	-webkit-mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 54%, rgba(0, 0, 0, 0.38) 72%, transparent 92%);
-	mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 54%, rgba(0, 0, 0, 0.38) 72%, transparent 92%);
-	opacity: 0.72;
-	mix-blend-mode: screen;
-	animation: flame-new-embers 2.6s ease-in-out infinite;
-	pointer-events: none;
-}
-
-.stage[data-glow='flame'] .field[data-glow] .next-word {
-	color: rgba(255, 238, 174, 0.98);
-	background: none;
-	filter: saturate(1.18);
-	text-shadow:
-		0 -0.018em 0 rgba(255, 255, 232, 0.58),
-		0 0 9px rgba(255, 244, 184, 0.78),
-		0 0 24px rgba(255, 132, 24, 0.58),
-		0 0 52px rgba(255, 46, 8, 0.36);
-}
-
-.stage[data-glow='flame'] .field[data-glow] .next-word .glyph:nth-child(2n) {
-	color: rgba(255, 210, 94, 0.98);
-}
-
-.stage[data-glow='flame'] .field[data-glow] .next-word .glyph:nth-child(3n + 1) {
-	animation: flame-letter-lick 1.7s ease-in-out infinite;
-}
-
-.stage[data-glow='flame'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
-	animation: flame-letter-lick 1.55s ease-in-out 160ms infinite;
-}
-
-.stage[data-glow='flame'] .field[data-glow] .tail {
-	color: rgba(255, 162, 96, 0.28);
-	filter: blur(0.48px) saturate(1.08);
-	text-shadow:
-		0 0 12px rgba(255, 98, 18, 0.2),
-		0 0 34px rgba(85, 8, 2, 0.38);
-}
-
-.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow]::before,
-.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .prediction::before,
-.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .prediction::after,
-.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
-	animation: none;
-}
 
 .field[data-glow='matrix'] {
 	--ready-border: rgba(48, 255, 116, 0.34);
@@ -3020,26 +2558,6 @@
 	--smoke-opacity: 0.08;
 }
 
-.field[data-theme='light'][data-glow='flame'] {
-	--ready-border: rgba(205, 75, 32, 0.36);
-	--ready-shadow:
-		0 1px 0 rgba(255, 255, 255, 0.98) inset,
-		0 -18px 50px rgba(255, 110, 36, 0.11) inset,
-		0 18px 46px rgba(42, 52, 74, 0.14),
-		0 0 76px rgba(255, 70, 24, 0.13);
-	--haze-opacity: 0.58;
-	--body-opacity: 0.68;
-	--core-opacity: 0.78;
-	--flow-high: 0.32;
-	--spark-high: 0.26;
-	--smoke-opacity: 0.13;
-	--aux-opacity: 0.34;
-	--next-color: rgba(138, 56, 22, 0.86);
-	--next-shadow:
-		0 0 9px rgba(255, 135, 47, 0.25),
-		0 0 24px rgba(220, 56, 20, 0.1);
-}
-
 .field[data-theme='light'][data-glow='matrix'] {
 	--ready-border: rgba(30, 145, 76, 0.3);
 	--haze-opacity: 0.46;
@@ -3110,21 +2628,6 @@
 		0 0 24px rgba(203, 74, 184, 0.1);
 }
 
-.field[data-theme='light'][data-glow='flame'] {
-	--ready-border: rgba(212, 75, 28, 0.4);
-	--haze-opacity: 0.6;
-	--body-opacity: 0.66;
-	--core-opacity: 0.78;
-	--flow-high: 0.36;
-	--spark-high: 0.28;
-	--smoke-opacity: 0.12;
-	--aux-opacity: 0.42;
-	--next-color: rgba(138, 52, 16, 0.9);
-	--next-shadow:
-		0 0 9px rgba(255, 146, 45, 0.28),
-		0 0 24px rgba(220, 52, 16, 0.12);
-}
-
 .field[data-theme='light'][data-glow='matrix'] {
 	--ready-border: rgba(22, 132, 62, 0.34);
 	--haze-opacity: 0.48;
@@ -3138,23 +2641,6 @@
 	--next-shadow:
 		0 0 8px rgba(49, 210, 95, 0.24),
 		0 0 22px rgba(0, 145, 58, 0.1);
-}
-
-.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .next-word {
-	color: rgba(142, 50, 8, 0.92);
-	text-shadow:
-		0 -0.018em 0 rgba(255, 246, 210, 0.52),
-		0 0 7px rgba(255, 180, 54, 0.44),
-		0 0 22px rgba(255, 96, 12, 0.26);
-}
-
-.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .next-word .glyph:nth-child(2n) {
-	color: rgba(172, 72, 10, 0.9);
-}
-
-.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .tail {
-	color: rgba(112, 70, 48, 0.22);
-	text-shadow: 0 0 18px rgba(255, 116, 28, 0.12);
 }
 
 .stage[data-theme='light'][data-glow='matrix'] .field[data-glow] .prediction::before {
@@ -4594,813 +4080,6 @@
 	mix-blend-mode: screen;
 	animation: heart-float 4.1s ease-in-out infinite;
 	pointer-events: none;
-}
-
-/* Flame is a horizontal burner jet from the caret, not an upright fire shape. */
-.field[data-glow='flame'] {
-	--ready-border: rgba(255, 132, 38, 0.48);
-	--ready-shadow:
-		0 1px 0 rgba(255, 246, 214, 0.08) inset,
-		0 -34px 96px rgba(58, 8, 0, 0.76) inset,
-		0 34px 76px rgba(0, 0, 0, 0.5),
-		0 0 92px rgba(255, 68, 8, 0.22),
-		0 0 170px rgba(255, 145, 28, 0.14);
-	--field-wash:
-		radial-gradient(ellipse 42% 115% at 74% 52%, rgba(255, 118, 18, 0.18), transparent 70%),
-		radial-gradient(ellipse 28% 82% at 48% 54%, rgba(255, 224, 76, 0.08), transparent 68%),
-		repeating-linear-gradient(100deg, transparent 0 0.78em, rgba(255, 170, 32, 0.035) 0.84em 0.9em, transparent 0.96em 1.42em);
-	--caret-gradient: linear-gradient(180deg, rgb(255, 255, 238), rgb(255, 222, 64) 30%, rgb(255, 88, 9) 66%, rgb(118, 10, 0));
-	--caret-shadow:
-		0 0 9px rgba(255, 250, 205, 0.92),
-		0 0 28px rgba(255, 142, 24, 0.72),
-		0 0 62px rgba(255, 44, 6, 0.5);
-	--next-color: rgba(255, 244, 198, 0.98);
-	--tail-color: rgba(255, 158, 82, 0.28);
-}
-
-.field[data-theme='light'][data-glow='flame'] {
-	--ready-border: rgba(218, 82, 12, 0.34);
-	--ready-shadow:
-		0 1px 0 rgba(255, 255, 255, 0.82) inset,
-		0 -28px 86px rgba(255, 220, 154, 0.32) inset,
-		0 30px 64px rgba(122, 70, 20, 0.16),
-		0 0 76px rgba(255, 116, 18, 0.18);
-	--field-wash:
-		radial-gradient(ellipse 40% 110% at 74% 52%, rgba(255, 132, 28, 0.16), transparent 70%),
-		radial-gradient(ellipse 28% 76% at 48% 54%, rgba(255, 218, 72, 0.1), transparent 70%),
-		repeating-linear-gradient(100deg, transparent 0 0.82em, rgba(220, 78, 8, 0.035) 0.88em 0.94em, transparent 1em 1.5em);
-	--next-color: rgba(122, 38, 5, 0.94);
-	--tail-color: rgba(120, 68, 34, 0.24);
-}
-
-.stage[data-glow='flame'] .field[data-glow] {
-	background:
-		radial-gradient(ellipse 76% 165% at 78% 52%, rgba(120, 18, 0, 0.22), transparent 58%),
-		linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0) 42%),
-		linear-gradient(90deg, rgba(18, 10, 8, 0.995), rgba(31, 17, 14, 0.99) 48%, rgba(52, 14, 7, 0.985));
-}
-
-.stage[data-theme='light'][data-glow='flame'] .field[data-glow] {
-	background:
-		radial-gradient(ellipse 80% 155% at 82% 52%, rgba(255, 166, 52, 0.18), transparent 58%),
-		linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(255, 252, 245, 0.7) 46%, rgba(255, 247, 236, 0.82)),
-		linear-gradient(90deg, rgba(255, 255, 253, 0.96), rgba(255, 249, 240, 0.96));
-}
-
-.stage[data-glow='flame'] .field[data-glow]::before {
-	background: var(--field-wash);
-	background-size:
-		118% 100%,
-		100% 100%,
-		2.7em 100%;
-	opacity: 0.96;
-	mix-blend-mode: screen;
-	animation: flame-burner-field 6.8s ease-in-out infinite;
-}
-
-.stage[data-glow='flame'] .field[data-glow] .caret-origin-glow[data-mode='ready'],
-.stage[data-glow='flame'] .field[data-glow] .prediction > .beam {
-	display: none;
-}
-
-.stage[data-glow='flame'] .field[data-glow] .edge-left,
-.stage[data-glow='flame'] .field[data-glow] .edge-right {
-	opacity: 0;
-}
-
-.stage[data-glow='flame'] .field[data-glow] .paint {
-	overflow: visible;
-	clip-path: inset(-3.4em -7.8em -3.4em 0);
-}
-
-.stage[data-glow='flame'] .field[data-glow] .prediction {
-	position: relative;
-	isolation: isolate;
-}
-
-.stage[data-glow='flame'] .field[data-glow] .prediction::before {
-	position: absolute;
-	left: -0.36em;
-	top: 50%;
-	z-index: -4;
-	width: 7.8em;
-	height: 1.78em;
-	content: '';
-	pointer-events: none;
-	border-radius: 999px 62% 58% 999px / 58% 46% 54% 46%;
-	clip-path: polygon(0% 36%, 7% 24%, 24% 18%, 47% 24%, 76% 36%, 100% 50%, 76% 64%, 47% 76%, 24% 82%, 7% 74%, 0% 64%);
-	background:
-		radial-gradient(ellipse 10% 54% at 2% 50%, rgba(255, 255, 238, 0.96), rgba(255, 230, 82, 0.78) 28%, rgba(255, 106, 10, 0.46) 52%, transparent 78%),
-		radial-gradient(ellipse 58% 72% at 24% 50%, rgba(255, 228, 84, 0.56), rgba(255, 112, 10, 0.48) 38%, rgba(190, 22, 2, 0.24) 70%, transparent 88%),
-		radial-gradient(ellipse 88% 62% at 56% 50%, rgba(255, 92, 8, 0.34), rgba(255, 42, 4, 0.18) 48%, rgba(82, 4, 0, 0.06) 78%, transparent 96%),
-		repeating-linear-gradient(98deg, transparent 0 0.46em, rgba(255, 244, 160, 0.18) 0.5em 0.56em, transparent 0.62em 1.08em),
-		linear-gradient(90deg, rgba(255, 244, 184, 0.18), rgba(255, 96, 10, 0.22) 35%, rgba(158, 14, 0, 0.12) 72%, transparent 96%);
-	background-size:
-		100% 100%,
-		120% 100%,
-		138% 100%,
-		2.6em 100%,
-		100% 100%;
-	filter: blur(9px) saturate(1.8) contrast(1.08) drop-shadow(0 0 22px rgba(255, 72, 8, 0.64));
-	-webkit-mask-image: linear-gradient(90deg, transparent 0%, black 4%, black 48%, rgba(0, 0, 0, 0.42) 66%, transparent 88%);
-	mask-image: linear-gradient(90deg, transparent 0%, black 4%, black 48%, rgba(0, 0, 0, 0.42) 66%, transparent 88%);
-	mix-blend-mode: screen;
-	opacity: 0.94;
-	transform: translateY(-50%);
-	transform-origin: left center;
-	animation: flame-burner-jet 1.86s ease-in-out infinite;
-}
-
-.stage[data-glow='flame'] .field[data-glow] .prediction::after {
-	position: absolute;
-	left: -0.3em;
-	top: 50%;
-	z-index: -2;
-	width: 8.4em;
-	height: 1.94em;
-	content: '';
-	pointer-events: none;
-	clip-path: polygon(0% 38%, 9% 26%, 28% 20%, 52% 28%, 80% 38%, 100% 50%, 80% 62%, 52% 72%, 28% 80%, 9% 72%, 0% 62%);
-	background:
-		radial-gradient(circle at 3% 48%, rgba(255, 255, 232, 0.98) 0 0.036em, transparent 0.076em),
-		radial-gradient(circle at 9% 37%, rgba(255, 232, 88, 0.82) 0 0.03em, transparent 0.072em),
-		radial-gradient(circle at 18% 64%, rgba(255, 148, 22, 0.76) 0 0.034em, transparent 0.078em),
-		radial-gradient(circle at 31% 30%, rgba(255, 208, 58, 0.58) 0 0.028em, transparent 0.064em),
-		radial-gradient(circle at 43% 58%, rgba(255, 94, 10, 0.52) 0 0.03em, transparent 0.072em),
-		radial-gradient(circle at 58% 42%, rgba(255, 164, 28, 0.42) 0 0.024em, transparent 0.062em),
-		radial-gradient(circle at 72% 66%, rgba(255, 74, 8, 0.34) 0 0.024em, transparent 0.058em),
-		radial-gradient(circle at 86% 36%, rgba(255, 182, 42, 0.28) 0 0.02em, transparent 0.052em),
-		linear-gradient(90deg, rgba(255, 242, 150, 0.16), rgba(255, 102, 12, 0.14) 38%, rgba(148, 14, 0, 0.08) 70%, transparent);
-	filter: blur(0.12px) saturate(1.45) drop-shadow(0 0 10px rgba(255, 116, 16, 0.74));
-	-webkit-mask-image: linear-gradient(90deg, transparent 0%, black 4%, black 58%, rgba(0, 0, 0, 0.38) 74%, transparent 94%);
-	mask-image: linear-gradient(90deg, transparent 0%, black 4%, black 58%, rgba(0, 0, 0, 0.38) 74%, transparent 94%);
-	mix-blend-mode: screen;
-	opacity: 0.9;
-	transform: translateY(-50%);
-	animation: flame-burner-embers 2.45s linear infinite;
-}
-
-.stage[data-glow='flame'] .field[data-glow] .next-word {
-	position: relative;
-	isolation: isolate;
-	color: rgba(255, 244, 198, 0.98);
-	filter: saturate(1.18);
-	text-shadow:
-		0 -0.018em 0 rgba(255, 255, 232, 0.52),
-		0 0 9px rgba(255, 244, 178, 0.72),
-		0 0 25px rgba(255, 122, 18, 0.54),
-		0 0 58px rgba(255, 36, 6, 0.34);
-}
-
-.stage[data-glow='flame'] .field[data-glow] .next-word::before {
-	position: absolute;
-	inset: -0.34em -1.06em -0.28em -0.14em;
-	z-index: -1;
-	content: '';
-	pointer-events: none;
-	border-radius: 999px 60% 52% 999px / 58% 48% 52% 46%;
-	clip-path: polygon(0% 34%, 12% 20%, 42% 22%, 78% 38%, 100% 50%, 78% 62%, 42% 78%, 12% 80%, 0% 66%);
-	background:
-		radial-gradient(ellipse 18% 72% at 0% 50%, rgba(255, 255, 240, 0.84), rgba(255, 226, 72, 0.56) 30%, transparent 66%),
-		linear-gradient(90deg, rgba(255, 238, 128, 0.42), rgba(255, 118, 14, 0.32) 42%, rgba(255, 48, 6, 0.14) 76%, transparent 96%),
-		repeating-linear-gradient(102deg, transparent 0 0.32em, rgba(255, 255, 214, 0.16) 0.36em 0.4em, transparent 0.44em 0.82em);
-	filter: blur(5px) saturate(1.55) drop-shadow(0 0 15px rgba(255, 82, 8, 0.62));
-	-webkit-mask-image: linear-gradient(90deg, black 0%, black 58%, rgba(0, 0, 0, 0.42) 80%, transparent 100%);
-	mask-image: linear-gradient(90deg, black 0%, black 58%, rgba(0, 0, 0, 0.42) 80%, transparent 100%);
-	mix-blend-mode: screen;
-	opacity: 0.84;
-	animation: flame-burner-core 1.28s ease-in-out infinite;
-}
-
-.stage[data-glow='flame'] .field[data-glow] .next-word .glyph {
-	color: rgba(255, 244, 198, 0.98);
-	animation: flame-burner-glyph 1.65s ease-in-out infinite;
-	animation-delay: calc(var(--i) * 46ms);
-}
-
-.stage[data-glow='flame'] .field[data-glow] .next-word .glyph:nth-child(2n) {
-	color: rgba(255, 212, 90, 0.98);
-}
-
-.stage[data-glow='flame'] .field[data-glow] .next-word .glyph:nth-child(3n) {
-	color: rgba(255, 154, 42, 0.95);
-}
-
-.stage[data-glow='flame'] .field[data-glow] .tail {
-	color: rgba(255, 148, 76, 0.27);
-	filter: blur(0.38px) saturate(1.08);
-	text-shadow:
-		0 0 14px rgba(255, 92, 12, 0.22),
-		0 0 34px rgba(86, 8, 0, 0.4);
-	-webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.8) 0, rgba(0, 0, 0, 0.42) 2.6em, transparent 8.4em);
-	mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.8) 0, rgba(0, 0, 0, 0.42) 2.6em, transparent 8.4em);
-}
-
-.stage[data-glow='flame'] .field[data-glow] .tail .glyph {
-	color: rgba(255, 148, 76, 0.27);
-	animation: flame-burner-tail 2.2s ease-in-out infinite;
-	animation-delay: calc(var(--i) * 38ms);
-}
-
-.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .prediction::before {
-	opacity: 0.52;
-	filter: blur(10px) saturate(1.42) contrast(1.02) drop-shadow(0 0 18px rgba(255, 116, 18, 0.24));
-}
-
-.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .prediction::after {
-	opacity: 0.5;
-	filter: blur(0.12px) saturate(1.25) drop-shadow(0 0 8px rgba(255, 122, 18, 0.38));
-}
-
-.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .next-word {
-	color: rgba(124, 38, 4, 0.94);
-	text-shadow:
-		0 -0.016em 0 rgba(255, 248, 220, 0.44),
-		0 0 7px rgba(255, 180, 54, 0.36),
-		0 0 20px rgba(255, 92, 12, 0.18);
-}
-
-.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .next-word .glyph {
-	color: rgba(124, 38, 4, 0.94);
-}
-
-.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .next-word .glyph:nth-child(2n) {
-	color: rgba(160, 58, 6, 0.92);
-}
-
-.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .next-word .glyph:nth-child(3n) {
-	color: rgba(196, 76, 8, 0.88);
-}
-
-.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .tail,
-.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .tail .glyph {
-	color: rgba(118, 66, 34, 0.24);
-	text-shadow: 0 0 18px rgba(255, 116, 28, 0.12);
-}
-
-.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow]::before,
-.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .prediction::before,
-.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .prediction::after,
-.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .next-word::before,
-.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .next-word .glyph,
-.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .tail .glyph {
-	animation: none;
-}
-
-/* Flame final: horizontal fire-gel jet from the caret, with ember particles. */
-.field[data-glow='flame'] {
-	--layer-clip: none;
-	--layer-radius: 999px;
-	--ready-border: rgba(255, 116, 22, 0.54);
-	--ready-shadow:
-		0 1px 0 rgba(255, 246, 218, 0.08) inset,
-		0 -40px 104px rgba(58, 5, 0, 0.7) inset,
-		0 36px 78px rgba(0, 0, 0, 0.5),
-		0 0 124px rgba(255, 64, 4, 0.28),
-		0 0 210px rgba(255, 136, 18, 0.12);
-	--field-wash:
-		radial-gradient(ellipse 24% 72% at 22% 50%, rgba(255, 232, 116, 0.12), transparent 70%),
-		radial-gradient(ellipse 54% 116% at 62% 54%, rgba(255, 74, 8, 0.15), transparent 76%),
-		linear-gradient(90deg, rgba(255, 54, 4, 0.1), rgba(255, 176, 40, 0.07) 48%, transparent 86%);
-	--flame-field-opacity: 0.86;
-	--flame-sheet-low: 0.72;
-	--flame-sheet-high: 0.98;
-	--flame-sheet-mid: 0.86;
-	--flame-sheet-pop: 0.94;
-	--flame-ember-start: 0.28;
-	--flame-ember-high: 0.92;
-	--flame-ember-mid: 0.58;
-	--flame-ember-end: 0.22;
-	--flame-word-low: 0.34;
-	--flame-word-high: 0.56;
-	--flame-word-mid: 0.42;
-	--caret-gradient: linear-gradient(180deg, rgb(255, 255, 236), rgb(255, 225, 74) 30%, rgb(255, 86, 8) 64%, rgb(142, 14, 0));
-	--caret-shadow:
-		0 0 9px rgba(255, 248, 214, 0.82),
-		0 0 30px rgba(255, 126, 18, 0.62),
-		0 0 62px rgba(255, 42, 6, 0.36);
-	--haze-width: 9.4em;
-	--haze-height: 2.9em;
-	--haze-bg:
-		radial-gradient(ellipse 18% 60% at 3% 50%, rgba(255, 255, 220, 0.6), rgba(255, 190, 42, 0.36) 52%, transparent 78%),
-		radial-gradient(ellipse 52% 76% at 36% 50%, rgba(255, 102, 12, 0.34), rgba(220, 18, 0, 0.16) 68%, transparent 88%),
-		linear-gradient(90deg, rgba(255, 206, 72, 0.24), rgba(255, 76, 6, 0.28) 38%, rgba(148, 10, 0, 0.14) 76%, transparent 96%);
-	--haze-filter: blur(25px) saturate(1.7) contrast(1.05);
-	--haze-opacity: 0.9;
-	--haze-motion: flame-gel-stretch 3.8s ease-in-out infinite;
-	--torch-haze-motion: flame-gel-stretch 2.9s ease-in-out infinite;
-	--body-width: 8.8em;
-	--body-height: 1.86em;
-	--body-bg:
-		radial-gradient(ellipse 56% 58% at 0% 50%, rgba(255, 248, 178, 0.58), rgba(255, 142, 24, 0.5) 36%, rgba(255, 54, 6, 0.2) 72%, transparent),
-		repeating-linear-gradient(103deg, rgba(255, 255, 210, 0.15) 0 0.07em, transparent 0.08em 0.27em);
-	--body-filter: blur(14px) saturate(1.6) contrast(1.04);
-	--body-opacity: 0.86;
-	--core-width: 4.6em;
-	--core-height: 1.08em;
-	--core-bg: linear-gradient(90deg, rgba(255, 252, 206, 0.78), rgba(255, 184, 40, 0.62) 34%, rgba(255, 74, 7, 0.34) 74%, transparent);
-	--core-filter: blur(6px) saturate(1.32);
-	--core-opacity: 0.82;
-	--core-motion: flame-gel-shine 2.05s ease-in-out infinite;
-	--torch-core-motion: flame-gel-shine 1.58s ease-in-out infinite;
-	--flow-width: 10em;
-	--flow-height: 2.14em;
-	--flow-bg:
-		linear-gradient(90deg, transparent, rgba(255, 238, 150, 0.24) 12%, rgba(255, 88, 7, 0.32) 40%, rgba(168, 12, 0, 0.16) 72%, transparent 96%),
-		repeating-linear-gradient(105deg, transparent 0 0.4em, rgba(255, 244, 160, 0.1) 0.46em 0.51em, transparent 0.57em 0.94em);
-	--flow-filter: blur(17px) saturate(1.62);
-	--flow-low: 0.1;
-	--flow-high: 0.68;
-	--flow-motion: flame-gel-stretch 3.25s ease-in-out infinite;
-	--spark-width: 9.6em;
-	--spark-height: 2.6em;
-	--spark-bg:
-		radial-gradient(circle at 8% 50%, rgba(255, 255, 226, 0.9), transparent 3.2%),
-		radial-gradient(circle at 18% 30%, rgba(255, 224, 64, 0.78), transparent 4%),
-		radial-gradient(circle at 32% 68%, rgba(255, 116, 12, 0.66), transparent 4%),
-		radial-gradient(circle at 49% 38%, rgba(255, 182, 34, 0.52), transparent 3.6%),
-		radial-gradient(circle at 66% 62%, rgba(255, 66, 6, 0.42), transparent 3.4%),
-		radial-gradient(circle at 83% 44%, rgba(255, 164, 30, 0.3), transparent 3.1%);
-	--spark-filter: blur(0.45px) saturate(1.46) drop-shadow(0 0 14px rgba(255, 92, 8, 0.72));
-	--spark-low: 0.06;
-	--spark-high: 0.72;
-	--spark-motion: flame-gel-embers 2.7s ease-in-out infinite;
-	--smoke-width: 9.8em;
-	--smoke-height: 2.6em;
-	--smoke-bg:
-		radial-gradient(ellipse 44% 62% at 22% 50%, rgba(255, 100, 18, 0.14), transparent 72%),
-		radial-gradient(ellipse 54% 72% at 68% 58%, rgba(112, 8, 0, 0.16), transparent 80%);
-	--smoke-filter: blur(24px) saturate(1.24);
-	--smoke-opacity: 0.22;
-	--aux-width: 9.4em;
-	--aux-height: 2.6em;
-	--aux-bg:
-		linear-gradient(90deg, transparent, rgba(255, 250, 202, 0.44) 8%, rgba(255, 128, 18, 0.28) 18%, transparent 30%),
-		radial-gradient(ellipse 12% 40% at 16% 50%, rgba(255, 242, 178, 0.66), rgba(255, 142, 24, 0.36) 54%, transparent 78%),
-		radial-gradient(ellipse 18% 58% at 48% 50%, rgba(255, 66, 5, 0.4), transparent 74%),
-		radial-gradient(ellipse 22% 62% at 78% 50%, rgba(150, 12, 0, 0.24), transparent 76%);
-	--aux-filter: blur(4px) saturate(1.62) drop-shadow(0 0 18px rgba(255, 72, 8, 0.6));
-	--aux-opacity: 0.86;
-	--aux-motion: flame-gel-pull 3.95s ease-in-out infinite;
-	--next-color: rgba(255, 242, 180, 0.98);
-	--next-shadow:
-		0 1px 2px rgba(72, 8, 0, 0.58),
-		0 0 8px rgba(255, 224, 122, 0.45),
-		0 0 24px rgba(255, 86, 8, 0.3);
-	--tail-color: rgba(255, 166, 88, 0.35);
-}
-
-.field[data-theme='light'][data-glow='flame'] {
-	--ready-border: rgba(206, 74, 10, 0.34);
-	--flame-field-opacity: 0.42;
-	--flame-sheet-low: 0.22;
-	--flame-sheet-high: 0.42;
-	--flame-sheet-mid: 0.3;
-	--flame-sheet-pop: 0.36;
-	--flame-ember-start: 0.1;
-	--flame-ember-high: 0.44;
-	--flame-ember-mid: 0.24;
-	--flame-ember-end: 0.08;
-	--flame-word-low: 0.1;
-	--flame-word-high: 0.22;
-	--flame-word-mid: 0.14;
-	--haze-opacity: 0.42;
-	--body-opacity: 0.54;
-	--core-opacity: 0.68;
-	--flow-low: 0.05;
-	--flow-high: 0.34;
-	--spark-high: 0.48;
-	--smoke-opacity: 0.08;
-	--aux-opacity: 0.38;
-	--next-color: rgba(126, 38, 4, 0.9);
-	--next-shadow:
-		0 0 8px rgba(255, 154, 36, 0.26),
-		0 0 22px rgba(220, 54, 8, 0.1);
-	--tail-color: rgba(118, 68, 38, 0.24);
-}
-
-.stage[data-glow='flame'] .field[data-glow] {
-	background:
-		radial-gradient(ellipse 74% 145% at 80% 52%, rgba(118, 14, 0, 0.2), transparent 60%),
-		linear-gradient(180deg, rgba(255, 255, 255, 0.034), rgba(255, 255, 255, 0) 42%),
-		linear-gradient(90deg, rgba(18, 10, 8, 0.995), rgba(31, 16, 13, 0.99) 48%, rgba(52, 12, 6, 0.985));
-}
-
-.stage[data-theme='light'][data-glow='flame'] .field[data-glow] {
-	background:
-		radial-gradient(ellipse 82% 150% at 82% 52%, rgba(255, 150, 40, 0.14), transparent 60%),
-		linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(255, 252, 246, 0.7) 46%, rgba(255, 247, 236, 0.84)),
-		linear-gradient(90deg, rgba(255, 255, 253, 0.98), rgba(255, 249, 240, 0.96));
-}
-
-.stage[data-glow='flame'] .field[data-glow] .caret-origin-glow[data-mode='ready'],
-.stage[data-glow='flame'] .field[data-glow] .prediction > .beam {
-	display: none;
-}
-
-.stage[data-glow='flame'] .field[data-glow]::before {
-	background: var(--field-wash);
-	background-size:
-		118% 100%,
-		112% 100%,
-		100% 100%;
-	opacity: 0;
-	mix-blend-mode: screen;
-	animation: none !important;
-}
-
-.stage[data-glow='flame'] .field[data-state='ready'][data-glow]::before,
-.stage[data-glow='flame'] .field[data-state='waiting'][data-loading-glow='field'][data-glow]::before {
-	opacity: var(--flame-field-opacity);
-	animation: flame-field-breathe-final 5.2s ease-in-out infinite !important;
-}
-
-.stage[data-glow='flame'] .field[data-glow] .prediction::before {
-	position: absolute;
-	left: -0.08em;
-	top: 50%;
-	z-index: -4;
-	display: block;
-	width: min(12.4em, calc(100% + 7em));
-	height: 2.42em;
-	content: '';
-	pointer-events: none;
-	border-radius: 999px 68% 62% 999px / 62% 50% 52% 48%;
-	clip-path: polygon(
-		0% 42%,
-		7% 31%,
-		20% 24%,
-		36% 30%,
-		52% 20%,
-		70% 32%,
-		100% 43%,
-		100% 59%,
-		74% 70%,
-		56% 82%,
-		38% 72%,
-		20% 80%,
-		7% 68%,
-		0% 58%
-	);
-	background:
-		radial-gradient(ellipse 13% 62% at 0% 50%, rgba(255, 255, 224, 0.92), rgba(255, 224, 80, 0.66) 32%, rgba(255, 96, 9, 0.34) 60%, transparent 82%),
-		radial-gradient(ellipse 34% 68% at 18% 49%, rgba(255, 210, 58, 0.42), rgba(255, 90, 7, 0.3) 42%, rgba(168, 12, 0, 0.12) 76%, transparent 94%),
-		radial-gradient(ellipse 58% 48% at 52% 50%, rgba(255, 72, 6, 0.22), rgba(196, 18, 0, 0.11) 58%, transparent 94%),
-		repeating-linear-gradient(104deg, transparent 0 0.34em, rgba(255, 246, 166, 0.15) 0.42em 0.49em, transparent 0.57em 0.96em),
-		linear-gradient(90deg, rgba(255, 244, 164, 0.11), rgba(255, 98, 8, 0.14) 36%, rgba(136, 9, 0, 0.06) 74%, transparent 98%);
-	background-size:
-		100% 100%,
-		112% 100%,
-		130% 100%,
-		2.4em 100%,
-		100% 100%;
-	filter: blur(15px) saturate(1.82) contrast(1.06) drop-shadow(0 0 24px rgba(255, 68, 6, 0.6));
-	-webkit-mask-image: radial-gradient(ellipse 102% 50% at 34% 50%, black 0 42%, rgba(0, 0, 0, 0.42) 60%, transparent 82%);
-	mask-image: radial-gradient(ellipse 102% 50% at 34% 50%, black 0 42%, rgba(0, 0, 0, 0.42) 60%, transparent 82%);
-	opacity: 0.78;
-	mix-blend-mode: screen;
-	transform: translateY(-50%);
-	transform-origin: left center;
-	animation: flame-sheet-flow-final 1.72s ease-in-out infinite;
-}
-
-.stage[data-glow='flame'] .field[data-glow] .prediction::after {
-	position: absolute;
-	left: -0.12em;
-	top: 50%;
-	z-index: 2;
-	width: min(10.6em, calc(100% + 5.8em));
-	height: 3.15em;
-	content: '';
-	pointer-events: none;
-	background:
-		radial-gradient(circle at 4% 50%, rgba(255, 255, 230, 0.98) 0 0.058em, transparent 0.1em),
-		radial-gradient(circle at 11% 24%, rgba(255, 226, 72, 0.9) 0 0.05em, transparent 0.092em),
-		radial-gradient(circle at 18% 72%, rgba(255, 124, 14, 0.76) 0 0.048em, transparent 0.09em),
-		radial-gradient(circle at 28% 34%, rgba(255, 194, 38, 0.68) 0 0.044em, transparent 0.084em),
-		radial-gradient(circle at 38% 68%, rgba(255, 74, 7, 0.58) 0 0.042em, transparent 0.08em),
-		radial-gradient(circle at 50% 26%, rgba(255, 174, 30, 0.5) 0 0.038em, transparent 0.078em),
-		radial-gradient(circle at 62% 72%, rgba(255, 58, 6, 0.42) 0 0.036em, transparent 0.072em),
-		radial-gradient(circle at 74% 36%, rgba(255, 164, 30, 0.34) 0 0.032em, transparent 0.068em),
-		radial-gradient(circle at 88% 62%, rgba(255, 86, 8, 0.26) 0 0.03em, transparent 0.062em),
-		radial-gradient(circle at 95% 28%, rgba(255, 196, 54, 0.22) 0 0.026em, transparent 0.058em),
-		linear-gradient(90deg, rgba(255, 236, 120, 0.05), rgba(255, 84, 8, 0.04) 42%, transparent 84%);
-	filter: blur(0.12px) saturate(1.58) drop-shadow(0 0 11px rgba(255, 108, 10, 0.82));
-	-webkit-mask-image: radial-gradient(ellipse 104% 86% at 38% 50%, transparent 0 2%, black 7% 70%, rgba(0, 0, 0, 0.42) 84%, transparent 100%);
-	mask-image: radial-gradient(ellipse 104% 86% at 38% 50%, transparent 0 2%, black 7% 70%, rgba(0, 0, 0, 0.42) 84%, transparent 100%);
-	mix-blend-mode: screen;
-	opacity: 0.98;
-	transform: translateY(-50%);
-	animation: flame-ember-stream-final 2.24s linear infinite;
-}
-
-.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .prediction::after {
-	filter: blur(0.18px) saturate(1.35) drop-shadow(0 0 10px rgba(255, 106, 12, 0.48));
-	opacity: 0.72;
-}
-
-.stage[data-glow='flame'] .field[data-glow] .next-word::before {
-	position: absolute;
-	inset: -0.28em -0.9em -0.24em -0.08em;
-	z-index: -1;
-	display: block;
-	content: '';
-	pointer-events: none;
-	border-radius: 999px 64% 58% 999px / 60% 50% 52% 46%;
-	clip-path: polygon(
-		0% 39%,
-		10% 28%,
-		28% 24%,
-		44% 32%,
-		60% 23%,
-		82% 36%,
-		100% 45%,
-		100% 58%,
-		82% 68%,
-		62% 77%,
-		44% 70%,
-		26% 78%,
-		10% 66%,
-		0% 59%
-	);
-	background:
-		radial-gradient(ellipse 18% 68% at 0% 50%, rgba(255, 255, 224, 0.82), rgba(255, 224, 76, 0.5) 34%, transparent 70%),
-		radial-gradient(ellipse 68% 54% at 38% 50%, rgba(255, 116, 14, 0.16), rgba(255, 50, 5, 0.06) 66%, transparent 94%),
-		linear-gradient(90deg, rgba(255, 236, 124, 0.2), rgba(255, 112, 12, 0.12) 40%, rgba(255, 42, 4, 0.05) 78%, transparent 98%),
-		repeating-linear-gradient(104deg, transparent 0 0.3em, rgba(255, 255, 212, 0.12) 0.36em 0.41em, transparent 0.48em 0.82em);
-	filter: blur(9px) saturate(1.62) contrast(1.04) drop-shadow(0 0 15px rgba(255, 78, 6, 0.48));
-	-webkit-mask-image: radial-gradient(ellipse 92% 46% at 36% 50%, black 0 42%, rgba(0, 0, 0, 0.36) 60%, transparent 80%);
-	mask-image: radial-gradient(ellipse 92% 46% at 36% 50%, black 0 42%, rgba(0, 0, 0, 0.36) 60%, transparent 80%);
-	opacity: 0.42;
-	mix-blend-mode: screen;
-	animation: flame-word-gel-final 1.38s ease-in-out infinite;
-}
-
-.stage[data-glow='flame'] .field[data-glow] .next-word,
-.stage[data-glow='flame'] .field[data-glow] .next-word .glyph {
-	position: relative;
-	z-index: 3;
-	color: var(--next-color);
-	text-shadow: var(--next-shadow);
-}
-
-.stage[data-glow='flame'] .field[data-glow] .next-word .glyph {
-	animation: flame-glyph-heat-final 1.5s ease-in-out infinite;
-	animation-delay: calc(var(--i) * 42ms);
-}
-
-.stage[data-glow='flame'] .field[data-glow] .next-word .glyph:nth-child(2n) {
-	color: rgba(255, 214, 94, 0.98);
-}
-
-.stage[data-glow='flame'] .field[data-glow] .next-word .glyph:nth-child(3n) {
-	color: rgba(255, 156, 42, 0.96);
-}
-
-.stage[data-glow='flame'] .field[data-glow] .tail,
-.stage[data-glow='flame'] .field[data-glow] .tail .glyph {
-	color: var(--tail-color);
-	text-shadow:
-		0 0 12px rgba(255, 88, 8, 0.18),
-		0 0 28px rgba(120, 10, 0, 0.28);
-	-webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.82) 0, rgba(0, 0, 0, 0.44) 2.8em, transparent 8.8em);
-	mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.82) 0, rgba(0, 0, 0, 0.44) 2.8em, transparent 8.8em);
-}
-
-.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .prediction::before {
-	opacity: 0.42;
-	filter: blur(13px) saturate(1.38) contrast(1.02) drop-shadow(0 0 18px rgba(255, 102, 10, 0.22));
-}
-
-.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .prediction::after {
-	opacity: 0.5;
-}
-
-.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .next-word::before {
-	opacity: 0.28;
-	filter: blur(7px) saturate(1.28) drop-shadow(0 0 12px rgba(255, 98, 8, 0.18));
-}
-
-.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .next-word .glyph:nth-child(2n) {
-	color: rgba(156, 54, 5, 0.9);
-}
-
-.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .next-word .glyph:nth-child(3n) {
-	color: rgba(188, 70, 7, 0.88);
-}
-
-.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow]::before,
-.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .prediction::before,
-.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .prediction::after,
-.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .next-word::before,
-.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
-	animation: none;
-}
-
-/* Flame final pass: bubble-gum geometry, fire materials, ember particles. */
-.field[data-glow='flame'] {
-	--ready-border: rgba(255, 139, 30, 0.56);
-	--ready-shadow:
-		0 1px 0 rgba(255, 249, 218, 0.1) inset,
-		0 -40px 106px rgba(52, 5, 0, 0.66) inset,
-		0 36px 78px rgba(0, 0, 0, 0.5),
-		0 0 142px rgba(255, 72, 5, 0.32),
-		0 0 210px rgba(255, 178, 38, 0.14);
-	--field-wash:
-		radial-gradient(ellipse 34% 88% at 22% 50%, rgba(255, 203, 58, 0.17), transparent 72%),
-		radial-gradient(ellipse 54% 116% at 62% 54%, rgba(255, 54, 5, 0.18), transparent 78%),
-		linear-gradient(90deg, rgba(255, 87, 8, 0.13), rgba(255, 198, 50, 0.08) 50%, transparent 86%);
-	--flame-field-opacity: 0.74;
-	--haze-opacity: 0.95;
-	--body-opacity: 0.9;
-	--core-opacity: 0.9;
-	--flow-low: 0.14;
-	--flow-high: 0.7;
-	--spark-low: 0.08;
-	--spark-high: 0.82;
-	--smoke-opacity: 0.2;
-	--aux-opacity: 0.82;
-	--caret-gradient: linear-gradient(180deg, rgb(255, 255, 230), rgb(255, 225, 68) 30%, rgb(255, 104, 9) 66%, rgb(155, 18, 0));
-	--caret-shadow:
-		0 0 10px rgba(255, 249, 214, 0.86),
-		0 0 32px rgba(255, 139, 18, 0.66),
-		0 0 66px rgba(255, 44, 5, 0.38);
-	--haze-width: 10.8em;
-	--haze-height: 2.85em;
-	--haze-bg:
-		radial-gradient(ellipse 24% 58% at 8% 50%, rgba(255, 255, 224, 0.5), rgba(255, 201, 58, 0.28) 54%, transparent 78%),
-		linear-gradient(90deg, rgba(255, 212, 58, 0.28), rgba(255, 105, 11, 0.3) 38%, rgba(202, 23, 0, 0.18) 72%, transparent 94%);
-	--haze-filter: blur(27px) saturate(1.58) contrast(1.04);
-	--haze-motion: gum-stretch 4s ease-in-out infinite;
-	--torch-haze-motion: gum-stretch 3s ease-in-out infinite;
-	--body-width: 8.8em;
-	--body-height: 1.86em;
-	--body-bg:
-		radial-gradient(ellipse 64% 58% at 0% 50%, rgba(255, 248, 178, 0.62), rgba(255, 139, 18, 0.46) 36%, rgba(255, 46, 4, 0.2) 72%, transparent),
-		repeating-linear-gradient(105deg, rgba(255, 250, 190, 0.16) 0 4px, transparent 4px 14px);
-	--body-filter: blur(15px) saturate(1.56);
-	--core-width: 4.55em;
-	--core-height: 1.08em;
-	--core-bg: linear-gradient(90deg, rgba(255, 255, 224, 0.96), rgba(255, 215, 76, 0.72) 34%, rgba(255, 91, 8, 0.36) 70%, transparent);
-	--core-filter: blur(6px) saturate(1.32);
-	--core-motion: gum-shine 2.2s ease-in-out infinite;
-	--torch-core-motion: gum-shine 1.7s ease-in-out infinite;
-	--flow-width: 10.6em;
-	--flow-height: 2.12em;
-	--flow-bg: linear-gradient(90deg, transparent, rgba(255, 245, 172, 0.25) 12%, rgba(255, 112, 10, 0.32) 42%, rgba(199, 23, 0, 0.18) 72%, transparent 94%);
-	--flow-filter: blur(18px) saturate(1.5);
-	--flow-motion: gum-stretch 3.4s ease-in-out infinite;
-	--spark-width: 10.4em;
-	--spark-height: 2.85em;
-	--spark-bg:
-		radial-gradient(circle at 9% 52%, rgba(255, 255, 226, 0.86), transparent 3.6%),
-		radial-gradient(circle at 23% 28%, rgba(255, 220, 58, 0.74), transparent 4.6%),
-		radial-gradient(circle at 37% 70%, rgba(255, 111, 12, 0.66), transparent 4.8%),
-		radial-gradient(circle at 54% 35%, rgba(255, 181, 34, 0.56), transparent 4.2%),
-		radial-gradient(circle at 74% 64%, rgba(255, 62, 6, 0.44), transparent 4%),
-		radial-gradient(circle at 90% 43%, rgba(255, 171, 34, 0.34), transparent 3.8%);
-	--spark-filter: blur(0.62px) saturate(1.48) drop-shadow(0 0 14px rgba(255, 102, 8, 0.72));
-	--spark-motion: gum-bubbles 2.8s ease-in-out infinite;
-	--smoke-bg:
-		radial-gradient(ellipse 40% 62% at 22% 50%, rgba(255, 110, 12, 0.12), transparent 72%),
-		radial-gradient(ellipse 52% 72% at 68% 58%, rgba(122, 10, 0, 0.14), transparent 80%);
-	--aux-width: 9.8em;
-	--aux-height: 2.68em;
-	--aux-bg:
-		linear-gradient(90deg, transparent, rgba(255, 252, 204, 0.44) 8%, rgba(255, 134, 18, 0.3) 18%, transparent 28%),
-		radial-gradient(ellipse 12% 40% at 18% 50%, rgba(255, 242, 174, 0.66), rgba(255, 142, 24, 0.34) 54%, transparent 78%),
-		radial-gradient(ellipse 18% 56% at 50% 50%, rgba(255, 70, 6, 0.42), transparent 74%),
-		radial-gradient(ellipse 22% 62% at 76% 50%, rgba(180, 16, 0, 0.24), transparent 76%);
-	--aux-filter: blur(4px) saturate(1.52) drop-shadow(0 0 18px rgba(255, 78, 8, 0.58));
-	--aux-motion: gum-pull 4.2s ease-in-out infinite;
-	--next-color: rgba(255, 244, 188, 0.98);
-	--next-shadow:
-		0 1px 2px rgba(72, 8, 0, 0.58),
-		0 0 10px rgba(255, 225, 116, 0.48),
-		0 0 30px rgba(255, 84, 8, 0.32);
-	--tail-color: rgba(255, 169, 88, 0.34);
-}
-
-.field[data-theme='light'][data-glow='flame'] {
-	--ready-border: rgba(205, 74, 10, 0.36);
-	--flame-field-opacity: 0.38;
-	--haze-opacity: 0.46;
-	--body-opacity: 0.52;
-	--core-opacity: 0.68;
-	--flow-low: 0.04;
-	--flow-high: 0.3;
-	--spark-low: 0.04;
-	--spark-high: 0.38;
-	--smoke-opacity: 0.07;
-	--aux-opacity: 0.34;
-	--next-color: rgba(126, 38, 4, 0.9);
-	--next-shadow:
-		0 0 8px rgba(255, 154, 36, 0.28),
-		0 0 22px rgba(220, 54, 8, 0.11);
-	--tail-color: rgba(118, 68, 38, 0.24);
-}
-
-.stage[data-glow='flame'] .field[data-glow] .prediction::before {
-	left: -0.12em;
-	top: 50%;
-	z-index: -4;
-	width: min(13.8em, calc(100% + 7.4em));
-	height: 2.7em;
-	border-radius: 999px 76% 70% 999px / 64% 52% 54% 48%;
-	clip-path: polygon(
-		0% 38%,
-		7% 31%,
-		20% 26%,
-		36% 30%,
-		52% 24%,
-		70% 32%,
-		100% 42%,
-		100% 61%,
-		72% 70%,
-		54% 76%,
-		38% 71%,
-		20% 78%,
-		7% 67%,
-		0% 58%
-	);
-	background:
-		radial-gradient(ellipse 16% 64% at 0% 50%, rgba(255, 255, 226, 0.9), rgba(255, 219, 66, 0.62) 35%, rgba(255, 106, 8, 0.34) 64%, transparent 82%),
-		radial-gradient(ellipse 45% 68% at 24% 49%, rgba(255, 192, 44, 0.4), rgba(255, 95, 8, 0.28) 48%, rgba(205, 24, 0, 0.12) 78%, transparent 95%),
-		radial-gradient(ellipse 72% 56% at 58% 50%, rgba(255, 72, 6, 0.24), rgba(186, 18, 0, 0.1) 60%, transparent 94%),
-		repeating-linear-gradient(105deg, transparent 0 0.36em, rgba(255, 248, 176, 0.14) 0.44em 0.52em, transparent 0.6em 0.98em),
-		linear-gradient(90deg, rgba(255, 240, 144, 0.14), rgba(255, 104, 8, 0.16) 38%, rgba(154, 12, 0, 0.08) 76%, transparent 98%);
-	filter: blur(17px) saturate(1.78) contrast(1.06) drop-shadow(0 0 26px rgba(255, 72, 6, 0.58));
-	-webkit-mask-image: radial-gradient(ellipse 104% 52% at 34% 50%, black 0 48%, rgba(0, 0, 0, 0.45) 64%, transparent 84%);
-	mask-image: radial-gradient(ellipse 104% 52% at 34% 50%, black 0 48%, rgba(0, 0, 0, 0.45) 64%, transparent 84%);
-	transform: translateY(-50%);
-	animation: gum-stretch 3.8s ease-in-out infinite;
-}
-
-.stage[data-glow='flame'] .field[data-glow] .prediction::after {
-	left: -0.1em;
-	top: 50%;
-	z-index: 2;
-	width: min(12.4em, calc(100% + 6.4em));
-	height: 3.1em;
-	background:
-		radial-gradient(circle at 5% 52%, rgba(255, 255, 230, 0.95) 0 0.055em, transparent 0.1em),
-		radial-gradient(circle at 13% 24%, rgba(255, 226, 68, 0.86) 0 0.052em, transparent 0.094em),
-		radial-gradient(circle at 22% 72%, rgba(255, 123, 13, 0.72) 0 0.05em, transparent 0.092em),
-		radial-gradient(circle at 34% 35%, rgba(255, 193, 38, 0.66) 0 0.047em, transparent 0.088em),
-		radial-gradient(circle at 47% 67%, rgba(255, 68, 6, 0.56) 0 0.043em, transparent 0.082em),
-		radial-gradient(circle at 61% 26%, rgba(255, 176, 32, 0.5) 0 0.04em, transparent 0.078em),
-		radial-gradient(circle at 76% 70%, rgba(255, 58, 6, 0.42) 0 0.038em, transparent 0.074em),
-		radial-gradient(circle at 91% 38%, rgba(255, 164, 30, 0.34) 0 0.034em, transparent 0.068em),
-		linear-gradient(90deg, rgba(255, 236, 120, 0.05), rgba(255, 84, 8, 0.04) 42%, transparent 84%);
-	filter: blur(0.12px) saturate(1.62) drop-shadow(0 0 11px rgba(255, 108, 10, 0.82));
-	-webkit-mask-image: radial-gradient(ellipse 108% 88% at 38% 50%, transparent 0 2%, black 7% 74%, rgba(0, 0, 0, 0.42) 86%, transparent 100%);
-	mask-image: radial-gradient(ellipse 108% 88% at 38% 50%, transparent 0 2%, black 7% 74%, rgba(0, 0, 0, 0.42) 86%, transparent 100%);
-	transform: translateY(-50%);
-	animation: gum-bubbles 2.6s ease-in-out infinite;
-}
-
-.stage[data-glow='flame'] .field[data-glow] .next-word::before {
-	inset: -0.32em -1em -0.28em -0.08em;
-	border-radius: 999px 72% 62% 999px / 62% 52% 54% 48%;
-	clip-path: polygon(
-		0% 38%,
-		10% 29%,
-		28% 25%,
-		44% 32%,
-		60% 24%,
-		82% 36%,
-		100% 45%,
-		100% 59%,
-		82% 68%,
-		62% 76%,
-		44% 70%,
-		26% 78%,
-		10% 66%,
-		0% 59%
-	);
-	background:
-		radial-gradient(ellipse 20% 68% at 0% 50%, rgba(255, 255, 224, 0.82), rgba(255, 221, 76, 0.48) 35%, transparent 72%),
-		radial-gradient(ellipse 70% 56% at 38% 50%, rgba(255, 120, 14, 0.18), rgba(255, 48, 5, 0.07) 66%, transparent 94%),
-		linear-gradient(90deg, rgba(255, 236, 124, 0.22), rgba(255, 116, 12, 0.13) 42%, rgba(255, 44, 4, 0.05) 80%, transparent 98%),
-		repeating-linear-gradient(105deg, transparent 0 0.32em, rgba(255, 255, 212, 0.13) 0.38em 0.44em, transparent 0.52em 0.84em);
-	filter: blur(9px) saturate(1.58) contrast(1.04) drop-shadow(0 0 15px rgba(255, 78, 6, 0.46));
-	opacity: 0.42;
-	animation: flame-word-gel-final 1.6s ease-in-out infinite;
-}
-
-.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .prediction::before {
-	opacity: 0.44;
-	filter: blur(14px) saturate(1.34) contrast(1.02) drop-shadow(0 0 18px rgba(255, 102, 10, 0.22));
-}
-
-.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .prediction::after {
-	opacity: 0.58;
-	filter: blur(0.18px) saturate(1.28) drop-shadow(0 0 9px rgba(255, 106, 12, 0.42));
-}
-
-.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .next-word::before {
-	opacity: 0.28;
-	filter: blur(7px) saturate(1.24) drop-shadow(0 0 11px rgba(255, 98, 8, 0.16));
 }
 
 /* Matrix final typography: dense binary fabric stays visible while predicted text remains readable. */
@@ -9683,76 +8362,6 @@
 	mix-blend-mode: normal;
 }
 
-@keyframes hellfire {
-	0%,
-	100% {
-		opacity: calc(var(--haze-opacity) * 0.66);
-		background-position: 0% 50%;
-		transform: translateY(-52%) translateX(-0.16em) scaleX(0.86) scaleY(1.02);
-	}
-	38% {
-		opacity: var(--haze-opacity);
-		background-position: 100% 50%;
-		transform: translateY(-47%) translateX(0.28em) scaleX(1.08) scaleY(0.92);
-	}
-	68% {
-		opacity: calc(var(--haze-opacity) * 0.82);
-		background-position: 58% 50%;
-		transform: translateY(-55%) translateX(0.08em) scaleX(0.96) scaleY(1.14);
-	}
-}
-
-@keyframes flame-core {
-	0%,
-	100% {
-		opacity: calc(var(--core-opacity) * 0.7);
-		transform: translateY(-51%) translateX(-0.04em) scaleX(0.82) scaleY(1.04);
-	}
-	46% {
-		opacity: var(--core-opacity);
-		transform: translateY(-48%) translateX(0.1em) scaleX(1.08) scaleY(0.92);
-	}
-	70% {
-		opacity: calc(var(--core-opacity) * 0.82);
-		transform: translateY(-53%) translateX(0.18em) scaleX(0.94) scaleY(1.12);
-	}
-}
-
-@keyframes flame-lash {
-	0%,
-	100% {
-		opacity: var(--flow-low);
-		background-position: 0% 50%;
-		transform: translateY(-52%) translateX(-0.2em) scaleX(0.82) scaleY(1.02);
-	}
-	42% {
-		opacity: var(--flow-high);
-		background-position: 100% 50%;
-		transform: translateY(-46%) translateX(0.5em) scaleX(1.14) scaleY(0.92);
-	}
-	72% {
-		opacity: calc((var(--flow-low) + var(--flow-high)) / 2);
-		background-position: 58% 50%;
-		transform: translateY(-55%) translateX(0.12em) scaleX(0.96) scaleY(1.12);
-	}
-}
-
-@keyframes flame-tongues {
-	0%,
-	100% {
-		opacity: calc(var(--aux-opacity) * 0.62);
-		transform: translateY(-53%) translateX(-0.12em) scaleX(0.82) scaleY(0.88) skewX(-5deg);
-	}
-	38% {
-		opacity: var(--aux-opacity);
-		transform: translateY(-66%) translateX(0.24em) scaleX(1.08) scaleY(1.14) skewX(7deg);
-	}
-	68% {
-		opacity: calc(var(--aux-opacity) * 0.76);
-		transform: translateY(-47%) translateX(0.44em) scaleX(0.94) scaleY(1.02) skewX(-4deg);
-	}
-}
-
 @keyframes matrix-scan {
 	0% {
 		opacity: calc(var(--haze-opacity) * 0.52);
@@ -9948,57 +8557,6 @@
 	62% {
 		opacity: calc(var(--spark-high) * 0.5);
 		transform: translateY(-38%) translateX(0.82em) scaleX(0.88) skewX(-3deg);
-	}
-}
-
-@keyframes flame-billow {
-	0%,
-	100% {
-		opacity: calc(var(--haze-opacity) * 0.72);
-		background-position: 0% 50%;
-		transform: translateY(-54%) translateX(-0.18em) scaleX(0.86) scaleY(1.04) skewX(-4deg);
-	}
-	36% {
-		opacity: var(--haze-opacity);
-		background-position: 100% 50%;
-		transform: translateY(-47%) translateX(0.28em) scaleX(1.1) scaleY(0.94) skewX(6deg);
-	}
-	64% {
-		opacity: calc(var(--haze-opacity) * 0.84);
-		background-position: 62% 50%;
-		transform: translateY(-57%) translateX(0.08em) scaleX(0.96) scaleY(1.16) skewX(-3deg);
-	}
-}
-
-@keyframes flame-heartbeat {
-	0%,
-	100% {
-		opacity: calc(var(--core-opacity) * 0.74);
-		transform: translateY(-51%) translateX(-0.04em) scaleX(0.82) scaleY(1.04);
-	}
-	42% {
-		opacity: var(--core-opacity);
-		transform: translateY(-48%) translateX(0.12em) scaleX(1.08) scaleY(0.92);
-	}
-	68% {
-		opacity: calc(var(--core-opacity) * 0.86);
-		transform: translateY(-54%) translateX(0.2em) scaleX(0.94) scaleY(1.14);
-	}
-}
-
-@keyframes flame-embers {
-	0%,
-	100% {
-		opacity: var(--spark-low);
-		transform: translateY(-46%) translateX(-0.1em) scaleX(0.78);
-	}
-	36% {
-		opacity: var(--spark-high);
-		transform: translateY(-70%) translateX(0.26em) scaleX(1.08);
-	}
-	62% {
-		opacity: calc(var(--spark-high) * 0.52);
-		transform: translateY(-35%) translateX(0.72em) scaleX(0.9);
 	}
 }
 
@@ -10444,76 +9002,6 @@
 	}
 }
 
-@keyframes flame-wild {
-	0%,
-	100% {
-		opacity: calc(var(--haze-opacity) * 0.72);
-		transform: translateY(-50%) translateX(-0.12em) scaleX(0.88) scaleY(1.08) skewX(-3deg);
-	}
-	34% {
-		opacity: var(--haze-opacity);
-		transform: translateY(-54%) translateX(0.16em) scaleX(1.05) scaleY(0.95) skewX(4deg);
-	}
-	66% {
-		opacity: calc(var(--haze-opacity) * 0.86);
-		transform: translateY(-47%) translateX(0.36em) scaleX(0.96) scaleY(1.12) skewX(-2deg);
-	}
-}
-
-@keyframes flame-wild-flow {
-	0%,
-	100% {
-		opacity: var(--flow-low);
-		background-position:
-			0% 50%,
-			0% 50%;
-		transform: translateY(-50%) translateX(-0.2em) scaleX(0.86) skewX(-4deg);
-	}
-	42% {
-		opacity: var(--flow-high);
-		background-position:
-			100% 50%,
-			50% 50%;
-		transform: translateY(-55%) translateX(0.36em) scaleX(1.12) skewX(5deg);
-	}
-	70% {
-		opacity: calc(var(--flow-high) * 0.62);
-		transform: translateY(-45%) translateX(0.6em) scaleX(0.92) skewX(-2deg);
-	}
-}
-
-@keyframes flame-embers-rise {
-	0%,
-	100% {
-		opacity: var(--spark-low);
-		transform: translateY(-42%) translateX(-0.08em) scale(0.84);
-	}
-	40% {
-		opacity: var(--spark-high);
-		transform: translateY(-70%) translateX(0.34em) scale(1.06);
-	}
-	74% {
-		opacity: calc(var(--spark-high) * 0.42);
-		transform: translateY(-82%) translateX(0.78em) scale(0.9);
-	}
-}
-
-@keyframes flame-tongue-dance {
-	0%,
-	100% {
-		opacity: calc(var(--aux-opacity) * 0.62);
-		transform: translateY(-50%) translateX(-0.16em) scaleX(0.86) scaleY(1.04) skewX(-3deg);
-	}
-	38% {
-		opacity: var(--aux-opacity);
-		transform: translateY(-58%) translateX(0.24em) scaleX(1.1) scaleY(0.96) skewX(5deg);
-	}
-	68% {
-		opacity: calc(var(--aux-opacity) * 0.78);
-		transform: translateY(-46%) translateX(0.48em) scaleX(0.94) scaleY(1.12) skewX(-2deg);
-	}
-}
-
 @keyframes matrix-scan-sweep {
 	0%,
 	100% {
@@ -10860,568 +9348,6 @@
 			54px -16px,
 			60% 50%;
 		transform: translateY(-72%) translateX(0.76em) scale(0.94);
-	}
-}
-
-@keyframes flame-plume-live {
-	0%,
-	100% {
-		opacity: calc(var(--haze-opacity) * 0.68);
-		transform: translateY(-50%) translateX(-0.1em) scaleX(0.84) scaleY(1.12) skewX(-4deg);
-	}
-	34% {
-		opacity: var(--haze-opacity);
-		transform: translateY(-56%) translateX(0.08em) scaleX(1.04) scaleY(0.92) skewX(5deg);
-	}
-	67% {
-		opacity: calc(var(--haze-opacity) * 0.84);
-		transform: translateY(-46%) translateX(0.26em) scaleX(0.92) scaleY(1.16) skewX(-2deg);
-	}
-}
-
-@keyframes flame-plume-flow-live {
-	0%,
-	100% {
-		opacity: var(--flow-low);
-		background-position:
-			0% 50%,
-			0% 50%;
-		transform: translateY(-48%) translateX(-0.18em) scaleX(0.82) skewX(-5deg);
-	}
-	44% {
-		opacity: var(--flow-high);
-		background-position:
-			100% 50%,
-			44% 50%;
-		transform: translateY(-57%) translateX(0.28em) scaleX(1.08) skewX(6deg);
-	}
-	72% {
-		opacity: calc(var(--flow-high) * 0.52);
-		transform: translateY(-43%) translateX(0.52em) scaleX(0.9) skewX(-3deg);
-	}
-}
-
-@keyframes flame-kernel-live {
-	0%,
-	100% {
-		opacity: calc(var(--core-opacity) * 0.74);
-		transform: translateY(-50%) translateX(-0.05em) scaleX(0.88) scaleY(1.04);
-	}
-	45% {
-		opacity: var(--core-opacity);
-		transform: translateY(-52%) translateX(0.08em) scaleX(1.06) scaleY(0.96);
-	}
-}
-
-@keyframes flame-ember-lift-live {
-	0%,
-	100% {
-		opacity: var(--spark-low);
-		transform: translateY(-40%) translateX(-0.08em) scale(0.82);
-	}
-	46% {
-		opacity: var(--spark-high);
-		transform: translateY(-76%) translateX(0.26em) scale(1.06);
-	}
-	76% {
-		opacity: calc(var(--spark-high) * 0.38);
-		transform: translateY(-90%) translateX(0.66em) scale(0.9);
-	}
-}
-
-@keyframes flame-tongue-live {
-	0%,
-	100% {
-		opacity: calc(var(--aux-opacity) * 0.62);
-		transform: translateY(-50%) translateX(-0.1em) scaleX(0.88) scaleY(1.02) skewX(-3deg);
-	}
-	38% {
-		opacity: var(--aux-opacity);
-		transform: translateY(-62%) translateX(0.14em) scaleX(1.04) scaleY(1.1) skewX(5deg);
-	}
-	68% {
-		opacity: calc(var(--aux-opacity) * 0.78);
-		transform: translateY(-46%) translateX(0.32em) scaleX(0.94) scaleY(1.04) skewX(-2deg);
-	}
-}
-
-@keyframes flame-field-heat {
-	0%,
-	100% {
-		opacity: 0.82;
-		background-position: 0% 50%;
-	}
-	44% {
-		opacity: 1;
-		background-position: 64% 50%;
-	}
-	72% {
-		opacity: 0.9;
-		background-position: 100% 50%;
-	}
-}
-
-@keyframes flame-new-tongues {
-	0%,
-	100% {
-		opacity: 0.78;
-		transform: translate3d(-0.08em, 0.1em, 0) scaleX(0.94) scaleY(0.98) skewX(-4deg);
-	}
-	30% {
-		opacity: 1;
-		transform: translate3d(0.04em, -0.1em, 0) scaleX(1.05) scaleY(1.08) skewX(5deg);
-	}
-	58% {
-		opacity: 0.88;
-		transform: translate3d(0.14em, -0.02em, 0) scaleX(0.98) scaleY(1.16) skewX(-2deg);
-	}
-	78% {
-		opacity: 0.96;
-		transform: translate3d(0.02em, -0.14em, 0) scaleX(1.02) scaleY(1.04) skewX(3deg);
-	}
-}
-
-@keyframes flame-new-embers {
-	0%,
-	100% {
-		opacity: 0.46;
-		transform: translate3d(-0.08em, 0.12em, 0) scale(0.9);
-	}
-	38% {
-		opacity: 0.88;
-		transform: translate3d(0.22em, -0.22em, 0) scale(1.04);
-	}
-	72% {
-		opacity: 0.58;
-		transform: translate3d(0.52em, -0.48em, 0) scale(0.86);
-	}
-}
-
-@keyframes flame-letter-lick {
-	0%,
-	100% {
-		filter: brightness(1) saturate(1);
-		transform: translateY(0);
-	}
-	42% {
-		filter: brightness(1.12) saturate(1.14);
-		transform: translateY(-0.018em);
-	}
-	70% {
-		filter: brightness(0.96) saturate(1.04);
-		transform: translateY(0.008em);
-	}
-}
-
-@keyframes flame-burner-field {
-	0%,
-	100% {
-		opacity: 0.78;
-		background-position:
-			0% 50%,
-			0% 50%,
-			0% 50%;
-	}
-	42% {
-		opacity: 1;
-		background-position:
-			58% 50%,
-			38% 50%,
-			100% 50%;
-	}
-	74% {
-		opacity: 0.86;
-		background-position:
-			100% 50%,
-			62% 50%,
-			38% 50%;
-	}
-}
-
-@keyframes flame-burner-jet {
-	0%,
-	100% {
-		opacity: 0.76;
-		background-position:
-			0% 50%,
-			0% 50%,
-			0% 50%,
-			0% 50%,
-			0% 50%;
-		transform: translateY(-50%) translateX(-0.12em) scaleX(0.86) scaleY(0.94) skewX(-2deg);
-	}
-	35% {
-		opacity: 0.98;
-		background-position:
-			22% 50%,
-			56% 50%,
-			72% 50%,
-			100% 50%,
-			40% 50%;
-		transform: translateY(-50%) translateX(0.06em) scaleX(1.08) scaleY(1.04) skewX(2deg);
-	}
-	62% {
-		opacity: 0.88;
-		background-position:
-			8% 50%,
-			88% 50%,
-			100% 50%,
-			34% 50%,
-			86% 50%;
-		transform: translateY(-50%) translateX(0.22em) scaleX(1.02) scaleY(0.9) skewX(-3deg);
-	}
-	82% {
-		opacity: 0.94;
-		transform: translateY(-50%) translateX(0.02em) scaleX(1.14) scaleY(0.98) skewX(1deg);
-	}
-}
-
-@keyframes flame-burner-embers {
-	0% {
-		opacity: 0.34;
-		background-position:
-			0% 50%,
-			0% 50%,
-			0% 50%,
-			0% 50%,
-			0% 50%,
-			0% 50%,
-			0% 50%,
-			0% 50%,
-			0% 50%,
-			0% 50%,
-			0% 50%;
-		transform: translateY(-50%) translateX(-0.16em) scale(0.88);
-	}
-	34% {
-		opacity: 0.94;
-		transform: translateY(-54%) translateX(0.32em) scale(1.04);
-	}
-	68% {
-		opacity: 0.62;
-		background-position:
-			0.42em -0.12em,
-			0.76em 0.18em,
-			1.15em -0.08em,
-			1.58em 0.16em,
-			2.1em -0.18em,
-			2.64em 0.12em,
-			3.18em -0.1em,
-			3.86em 0.2em,
-			100% 50%;
-		transform: translateY(-47%) translateX(0.9em) scale(0.94);
-	}
-	100% {
-		opacity: 0.26;
-		background-position:
-			0.72em -0.2em,
-			1.12em 0.28em,
-			1.72em -0.16em,
-			2.38em 0.24em,
-			3.1em -0.22em,
-			3.82em 0.18em,
-			4.64em -0.18em,
-			5.2em 0.28em,
-			100% 50%;
-		transform: translateY(-50%) translateX(1.34em) scale(0.82);
-	}
-}
-
-@keyframes flame-burner-core {
-	0%,
-	100% {
-		opacity: 0.62;
-		background-position:
-			0% 50%,
-			0% 50%,
-			0% 50%;
-		transform: translateX(-0.05em) scaleX(0.9);
-	}
-	45% {
-		opacity: 0.92;
-		background-position:
-			18% 50%,
-			72% 50%,
-			100% 50%;
-		transform: translateX(0.08em) scaleX(1.08);
-	}
-	72% {
-		opacity: 0.78;
-		transform: translateX(0.16em) scaleX(0.98);
-	}
-}
-
-@keyframes flame-burner-glyph {
-	0%,
-	100% {
-		filter: brightness(1) saturate(1);
-		transform: translateY(0) skewX(0deg);
-	}
-	38% {
-		filter: brightness(1.16) saturate(1.16);
-		transform: translateY(-0.018em) skewX(-1.4deg);
-	}
-	68% {
-		filter: brightness(0.96) saturate(1.06);
-		transform: translateY(0.01em) skewX(1deg);
-	}
-}
-
-@keyframes flame-burner-tail {
-	0%,
-	100% {
-		filter: blur(0.34px) saturate(1);
-		transform: translateY(0);
-	}
-	48% {
-		filter: blur(0.54px) saturate(1.18);
-		transform: translateY(-0.01em);
-	}
-}
-
-@keyframes flame-gel-stretch {
-	0%,
-	100% {
-		opacity: calc(var(--haze-opacity) * 0.62);
-		background-position: 0% 50%;
-		transform: translateY(-50%) translateX(-0.2em) scaleX(0.78) scaleY(1.04);
-	}
-	48% {
-		opacity: var(--haze-opacity);
-		background-position: 100% 50%;
-		transform: translateY(-50%) translateX(0.42em) scaleX(1.16) scaleY(0.96);
-	}
-	76% {
-		opacity: calc(var(--haze-opacity) * 0.78);
-		transform: translateY(-50%) translateX(0.12em) scaleX(0.94) scaleY(1.06);
-	}
-}
-
-@keyframes flame-gel-shine {
-	0%,
-	100% {
-		opacity: calc(var(--core-opacity) * 0.66);
-		transform: translateY(-50%) translateX(-0.08em) scaleX(0.84);
-	}
-	48% {
-		opacity: var(--core-opacity);
-		transform: translateY(-50%) translateX(0.18em) scaleX(1.1);
-	}
-}
-
-@keyframes flame-gel-embers {
-	0%,
-	100% {
-		opacity: var(--spark-low, 0.12);
-		background-position:
-			0% 50%,
-			0% 50%,
-			0% 50%,
-			0% 50%,
-			0% 50%,
-			0% 50%,
-			0% 50%;
-		transform: translateY(-46%) translateX(-0.12em) scale(0.82);
-	}
-	46% {
-		opacity: var(--spark-high, 0.62);
-		transform: translateY(-58%) translateX(0.32em) scale(1.08);
-	}
-	74% {
-		opacity: calc(var(--spark-high, 0.62) * 0.52);
-		background-position:
-			0.34em -0.08em,
-			0.72em 0.12em,
-			1.18em -0.1em,
-			1.72em 0.08em,
-			2.34em -0.12em,
-			2.96em 0.12em,
-			100% 50%;
-		transform: translateY(-42%) translateX(0.76em) scale(0.94);
-	}
-}
-
-@keyframes flame-gel-pull {
-	0%,
-	100% {
-		opacity: calc(var(--aux-opacity) * 0.58);
-		background-position:
-			0% 50%,
-			0% 50%,
-			0% 50%,
-			0% 50%;
-		transform: translateY(-50%) translateX(-0.2em) scaleX(0.8);
-	}
-	48% {
-		opacity: var(--aux-opacity);
-		background-position:
-			100% 50%,
-			34% 50%,
-			62% 50%,
-			100% 50%;
-		transform: translateY(-50%) translateX(0.36em) scaleX(1.12);
-	}
-	76% {
-		opacity: calc(var(--aux-opacity) * 0.72);
-		transform: translateY(-50%) translateX(0.08em) scaleX(0.92);
-	}
-}
-
-@keyframes flame-field-breathe-final {
-	0%,
-	100% {
-		opacity: calc(var(--flame-field-opacity) * 0.72);
-		background-position:
-			0% 50%,
-			0% 50%,
-			0% 50%;
-	}
-	44% {
-		opacity: var(--flame-field-opacity);
-		background-position:
-			62% 50%,
-			38% 50%,
-			100% 50%;
-	}
-	74% {
-		opacity: calc(var(--flame-field-opacity) * 0.84);
-		background-position:
-			100% 50%,
-			72% 50%,
-			36% 50%;
-	}
-}
-
-@keyframes flame-sheet-flow-final {
-	0%,
-	100% {
-		opacity: var(--flame-sheet-low);
-		background-position:
-			0% 50%,
-			0% 50%,
-			0% 50%,
-			0% 50%,
-			0% 50%;
-		transform: translateY(-50%) translate3d(-0.08em, 0.02em, 0) scaleX(0.92) scaleY(1.02) skewX(-1.4deg);
-	}
-	34% {
-		opacity: var(--flame-sheet-high);
-		background-position:
-			16% 50%,
-			48% 50%,
-			72% 50%,
-			100% 50%,
-			42% 50%;
-		transform: translateY(-50%) translate3d(0.06em, -0.04em, 0) scaleX(1.08) scaleY(0.96) skewX(1.8deg);
-	}
-	62% {
-		opacity: var(--flame-sheet-mid);
-		background-position:
-			8% 50%,
-			86% 50%,
-			100% 50%,
-			38% 50%,
-			82% 50%;
-		transform: translateY(-50%) translate3d(0.22em, 0.025em, 0) scaleX(1.02) scaleY(1.04) skewX(-2.2deg);
-	}
-	82% {
-		opacity: var(--flame-sheet-pop);
-		transform: translateY(-50%) translate3d(0.02em, -0.02em, 0) scaleX(1.12) scaleY(0.98) skewX(0.8deg);
-	}
-}
-
-@keyframes flame-ember-stream-final {
-	0% {
-		opacity: var(--flame-ember-start);
-		background-position:
-			0% 50%,
-			0% 50%,
-			0% 50%,
-			0% 50%,
-			0% 50%,
-			0% 50%,
-			0% 50%,
-			0% 50%,
-			0% 50%;
-		transform: translateY(-50%) translate3d(-0.14em, 0.08em, 0) scale(0.88);
-	}
-	34% {
-		opacity: var(--flame-ember-high);
-		transform: translateY(-54%) translate3d(0.26em, -0.08em, 0) scale(1.04);
-	}
-	68% {
-		opacity: var(--flame-ember-mid);
-		background-position:
-			0.34em -0.1em,
-			0.66em 0.18em,
-			1.1em -0.08em,
-			1.54em 0.12em,
-			2.08em -0.16em,
-			2.62em 0.1em,
-			3.24em -0.12em,
-			3.86em 0.18em,
-			4.36em -0.06em,
-			4.86em 0.14em,
-			100% 50%;
-		transform: translateY(-46%) translate3d(0.82em, 0.02em, 0) scale(0.94);
-	}
-	100% {
-		opacity: var(--flame-ember-end);
-		background-position:
-			0.68em -0.2em,
-			1.04em 0.28em,
-			1.62em -0.15em,
-			2.28em 0.22em,
-			3em -0.2em,
-			3.76em 0.18em,
-			4.58em -0.16em,
-			5.18em 0.26em,
-			5.92em -0.12em,
-			6.46em 0.18em,
-			100% 50%;
-		transform: translateY(-50%) translate3d(1.26em, 0.04em, 0) scale(0.82);
-	}
-}
-
-@keyframes flame-word-gel-final {
-	0%,
-	100% {
-		opacity: var(--flame-word-low);
-		background-position:
-			0% 50%,
-			0% 50%,
-			0% 50%,
-			0% 50%;
-		transform: translateX(-0.08em) scaleX(0.92);
-	}
-	42% {
-		opacity: var(--flame-word-high);
-		background-position:
-			16% 50%,
-			54% 50%,
-			84% 50%,
-			100% 50%;
-		transform: translateX(0.08em) scaleX(1.08);
-	}
-	72% {
-		opacity: var(--flame-word-mid);
-		transform: translateX(0.18em) scaleX(0.98);
-	}
-}
-
-@keyframes flame-glyph-heat-final {
-	0%,
-	100% {
-		filter: brightness(1) saturate(1);
-		transform: translateY(0) skewX(0deg);
-	}
-	38% {
-		filter: brightness(1.14) saturate(1.16);
-		transform: translateY(-0.015em) skewX(-0.8deg);
-	}
-	68% {
-		filter: brightness(0.98) saturate(1.06);
-		transform: translateY(0.006em) skewX(0.6deg);
 	}
 }
 
@@ -17077,7 +15003,7 @@
 	}
 }
 
-/* QA pass: photo-matched spoiler dots, softer ghosts, gum-geometry flame/biolume, readable long tails. */
+/* QA pass: photo-matched spoiler dots, softer ghosts, gum-geometry biolume, readable long tails. */
 .stage[data-glow='spoiler'] .field[data-glow] .prediction::before,
 .stage[data-glow='spoiler'] .field[data-glow] .tail::after {
 	display: none;
@@ -17187,66 +15113,24 @@
 	mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.62) 0, rgba(0, 0, 0, 0.42) 6em, transparent 18em);
 }
 
-.stage[data-glow='flame'] .field[data-glow] .caret-origin-glow[data-mode='ready'],
-.stage[data-glow='flame'] .field[data-glow] .prediction > .beam,
 .stage[data-glow='biolume'] .field[data-glow] .caret-origin-glow[data-mode='ready'],
 .stage[data-glow='biolume'] .field[data-glow] .prediction > .beam {
 	display: block;
 }
 
-.stage[data-glow='flame'] .field[data-glow] .caret-origin-glow[data-mode='ready'],
 .stage[data-glow='biolume'] .field[data-glow] .caret-origin-glow[data-mode='ready'] {
 	display: inline-block;
 }
 
-.stage[data-glow='flame'] .field[data-glow] .prediction::before,
 .stage[data-glow='biolume'] .field[data-glow] .prediction::before {
 	border-radius: 999px;
 	clip-path: none;
 	animation: gum-stretch 3.8s ease-in-out infinite;
 }
 
-.stage[data-glow='flame'] .field[data-glow] .prediction::after,
 .stage[data-glow='biolume'] .field[data-glow] .prediction::after {
 	clip-path: none;
 	animation: gum-bubbles 2.9s ease-in-out infinite;
-}
-
-.stage[data-glow='flame'] .field[data-glow] .prediction::before {
-	left: -0.28em;
-	width: min(12em, calc(100% + 6.8em));
-	height: 2.8em;
-	background:
-		radial-gradient(ellipse 24% 58% at 8% 50%, rgba(255, 255, 224, 0.52), rgba(255, 204, 56, 0.3) 54%, transparent 78%),
-		linear-gradient(90deg, rgba(255, 212, 58, 0.3), rgba(255, 105, 11, 0.32) 38%, rgba(202, 23, 0, 0.16) 72%, transparent 94%);
-	filter: blur(26px) saturate(1.54);
-	opacity: 0.78;
-	-webkit-mask-image: radial-gradient(ellipse 96% 70% at 28% 50%, black 0 44%, rgba(0, 0, 0, 0.58) 68%, transparent 100%);
-	mask-image: radial-gradient(ellipse 96% 70% at 28% 50%, black 0 44%, rgba(0, 0, 0, 0.58) 68%, transparent 100%);
-}
-
-.stage[data-glow='flame'] .field[data-glow] .prediction::after {
-	left: -0.18em;
-	width: min(11em, calc(100% + 6em));
-	height: 2.85em;
-	background:
-		radial-gradient(circle at 9% 52%, rgba(255, 255, 226, 0.86), transparent 3.6%),
-		radial-gradient(circle at 23% 28%, rgba(255, 220, 58, 0.74), transparent 4.6%),
-		radial-gradient(circle at 37% 70%, rgba(255, 111, 12, 0.66), transparent 4.8%),
-		radial-gradient(circle at 54% 35%, rgba(255, 181, 34, 0.56), transparent 4.2%),
-		radial-gradient(circle at 74% 64%, rgba(255, 62, 6, 0.44), transparent 4%),
-		radial-gradient(circle at 90% 43%, rgba(255, 171, 34, 0.34), transparent 3.8%);
-	filter: blur(0.62px) saturate(1.48) drop-shadow(0 0 14px rgba(255, 102, 8, 0.72));
-	opacity: 0.8;
-}
-
-.stage[data-glow='flame'] .field[data-glow] .next-word::before {
-	border-radius: 999px;
-	clip-path: none;
-	background:
-		radial-gradient(ellipse 18% 68% at 0% 50%, rgba(255, 255, 224, 0.72), rgba(255, 221, 76, 0.42) 35%, transparent 72%),
-		linear-gradient(90deg, rgba(255, 236, 124, 0.2), rgba(255, 116, 12, 0.12) 42%, rgba(255, 44, 4, 0.05) 80%, transparent 98%);
-	opacity: 0.34;
 }
 
 .stage[data-glow='biolume'] .field[data-glow] .prediction::before {
@@ -17502,7 +15386,6 @@
 /* QA correction: remove rectangular field edges and switch spoiler to Telegram-like micro dots. */
 .stage[data-glow='spoiler'] .field[data-glow] .edge-right,
 .stage[data-glow='ghosttext'] .field[data-glow] .edge-right,
-.stage[data-glow='flame'] .field[data-glow] .edge-right,
 .stage[data-glow='biolume'] .field[data-glow] .edge-right,
 .stage[data-glow='android'] .field[data-glow] .edge-right,
 .stage[data-glow='diffusion'] .field[data-glow] .edge-right,
@@ -17573,14 +15456,12 @@
 	opacity: 0.34;
 }
 
-.stage[data-glow='flame'] .field[data-glow] .prediction::before,
 .stage[data-glow='biolume'] .field[data-glow] .prediction::before {
 	width: min(15em, calc(100% + 8.8em));
 	-webkit-mask-image: radial-gradient(ellipse 82% 68% at 22% 50%, #000 0 36%, rgba(0, 0, 0, 0.46) 64%, transparent 100%);
 	mask-image: radial-gradient(ellipse 82% 68% at 22% 50%, #000 0 36%, rgba(0, 0, 0, 0.46) 64%, transparent 100%);
 }
 
-.stage[data-glow='flame'] .field[data-glow] .prediction::after,
 .stage[data-glow='biolume'] .field[data-glow] .prediction::after {
 	width: min(14em, calc(100% + 8em));
 	-webkit-mask-image: radial-gradient(ellipse 80% 64% at 22% 50%, #000 0 34%, rgba(0, 0, 0, 0.4) 62%, transparent 100%);
@@ -18524,6 +16405,925 @@
 	}
 	50% {
 		opacity: var(--core-opacity);
+		transform: translateY(-50%) scale(1.04);
+	}
+}
+
+/* ============================================================
+   FLAME v2 — "Gas burner jet from the caret"
+   Blue premix nozzle (prediction::after, survives
+   data-light-flow='off') + buoyant plume that bends upward via
+   a rising spine of offset radials. Tongues live on
+   prediction::before (set A) and beam-aux (set B) at different
+   tempos; embers on beam-spark; gray smoke on beam-smoke
+   (normal blend). No capsule silhouette: layer-radius 0,
+   layer-clip none, every layer dissolves through 2D masks.
+   Text protected by a dark scrim under .next-word and a hot
+   spine kept below the text midline near the caret.
+   ============================================================ */
+
+.field[data-glow='flame'] {
+	--layer-radius: 0;
+	--layer-clip: none;
+	--ready-border: rgba(255, 122, 48, 0.36);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.05) inset,
+		0 -34px 90px rgba(20, 6, 2, 0.62) inset,
+		0 30px 70px rgba(0, 0, 0, 0.52),
+		0 0 90px rgba(255, 96, 22, 0.17),
+		0 0 150px rgba(255, 150, 50, 0.07);
+	--field-wash:
+		radial-gradient(ellipse 30% 105% at 21% 60%, rgba(255, 116, 30, 0.16), transparent 70%),
+		radial-gradient(ellipse 18% 72% at 19% 55%, rgba(255, 180, 70, 0.09), transparent 66%),
+		radial-gradient(ellipse 13% 52% at 17% 52%, rgba(96, 136, 255, 0.05), transparent 62%);
+	--caret-gradient: linear-gradient(180deg, rgb(255, 255, 255), rgb(224, 240, 255) 26%, rgb(150, 194, 255) 55%, rgb(84, 120, 255) 82%, rgb(52, 74, 210));
+	--caret-shadow:
+		0 0 5px rgba(240, 248, 255, 0.9),
+		0 0 14px rgba(140, 180, 255, 0.55),
+		0 0 30px rgba(90, 120, 255, 0.35);
+	--haze-width: 11em;
+	--haze-height: 2.6em;
+	--haze-size: auto;
+	--haze-bg:
+		radial-gradient(ellipse 5.2em 1.5em at 1.4em 58%, rgba(255, 138, 40, 0.3), rgba(210, 70, 12, 0.14) 55%, transparent 80%),
+		radial-gradient(ellipse 7.5em 1.1em at 4.6em 44%, rgba(255, 96, 18, 0.12), transparent 75%),
+		radial-gradient(ellipse 3em 1.7em at 0.7em 50%, rgba(120, 160, 255, 0.1), transparent 70%);
+	--haze-filter: blur(22px) saturate(1.25);
+	--haze-opacity: 0.85;
+	--haze-motion: flame-haze-breathe-v2 3.6s ease-in-out 760ms infinite;
+	--torch-haze-motion: flame-pilot-halo-v2 2.8s ease-in-out infinite;
+	--haze-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 95% 92% at 26% 54%, black 0 38%, rgba(0, 0, 0, 0.5) 66%, transparent 96%);
+	--body-width: 9.8em;
+	--body-height: 2.6em;
+	--body-size: auto;
+	--body-bg:
+		radial-gradient(ellipse 1.5em 0.55em at 1.15em 62%, rgba(255, 252, 232, 0.85), rgba(255, 214, 92, 0.45) 55%, transparent 82%),
+		radial-gradient(ellipse 2.3em 0.62em at 2.6em 58%, rgba(255, 196, 64, 0.62), rgba(255, 130, 26, 0.34) 60%, transparent 85%),
+		radial-gradient(ellipse 2.6em 0.6em at 4.3em 52%, rgba(255, 142, 30, 0.5), rgba(230, 84, 12, 0.26) 62%, transparent 86%),
+		radial-gradient(ellipse 2.8em 0.55em at 6em 46%, rgba(248, 100, 16, 0.38), rgba(196, 54, 8, 0.18) 64%, transparent 88%),
+		radial-gradient(ellipse 2.9em 0.5em at 7.6em 40%, rgba(216, 66, 10, 0.26), transparent 86%),
+		radial-gradient(ellipse 0.9em 0.75em at 2.1em 36%, rgba(255, 170, 40, 0.3), transparent 78%),
+		radial-gradient(ellipse 0.8em 0.9em at 3.5em 30%, rgba(255, 120, 22, 0.24), transparent 80%),
+		radial-gradient(ellipse 0.7em 0.7em at 5.1em 30%, rgba(240, 92, 14, 0.18), transparent 80%);
+	--body-filter: blur(7px) saturate(1.3) contrast(1.04);
+	--body-opacity: 0.95;
+	--body-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 100% 92% at 22% 58%, black 0 42%, rgba(0, 0, 0, 0.55) 68%, transparent 96%);
+	--core-width: 3.4em;
+	--core-height: 1.4em;
+	--core-size: auto;
+	--core-bg:
+		radial-gradient(ellipse 0.85em 0.3em at 0.75em 60%, rgba(255, 255, 248, 0.95), rgba(255, 240, 180, 0.55) 55%, transparent 85%),
+		radial-gradient(ellipse 1.9em 0.34em at 1.7em 57%, rgba(255, 232, 140, 0.6), rgba(255, 170, 50, 0.25) 65%, transparent 90%),
+		radial-gradient(ellipse 0.5em 0.22em at 0.42em 60%, rgba(150, 190, 255, 0.5), transparent 80%);
+	--core-filter: blur(3px) saturate(1.25);
+	--core-opacity: 1;
+	--core-motion: flame-core-flicker-v2 1.15s ease-in-out 560ms infinite;
+	--torch-core-motion: flame-pilot-v2 1.7s ease-in-out infinite;
+	--core-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 96% 92% at 26% 58%, black 0 45%, rgba(0, 0, 0, 0.5) 72%, transparent 95%);
+	--flow-width: 10em;
+	--flow-height: 2.2em;
+	--flow-size: 230% 100%;
+	--flow-bg:
+		linear-gradient(93deg, transparent 0%, rgba(255, 236, 170, 0.2) 12%, rgba(255, 128, 30, 0.18) 30%, transparent 48%, rgba(255, 150, 40, 0.12) 62%, transparent 82%),
+		radial-gradient(ellipse 6em 0.5em at 4.5em 22%, rgba(255, 200, 120, 0.1), transparent 75%);
+	--flow-filter: blur(12px) saturate(1.2);
+	--flow-low: 0.16;
+	--flow-high: 0.5;
+	--flow-motion: flame-flow-v2 2.7s ease-in-out 900ms infinite;
+	--flow-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 94% 88% at 28% 52%, black 0 40%, rgba(0, 0, 0, 0.5) 68%, transparent 96%);
+	--spark-width: 6.5em;
+	--spark-height: 2.6em;
+	--spark-size: auto;
+	--spark-bg:
+		radial-gradient(circle at 1.5em 1.35em, rgba(255, 252, 232, 0.95) 0 0.045em, transparent 0.11em),
+		radial-gradient(circle at 2.6em 1em, rgba(255, 216, 90, 0.9) 0 0.038em, transparent 0.1em),
+		radial-gradient(circle at 3.8em 0.75em, rgba(255, 150, 38, 0.8) 0 0.034em, transparent 0.09em),
+		radial-gradient(circle at 5em 0.55em, rgba(248, 104, 18, 0.65) 0 0.03em, transparent 0.085em),
+		radial-gradient(circle at 3.1em 1.6em, rgba(255, 176, 60, 0.6) 0 0.028em, transparent 0.08em),
+		radial-gradient(circle at 4.4em 1.25em, rgba(150, 52, 20, 0.55) 0 0.026em, transparent 0.075em);
+	--spark-filter: blur(0.3px) drop-shadow(0 0 6px rgba(255, 150, 40, 0.7));
+	--spark-low: 0;
+	--spark-high: 0.95;
+	--spark-motion: flame-embers-v2 2.3s cubic-bezier(0.3, 0.1, 0.55, 1) 880ms infinite;
+	--spark-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 94% 92% at 35% 55%, black 0 55%, transparent 96%);
+	--smoke-width: 9em;
+	--smoke-height: 2.6em;
+	--smoke-size: auto;
+	--smoke-bg:
+		radial-gradient(ellipse 2.6em 0.8em at 6.6em 26%, rgba(64, 58, 60, 0.34), transparent 78%),
+		radial-gradient(ellipse 1.8em 0.6em at 7.8em 16%, rgba(52, 48, 52, 0.22), transparent 80%),
+		radial-gradient(ellipse 3.4em 1em at 5.4em 40%, rgba(32, 24, 22, 0.2), transparent 82%);
+	--smoke-filter: blur(13px);
+	--smoke-opacity: 0.6;
+	--smoke-blend: normal;
+	--smoke-motion: flame-smoke-v2 6s ease-in-out 1.2s infinite;
+	--smoke-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 94% 92% at 62% 34%, black 0 40%, rgba(0, 0, 0, 0.5) 68%, transparent 94%);
+	--aux-width: 6.8em;
+	--aux-height: 2.6em;
+	--aux-size: auto;
+	--aux-bg:
+		radial-gradient(ellipse 0.34em 0.85em at 2.35em 0.95em, rgba(255, 208, 70, 0.55), rgba(255, 120, 24, 0.28) 55%, transparent 80%),
+		radial-gradient(ellipse 0.28em 0.7em at 3.7em 0.8em, rgba(255, 158, 38, 0.45), rgba(230, 84, 12, 0.2) 58%, transparent 82%),
+		radial-gradient(ellipse 0.24em 0.6em at 4.9em 0.72em, rgba(255, 120, 24, 0.32), transparent 78%);
+	--aux-filter: blur(2.5px) saturate(1.3);
+	--aux-opacity: 0.9;
+	--aux-blend: screen;
+	--aux-motion: flame-tongue-dance-v2 1.05s ease-in-out 780ms infinite;
+	--aux-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 92% 96% at 45% 34%, black 0 45%, rgba(0, 0, 0, 0.5) 72%, transparent 94%);
+	--next-color: rgba(255, 240, 215, 0.96);
+	--next-shadow:
+		0 0 6px rgba(255, 236, 200, 0.4),
+		0 0 16px rgba(255, 150, 50, 0.24),
+		0 0 34px rgba(255, 70, 16, 0.16);
+	--tail-color: rgba(255, 170, 110, 0.3);
+}
+
+/* Beams are the instrument again: undo the legacy passes that hid them. */
+.stage[data-glow='flame'] .field[data-glow] .prediction > .beam {
+	display: block;
+	left: -0.03em;
+	transform-origin: left center;
+}
+
+/* Two-layer masks (left fade x radial falloff) need intersection, not union. */
+.stage[data-glow='flame'] .field[data-glow] .prediction > .beam,
+.stage[data-glow='flame'] .field[data-glow] .torch-beam {
+	mask-composite: intersect;
+}
+
+/* Torch layers serve the waiting state only; never double-print in ready. */
+.stage[data-glow='flame'] .field[data-glow] .caret-origin-glow[data-mode='ready'] {
+	display: none;
+}
+
+.stage[data-glow='flame'] .field[data-glow] .prediction {
+	isolation: isolate;
+}
+
+/* Dark charcoal vessel; warmth lives only in the hearth zone near the caret. */
+.stage[data-glow='flame'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 44% 150% at 20% 64%, rgba(70, 24, 6, 0.34), transparent 66%),
+		radial-gradient(ellipse 120% 180% at 78% -36%, rgba(26, 14, 18, 0.5), transparent 66%),
+		linear-gradient(90deg, rgb(16, 10, 8), rgb(13, 9, 10) 52%, rgb(10, 8, 12));
+}
+
+.stage[data-glow='flame'] .field[data-glow]::before {
+	background: var(--field-wash);
+	background-size: 100% 100%;
+	-webkit-mask-image: radial-gradient(ellipse 100% 96% at 30% 55%, black 0 44%, rgba(0, 0, 0, 0.5) 72%, transparent 100%);
+	mask-image: radial-gradient(ellipse 100% 96% at 30% 55%, black 0 44%, rgba(0, 0, 0, 0.5) 72%, transparent 100%);
+	mix-blend-mode: screen;
+	opacity: 0.88;
+	animation: flame-wash-v2 6.8s ease-in-out infinite;
+}
+
+/* Dissolve into the field's rounded clip, not the paint box; edge overlays
+   extended into the 64px padding so brightness never steps at the content box. */
+.stage[data-glow='flame'] .field[data-glow] .paint {
+	overflow: visible;
+	clip-path: inset(-3.4em -5em -3.4em 0);
+}
+
+.stage[data-glow='flame'] .field[data-glow] .edge-left {
+	left: -64px;
+	width: 156px;
+	background: linear-gradient(90deg, rgb(15, 9, 8) 0%, rgb(15, 9, 8) 40%, rgba(15, 9, 8, 0) 100%);
+}
+
+.stage[data-glow='flame'] .field[data-glow] .edge-right {
+	right: -64px;
+	width: 224px;
+	background: linear-gradient(
+		270deg,
+		rgba(13, 8, 9, 0.9) 0%,
+		rgba(13, 8, 9, 0.55) 30%,
+		rgba(13, 8, 9, 0.16) 68%,
+		rgba(13, 8, 9, 0) 100%
+	);
+	opacity: 0.9;
+}
+
+/* Tongue set A: licks off the plume top, swaying from a low pivot. */
+.stage[data-glow='flame'] .field[data-glow] .prediction::before {
+	position: absolute;
+	left: -0.15em;
+	top: 50%;
+	z-index: -2;
+	width: 8.5em;
+	height: 2.6em;
+	content: '';
+	pointer-events: none;
+	border-radius: 0;
+	clip-path: none;
+	background:
+		radial-gradient(ellipse 0.4em 1em at 1.35em 0.9em, rgba(255, 232, 120, 0.6), rgba(255, 150, 34, 0.3) 55%, transparent 80%),
+		radial-gradient(ellipse 0.3em 0.8em at 2.75em 0.75em, rgba(255, 176, 44, 0.5), rgba(240, 100, 16, 0.24) 58%, transparent 82%),
+		radial-gradient(ellipse 0.26em 0.66em at 4.35em 0.68em, rgba(255, 130, 26, 0.36), transparent 80%),
+		radial-gradient(ellipse 3.6em 0.5em at 2.6em 1.28em, rgba(255, 150, 40, 0.22), transparent 80%);
+	filter: blur(3.5px) saturate(1.35);
+	-webkit-mask-image: radial-gradient(ellipse 96% 100% at 30% 42%, black 0 46%, rgba(0, 0, 0, 0.5) 72%, transparent 98%);
+	mask-image: radial-gradient(ellipse 96% 100% at 30% 42%, black 0 46%, rgba(0, 0, 0, 0.5) 72%, transparent 98%);
+	mix-blend-mode: screen;
+	opacity: 0.95;
+	transform: translateY(-50%);
+	transform-origin: 16% 74%;
+	animation:
+		flame-layer-in-v2 480ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		flame-tongue-sway-v2 1.5s ease-in-out 620ms infinite;
+}
+
+/* The nozzle: blue premix cone with a white-hot throat, crisp, above the
+   beams and below the text; alive with or without light flow. */
+.stage[data-glow='flame'] .field[data-glow] .prediction::after {
+	position: absolute;
+	left: -0.3em;
+	top: 50%;
+	z-index: -1;
+	width: 2.6em;
+	height: 1.8em;
+	content: '';
+	pointer-events: none;
+	border-radius: 0;
+	clip-path: none;
+	background:
+		radial-gradient(circle at 0.62em 1em, rgba(255, 255, 252, 0.98) 0 0.075em, rgba(255, 244, 214, 0.5) 0.14em, transparent 0.24em),
+		radial-gradient(ellipse 0.5em 0.24em at 0.5em 1.02em, rgba(210, 232, 255, 0.85), rgba(150, 190, 255, 0.4) 60%, transparent 85%),
+		radial-gradient(ellipse 0.95em 0.34em at 0.72em 1.03em, rgba(92, 140, 255, 0.6), rgba(70, 105, 245, 0.24) 62%, transparent 88%),
+		radial-gradient(ellipse 1.35em 0.46em at 1.05em 1.02em, rgba(66, 96, 235, 0.32), rgba(110, 80, 245, 0.12) 66%, transparent 90%),
+		radial-gradient(ellipse 0.5em 0.52em at 0.35em 1.05em, rgba(140, 100, 255, 0.28), transparent 80%);
+	filter: blur(0.8px) saturate(1.35) drop-shadow(0 0 10px rgba(96, 140, 255, 0.45)) drop-shadow(0 0 22px rgba(255, 140, 40, 0.3));
+	-webkit-mask-image: radial-gradient(ellipse 96% 96% at 34% 56%, black 0 55%, transparent 96%);
+	mask-image: radial-gradient(ellipse 96% 96% at 34% 56%, black 0 55%, transparent 96%);
+	mix-blend-mode: screen;
+	opacity: 1;
+	transform: translateY(-50%);
+	transform-origin: left center;
+	animation:
+		flame-nozzle-in-v2 520ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		flame-nozzle-flicker-v2 1.3s ease-in-out 520ms infinite;
+}
+
+/* Plume buoyancy: a slow waver layered after the shared entrance. */
+.stage[data-glow='flame'] .field[data-glow] .beam-body {
+	animation:
+		beam-open 650ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		flame-plume-live-v2 2.9s ease-in-out 700ms infinite;
+}
+
+/* ---------- Text is sacred ---------- */
+.stage[data-glow='flame'] .field[data-glow] .next-word {
+	position: relative;
+	z-index: 2;
+	color: var(--next-color);
+	background: none;
+	filter: none;
+	text-shadow: var(--next-shadow);
+	animation:
+		flame-word-settle-v2 320ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		flame-word-simmer-v2 4.8s ease-in-out 1.2s infinite;
+}
+
+/* Dark scrim between the flame body and the glyphs: contrast insurance. */
+.stage[data-glow='flame'] .field[data-glow] .next-word::before {
+	position: absolute;
+	inset: -0.1em -0.4em -0.16em -0.28em;
+	z-index: -1;
+	display: block;
+	content: '';
+	pointer-events: none;
+	border-radius: 0.7em;
+	clip-path: none;
+	background: radial-gradient(ellipse 74% 88% at 32% 58%, rgba(16, 6, 2, 0.5), rgba(16, 6, 2, 0.22) 58%, transparent 86%);
+	filter: blur(5px);
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: normal;
+	opacity: 0.85;
+	transform: none;
+	animation: flame-scrim-in-v2 420ms ease-out both;
+}
+
+/* Per-glyph ignition; nth-child variants grouped to outrank legacy tints. */
+.stage[data-glow='flame'] .field[data-glow] .next-word .glyph,
+.stage[data-glow='flame'] .field[data-glow] .next-word .glyph:nth-child(2n),
+.stage[data-glow='flame'] .field[data-glow] .next-word .glyph:nth-child(3n),
+.stage[data-glow='flame'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-glow='flame'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
+	color: var(--next-color);
+	transform-origin: 55% 85%;
+	animation: flame-glyph-ignite-v2 560ms cubic-bezier(0.2, 0.85, 0.3, 1.05) both;
+	animation-delay: calc(120ms + var(--i) * 58ms);
+}
+
+/* Tail = smolder: dim amber, ember-glow shadow, masked fade. */
+.stage[data-glow='flame'] .field[data-glow] .tail {
+	color: var(--tail-color);
+	filter: none;
+	text-shadow:
+		0 0 10px rgba(255, 110, 30, 0.16),
+		0 0 22px rgba(140, 36, 8, 0.2);
+	-webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0, rgba(0, 0, 0, 0.5) 2.6em, transparent 8em);
+	mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0, rgba(0, 0, 0, 0.5) 2.6em, transparent 8em);
+}
+
+.stage[data-glow='flame'] .field[data-glow] .tail .glyph {
+	color: color-mix(in oklab, rgba(255, 150, 70, 0.62) clamp(0%, calc(34% - var(--i) * 3%), 34%), rgba(214, 150, 112, 0.32));
+	filter: blur(clamp(0.1px, calc(0.6px - var(--i) * 0.04px), 0.6px)) saturate(1.1);
+	opacity: clamp(0.42, calc(0.68 - var(--i) * 0.02), 0.68);
+	text-shadow: none;
+	-webkit-mask-image: none;
+	mask-image: none;
+	animation: none;
+}
+
+/* Light flow off: nozzle, plume, tongue shapes and glyph ignition stay;
+   only the infinite ambience is stilled. */
+.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow]::before {
+	animation: none;
+}
+
+.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: flame-layer-in-v2 480ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .prediction::after {
+	animation: flame-nozzle-in-v2 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .beam-veil {
+	animation: beam-open 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .beam-body {
+	animation: beam-open 650ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .beam-hot {
+	animation: beam-hot 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .next-word {
+	animation: flame-word-settle-v2 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .next-word::before {
+	animation: flame-scrim-in-v2 420ms ease-out both;
+}
+
+.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .next-word .glyph,
+.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(2n),
+.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(3n),
+.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
+	animation: flame-glyph-ignite-v2 560ms cubic-bezier(0.2, 0.85, 0.3, 1.05) both;
+	animation-delay: calc(120ms + var(--i) * 58ms);
+}
+
+/* ---------- Light theme: fire on clean paper ---------- */
+.field[data-theme='light'][data-glow='flame'] {
+	--ready-border: rgba(226, 106, 26, 0.4);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.98) inset,
+		0 -16px 44px rgba(240, 130, 40, 0.07) inset,
+		0 18px 44px rgba(150, 60, 10, 0.15),
+		0 0 70px rgba(255, 140, 40, 0.13);
+	--field-wash:
+		radial-gradient(ellipse 26% 90% at 20% 58%, rgba(250, 130, 30, 0.1), transparent 68%),
+		radial-gradient(ellipse 12% 48% at 17% 52%, rgba(80, 120, 245, 0.06), transparent 62%);
+	--caret-gradient: linear-gradient(180deg, rgb(24, 44, 130), rgb(52, 92, 235) 45%, rgb(120, 168, 255) 80%, rgb(200, 224, 255));
+	--caret-shadow:
+		0 0 6px rgba(120, 165, 255, 0.5),
+		0 0 16px rgba(70, 105, 245, 0.28);
+	--haze-bg:
+		radial-gradient(ellipse 5em 1.4em at 1.4em 58%, rgba(244, 120, 26, 0.2), rgba(212, 84, 12, 0.08) 55%, transparent 80%),
+		radial-gradient(ellipse 7em 1em at 4.4em 44%, rgba(235, 100, 18, 0.08), transparent 75%),
+		radial-gradient(ellipse 2.6em 1.5em at 0.7em 50%, rgba(80, 125, 245, 0.08), transparent 70%);
+	--haze-opacity: 0.42;
+	--body-bg:
+		radial-gradient(ellipse 1.5em 0.55em at 1.15em 62%, rgba(255, 196, 48, 0.95), rgba(248, 140, 18, 0.62) 55%, transparent 82%),
+		radial-gradient(ellipse 2.3em 0.62em at 2.6em 58%, rgba(246, 118, 12, 0.76), rgba(228, 86, 8, 0.42) 60%, transparent 85%),
+		radial-gradient(ellipse 2.6em 0.6em at 4.3em 52%, rgba(232, 88, 8, 0.6), rgba(202, 58, 6, 0.3) 62%, transparent 86%),
+		radial-gradient(ellipse 2.8em 0.55em at 6em 46%, rgba(210, 66, 8, 0.44), transparent 86%),
+		radial-gradient(ellipse 2.9em 0.5em at 7.6em 40%, rgba(182, 48, 6, 0.3), transparent 86%),
+		radial-gradient(ellipse 0.9em 0.75em at 2.1em 36%, rgba(244, 112, 14, 0.36), transparent 78%),
+		radial-gradient(ellipse 0.8em 0.9em at 3.5em 30%, rgba(228, 86, 8, 0.28), transparent 80%);
+	--body-filter: blur(5px) saturate(1.45) drop-shadow(0 0.22em 0.55em rgba(190, 80, 10, 0.26));
+	--body-opacity: 0.96;
+	--core-bg:
+		radial-gradient(ellipse 0.85em 0.3em at 0.75em 60%, rgba(255, 214, 100, 0.95), rgba(250, 160, 30, 0.55) 55%, transparent 85%),
+		radial-gradient(ellipse 1.9em 0.34em at 1.7em 57%, rgba(246, 150, 30, 0.6), rgba(230, 100, 14, 0.26) 65%, transparent 90%),
+		radial-gradient(ellipse 0.5em 0.22em at 0.42em 60%, rgba(80, 125, 250, 0.5), transparent 80%);
+	--flow-bg:
+		linear-gradient(93deg, transparent 0%, rgba(248, 160, 40, 0.16) 12%, rgba(235, 100, 18, 0.14) 30%, transparent 48%, rgba(240, 120, 26, 0.1) 62%, transparent 82%),
+		radial-gradient(ellipse 6em 0.5em at 4.5em 22%, rgba(240, 140, 50, 0.08), transparent 75%);
+	--flow-low: 0.1;
+	--flow-high: 0.32;
+	--spark-bg:
+		radial-gradient(circle at 1.5em 1.35em, rgba(250, 150, 30, 0.95) 0 0.045em, transparent 0.11em),
+		radial-gradient(circle at 2.6em 1em, rgba(238, 116, 16, 0.9) 0 0.038em, transparent 0.1em),
+		radial-gradient(circle at 3.8em 0.75em, rgba(222, 88, 10, 0.8) 0 0.034em, transparent 0.09em),
+		radial-gradient(circle at 5em 0.55em, rgba(196, 62, 8, 0.6) 0 0.03em, transparent 0.085em),
+		radial-gradient(circle at 3.1em 1.6em, rgba(240, 130, 24, 0.6) 0 0.028em, transparent 0.08em),
+		radial-gradient(circle at 4.4em 1.25em, rgba(96, 48, 28, 0.55) 0 0.026em, transparent 0.075em);
+	--spark-filter: blur(0.3px) drop-shadow(0 0 5px rgba(235, 110, 20, 0.55));
+	--spark-high: 0.75;
+	--smoke-bg:
+		radial-gradient(ellipse 2.6em 0.8em at 6.6em 26%, rgba(96, 86, 84, 0.26), transparent 78%),
+		radial-gradient(ellipse 1.8em 0.6em at 7.8em 16%, rgba(110, 100, 100, 0.16), transparent 80%);
+	--smoke-opacity: 0.4;
+	--aux-bg:
+		radial-gradient(ellipse 0.34em 0.85em at 2.35em 0.95em, rgba(246, 142, 26, 0.5), rgba(226, 92, 12, 0.24) 55%, transparent 80%),
+		radial-gradient(ellipse 0.28em 0.7em at 3.7em 0.8em, rgba(236, 110, 16, 0.4), transparent 82%),
+		radial-gradient(ellipse 0.24em 0.6em at 4.9em 0.72em, rgba(220, 86, 10, 0.28), transparent 78%);
+	--aux-blend: normal;
+	--aux-opacity: 0.8;
+	--next-color: rgba(44, 26, 16, 0.95);
+	--next-shadow:
+		0 0 1px rgba(255, 255, 255, 0.75),
+		0 0 10px rgba(244, 140, 40, 0.24),
+		0 0 22px rgba(226, 92, 14, 0.12);
+	--tail-color: rgba(150, 96, 62, 0.4);
+}
+
+.stage[data-theme='light'][data-glow='flame'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 60% 140% at 22% 66%, rgba(252, 232, 214, 0.55), transparent 62%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(253, 250, 246, 0.9) 50%, rgba(250, 244, 238, 0.9)),
+		linear-gradient(90deg, rgb(255, 254, 252), rgb(252, 249, 246));
+}
+
+.stage[data-theme='light'][data-glow='flame'] .field[data-glow]::before {
+	mix-blend-mode: normal;
+	opacity: 0.7;
+}
+
+.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .prediction::before {
+	background:
+		radial-gradient(ellipse 0.4em 1em at 1.35em 0.9em, rgba(248, 152, 24, 0.72), rgba(232, 94, 10, 0.36) 55%, transparent 80%),
+		radial-gradient(ellipse 0.3em 0.8em at 2.75em 0.75em, rgba(240, 114, 12, 0.6), rgba(214, 74, 8, 0.28) 58%, transparent 82%),
+		radial-gradient(ellipse 0.26em 0.66em at 4.35em 0.68em, rgba(228, 88, 10, 0.44), transparent 80%),
+		radial-gradient(ellipse 3.6em 0.5em at 2.6em 1.28em, rgba(240, 110, 18, 0.24), transparent 80%);
+	filter: blur(2.6px) saturate(1.4) drop-shadow(0 0.14em 0.4em rgba(200, 90, 14, 0.22));
+	mix-blend-mode: normal;
+	opacity: 0.92;
+}
+
+.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .prediction::after {
+	background:
+		radial-gradient(circle at 0.62em 1em, rgba(255, 252, 240, 0.98) 0 0.06em, rgba(255, 226, 160, 0.5) 0.12em, transparent 0.22em),
+		radial-gradient(ellipse 0.5em 0.24em at 0.5em 1.02em, rgba(140, 180, 255, 0.9), rgba(90, 135, 250, 0.45) 60%, transparent 85%),
+		radial-gradient(ellipse 0.95em 0.34em at 0.72em 1.03em, rgba(60, 100, 240, 0.62), rgba(48, 80, 225, 0.26) 62%, transparent 88%),
+		radial-gradient(ellipse 1.35em 0.46em at 1.05em 1.02em, rgba(48, 76, 220, 0.3), rgba(96, 66, 230, 0.12) 66%, transparent 90%),
+		radial-gradient(ellipse 0.5em 0.52em at 0.35em 1.05em, rgba(120, 84, 240, 0.24), transparent 80%);
+	filter: blur(0.7px) saturate(1.3) drop-shadow(0 0 8px rgba(80, 120, 250, 0.4)) drop-shadow(0 0.1em 0.4em rgba(220, 110, 20, 0.24));
+	mix-blend-mode: normal;
+}
+
+.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .next-word::before {
+	background: radial-gradient(ellipse 74% 88% at 32% 58%, rgba(255, 253, 248, 0.78), rgba(255, 253, 248, 0.4) 58%, transparent 86%);
+	filter: blur(5px);
+	opacity: 0.9;
+}
+
+.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .next-word {
+	animation:
+		flame-word-settle-v2 320ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		flame-word-simmer-light-v2 4.8s ease-in-out 1.2s infinite;
+}
+
+.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .next-word .glyph,
+.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .next-word .glyph:nth-child(2n),
+.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .next-word .glyph:nth-child(3n),
+.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
+	color: var(--next-color);
+	animation: flame-glyph-ignite-light-v2 560ms cubic-bezier(0.2, 0.85, 0.3, 1.05) both;
+	animation-delay: calc(120ms + var(--i) * 58ms);
+}
+
+.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .tail .glyph {
+	color: color-mix(in oklab, rgba(216, 100, 20, 0.6) clamp(0%, calc(32% - var(--i) * 3%), 32%), rgba(140, 96, 66, 0.42));
+	filter: blur(clamp(0.08px, calc(0.5px - var(--i) * 0.035px), 0.5px));
+	opacity: clamp(0.46, calc(0.7 - var(--i) * 0.018), 0.7);
+}
+
+.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .edge-left {
+	background: linear-gradient(90deg, rgba(255, 254, 252, 0.94), rgba(255, 254, 252, 0));
+}
+
+.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .edge-right {
+	background: linear-gradient(
+		270deg,
+		rgba(252, 248, 244, 0.45) 0%,
+		rgba(252, 248, 244, 0.2) 42%,
+		rgba(252, 248, 244, 0) 100%
+	);
+	opacity: 0.5;
+}
+
+/* ---------- Waiting state: blue pilot light at the caret ---------- */
+.field[data-state='waiting'][data-glow='flame'] {
+	--haze-width: 4.8em;
+	--haze-height: 2.1em;
+	--haze-bg:
+		radial-gradient(ellipse 1.7em 0.95em at 0.6em 55%, rgba(255, 158, 66, 0.22), transparent 78%),
+		radial-gradient(ellipse 0.9em 0.7em at 0.45em 58%, rgba(110, 150, 255, 0.14), transparent 76%);
+	--haze-filter: blur(14px) saturate(1.15);
+	--haze-opacity: 0.85;
+	--haze-mask: linear-gradient(90deg, transparent 0, black 0.35em), radial-gradient(ellipse 92% 92% at 28% 55%, black 0 44%, rgba(0, 0, 0, 0.5) 70%, transparent 96%);
+	--core-width: 2.2em;
+	--core-height: 1.5em;
+	--core-bg:
+		radial-gradient(ellipse 0.14em 0.3em at 0.42em 0.86em, rgba(255, 255, 255, 0.95), rgba(214, 232, 255, 0.55) 55%, transparent 84%),
+		radial-gradient(ellipse 0.22em 0.5em at 0.42em 0.74em, rgba(120, 160, 255, 0.8), rgba(84, 112, 248, 0.34) 60%, transparent 86%),
+		radial-gradient(ellipse 0.3em 0.66em at 0.42em 0.66em, rgba(84, 104, 245, 0.32), rgba(122, 92, 250, 0.12) 66%, transparent 90%);
+	--core-filter: blur(0.8px) drop-shadow(0 0 8px rgba(104, 144, 255, 0.55));
+	--core-opacity: 0.95;
+	--core-mask: linear-gradient(90deg, transparent 0, black 0.35em), radial-gradient(ellipse 92% 94% at 26% 58%, black 0 55%, transparent 95%);
+	--flow-width: 3.4em;
+	--flow-height: 1.3em;
+	--flow-bg: linear-gradient(93deg, transparent 0%, rgba(255, 200, 130, 0.14) 18%, rgba(130, 160, 255, 0.08) 46%, transparent 76%);
+	--flow-filter: blur(10px) saturate(1.1);
+	--flow-low: 0.05;
+	--flow-high: 0.16;
+	--flow-motion: flame-flow-v2 6s ease-in-out infinite;
+	--flow-mask: linear-gradient(90deg, transparent 0, black 0.35em), radial-gradient(ellipse 92% 88% at 28% 52%, black 0 44%, transparent 96%);
+	--spark-width: 2.4em;
+	--spark-height: 1.7em;
+	--spark-bg:
+		radial-gradient(circle at 0.8em 0.9em, rgba(255, 240, 200, 0.85) 0 0.03em, transparent 0.08em),
+		radial-gradient(circle at 1.4em 0.55em, rgba(255, 176, 70, 0.7) 0 0.026em, transparent 0.075em);
+	--spark-filter: blur(0.3px) drop-shadow(0 0 5px rgba(255, 170, 60, 0.5));
+	--spark-low: 0;
+	--spark-high: 0.4;
+	--spark-motion: flame-embers-v2 3.8s cubic-bezier(0.3, 0.1, 0.55, 1) infinite;
+	--spark-mask: linear-gradient(90deg, transparent 0, black 0.35em), radial-gradient(ellipse 92% 90% at 32% 55%, black 0 55%, transparent 96%);
+	--smoke-width: 3.6em;
+	--smoke-height: 2em;
+	--smoke-bg: radial-gradient(ellipse 1.3em 0.55em at 1.6em 0.45em, rgba(58, 52, 54, 0.24), transparent 80%);
+	--smoke-filter: blur(10px);
+	--smoke-opacity: 0.3;
+	--smoke-mask: linear-gradient(90deg, transparent 0, black 0.35em), radial-gradient(ellipse 92% 90% at 40% 34%, black 0 46%, transparent 94%);
+	--aux-width: 2.6em;
+	--aux-height: 1.9em;
+	--aux-bg: radial-gradient(ellipse 0.2em 0.5em at 0.45em 0.55em, rgba(255, 178, 66, 0.32), rgba(255, 120, 26, 0.14) 58%, transparent 82%);
+	--aux-filter: blur(2px) saturate(1.2);
+	--aux-opacity: 0.55;
+	--aux-motion: flame-tongue-dance-v2 2.1s ease-in-out infinite;
+	--aux-mask: linear-gradient(90deg, transparent 0, black 0.35em), radial-gradient(ellipse 90% 94% at 34% 38%, black 0 48%, transparent 94%);
+}
+
+.field[data-theme='light'][data-state='waiting'][data-glow='flame'] {
+	--haze-opacity: 0.5;
+	--core-opacity: 0.9;
+	--core-bg:
+		radial-gradient(ellipse 0.14em 0.28em at 0.42em 0.86em, rgba(230, 242, 255, 0.95), rgba(150, 190, 255, 0.5) 55%, transparent 84%),
+		radial-gradient(ellipse 0.22em 0.48em at 0.42em 0.74em, rgba(70, 110, 245, 0.75), rgba(52, 82, 230, 0.3) 60%, transparent 86%),
+		radial-gradient(ellipse 0.3em 0.62em at 0.42em 0.66em, rgba(52, 76, 225, 0.28), transparent 88%);
+	--spark-high: 0.3;
+	--smoke-opacity: 0.18;
+	--aux-opacity: 0.4;
+}
+
+/* ---------- Keyframes (flame-*-v2) ---------- */
+@keyframes flame-haze-breathe-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--haze-opacity) * 0.78);
+		transform: translateY(-50%) scaleX(0.98) scaleY(0.95);
+	}
+	50% {
+		opacity: var(--haze-opacity);
+		transform: translateY(-50%) scaleX(1.02) scaleY(1.05);
+	}
+}
+
+@keyframes flame-plume-live-v2 {
+	0%,
+	100% {
+		transform: translateY(-50%) scaleY(0.965) skewX(-0.5deg);
+	}
+	34% {
+		transform: translateY(-51.5%) scaleY(1.03) skewX(0.8deg);
+	}
+	68% {
+		transform: translateY(-49%) scaleY(0.99) skewX(-0.3deg);
+	}
+}
+
+@keyframes flame-core-flicker-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--core-opacity) * 0.82);
+		transform: translateY(-50%) scaleX(0.97);
+	}
+	22% {
+		opacity: var(--core-opacity);
+		transform: translateY(-52%) scaleX(1.04);
+	}
+	55% {
+		opacity: calc(var(--core-opacity) * 0.9);
+		transform: translateY(-49%) scaleX(1);
+	}
+	78% {
+		opacity: var(--core-opacity);
+		transform: translateY(-51%) scaleX(1.02);
+	}
+}
+
+@keyframes flame-flow-v2 {
+	0% {
+		opacity: var(--flow-low);
+		background-position: 0% 50%;
+	}
+	20% {
+		opacity: var(--flow-high);
+	}
+	58% {
+		opacity: calc(var(--flow-high) * 0.62);
+	}
+	100% {
+		opacity: var(--flow-low);
+		background-position: 200% 44%;
+	}
+}
+
+@keyframes flame-embers-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-46%) translateX(-0.1em) scale(0.9);
+	}
+	14% {
+		opacity: var(--spark-high);
+	}
+	55% {
+		opacity: calc(var(--spark-high) * 0.7);
+		transform: translateY(-64%) translateX(0.34em) scale(1);
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(-86%) translateX(0.78em) scale(0.55);
+	}
+}
+
+@keyframes flame-smoke-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--smoke-opacity) * 0.7);
+		transform: translateY(-52%) translateX(0) scaleY(0.96);
+	}
+	45% {
+		opacity: var(--smoke-opacity);
+		transform: translateY(-57%) translateX(0.22em) scaleY(1.06) skewX(-2deg);
+	}
+	75% {
+		opacity: calc(var(--smoke-opacity) * 0.85);
+		transform: translateY(-60%) translateX(0.34em) scaleY(1.02) skewX(1.5deg);
+	}
+}
+
+@keyframes flame-tongue-sway-v2 {
+	0%,
+	100% {
+		opacity: 0.85;
+		transform: translateY(-50%) skewX(-2.5deg) scaleY(0.94);
+	}
+	28% {
+		opacity: 1;
+		transform: translateY(-51%) skewX(1.8deg) scaleY(1.06);
+	}
+	54% {
+		opacity: 0.92;
+		transform: translateY(-49.5%) skewX(-1deg) scaleY(0.99);
+	}
+	76% {
+		opacity: 0.97;
+		transform: translateY(-51.5%) skewX(2.6deg) scaleY(1.04);
+	}
+}
+
+@keyframes flame-tongue-dance-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--aux-opacity) * 0.7);
+		transform: translateY(-50%) skewX(2deg) scaleY(0.92);
+	}
+	24% {
+		opacity: var(--aux-opacity);
+		transform: translateY(-51.4%) skewX(-2.2deg) scaleY(1.08);
+	}
+	52% {
+		opacity: calc(var(--aux-opacity) * 0.84);
+		transform: translateY(-49.4%) skewX(1.2deg) scaleY(0.98);
+	}
+	78% {
+		opacity: var(--aux-opacity);
+		transform: translateY(-51%) skewX(-1.4deg) scaleY(1.05);
+	}
+}
+
+@keyframes flame-nozzle-in-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-50%) scaleX(0.2) scaleY(0.55);
+	}
+	60% {
+		opacity: 1;
+		transform: translateY(-50%) scaleX(1.08) scaleY(1.04);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(-50%) scale(1);
+	}
+}
+
+@keyframes flame-nozzle-flicker-v2 {
+	0%,
+	100% {
+		opacity: 0.94;
+		transform: translateY(-50%) scaleY(0.97);
+	}
+	18% {
+		opacity: 1;
+		transform: translateY(-50.8%) scaleY(1.05);
+	}
+	41% {
+		opacity: 0.9;
+		transform: translateY(-49.4%) scaleY(0.95);
+	}
+	63% {
+		opacity: 1;
+		transform: translateY(-50.4%) scaleY(1.03);
+	}
+	82% {
+		opacity: 0.95;
+		transform: translateY(-50%) scaleY(1);
+	}
+}
+
+@keyframes flame-layer-in-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-50%) scaleY(0.7);
+	}
+	100% {
+		opacity: 0.95;
+		transform: translateY(-50%) scaleY(1);
+	}
+}
+
+@keyframes flame-scrim-in-v2 {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 0.85;
+	}
+}
+
+@keyframes flame-wash-v2 {
+	0%,
+	100% {
+		opacity: 0.78;
+	}
+	42% {
+		opacity: 0.95;
+	}
+	68% {
+		opacity: 0.86;
+	}
+}
+
+@keyframes flame-glyph-ignite-v2 {
+	0% {
+		opacity: 0;
+		color: rgb(255, 255, 250);
+		transform: translateY(0.12em) scaleY(0.6);
+		filter: blur(5px) brightness(2.2) saturate(1.5) drop-shadow(0 0 0.16em rgba(255, 255, 240, 0.9));
+	}
+	38% {
+		opacity: 1;
+		color: rgb(255, 244, 214);
+		transform: translateY(-0.02em) scaleY(1.05);
+		filter: blur(0.6px) brightness(1.55) saturate(1.2) drop-shadow(0 0 0.12em rgba(255, 240, 200, 0.7));
+	}
+	70% {
+		color: rgb(255, 242, 216);
+		filter: blur(0) brightness(1.15) saturate(1.06) drop-shadow(0 0 0.06em rgba(255, 210, 150, 0.4));
+	}
+	100% {
+		opacity: 1;
+		color: var(--next-color);
+		transform: translateY(0) scaleY(1);
+		filter: blur(0) brightness(1) saturate(1) drop-shadow(0 0 0 rgba(255, 210, 150, 0));
+	}
+}
+
+@keyframes flame-glyph-ignite-light-v2 {
+	0% {
+		opacity: 0;
+		color: rgb(250, 150, 30);
+		transform: translateY(0.12em) scaleY(0.6);
+		filter: blur(4px) saturate(1.6) drop-shadow(0 0 0.14em rgba(250, 140, 30, 0.8));
+	}
+	38% {
+		opacity: 1;
+		color: rgb(216, 96, 16);
+		transform: translateY(-0.02em) scaleY(1.05);
+		filter: blur(0.5px) saturate(1.3) drop-shadow(0 0 0.1em rgba(240, 120, 24, 0.55));
+	}
+	70% {
+		color: rgb(120, 62, 30);
+		filter: blur(0) saturate(1.1) drop-shadow(0 0 0.05em rgba(230, 110, 22, 0.3));
+	}
+	100% {
+		opacity: 1;
+		color: var(--next-color);
+		transform: translateY(0) scaleY(1);
+		filter: blur(0) saturate(1) drop-shadow(0 0 0 rgba(230, 110, 22, 0));
+	}
+}
+
+@keyframes flame-word-settle-v2 {
+	0% {
+		opacity: 0;
+		transform: translateX(-0.1em);
+	}
+	100% {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+@keyframes flame-word-simmer-v2 {
+	0%,
+	100% {
+		text-shadow:
+			0 0 6px rgba(255, 236, 200, 0.4),
+			0 0 16px rgba(255, 150, 50, 0.24),
+			0 0 34px rgba(255, 70, 16, 0.16);
+	}
+	26% {
+		text-shadow:
+			0 0 7px rgba(255, 240, 208, 0.5),
+			0 0 18px rgba(255, 160, 56, 0.3),
+			0 0 38px rgba(255, 84, 20, 0.2);
+	}
+	50% {
+		text-shadow:
+			0 0 6px rgba(255, 232, 194, 0.36),
+			0 0 15px rgba(255, 144, 46, 0.22),
+			0 0 32px rgba(255, 66, 14, 0.14);
+	}
+	74% {
+		text-shadow:
+			0 0 8px rgba(255, 242, 212, 0.52),
+			0 0 20px rgba(255, 166, 60, 0.32),
+			0 0 40px rgba(255, 90, 22, 0.22);
+	}
+}
+
+@keyframes flame-word-simmer-light-v2 {
+	0%,
+	100% {
+		text-shadow:
+			0 0 1px rgba(255, 255, 255, 0.75),
+			0 0 10px rgba(244, 140, 40, 0.2),
+			0 0 22px rgba(226, 92, 14, 0.1);
+	}
+	50% {
+		text-shadow:
+			0 0 1px rgba(255, 255, 255, 0.75),
+			0 0 12px rgba(244, 140, 40, 0.3),
+			0 0 26px rgba(226, 92, 14, 0.16);
+	}
+}
+
+@keyframes flame-pilot-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--core-opacity) * 0.85);
+		transform: translateY(-50%) scaleY(0.94) skewX(-1deg);
+	}
+	30% {
+		opacity: var(--core-opacity);
+		transform: translateY(-52%) scaleY(1.08) skewX(1.2deg);
+	}
+	62% {
+		opacity: calc(var(--core-opacity) * 0.92);
+		transform: translateY(-50.6%) scaleY(1) skewX(-0.6deg);
+	}
+}
+
+@keyframes flame-pilot-halo-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--haze-opacity) * 0.72);
+		transform: translateY(-50%) scale(0.96);
+	}
+	50% {
+		opacity: var(--haze-opacity);
 		transform: translateY(-50%) scale(1.04);
 	}
 }
