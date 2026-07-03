@@ -1,0 +1,1426 @@
+/* ============================================================
+   HEART v2 — "Кардиомонитор: the reveal IS a heartbeat"
+   Not confetti — a cardiac monitor, tender but alive. The field
+   is a dark warm burgundy-black vessel (never pink-washed) whose
+   rose rim breathes on a LUB-DUB double beat (~1.1s:
+   thump-thump...pause) shared by every layer of the family. THE
+   SIGNATURE — the EKG TRACE (prediction::before): a thin
+   rose-white monitor line at the text's lower third built from
+   stacked no-repeat gradient segments — flat lead-in, a tiny
+   P-wave arch, the sharp QRS SPIKE (two steep mirrored
+   linear-gradient slants + an apex glow) right around the next
+   word's start, a T-wave arch, then a long flat run that
+   continues faint beneath the tail. On ignite the trace DRAWS
+   left -> right in ~820ms via per-layer background-size widths
+   (horror's scratch technique), then RESTS, luminance breathing
+   on the beat. A bright LEADING DOT (prediction::after)
+   re-travels the resting line every couple of beats — a single
+   no-repeat tile whose background-position runs the polyline,
+   dipping into the P bump, spiking hard at the QRS, easing over
+   the T — with a drop-shadow trail smearing behind it. ONE HEART
+   (next-word::after): a single small glossy SVG heart INFLATES
+   at the caret at ignite (springy overshoot) and then beats
+   lub-dub forever; every four cycles a tiny heart BUDS OFF
+   (glyph:first-child::before) and floats up, fading. NO
+   confetti. BLUSH WAVE TEXT per glyph via var(--i), stagger
+   tuned to the draw speed: each glyph flushes pale gray -> rose
+   flush with a 1.03 scale bump at its beat -> settles warm
+   ivory-white rgba(255,238,242,.96) with a soft pink glow; the
+   data-alt ghost lifts off as a small sigh. beam-hot is the
+   entry bloom pumping with the beat at the caret; beam-flow a
+   finite flash sheet chasing the draw; beam-veil a warm haze
+   over the trace zone on the beat; beam-body the rose pool
+   below; beam-spark rare glints twinkling on the resting line;
+   beam-smoke a normal-blend depth shade; beam-aux the faint
+   MONITOR GRID — graph paper ruled in dim rose. Tail = dusty
+   rose dim, masked fade, the flat trace running faint beneath
+   it. Caret = rose-white needle with a soft double-beat dip.
+   Waiting = FLATLINE at the caret: a thin dim line (torch-haze),
+   a small blip traveling a short distance every ~1.6s
+   (torch-flow, background-position run), a tiny dim heart barely
+   pulsing (torch-core) over a quiet dark pool (torch-smoke) —
+   the monitor waiting for a signal. Light theme = valentine
+   stationery: cream paper, the EKG in rose INK that darkens the
+   paper (normal blend), deep raspberry text, the heart a wet
+   rose-ink drop with a white specular. data-light-flow='off':
+   trace draw, blush wave, heart inflate and the alt sigh play
+   once (finite); dot travel, lub-dub loops and buds go static
+   while the drawn trace rests visible. No capsule anywhere:
+   layer-radius 0, every layer and pseudo dissolves through
+   intersected left-fade x radial masks whose fades complete
+   INSIDE their boxes. Keyframes: heart-*-v2 only (legacy
+   heart-*, heart-*-new stay untouched for legacy consumers).
+   ============================================================ */
+
+.field[data-glow='heart'] {
+	--layer-radius: 0;
+	--layer-clip: none;
+	--heart-trace-o: 0.92;
+	--heart-dot-o: 0.95;
+	--heart-scrim-o: 0.8;
+	--heart-organ-o: 0.95;
+	--heart-vessel-o: 0.8;
+	--heart-bud-o: 0.85;
+	--ready-border: rgba(255, 96, 148, 0.26);
+	--ready-shadow:
+		0 1px 0 rgba(255, 226, 236, 0.04) inset,
+		0 -40px 104px rgba(26, 2, 12, 0.74) inset,
+		0 32px 70px rgba(0, 0, 0, 0.55),
+		0 0 88px rgba(255, 46, 110, 0.1),
+		0 0 150px rgba(150, 10, 60, 0.06);
+	--field-wash:
+		radial-gradient(ellipse 118% 172% at 50% 50%, transparent 0 56%, rgba(255, 46, 110, 0.05) 78%, rgba(255, 70, 130, 0.12) 100%),
+		radial-gradient(ellipse 42% 96% at 22% 60%, rgba(255, 60, 122, 0.05), transparent 76%),
+		linear-gradient(180deg, rgba(255, 196, 214, 0.02), transparent 38%);
+	--caret-gradient: linear-gradient(
+		180deg,
+		rgb(255, 252, 253) 0%,
+		rgb(255, 228, 237) 28%,
+		rgb(255, 154, 188) 58%,
+		rgb(226, 54, 112) 84%,
+		rgb(140, 16, 60) 100%
+	);
+	--caret-shadow:
+		0 0 5px rgba(255, 238, 245, 0.7),
+		0 0 15px rgba(255, 110, 160, 0.4),
+		0 9px 20px rgba(150, 12, 62, 0.45);
+	--haze-width: 12em;
+	--haze-height: 2.6em;
+	--haze-size: 100% 100%;
+	--haze-bg:
+		linear-gradient(180deg, transparent 0 44%, rgba(255, 112, 162, 0.07) 60% 72%, transparent 90%),
+		radial-gradient(ellipse 46% 34% at 26% 66%, rgba(255, 84, 142, 0.1), transparent 78%);
+	--haze-filter: blur(9px) saturate(1.15);
+	--haze-opacity: 0.8;
+	--haze-motion: heart-haze-beat-v2 1.1s cubic-bezier(0.45, 0.05, 0.55, 0.95) 1.3s infinite;
+	--torch-haze-motion: heart-wait-line-v2 3.2s ease-in-out infinite;
+	--haze-mask: linear-gradient(90deg, transparent 0, black 0.9em), radial-gradient(ellipse 52% 52% at 38% 52%, black 0 46%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	--body-width: 11em;
+	--body-height: 2.6em;
+	--body-size: 100% 100%;
+	--body-bg:
+		radial-gradient(ellipse 56% 58% at 30% 66%, rgba(255, 70, 130, 0.13), rgba(190, 30, 90, 0.05) 58%, transparent 80%),
+		radial-gradient(ellipse 3.4em 0.5em at 2em 1.74em, rgba(255, 120, 168, 0.12), transparent 78%);
+	--body-filter: blur(8px) saturate(1.2);
+	--body-opacity: 0.9;
+	--body-mask: linear-gradient(90deg, transparent 0, black 0.85em), radial-gradient(ellipse 52% 54% at 40% 54%, black 0 48%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	--core-width: 3em;
+	--core-height: 2.6em;
+	--core-size: auto;
+	--core-bg:
+		radial-gradient(ellipse 1.5em 0.85em at 0.7em 1.5em, rgba(255, 216, 231, 0.45), rgba(255, 92, 150, 0.2) 55%, transparent 80%),
+		radial-gradient(ellipse 0.6em 0.4em at 0.5em 1.62em, rgba(255, 240, 246, 0.4), transparent 76%);
+	--core-filter: blur(4.5px) saturate(1.2);
+	--core-opacity: 0.9;
+	--core-motion: heart-hot-beat-v2 1.1s cubic-bezier(0.45, 0.05, 0.55, 0.95) 1.2s infinite;
+	--torch-core-motion: heart-wait-heart-v2 3.2s ease-in-out infinite;
+	--core-mask: linear-gradient(90deg, transparent 0, black 0.3em), radial-gradient(ellipse 52% 52% at 34% 56%, black 0 48%, rgba(0, 0, 0, 0.5) 74%, transparent 94%);
+	--flow-width: 10em;
+	--flow-height: 2.6em;
+	--flow-size: 100% 100%;
+	--flow-bg:
+		linear-gradient(90deg, transparent 0 3%, rgba(255, 208, 226, 0.3) 12%, rgba(255, 128, 175, 0.16) 30%, transparent 54%),
+		radial-gradient(ellipse 1.2em 0.4em at 18% 66%, rgba(255, 244, 248, 0.35), transparent 76%);
+	--flow-filter: blur(6px) saturate(1.2);
+	--flow-low: 0;
+	--flow-high: 0.7;
+	--flow-motion: heart-draw-sweep-v2 900ms cubic-bezier(0.3, 0.6, 0.3, 1) 200ms both;
+	--flow-mask: linear-gradient(90deg, transparent 0, black 0.8em), radial-gradient(ellipse 50% 52% at 40% 54%, black 0 46%, rgba(0, 0, 0, 0.5) 72%, transparent 96%);
+	--spark-width: 8.5em;
+	--spark-height: 2.6em;
+	--spark-size: 100% 100%;
+	--spark-bg:
+		radial-gradient(circle at 1.1em 1.72em, rgba(255, 246, 250, 0.85) 0 0.024em, rgba(255, 140, 180, 0.26) 0.032em 0.055em, transparent 0.075em),
+		radial-gradient(circle at 3.2em 1.74em, rgba(255, 238, 245, 0.7) 0 0.02em, rgba(255, 130, 172, 0.2) 0.027em 0.048em, transparent 0.066em),
+		radial-gradient(circle at 5.4em 1.72em, rgba(255, 242, 247, 0.55) 0 0.018em, transparent 0.05em),
+		radial-gradient(circle at 7.2em 1.74em, rgba(255, 234, 242, 0.42) 0 0.016em, transparent 0.045em);
+	--spark-filter: blur(0.2px) drop-shadow(0 0 4px rgba(255, 100, 150, 0.45));
+	--spark-low: 0.1;
+	--spark-high: 0.75;
+	--spark-motion: heart-glint-v2 3.3s ease-in-out 2.2s infinite;
+	--spark-mask: linear-gradient(90deg, transparent 0, black 0.6em), radial-gradient(ellipse 52% 52% at 42% 56%, black 0 50%, rgba(0, 0, 0, 0.5) 76%, transparent 96%);
+	--smoke-width: 12em;
+	--smoke-height: 2.6em;
+	--smoke-size: 100% 100%;
+	--smoke-bg:
+		linear-gradient(180deg, rgba(12, 2, 7, 0.36) 0 12%, transparent 38% 60%, rgba(12, 2, 7, 0.42) 92% 100%),
+		radial-gradient(ellipse 46% 66% at 62% 44%, rgba(10, 2, 6, 0.24), transparent 78%);
+	--smoke-filter: blur(9px);
+	--smoke-opacity: 0.62;
+	--smoke-blend: normal;
+	--smoke-motion: heart-depth-breathe-v2 8.8s ease-in-out 1.4s infinite;
+	--smoke-mask: linear-gradient(90deg, transparent 0, black 0.9em), radial-gradient(ellipse 52% 54% at 40% 52%, black 0 48%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	--aux-width: 12em;
+	--aux-height: 2.6em;
+	--aux-size: 100% 100%, 100% 100%;
+	--aux-bg:
+		repeating-linear-gradient(90deg, rgba(255, 110, 160, 0.05) 0 0.022em, transparent 0.022em 0.62em),
+		repeating-linear-gradient(0deg, rgba(255, 110, 160, 0.04) 0 0.022em, transparent 0.022em 0.62em);
+	--aux-filter: blur(0.2px);
+	--aux-opacity: 0.5;
+	--aux-blend: screen;
+	--aux-motion: heart-grid-breathe-v2 4.4s ease-in-out 1.1s infinite;
+	--aux-mask: linear-gradient(90deg, transparent 0, black 0.9em), radial-gradient(ellipse 52% 52% at 40% 50%, black 0 44%, rgba(0, 0, 0, 0.5) 72%, transparent 94%);
+	--next-color: rgba(255, 238, 242, 0.96);
+	--next-shadow:
+		0 1px 2px rgba(30, 2, 12, 0.6),
+		0 0 1px rgba(255, 244, 248, 0.5),
+		0 0 12px rgba(255, 110, 160, 0.28),
+		0 0 28px rgba(255, 60, 120, 0.12);
+	--tail-color: rgba(226, 164, 186, 0.3);
+}
+
+/* The monitor rides the shared beams again: undo the legacy display:none
+   pass and anchor each layer. The entry bloom hugs the caret, the grid and
+   depth shade span the suggestion zone. */
+.stage[data-glow='heart'] .field[data-glow] .prediction > .beam {
+	display: block;
+	left: -0.03em;
+	transform-origin: left center;
+}
+
+.stage[data-glow='heart'] .field[data-glow] .prediction > .beam-veil {
+	left: -0.3em;
+}
+
+.stage[data-glow='heart'] .field[data-glow] .prediction > .beam-body {
+	left: -0.5em;
+}
+
+.stage[data-glow='heart'] .field[data-glow] .prediction > .beam-hot {
+	left: -0.35em;
+}
+
+.stage[data-glow='heart'] .field[data-glow] .prediction > .beam-flow {
+	left: -0.4em;
+}
+
+.stage[data-glow='heart'] .field[data-glow] .prediction > .beam-spark {
+	left: -0.1em;
+}
+
+.stage[data-glow='heart'] .field[data-glow] .prediction > .beam-smoke {
+	left: -0.6em;
+}
+
+.stage[data-glow='heart'] .field[data-glow] .prediction > .beam-aux {
+	left: -0.45em;
+}
+
+/* Two-layer masks (left fade x radial falloff) need intersection, not
+   union — on the pseudo layers too. */
+.stage[data-glow='heart'] .field[data-glow] .prediction > .beam,
+.stage[data-glow='heart'] .field[data-glow] .torch-beam,
+.stage[data-glow='heart'] .field[data-glow] .prediction::before,
+.stage[data-glow='heart'] .field[data-glow] .prediction::after {
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+}
+
+/* Torch layers serve the waiting flatline only; never double-print in ready. */
+.stage[data-glow='heart'] .field[data-glow] .caret-origin-glow[data-mode='ready'] {
+	display: none;
+}
+
+.stage[data-glow='heart'] .field[data-glow] .prediction {
+	isolation: isolate;
+}
+
+/* Dark warm burgundy-black vessel — a monitor housing, not a pink wash. */
+.stage[data-glow='heart'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 110% 170% at 76% -46%, rgba(150, 30, 74, 0.12), transparent 55%),
+		linear-gradient(180deg, rgba(255, 210, 224, 0.02), transparent 32%),
+		linear-gradient(90deg, rgb(14, 5, 8), rgb(18, 6, 11) 52%, rgb(24, 7, 14));
+}
+
+/* Rose rim: swells with the lub-dub. Screen blend lifts the rim without
+   washing the vessel pink. */
+.stage[data-glow='heart'] .field[data-glow]::before {
+	background: var(--field-wash);
+	background-size: 100% 100%;
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: screen;
+}
+
+.stage[data-glow='heart'] .field[data-glow][data-state='ready']::before {
+	opacity: var(--heart-vessel-o, 0.8);
+	animation:
+		heart-vessel-in-v2 500ms ease-out both,
+		heart-vessel-beat-v2 1.1s cubic-bezier(0.45, 0.05, 0.55, 0.95) 700ms infinite;
+}
+
+/* Dissolve into the field's rounded clip, not the paint box; edge overlays
+   extended into the 64px padding so the vessel never steps at the content
+   box. */
+.stage[data-glow='heart'] .field[data-glow] .paint {
+	overflow: visible;
+	clip-path: inset(-3.4em -5em -3.4em 0);
+}
+
+.stage[data-glow='heart'] .field[data-glow] .edge-left {
+	left: -64px;
+	width: 156px;
+	background: linear-gradient(90deg, rgb(14, 5, 8) 0%, rgb(14, 5, 8) 40%, rgba(14, 5, 8, 0) 100%);
+	opacity: 0;
+}
+
+.stage[data-glow='heart'] .field[data-glow] .viewport.scrolled .edge-left {
+	opacity: 1;
+}
+
+.stage[data-glow='heart'] .field[data-glow] .edge-right {
+	right: -64px;
+	width: 224px;
+	background: linear-gradient(
+		270deg,
+		rgba(24, 7, 14, 0.92) 0%,
+		rgba(24, 7, 14, 0.58) 30%,
+		rgba(24, 7, 14, 0.18) 68%,
+		rgba(24, 7, 14, 0) 100%
+	);
+	opacity: 0.9;
+}
+
+/* Caret: rose-white needle, dipping softly twice per cycle with the beat. */
+.stage[data-glow='heart'] .field[data-glow] .caret.active {
+	animation: heart-caret-beat-v2 1.1s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+
+/* THE EKG TRACE: flat lead-in -> P-wave arch -> QRS spike (two mirrored
+   steep slants + apex glow) at the next word's start -> T-wave arch -> long
+   flat run under the tail. Segments are no-repeat gradient layers whose
+   background-size widths grow left -> right over ~820ms (draw-in), then the
+   whole line rests. Finite; survives flow-off. Base sizes hold the drawn
+   state — the animation's backwards fill hides it before ignite. */
+.stage[data-glow='heart'] .field[data-glow] .prediction::before {
+	position: absolute;
+	left: -0.7em;
+	top: 50%;
+	z-index: 1;
+	width: 11em;
+	height: 2.6em;
+	content: '';
+	pointer-events: none;
+	border-radius: 0;
+	clip-path: none;
+	background-image:
+		linear-gradient(90deg, rgba(255, 198, 216, 0.3), rgba(255, 212, 227, 0.85) 55%, rgba(255, 216, 230, 0.9)),
+		radial-gradient(ellipse 50% 100% at 50% 100%, transparent 0 58%, rgba(255, 206, 222, 0.8) 66% 84%, transparent 92%),
+		linear-gradient(90deg, rgba(255, 214, 228, 0.9), rgba(255, 218, 231, 0.92)),
+		linear-gradient(103deg, transparent 0 44%, rgba(255, 240, 246, 0.98) 48% 54%, transparent 58%),
+		radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255, 252, 253, 0.9), rgba(255, 150, 190, 0.35) 55%, transparent 80%),
+		linear-gradient(77deg, transparent 0 44%, rgba(255, 236, 244, 0.95) 48% 54%, transparent 58%),
+		linear-gradient(90deg, rgba(255, 216, 230, 0.9), rgba(255, 210, 226, 0.85)),
+		radial-gradient(ellipse 50% 100% at 50% 100%, transparent 0 56%, rgba(255, 196, 216, 0.72) 64% 82%, transparent 90%),
+		linear-gradient(90deg, rgba(255, 208, 224, 0.8), rgba(255, 190, 212, 0.34) 55%, rgba(255, 180, 206, 0.14));
+	background-position:
+		0em 1.72em,
+		1.5em 1.5em,
+		2.05em 1.72em,
+		2.6em 0.48em,
+		2.52em 0.36em,
+		2.94em 0.48em,
+		3.28em 1.72em,
+		4.08em 1.4em,
+		4.88em 1.72em;
+	background-size:
+		1.5em 0.045em,
+		0.55em 0.26em,
+		0.55em 0.045em,
+		0.34em 1.28em,
+		0.5em 0.3em,
+		0.34em 1.42em,
+		0.8em 0.045em,
+		0.8em 0.38em,
+		5.6em 0.045em;
+	background-repeat: no-repeat;
+	filter: blur(0.2px) drop-shadow(0 0 4px rgba(255, 64, 118, 0.55)) drop-shadow(0 0 12px rgba(255, 40, 100, 0.22));
+	-webkit-mask-image: linear-gradient(90deg, transparent 0, black 0.8em), radial-gradient(ellipse 52% 54% at 42% 52%, black 0 48%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	mask-image: linear-gradient(90deg, transparent 0, black 0.8em), radial-gradient(ellipse 52% 54% at 42% 52%, black 0 48%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+	mix-blend-mode: screen;
+	opacity: var(--heart-trace-o);
+	transform: translateY(-50%);
+	animation:
+		heart-trace-draw-v2 820ms cubic-bezier(0.25, 0.6, 0.3, 1) 180ms both,
+		heart-trace-rest-v2 1.1s cubic-bezier(0.45, 0.05, 0.55, 0.95) 1.35s infinite;
+}
+
+/* THE LEADING DOT: one bright bead re-runs the resting line every couple of
+   beats. A single no-repeat tile travels the polyline on
+   background-position — dipping into the P bump, spiking hard at the QRS,
+   easing over the T — while stacked drop-shadows smear a fading trail
+   behind it. Hidden until its loop raises it; static (invisible) with flow
+   off, the drawn trace rests visible beneath. */
+.stage[data-glow='heart'] .field[data-glow] .prediction::after {
+	position: absolute;
+	left: -0.7em;
+	top: 50%;
+	z-index: 1;
+	width: 11em;
+	height: 2.6em;
+	content: '';
+	pointer-events: none;
+	border-radius: 0;
+	clip-path: none;
+	background-image: radial-gradient(circle at 0.7em 1.745em, rgba(255, 250, 252, 0.98) 0 0.055em, rgba(255, 130, 172, 0.45) 0.065em 0.12em, transparent 0.16em);
+	background-position: -0.8em 0em;
+	background-size: 1.4em 2.6em;
+	background-repeat: no-repeat;
+	filter: drop-shadow(0 0 5px rgba(255, 70, 122, 0.65)) drop-shadow(-0.35em 0 8px rgba(255, 90, 145, 0.4));
+	-webkit-mask-image: linear-gradient(90deg, transparent 0, black 0.8em), radial-gradient(ellipse 52% 54% at 42% 52%, black 0 48%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	mask-image: linear-gradient(90deg, transparent 0, black 0.8em), radial-gradient(ellipse 52% 54% at 42% 52%, black 0 48%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+	mix-blend-mode: screen;
+	opacity: 0;
+	transform: translateY(-50%);
+	animation: heart-dot-travel-v2 2.2s linear 1.55s infinite;
+}
+
+/* ---------- Text is sacred: the word takes its pulse ---------- */
+/* The whole word rides the lub-dub — two quick 1.018 swells, then rest. */
+.stage[data-glow='heart'] .field[data-glow] .next-word {
+	position: relative;
+	isolation: isolate;
+	z-index: 2;
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: var(--next-shadow);
+	transform-origin: left 60%;
+	animation:
+		heart-word-in-v2 300ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		heart-word-lubdub-v2 1.1s cubic-bezier(0.45, 0.05, 0.55, 0.95) 1.3s infinite;
+}
+
+/* Burgundy scrim under the glyphs: contrast insurance over the trace. */
+.stage[data-glow='heart'] .field[data-glow] .next-word::before {
+	position: absolute;
+	inset: -0.22em -0.6em -0.26em -0.35em;
+	z-index: -2;
+	content: '';
+	pointer-events: none;
+	border-radius: 0.75em;
+	clip-path: none;
+	background: radial-gradient(ellipse 84% 94% at 38% 52%, rgba(22, 3, 11, 0.6), rgba(22, 3, 11, 0.26) 58%, transparent 88%);
+	filter: blur(6px);
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: normal;
+	opacity: var(--heart-scrim-o);
+	transform: none;
+	animation: heart-scrim-in-v2 420ms ease-out both;
+}
+
+/* ONE HEART: a single glossy heart inflates at the caret with a springy
+   overshoot, then beats lub-dub in the shared timing family. Finite inflate
+   survives flow-off; the beat loop does not. */
+.stage[data-glow='heart'] .field[data-glow] .next-word::after {
+	position: absolute;
+	left: -1.02em;
+	top: 50%;
+	z-index: 1;
+	width: 0.95em;
+	height: 0.95em;
+	content: '';
+	pointer-events: none;
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23ffb1cd'/%3E%3Cstop offset='.45' stop-color='%23ff5a96'/%3E%3Cstop offset='1' stop-color='%23e0175e'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23g)' d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3Cellipse cx='8.6' cy='7.6' rx='2.5' ry='1.7' fill='%23ffffff' opacity='.55' transform='rotate(-18 8.6 7.6)'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+	filter: saturate(1.1) drop-shadow(0 0 8px rgba(255, 60, 120, 0.55)) drop-shadow(0 0 22px rgba(255, 40, 100, 0.25));
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: normal;
+	opacity: var(--heart-organ-o);
+	transform: translateY(-132%) scale(1);
+	transform-origin: 50% 60%;
+	animation:
+		heart-inflate-v2 640ms cubic-bezier(0.34, 1.56, 0.64, 1) 260ms both,
+		heart-organ-beat-v2 1.1s cubic-bezier(0.45, 0.05, 0.55, 0.95) 1.3s infinite;
+}
+
+/* BLUSH WAVE: per glyph via var(--i), staggered to ride under the trace
+   draw — pale gray -> rose flush with a 1.03 bump at its beat -> settles
+   warm ivory-white with a soft pink glow. The nth-child variants outrank
+   the legacy pulse loops. */
+.stage[data-glow='heart'] .field[data-glow] .next-word .glyph,
+.stage[data-glow='heart'] .field[data-glow] .next-word .glyph:nth-child(even),
+.stage[data-glow='heart'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-glow='heart'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
+	color: var(--next-color);
+	background: none;
+	opacity: 1;
+	filter: none;
+	text-shadow: var(--next-shadow);
+	transform-origin: 50% 72%;
+	animation: heart-glyph-flush-v2 720ms cubic-bezier(0.3, 0.7, 0.3, 1) both;
+	animation-delay: calc(240ms + var(--i) * 80ms);
+}
+
+/* The data-alt ghost lifts off the flushing glyph as a small sigh. */
+.stage[data-glow='heart'] .field[data-glow] .next-word .glyph::after {
+	z-index: 2;
+	content: attr(data-alt);
+	color: rgba(255, 208, 222, 0.75);
+	opacity: 0;
+	filter: none;
+	text-shadow: 0 0 0.25em rgba(255, 140, 180, 0.4);
+	transform: none;
+	transform-origin: 50% 30%;
+	animation: heart-alt-sigh-v2 560ms cubic-bezier(0.4, 0.1, 0.6, 1) both;
+	animation-delay: calc(240ms + var(--i) * 80ms);
+}
+
+/* BUD OFF: every four cycles a tiny heart detaches from the caret heart and
+   floats up, fading. Hidden at rest, so flow-off keeps it still. */
+.stage[data-glow='heart'] .field[data-glow] .next-word .glyph:first-child::before {
+	position: absolute;
+	left: -1.32em;
+	top: 0.12em;
+	z-index: 1;
+	width: 0.42em;
+	height: 0.42em;
+	content: '';
+	pointer-events: none;
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23ff7cae' opacity='.9' d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+	filter: drop-shadow(0 0 4px rgba(255, 80, 138, 0.5));
+	opacity: 0;
+	transform: translate(0, 0) scale(0.35);
+	transform-origin: 50% 60%;
+	animation: heart-bud-v2 4.4s ease-out 2.6s infinite;
+}
+
+/* Tail: dusty rose dim, masked fade completing inside the box — the flat
+   trace runs faint beneath it. */
+.stage[data-glow='heart'] .field[data-glow] .tail {
+	position: relative;
+	z-index: 2;
+	color: var(--tail-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: 0 0 0.3em rgba(255, 110, 160, 0.08);
+	-webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.85) 0, rgba(0, 0, 0, 0.4) 3em, transparent 8.6em);
+	mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.85) 0, rgba(0, 0, 0, 0.4) 3em, transparent 8.6em);
+}
+
+.stage[data-glow='heart'] .field[data-glow] .tail .glyph {
+	color: inherit;
+	background: none;
+	filter: none;
+	opacity: clamp(0.34, calc(0.6 - var(--i) * 0.012), 0.6);
+	text-shadow: none;
+	transform: none;
+	animation: none;
+}
+
+/* Light flow off: the monitor reads once — trace draw, blush wave, heart
+   inflate and the alt sigh play as finite entrances; the dot, lub-dub loops
+   and buds hold still over the resting trace. (Draw flash and glints ride
+   beam-flow/spark, depth and grid ride beam-smoke/aux — the shared flow-off
+   rules hide those.) */
+.stage[data-glow='heart'][data-light-flow='off'] .field[data-glow][data-state='ready']::before {
+	animation: heart-vessel-in-v2 500ms ease-out both;
+}
+
+.stage[data-glow='heart'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: heart-trace-draw-v2 820ms cubic-bezier(0.25, 0.6, 0.3, 1) 180ms both;
+}
+
+.stage[data-glow='heart'][data-light-flow='off'] .field[data-glow] .prediction::after {
+	animation: none;
+}
+
+.stage[data-glow='heart'][data-light-flow='off'] .field[data-glow] .beam-hot {
+	animation: beam-hot 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='heart'][data-light-flow='off'] .field[data-glow] .next-word {
+	animation: heart-word-in-v2 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='heart'][data-light-flow='off'] .field[data-glow] .next-word::before {
+	animation: heart-scrim-in-v2 420ms ease-out both;
+}
+
+.stage[data-glow='heart'][data-light-flow='off'] .field[data-glow] .next-word::after {
+	animation: heart-inflate-v2 640ms cubic-bezier(0.34, 1.56, 0.64, 1) 260ms both;
+}
+
+.stage[data-glow='heart'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
+	animation: heart-glyph-flush-v2 720ms cubic-bezier(0.3, 0.7, 0.3, 1) both;
+	animation-delay: calc(240ms + var(--i) * 80ms);
+}
+
+.stage[data-glow='heart'][data-light-flow='off'] .field[data-glow] .next-word .glyph::after {
+	animation: heart-alt-sigh-v2 560ms cubic-bezier(0.4, 0.1, 0.6, 1) both;
+	animation-delay: calc(240ms + var(--i) * 80ms);
+}
+
+.stage[data-glow='heart'][data-light-flow='off'] .field[data-glow] .next-word .glyph:first-child::before {
+	animation: none;
+}
+
+.stage[data-glow='heart'][data-light-flow='off'] .field[data-glow] .caret.active {
+	animation: none;
+	opacity: 1;
+}
+
+/* ---------- Light theme: valentine stationery ---------- */
+.field[data-theme='light'][data-glow='heart'] {
+	--heart-trace-o: 0.85;
+	--heart-dot-o: 0.8;
+	--heart-scrim-o: 0.88;
+	--heart-organ-o: 0.92;
+	--heart-vessel-o: 0.65;
+	--heart-bud-o: 0.7;
+	--ready-border: rgba(190, 62, 112, 0.34);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.98) inset,
+		0 -18px 50px rgba(232, 176, 194, 0.14) inset,
+		0 18px 46px rgba(88, 34, 52, 0.13),
+		0 0 76px rgba(216, 92, 140, 0.08);
+	--field-wash:
+		radial-gradient(ellipse 118% 172% at 50% 50%, transparent 0 58%, rgba(206, 78, 126, 0.05) 80%, rgba(198, 64, 114, 0.1) 100%),
+		radial-gradient(ellipse 42% 96% at 22% 60%, rgba(214, 96, 140, 0.05), transparent 76%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.5), transparent 38%);
+	--caret-gradient: linear-gradient(
+		180deg,
+		rgb(74, 8, 34) 0%,
+		rgb(140, 22, 66) 32%,
+		rgb(206, 62, 114) 62%,
+		rgb(242, 168, 196) 88%,
+		rgb(255, 244, 248) 100%
+	);
+	--caret-shadow:
+		0 0 5px rgba(178, 52, 100, 0.4),
+		0 0 14px rgba(150, 30, 78, 0.2);
+	--haze-bg:
+		linear-gradient(180deg, transparent 0 44%, rgba(198, 84, 128, 0.07) 60% 72%, transparent 90%),
+		radial-gradient(ellipse 46% 34% at 26% 66%, rgba(206, 92, 136, 0.09), transparent 78%);
+	--haze-filter: blur(8px) saturate(0.95);
+	--haze-opacity: 0.75;
+	--body-bg:
+		radial-gradient(ellipse 56% 58% at 30% 66%, rgba(208, 96, 138, 0.12), rgba(216, 118, 154, 0.05) 58%, transparent 80%),
+		radial-gradient(ellipse 3.4em 0.5em at 2em 1.74em, rgba(198, 82, 126, 0.1), transparent 78%);
+	--body-filter: blur(8px) saturate(0.95);
+	--body-opacity: 0.85;
+	--core-bg:
+		radial-gradient(ellipse 1.5em 0.85em at 0.7em 1.5em, rgba(198, 70, 116, 0.26), rgba(208, 96, 138, 0.11) 55%, transparent 80%),
+		radial-gradient(ellipse 0.6em 0.4em at 0.5em 1.62em, rgba(186, 54, 102, 0.2), transparent 76%);
+	--core-filter: blur(4.5px) saturate(0.95);
+	--core-opacity: 0.85;
+	--flow-bg:
+		linear-gradient(90deg, transparent 0 3%, rgba(196, 78, 122, 0.2) 12%, rgba(208, 104, 144, 0.11) 30%, transparent 54%),
+		radial-gradient(ellipse 1.2em 0.4em at 18% 66%, rgba(184, 52, 100, 0.22), transparent 76%);
+	--flow-filter: blur(6px) saturate(0.95);
+	--flow-high: 0.55;
+	--spark-bg:
+		radial-gradient(circle at 1.1em 1.72em, rgba(255, 255, 255, 0.95) 0 0.02em, rgba(172, 52, 96, 0.5) 0.027em 0.048em, transparent 0.066em),
+		radial-gradient(circle at 3.2em 1.74em, rgba(255, 255, 255, 0.9) 0 0.017em, rgba(180, 58, 102, 0.4) 0.023em 0.042em, transparent 0.058em),
+		radial-gradient(circle at 5.4em 1.72em, rgba(255, 255, 255, 0.85) 0 0.015em, rgba(188, 66, 108, 0.3) 0.02em 0.037em, transparent 0.05em),
+		radial-gradient(circle at 7.2em 1.74em, rgba(255, 255, 255, 0.8) 0 0.014em, transparent 0.04em);
+	--spark-filter: blur(0.2px);
+	--spark-low: 0.15;
+	--spark-high: 0.7;
+	--smoke-bg:
+		linear-gradient(180deg, rgba(214, 178, 190, 0.16) 0 12%, transparent 38% 60%, rgba(210, 170, 184, 0.18) 92% 100%),
+		radial-gradient(ellipse 46% 66% at 62% 44%, rgba(216, 184, 196, 0.12), transparent 78%);
+	--smoke-opacity: 0.55;
+	--smoke-blend: normal;
+	--aux-bg:
+		repeating-linear-gradient(90deg, rgba(178, 62, 106, 0.07) 0 0.022em, transparent 0.022em 0.62em),
+		repeating-linear-gradient(0deg, rgba(178, 62, 106, 0.055) 0 0.022em, transparent 0.022em 0.62em);
+	--aux-opacity: 0.5;
+	--aux-blend: normal;
+	--next-color: rgba(148, 18, 66, 0.94);
+	--next-shadow:
+		0 0 1px rgba(255, 255, 255, 0.88),
+		0 0 9px rgba(226, 120, 160, 0.24),
+		0 0 22px rgba(198, 62, 116, 0.09);
+	--tail-color: rgba(150, 90, 112, 0.36);
+}
+
+/* Cream paper under a soft morning light. */
+.stage[data-theme='light'][data-glow='heart'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 90% 160% at 78% -30%, rgba(255, 236, 242, 0.85), transparent 58%),
+		linear-gradient(180deg, rgb(255, 252, 249), rgb(253, 245, 242) 50%, rgb(250, 238, 236)),
+		linear-gradient(90deg, rgb(255, 251, 248), rgb(252, 242, 240));
+}
+
+.stage[data-theme='light'][data-glow='heart'] .field[data-glow]::before {
+	mix-blend-mode: normal;
+}
+
+/* Ink must darken the paper, never screen into it. */
+.stage[data-theme='light'][data-glow='heart'] .field[data-glow] .prediction > .beam,
+.stage[data-theme='light'][data-glow='heart'] .field[data-glow] .torch-beam {
+	mix-blend-mode: normal;
+}
+
+/* The EKG in rose ink: same geometry, ink that bleeds into the paper. */
+.stage[data-theme='light'][data-glow='heart'] .field[data-glow] .prediction::before {
+	background-image:
+		linear-gradient(90deg, rgba(186, 42, 92, 0.5), rgba(178, 32, 84, 0.8) 55%, rgba(172, 28, 80, 0.85)),
+		radial-gradient(ellipse 50% 100% at 50% 100%, transparent 0 58%, rgba(182, 38, 88, 0.75) 66% 84%, transparent 92%),
+		linear-gradient(90deg, rgba(176, 30, 82, 0.85), rgba(172, 28, 80, 0.85)),
+		linear-gradient(103deg, transparent 0 44%, rgba(150, 14, 64, 0.92) 48% 54%, transparent 58%),
+		radial-gradient(ellipse 50% 50% at 50% 50%, rgba(158, 20, 70, 0.5), rgba(196, 74, 118, 0.2) 55%, transparent 80%),
+		linear-gradient(77deg, transparent 0 44%, rgba(154, 16, 66, 0.88) 48% 54%, transparent 58%),
+		linear-gradient(90deg, rgba(172, 28, 80, 0.85), rgba(176, 32, 82, 0.8)),
+		radial-gradient(ellipse 50% 100% at 50% 100%, transparent 0 56%, rgba(186, 44, 94, 0.66) 64% 82%, transparent 90%),
+		linear-gradient(90deg, rgba(180, 36, 86, 0.72), rgba(196, 74, 118, 0.3) 55%, rgba(204, 92, 132, 0.12));
+	filter: blur(0.2px) drop-shadow(0 0.02em 0.1em rgba(150, 30, 78, 0.25));
+	mix-blend-mode: normal;
+}
+
+/* The dot as a wet ink bead catching the light. */
+.stage[data-theme='light'][data-glow='heart'] .field[data-glow] .prediction::after {
+	background-image: radial-gradient(circle at 0.7em 1.745em, rgba(140, 10, 58, 0.9) 0 0.05em, rgba(178, 52, 100, 0.4) 0.06em 0.11em, transparent 0.15em);
+	filter: drop-shadow(0 0 4px rgba(160, 30, 82, 0.4)) drop-shadow(-0.35em 0 7px rgba(178, 52, 100, 0.3));
+	mix-blend-mode: normal;
+}
+
+.stage[data-theme='light'][data-glow='heart'] .field[data-glow] .next-word {
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: var(--next-shadow);
+	transform-origin: left 60%;
+	animation:
+		heart-word-in-v2 300ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		heart-word-lubdub-v2 1.1s cubic-bezier(0.45, 0.05, 0.55, 0.95) 1.3s infinite;
+}
+
+/* Paper scrim keeps the raspberry ink legible over the washes. */
+.stage[data-theme='light'][data-glow='heart'] .field[data-glow] .next-word::before {
+	background: radial-gradient(ellipse 84% 94% at 38% 52%, rgba(255, 252, 249, 0.9), rgba(255, 252, 249, 0.42) 58%, transparent 88%);
+	filter: blur(5px);
+	mix-blend-mode: normal;
+	opacity: var(--heart-scrim-o);
+	animation: heart-scrim-in-v2 420ms ease-out both;
+}
+
+/* The heart as a wet rose-ink drop with a white specular. */
+.stage[data-theme='light'][data-glow='heart'] .field[data-glow] .next-word::after {
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23c23f78'/%3E%3Cstop offset='.5' stop-color='%23a01e56'/%3E%3Cstop offset='1' stop-color='%237c0e3e'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23g)' d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3Cellipse cx='8.8' cy='7.4' rx='2.3' ry='1.5' fill='%23ffffff' opacity='.8' transform='rotate(-18 8.8 7.4)'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+	filter: saturate(1.05) drop-shadow(0 0.03em 0.12em rgba(130, 16, 58, 0.35));
+	mix-blend-mode: normal;
+}
+
+.stage[data-theme='light'][data-glow='heart'] .field[data-glow] .next-word .glyph,
+.stage[data-theme='light'][data-glow='heart'] .field[data-glow] .next-word .glyph:nth-child(even),
+.stage[data-theme='light'][data-glow='heart'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-theme='light'][data-glow='heart'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
+	color: var(--next-color);
+	text-shadow: var(--next-shadow);
+	animation-name: heart-glyph-flush-light-v2;
+}
+
+.stage[data-theme='light'][data-glow='heart'] .field[data-glow] .next-word .glyph::after {
+	color: rgba(186, 78, 122, 0.7);
+	text-shadow: none;
+}
+
+/* Ink buds. */
+.stage[data-theme='light'][data-glow='heart'] .field[data-glow] .next-word .glyph:first-child::before {
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23b13565' opacity='.9' d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+	filter: drop-shadow(0 0.02em 0.08em rgba(150, 40, 84, 0.3));
+}
+
+.stage[data-theme='light'][data-glow='heart'] .field[data-glow] .tail,
+.stage[data-theme='light'][data-glow='heart'] .field[data-glow] .tail .glyph {
+	color: var(--tail-color);
+	text-shadow: none;
+}
+
+.stage[data-theme='light'][data-glow='heart'] .field[data-glow] .edge-left {
+	background: linear-gradient(90deg, rgb(255, 251, 248) 0%, rgb(255, 251, 248) 40%, rgba(255, 251, 248, 0) 100%);
+}
+
+.stage[data-theme='light'][data-glow='heart'] .field[data-glow] .edge-right {
+	background: linear-gradient(
+		270deg,
+		rgba(252, 242, 240, 0.5) 0%,
+		rgba(252, 242, 240, 0.22) 42%,
+		rgba(252, 242, 240, 0) 100%
+	);
+	opacity: 0.55;
+}
+
+/* Light theme + flow off: re-win against the higher-specificity kills. */
+.stage[data-theme='light'][data-glow='heart'][data-light-flow='off'] .field[data-glow][data-state='ready']::before {
+	animation: heart-vessel-in-v2 500ms ease-out both;
+}
+
+.stage[data-theme='light'][data-glow='heart'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: heart-trace-draw-v2 820ms cubic-bezier(0.25, 0.6, 0.3, 1) 180ms both;
+}
+
+.stage[data-theme='light'][data-glow='heart'][data-light-flow='off'] .field[data-glow] .prediction::after {
+	animation: none;
+}
+
+.stage[data-theme='light'][data-glow='heart'][data-light-flow='off'] .field[data-glow] .next-word {
+	animation: heart-word-in-v2 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-theme='light'][data-glow='heart'][data-light-flow='off'] .field[data-glow] .next-word::before {
+	animation: heart-scrim-in-v2 420ms ease-out both;
+}
+
+.stage[data-theme='light'][data-glow='heart'][data-light-flow='off'] .field[data-glow] .next-word::after {
+	animation: heart-inflate-v2 640ms cubic-bezier(0.34, 1.56, 0.64, 1) 260ms both;
+}
+
+.stage[data-theme='light'][data-glow='heart'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
+	animation: heart-glyph-flush-light-v2 720ms cubic-bezier(0.3, 0.7, 0.3, 1) both;
+	animation-delay: calc(240ms + var(--i) * 80ms);
+}
+
+.stage[data-theme='light'][data-glow='heart'][data-light-flow='off'] .field[data-glow] .next-word .glyph:first-child::before {
+	animation: none;
+}
+
+/* ---------- Waiting state: flatline, waiting for a signal ---------- */
+.field[data-state='waiting'][data-glow='heart'] {
+	--haze-width: 4.8em;
+	--haze-height: 2.6em;
+	--haze-size: 100% 100%;
+	--haze-bg: radial-gradient(ellipse 1.9em 0.035em at 1.15em 1.5em, rgba(255, 164, 194, 0.42), rgba(255, 120, 162, 0.13) 68%, transparent 90%);
+	--haze-filter: blur(0.4px) drop-shadow(0 0 4px rgba(255, 70, 122, 0.3));
+	--haze-opacity: 0.7;
+	--haze-mask: linear-gradient(90deg, transparent 0, black 0.3em), radial-gradient(ellipse 50% 50% at 34% 54%, black 0 46%, rgba(0, 0, 0, 0.5) 72%, transparent 96%);
+	--body-opacity: 0;
+	--core-width: 2.4em;
+	--core-height: 2.6em;
+	--core-size: 0.5em 0.5em;
+	--core-bg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23a63a60' opacity='.85' d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E") 0.85em 0.68em no-repeat;
+	--core-filter: blur(0.2px) drop-shadow(0 0 4px rgba(200, 50, 100, 0.3));
+	--core-opacity: 0.6;
+	--core-mask: linear-gradient(90deg, transparent 0, black 0.24em), radial-gradient(ellipse 52% 52% at 38% 50%, black 0 50%, rgba(0, 0, 0, 0.5) 76%, transparent 94%);
+	--flow-width: 3.2em;
+	--flow-height: 2.6em;
+	--flow-size: 0.3em 0.3em;
+	--flow-bg: radial-gradient(circle at 50% 50%, rgba(255, 240, 246, 0.9) 0 0.045em, rgba(255, 120, 165, 0.3) 0.055em 0.1em, transparent 0.14em) 0.15em 1.36em no-repeat;
+	--flow-filter: blur(0.2px) drop-shadow(0 0 4px rgba(255, 80, 132, 0.45)) drop-shadow(-0.2em 0 4px rgba(255, 100, 150, 0.3));
+	--flow-low: 0;
+	--flow-high: 0.9;
+	--flow-motion: heart-wait-blip-v2 1.6s linear 400ms infinite;
+	--flow-mask: linear-gradient(90deg, transparent 0, black 0.22em), radial-gradient(ellipse 52% 52% at 40% 54%, black 0 50%, rgba(0, 0, 0, 0.5) 74%, transparent 94%);
+	--spark-width: 2.4em;
+	--spark-height: 2.6em;
+	--spark-size: auto;
+	--spark-bg: none;
+	--spark-low: 0;
+	--spark-high: 0;
+	--spark-motion: none;
+	--smoke-width: 4.2em;
+	--smoke-height: 2.6em;
+	--smoke-size: auto;
+	--smoke-bg: radial-gradient(ellipse 1.8em 1em at 1em 50%, rgba(10, 2, 6, 0.55), rgba(10, 2, 6, 0.24) 56%, transparent 82%);
+	--smoke-filter: blur(10px);
+	--smoke-opacity: 0.5;
+	--smoke-blend: normal;
+	--smoke-motion: heart-wait-pool-v2 6.4s ease-in-out infinite;
+	--smoke-mask: linear-gradient(90deg, transparent 0, black 0.22em), radial-gradient(ellipse 50% 50% at 34% 50%, black 0 48%, transparent 94%);
+	--aux-opacity: 0;
+	--aux-motion: none;
+}
+
+.field[data-theme='light'][data-state='waiting'][data-glow='heart'] {
+	--haze-bg: radial-gradient(ellipse 1.9em 0.035em at 1.15em 1.5em, rgba(178, 40, 90, 0.45), rgba(190, 62, 108, 0.14) 68%, transparent 90%);
+	--haze-filter: blur(0.3px);
+	--haze-opacity: 0.65;
+	--core-bg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%239c2a56' opacity='.75' d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E") 0.85em 0.68em no-repeat;
+	--core-filter: blur(0.2px);
+	--core-opacity: 0.55;
+	--flow-bg: radial-gradient(circle at 50% 50%, rgba(150, 16, 66, 0.85) 0 0.045em, rgba(190, 62, 108, 0.3) 0.055em 0.1em, transparent 0.14em) 0.15em 1.36em no-repeat;
+	--flow-filter: blur(0.2px) drop-shadow(-0.2em 0 3px rgba(178, 52, 100, 0.25));
+	--flow-high: 0.8;
+	--smoke-bg: radial-gradient(ellipse 1.8em 1em at 1em 50%, rgba(214, 178, 190, 0.22), rgba(214, 178, 190, 0.1) 56%, transparent 82%);
+	--smoke-opacity: 0.5;
+}
+
+/* Waiting + flow off: the monitor holds perfectly still. */
+.field[data-light-flow='off'][data-state='waiting'][data-glow='heart'] {
+	--torch-haze-motion: none;
+	--torch-core-motion: none;
+	--flow-motion: none;
+	--spark-motion: none;
+	--smoke-motion: none;
+}
+
+/* ---------- Keyframes (heart-*-v2) ---------- */
+/* The vessel wakes: rim light rises to its resting level. */
+@keyframes heart-vessel-in-v2 {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: var(--heart-vessel-o, 0.8);
+	}
+}
+
+/* Lub-dub: the rim swells twice quickly, then a long diastole. */
+@keyframes heart-vessel-beat-v2 {
+	0%,
+	38%,
+	100% {
+		opacity: var(--heart-vessel-o, 0.8);
+	}
+	8% {
+		opacity: calc(var(--heart-vessel-o, 0.8) * 1.22);
+	}
+	16% {
+		opacity: calc(var(--heart-vessel-o, 0.8) * 1.05);
+	}
+	26% {
+		opacity: calc(var(--heart-vessel-o, 0.8) * 1.18);
+	}
+}
+
+/* THE DRAW: segment widths grow left -> right — flat, P, flat, R upstroke,
+   apex glow, S downstroke, flat, T, then the long run under the tail.
+   Heights never move; only x extents draw. */
+@keyframes heart-trace-draw-v2 {
+	0% {
+		opacity: 0;
+		background-size:
+			0em 0.045em,
+			0em 0.26em,
+			0em 0.045em,
+			0em 1.28em,
+			0em 0.3em,
+			0em 1.42em,
+			0em 0.045em,
+			0em 0.38em,
+			0em 0.045em;
+	}
+	3% {
+		opacity: 1;
+	}
+	14% {
+		background-size:
+			1.5em 0.045em,
+			0em 0.26em,
+			0em 0.045em,
+			0em 1.28em,
+			0em 0.3em,
+			0em 1.42em,
+			0em 0.045em,
+			0em 0.38em,
+			0em 0.045em;
+	}
+	19% {
+		background-size:
+			1.5em 0.045em,
+			0.55em 0.26em,
+			0em 0.045em,
+			0em 1.28em,
+			0em 0.3em,
+			0em 1.42em,
+			0em 0.045em,
+			0em 0.38em,
+			0em 0.045em;
+	}
+	24% {
+		background-size:
+			1.5em 0.045em,
+			0.55em 0.26em,
+			0.55em 0.045em,
+			0em 1.28em,
+			0em 0.3em,
+			0em 1.42em,
+			0em 0.045em,
+			0em 0.38em,
+			0em 0.045em;
+	}
+	28% {
+		background-size:
+			1.5em 0.045em,
+			0.55em 0.26em,
+			0.55em 0.045em,
+			0.34em 1.28em,
+			0em 0.3em,
+			0em 1.42em,
+			0em 0.045em,
+			0em 0.38em,
+			0em 0.045em;
+	}
+	30% {
+		background-size:
+			1.5em 0.045em,
+			0.55em 0.26em,
+			0.55em 0.045em,
+			0.34em 1.28em,
+			0.5em 0.3em,
+			0em 1.42em,
+			0em 0.045em,
+			0em 0.38em,
+			0em 0.045em;
+	}
+	32% {
+		background-size:
+			1.5em 0.045em,
+			0.55em 0.26em,
+			0.55em 0.045em,
+			0.34em 1.28em,
+			0.5em 0.3em,
+			0.34em 1.42em,
+			0em 0.045em,
+			0em 0.38em,
+			0em 0.045em;
+	}
+	39% {
+		background-size:
+			1.5em 0.045em,
+			0.55em 0.26em,
+			0.55em 0.045em,
+			0.34em 1.28em,
+			0.5em 0.3em,
+			0.34em 1.42em,
+			0.8em 0.045em,
+			0em 0.38em,
+			0em 0.045em;
+	}
+	46% {
+		background-size:
+			1.5em 0.045em,
+			0.55em 0.26em,
+			0.55em 0.045em,
+			0.34em 1.28em,
+			0.5em 0.3em,
+			0.34em 1.42em,
+			0.8em 0.045em,
+			0.8em 0.38em,
+			0em 0.045em;
+	}
+	100% {
+		opacity: var(--heart-trace-o, 0.92);
+		background-size:
+			1.5em 0.045em,
+			0.55em 0.26em,
+			0.55em 0.045em,
+			0.34em 1.28em,
+			0.5em 0.3em,
+			0.34em 1.42em,
+			0.8em 0.045em,
+			0.8em 0.38em,
+			5.6em 0.045em;
+	}
+}
+
+/* The resting trace breathes with the beat — luminance only. */
+@keyframes heart-trace-rest-v2 {
+	0%,
+	40%,
+	100% {
+		opacity: var(--heart-trace-o, 0.92);
+	}
+	8% {
+		opacity: 1;
+	}
+	16% {
+		opacity: calc(var(--heart-trace-o, 0.92) * 1.03);
+	}
+	26% {
+		opacity: 1;
+	}
+}
+
+/* The leading dot re-runs the polyline: dips into the P bump, spikes hard
+   at the QRS, eases over the T, fades out down the flat run. */
+@keyframes heart-dot-travel-v2 {
+	0% {
+		opacity: 0;
+		background-position: -0.8em 0em;
+	}
+	5% {
+		opacity: var(--heart-dot-o, 0.95);
+		background-position: -0.35em 0em;
+	}
+	16% {
+		background-position: 0.86em 0em;
+	}
+	18% {
+		background-position: 1.08em -0.14em;
+	}
+	20% {
+		background-position: 1.3em 0em;
+	}
+	26% {
+		background-position: 1.86em 0em;
+	}
+	28.5% {
+		background-position: 2.07em -1.16em;
+	}
+	30.5% {
+		background-position: 2.4em 0.14em;
+	}
+	32.5% {
+		background-position: 2.6em 0em;
+	}
+	45% {
+		background-position: 3.55em -0.06em;
+	}
+	47% {
+		background-position: 3.78em -0.2em;
+	}
+	50% {
+		background-position: 4.05em 0em;
+	}
+	90% {
+		opacity: calc(var(--heart-dot-o, 0.95) * 0.8);
+	}
+	100% {
+		opacity: 0;
+		background-position: 9.4em 0em;
+	}
+}
+
+/* Warm haze over the trace zone pumps with the beat. */
+@keyframes heart-haze-beat-v2 {
+	0%,
+	38%,
+	100% {
+		opacity: calc(var(--haze-opacity, 0.8) * 0.72);
+	}
+	8% {
+		opacity: var(--haze-opacity, 0.8);
+	}
+	16% {
+		opacity: calc(var(--haze-opacity, 0.8) * 0.82);
+	}
+	26% {
+		opacity: calc(var(--haze-opacity, 0.8) * 0.96);
+	}
+}
+
+/* The entry bloom at the caret takes the same pulse. */
+@keyframes heart-hot-beat-v2 {
+	0%,
+	38%,
+	100% {
+		opacity: calc(var(--core-opacity, 0.9) * 0.68);
+	}
+	8% {
+		opacity: var(--core-opacity, 0.9);
+	}
+	16% {
+		opacity: calc(var(--core-opacity, 0.9) * 0.78);
+	}
+	26% {
+		opacity: calc(var(--core-opacity, 0.9) * 0.94);
+	}
+}
+
+/* Finite flash sheet chasing the trace draw, then gone. */
+@keyframes heart-draw-sweep-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-50%) translateX(-0.5em) scaleX(0.7);
+	}
+	35% {
+		opacity: var(--flow-high, 0.7);
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(-50%) translateX(5.4em) scaleX(1.05);
+	}
+}
+
+/* Rare glints twinkle along the resting line — one per few beats. */
+@keyframes heart-glint-v2 {
+	0%,
+	28%,
+	36%,
+	66%,
+	72%,
+	100% {
+		opacity: var(--spark-low, 0.1);
+	}
+	31% {
+		opacity: var(--spark-high, 0.75);
+	}
+	68.5% {
+		opacity: calc(var(--spark-high, 0.75) * 0.6);
+	}
+}
+
+/* The depth shade never sits quite still. */
+@keyframes heart-depth-breathe-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--smoke-opacity, 0.62) * 0.82);
+	}
+	50% {
+		opacity: var(--smoke-opacity, 0.62);
+	}
+}
+
+/* Graph paper barely breathing behind everything. */
+@keyframes heart-grid-breathe-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--aux-opacity, 0.5) * 0.7);
+	}
+	50% {
+		opacity: var(--aux-opacity, 0.5);
+	}
+}
+
+@keyframes heart-word-in-v2 {
+	0% {
+		opacity: 0;
+		transform: translateX(-0.05em);
+	}
+	100% {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+/* The word takes its pulse: two quick 1.018 swells, then diastole. */
+@keyframes heart-word-lubdub-v2 {
+	0%,
+	38%,
+	100% {
+		transform: scale(1);
+	}
+	8% {
+		transform: scale(1.018);
+	}
+	16% {
+		transform: scale(1.004);
+	}
+	26% {
+		transform: scale(1.016);
+	}
+}
+
+@keyframes heart-scrim-in-v2 {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: var(--heart-scrim-o, 0.8);
+	}
+}
+
+/* The heart inflates with a springy overshoot and settles. */
+@keyframes heart-inflate-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-132%) scale(0.2);
+	}
+	55% {
+		opacity: var(--heart-organ-o, 0.95);
+		transform: translateY(-132%) scale(1.14);
+	}
+	78% {
+		transform: translateY(-132%) scale(0.96);
+	}
+	100% {
+		opacity: var(--heart-organ-o, 0.95);
+		transform: translateY(-132%) scale(1);
+	}
+}
+
+/* ...then beats lub-dub in the shared family. */
+@keyframes heart-organ-beat-v2 {
+	0%,
+	38%,
+	100% {
+		opacity: var(--heart-organ-o, 0.95);
+		transform: translateY(-132%) scale(1);
+	}
+	8% {
+		transform: translateY(-132%) scale(1.13);
+	}
+	16% {
+		transform: translateY(-132%) scale(1.02);
+	}
+	26% {
+		transform: translateY(-132%) scale(1.11);
+	}
+}
+
+/* Every four cycles a bud detaches, floats up and fades. */
+@keyframes heart-bud-v2 {
+	0% {
+		opacity: 0;
+		transform: translate(0, 0) scale(0.35);
+	}
+	5% {
+		opacity: var(--heart-bud-o, 0.85);
+	}
+	28% {
+		opacity: 0;
+		transform: translate(0.18em, -1.35em) scale(0.85);
+	}
+	100% {
+		opacity: 0;
+		transform: translate(0.18em, -1.35em) scale(0.85);
+	}
+}
+
+/* Blush wave: pale gray -> rose flush with a 1.03 bump -> warm ivory. */
+@keyframes heart-glyph-flush-v2 {
+	0% {
+		opacity: 0.18;
+		color: rgb(122, 106, 114);
+		transform: scale(1);
+		text-shadow: none;
+	}
+	45% {
+		opacity: 1;
+		color: rgb(255, 150, 185);
+		transform: scale(1.03);
+		text-shadow:
+			0 0 2px rgba(255, 214, 228, 0.9),
+			0 0 14px rgba(255, 90, 140, 0.55),
+			0 0 30px rgba(255, 60, 120, 0.28);
+	}
+	70% {
+		color: rgb(255, 214, 228);
+		transform: scale(1.006);
+		text-shadow:
+			0 0 1px rgba(255, 236, 243, 0.7),
+			0 0 12px rgba(255, 110, 160, 0.4);
+	}
+	100% {
+		opacity: 1;
+		color: var(--next-color);
+		transform: scale(1);
+		text-shadow: var(--next-shadow);
+	}
+}
+
+/* Valentine stationery: the flush reads as ink blooming into the paper. */
+@keyframes heart-glyph-flush-light-v2 {
+	0% {
+		opacity: 0.22;
+		color: rgb(206, 186, 192);
+		transform: scale(1);
+		text-shadow: none;
+	}
+	45% {
+		opacity: 1;
+		color: rgb(212, 58, 116);
+		transform: scale(1.03);
+		text-shadow: 0 0 1px rgba(255, 255, 255, 0.9);
+	}
+	70% {
+		color: rgb(172, 32, 86);
+		transform: scale(1.006);
+		text-shadow: 0 0 1px rgba(255, 255, 255, 0.85);
+	}
+	100% {
+		opacity: 1;
+		color: var(--next-color);
+		transform: scale(1);
+		text-shadow: var(--next-shadow);
+	}
+}
+
+/* The alt ghost sighs upward and is gone. */
+@keyframes heart-alt-sigh-v2 {
+	0% {
+		opacity: 0.32;
+		transform: translateY(0) scale(1);
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(-0.3em) scale(1.04);
+	}
+}
+
+/* The caret needle dips softly twice per cycle. */
+@keyframes heart-caret-beat-v2 {
+	0%,
+	38%,
+	100% {
+		opacity: 1;
+	}
+	8% {
+		opacity: 0.78;
+	}
+	16% {
+		opacity: 0.95;
+	}
+	26% {
+		opacity: 0.82;
+	}
+}
+
+/* Waiting: the flatline breathes very slowly... */
+@keyframes heart-wait-line-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--haze-opacity, 0.7) * 0.7);
+	}
+	50% {
+		opacity: var(--haze-opacity, 0.7);
+	}
+}
+
+/* ...the tiny heart barely pulses... */
+@keyframes heart-wait-heart-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--core-opacity, 0.6) * 0.75);
+		background-size: 0.5em 0.5em;
+	}
+	42% {
+		opacity: var(--core-opacity, 0.6);
+		background-size: 0.54em 0.54em;
+	}
+	52% {
+		opacity: calc(var(--core-opacity, 0.6) * 0.85);
+		background-size: 0.5em 0.5em;
+	}
+}
+
+/* ...and every ~1.6s a small blip travels a short stretch of the line. */
+@keyframes heart-wait-blip-v2 {
+	0% {
+		opacity: 0;
+		background-position: 0.15em 1.36em;
+	}
+	12% {
+		opacity: var(--flow-high, 0.9);
+		background-position: 0.45em 1.36em;
+	}
+	34% {
+		background-position: 0.95em 1.28em;
+	}
+	56% {
+		opacity: calc(var(--flow-high, 0.9) * 0.7);
+		background-position: 1.5em 1.36em;
+	}
+	74%,
+	100% {
+		opacity: 0;
+		background-position: 1.95em 1.36em;
+	}
+}
+
+/* The dark pool under the flatline breathes. */
+@keyframes heart-wait-pool-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--smoke-opacity, 0.5) * 0.75);
+	}
+	50% {
+		opacity: var(--smoke-opacity, 0.5);
+	}
+}
