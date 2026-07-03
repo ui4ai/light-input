@@ -18,7 +18,7 @@
 		type ThemeMode,
 		type VisualState
 	} from '$lib/autocomplete';
-	import { createMatrixDigits, flipMatrixDigits } from '$lib/matrix-digits';
+	import { createMatrixColumns, flipMatrixColumns } from '$lib/matrix-digits';
 
 	interface Props {
 		minChars?: number;
@@ -74,7 +74,7 @@
 	let selEnd = $state(0);
 	let scrollLeft = $state(0);
 	let igniteKey = $state(0);
-	let matrixDigits = $state(createMatrixDigits());
+	let matrixColumns = $state(createMatrixColumns());
 	let visualKey = '';
 	let sourceKey = '';
 	let matrixKey = '';
@@ -525,14 +525,14 @@
 		if (nextMatrixKey === matrixKey) return;
 		matrixKey = nextMatrixKey;
 
-		if (glow === 'matrix' && showGhost) matrixDigits = createMatrixDigits();
+		if (glow === 'matrix' && showGhost) matrixColumns = createMatrixColumns();
 	});
 
 	$effect(() => {
 		if (glow !== 'matrix' || !showGhost || !lightFlow) return;
 
 		const interval = window.setInterval(() => {
-			matrixDigits = flipMatrixDigits(matrixDigits);
+			matrixColumns = flipMatrixColumns(matrixColumns);
 		}, 92);
 
 		return () => window.clearInterval(interval);
@@ -624,12 +624,16 @@
 											class="matrix-code-layer"
 											data-testid="matrix-code-layer"
 											aria-hidden="true"
-											>{#each matrixDigits as digit, index (index)}<span
-													class="matrix-bit"
-													class:hot={digit.hot}
-													style={`--matrix-o:${digit.opacity};--matrix-speed:${digit.speed}ms;--matrix-delay:${digit.delay}ms`}
-													>{digit.value}</span
-												>{/each}</span
+											>{#each matrixColumns as column, colIndex (colIndex)}<span
+														class="matrix-col"
+														data-depth={column.depth}
+														style={`--rows:${column.cells.length};--fall:${column.speed}ms;--phase:${column.delay}ms;--drift:${column.drift}em`}
+														>{#each column.cells as cell, rowIndex (rowIndex)}<span
+																class="matrix-cell"
+																class:flash={cell.flash}
+																style={`--row:${cell.row}`}>{cell.value}</span
+															>{/each}</span
+													>{/each}</span
 										>{/if}{#if glow === 'kaleidoscope'}<span
 												class="kaleidoscope-layer"
 												data-testid="kaleidoscope-layer"

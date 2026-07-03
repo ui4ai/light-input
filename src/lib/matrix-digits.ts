@@ -1,48 +1,76 @@
-export const MATRIX_DIGIT_COUNT = 210;
+export const MATRIX_COLUMN_COUNT = 20;
+export const MATRIX_GLYPHS = 'ﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇ0123456789Z:=*+<>';
 
-export interface MatrixDigit {
-	delay: number;
-	hot: boolean;
-	opacity: number;
-	speed: number;
-	value: '0' | '1';
+const MATRIX_DEPTH_SPEED = [1700, 2500, 3400];
+
+export interface MatrixCell {
+	flash: boolean;
+	row: number;
+	value: string;
 }
 
-export function createMatrixDigits(count = MATRIX_DIGIT_COUNT): MatrixDigit[] {
+export interface MatrixColumn {
+	cells: MatrixCell[];
+	delay: number;
+	depth: number;
+	drift: number;
+	seed: number;
+	speed: number;
+}
+
+export function createMatrixColumns(count = MATRIX_COLUMN_COUNT): MatrixColumn[] {
 	return Array.from({ length: count }, (_, index) => {
+		const depth = (index * 7) % 3;
+		const rows = 8 + ((index * 7) % 5);
+
 		return {
-			delay: (index * 97) % 1900,
-			hot: false,
-			opacity: 0.28 + (((index * 17) % 41) / 100),
-			speed: 1200 + ((index * 73) % 2400),
-			value: index % 2 === 0 ? '0' : '1'
+			cells: Array.from({ length: rows }, (_, row) => ({
+				flash: false,
+				row,
+				value: MATRIX_GLYPHS[(index * 31 + row * (17 + index * 10)) % MATRIX_GLYPHS.length] ?? '0'
+			})),
+			delay: (index * 397) % 2200,
+			depth,
+			drift: ((index * 53) % 90) / 100,
+			seed: (index * 2654435761) % 997,
+			speed: (MATRIX_DEPTH_SPEED[depth] ?? 2500) + ((index * 271) % 700)
 		};
 	});
 }
 
-export function flipMatrixDigits(
-	digits: MatrixDigit[],
+export function flipMatrixColumns(
+	columns: MatrixColumn[],
 	random: () => number = Math.random
-): MatrixDigit[] {
-	if (!digits.length) return digits;
+): MatrixColumn[] {
+	const total = columns.reduce((sum, column) => sum + column.cells.length, 0);
+	if (!total) return columns;
 
-	const flipCount = Math.min(digits.length, Math.max(4, Math.round(digits.length * 0.065)));
+	const flipCount = Math.min(total, Math.max(4, Math.round(total * 0.045)));
 	const selected = new Set<number>();
 
 	while (selected.size < flipCount) {
-		selected.add(Math.floor(random() * digits.length));
+		selected.add(Math.floor(random() * total));
 	}
 
-	return digits.map((digit, index) => {
-		const hot = selected.has(index);
-		if (!hot) return { ...digit, hot: false };
+	let offset = 0;
+
+	return columns.map((column) => {
+		const start = offset;
+		offset += column.cells.length;
 
 		return {
-			...digit,
-			hot: true,
-			opacity: 0.42 + random() * 0.44,
-			speed: 900 + Math.round(random() * 2300),
-			value: digit.value === '0' ? '1' : '0'
+			...column,
+			cells: column.cells.map((cell, cellIndex) => {
+				if (!selected.has(start + cellIndex)) {
+					return cell.flash ? { ...cell, flash: false } : cell;
+				}
+
+				return {
+					...cell,
+					flash: true,
+					value: MATRIX_GLYPHS[Math.floor(random() * MATRIX_GLYPHS.length)] ?? cell.value
+				};
+			})
 		};
 	});
 }
