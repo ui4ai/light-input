@@ -1,0 +1,1335 @@
+/* ============================================================
+   BIOLUME v2 — "The text disturbs the water and the plankton answers"
+   Deep-sea bioluminescence. The field is an abyssal vessel:
+   near-black blue with the faintest cold gradient, and MARINE
+   SNOW — sparse pale motes sinking very slowly on two seamless
+   whole-tile background-position loops (beam-veil far, beam-smoke
+   near). On ignite the reveal is a PLANKTON WAVE: three depth
+   layers of micro-dots (prediction::before cluster A at the
+   caret, beam-body cluster B mid, beam-spark cluster C far
+   right) flare bright in sequence — staggered animation-delays
+   increasing with x — then decay to dim embers that keep a slow
+   irregular shimmer; beam-flow is ONE traveling brightness sweep
+   left -> right at ignite, then a quiet ambient glow drift. TWO
+   RIPPLE RINGS answer the disturbance and die: a thin ring on
+   next-word::after (finite, survives flow-off) and a second,
+   wider one on beam-aux. THE JELLY lives in the tail zone on
+   prediction::after (survives flow-off): a translucent bell dome
+   with a bright rim crescent, an inner organ gleam and three
+   thin tentacle strands, contracting on a slow ~4.4s scaleY
+   rhythm and drifting up a touch. LIVING TEXT per glyph via
+   var(--i): each glyph starts as a dark organism, FLARES
+   cyan-white from within (brightness + a strong local
+   text-shadow bloom), and settles soft aqua while the whole word
+   breathes a 5s two-peak luminescent afterglow — lit from
+   inside. Tail = dim deep-teal with a masked fade and one
+   occasional single-dot glimmer (tail::after). Caret = plankton
+   needle: cyan-white sliver with a soft halo. beam-hot is the
+   heart-light at the caret. Waiting = one dim organism at the
+   caret: a small bell (torch-core) pulsing ~4.2s with a micro
+   tentacle shimmer (torch-flow) over a quiet abyss pool
+   (torch-haze), plus two marine-snow motes trickling down
+   (torch-spark). Light theme = "aquarium by day": pale aqua
+   paper, plankton as saturated teal ink dots that DARKEN the
+   paper at normal blend, deep-teal ink text, the jelly a pale
+   watercolor bell. data-light-flow='off': wave/rings/jelly hold
+   as stills (finite entrances still play), snow parked. No
+   capsule anywhere: layer-radius 0, every layer and pseudo
+   dissolves through intersected left-fade x radial masks whose
+   fades complete INSIDE their boxes (radii <= 55%). Chrome-only
+   tech is intentional. Keyframes: biolume-*-v2 only (legacy
+   biolume-* and gum-* stay untouched for legacy consumers).
+   ============================================================ */
+
+.field[data-glow='biolume'] {
+	--layer-radius: 0;
+	--layer-clip: none;
+	--bio-wave-o: 0.9;
+	--bio-jelly-o: 0.85;
+	--bio-scrim-o: 0.8;
+	--ready-border: rgba(70, 200, 188, 0.28);
+	--ready-shadow:
+		0 1px 0 rgba(190, 240, 235, 0.05) inset,
+		0 -38px 100px rgba(1, 10, 18, 0.7) inset,
+		0 32px 70px rgba(0, 0, 0, 0.55),
+		0 0 90px rgba(30, 190, 172, 0.1),
+		0 0 150px rgba(24, 110, 150, 0.05);
+	--field-wash:
+		radial-gradient(ellipse 34% 110% at 24% 56%, rgba(36, 210, 190, 0.08), transparent 70%),
+		radial-gradient(ellipse 55% 150% at 78% -30%, rgba(58, 110, 170, 0.09), transparent 62%),
+		linear-gradient(180deg, rgba(150, 220, 230, 0.025), transparent 40%);
+	--caret-gradient: linear-gradient(
+		180deg,
+		rgb(240, 255, 252) 0%,
+		rgb(196, 255, 240) 22%,
+		rgb(110, 244, 220) 52%,
+		rgb(38, 168, 162) 80%,
+		rgb(10, 74, 92) 100%
+	);
+	--caret-shadow:
+		0 0 5px rgba(224, 255, 248, 0.8),
+		0 0 14px rgba(110, 244, 220, 0.5),
+		0 0 32px rgba(40, 190, 180, 0.26);
+	--haze-width: 12em;
+	--haze-height: 2.6em;
+	--haze-size: 3.2em 3em;
+	--haze-bg:
+		radial-gradient(circle at 0.5em 0.6em, rgba(198, 226, 224, 0.42) 0 0.017em, transparent 0.046em),
+		radial-gradient(circle at 2.1em 1.7em, rgba(176, 210, 212, 0.32) 0 0.014em, transparent 0.04em),
+		radial-gradient(circle at 1.2em 2.5em, rgba(206, 232, 230, 0.36) 0 0.015em, transparent 0.042em);
+	--haze-filter: blur(0.6px);
+	--haze-opacity: 0.7;
+	--haze-motion: biolume-snow-far-v2 22s linear 900ms infinite;
+	--torch-haze-motion: biolume-wait-pool-v2 5.6s ease-in-out infinite;
+	--haze-mask: linear-gradient(90deg, transparent 0, black 1em), radial-gradient(ellipse 50% 52% at 36% 50%, black 0 44%, rgba(0, 0, 0, 0.5) 72%, transparent 96%);
+	--body-width: 9.5em;
+	--body-height: 2.6em;
+	--body-size: 100% 100%;
+	--body-bg:
+		radial-gradient(circle at 1.6em 0.7em, rgba(196, 255, 240, 0.8) 0 0.032em, rgba(96, 246, 218, 0.3) 0.04em 0.075em, transparent 0.105em),
+		radial-gradient(circle at 2.4em 1.95em, rgba(140, 255, 226, 0.66) 0 0.028em, rgba(80, 226, 206, 0.24) 0.036em 0.068em, transparent 0.095em),
+		radial-gradient(circle at 3.2em 0.95em, rgba(120, 246, 255, 0.6) 0 0.026em, rgba(70, 206, 236, 0.2) 0.034em 0.062em, transparent 0.088em),
+		radial-gradient(circle at 4.1em 1.6em, rgba(168, 255, 234, 0.56) 0 0.028em, rgba(90, 236, 212, 0.2) 0.036em 0.064em, transparent 0.09em),
+		radial-gradient(circle at 5em 0.6em, rgba(130, 250, 226, 0.5) 0 0.024em, rgba(76, 220, 202, 0.16) 0.032em 0.056em, transparent 0.08em),
+		radial-gradient(circle at 5.9em 1.9em, rgba(112, 240, 250, 0.44) 0 0.022em, transparent 0.062em),
+		radial-gradient(circle at 6.8em 1.1em, rgba(156, 255, 236, 0.4) 0 0.02em, transparent 0.058em);
+	--body-filter: blur(0.3px) drop-shadow(0 0 6px rgba(90, 246, 220, 0.34));
+	--body-opacity: 0.8;
+	--body-mask: linear-gradient(90deg, transparent 0, black 0.9em), radial-gradient(ellipse 50% 52% at 40% 50%, black 0 48%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	--core-width: 2.4em;
+	--core-height: 1.7em;
+	--core-bg:
+		radial-gradient(circle at 0.52em 0.85em, rgba(230, 255, 248, 0.85) 0 0.05em, rgba(130, 250, 226, 0.34) 0.14em, transparent 0.3em),
+		radial-gradient(ellipse 0.85em 0.5em at 0.6em 0.85em, rgba(60, 220, 200, 0.24), transparent 76%);
+	--core-filter: blur(5px) saturate(1.2);
+	--core-opacity: 0.85;
+	--core-motion: biolume-heartlight-v2 4.6s ease-in-out 800ms infinite;
+	--torch-core-motion: biolume-wait-bell-v2 4.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+	--core-mask: linear-gradient(90deg, transparent 0, black 0.3em), radial-gradient(ellipse 52% 52% at 36% 50%, black 0 46%, rgba(0, 0, 0, 0.5) 72%, transparent 94%);
+	--flow-width: 11em;
+	--flow-height: 2.2em;
+	--flow-size: 100% 100%;
+	--flow-bg:
+		radial-gradient(ellipse 2.1em 0.95em at 1.6em 50%, rgba(160, 255, 234, 0.32), rgba(70, 230, 206, 0.12) 55%, transparent 80%),
+		radial-gradient(ellipse 3.6em 0.55em at 2em 54%, rgba(90, 240, 216, 0.1), transparent 76%);
+	--flow-filter: blur(10px) saturate(1.25);
+	--flow-low: 0;
+	--flow-high: 0.6;
+	--flow-motion:
+		biolume-sweep-v2 820ms cubic-bezier(0.3, 0.6, 0.3, 1) 160ms both,
+		biolume-drift-glow-v2 8.5s ease-in-out 2.2s infinite;
+	--flow-mask: linear-gradient(90deg, transparent 0, black 0.8em), radial-gradient(ellipse 50% 50% at 38% 50%, black 0 44%, rgba(0, 0, 0, 0.5) 72%, transparent 96%);
+	--spark-width: 8em;
+	--spark-height: 2.6em;
+	--spark-size: 100% 100%;
+	--spark-bg:
+		radial-gradient(circle at 0.6em 0.9em, rgba(226, 255, 248, 0.95) 0 0.04em, rgba(120, 255, 228, 0.4) 0.05em 0.085em, transparent 0.115em),
+		radial-gradient(circle at 1.7em 1.8em, rgba(170, 255, 238, 0.8) 0 0.034em, rgba(96, 244, 218, 0.3) 0.044em 0.076em, transparent 0.104em),
+		radial-gradient(circle at 2.9em 0.7em, rgba(140, 252, 255, 0.72) 0 0.03em, rgba(80, 220, 240, 0.24) 0.04em 0.068em, transparent 0.094em),
+		radial-gradient(circle at 4.2em 1.55em, rgba(196, 255, 242, 0.62) 0 0.028em, rgba(104, 240, 216, 0.2) 0.038em 0.062em, transparent 0.086em),
+		radial-gradient(circle at 5.5em 1em, rgba(150, 255, 232, 0.52) 0 0.024em, transparent 0.066em),
+		radial-gradient(circle at 6.6em 1.9em, rgba(128, 246, 228, 0.42) 0 0.02em, transparent 0.058em);
+	--spark-filter: blur(0.2px) drop-shadow(0 0 7px rgba(110, 255, 228, 0.5));
+	--spark-low: 0.55;
+	--spark-high: 1;
+	--spark-motion:
+		biolume-wave-crest-v2 1.2s cubic-bezier(0.3, 0.7, 0.3, 1) 480ms both,
+		biolume-ember-near-v2 6.4s ease-in-out 2s infinite;
+	--spark-mask: linear-gradient(90deg, transparent 0, black 0.7em), radial-gradient(ellipse 50% 52% at 44% 50%, black 0 50%, rgba(0, 0, 0, 0.5) 76%, transparent 96%);
+	--smoke-width: 9em;
+	--smoke-height: 2.6em;
+	--smoke-size: 3.6em 3.4em;
+	--smoke-bg:
+		radial-gradient(circle at 0.7em 0.8em, rgba(212, 238, 236, 0.4) 0 0.024em, transparent 0.06em),
+		radial-gradient(circle at 2.5em 2.1em, rgba(192, 222, 222, 0.3) 0 0.02em, transparent 0.052em),
+		radial-gradient(circle at 1.5em 3em, rgba(218, 242, 240, 0.34) 0 0.022em, transparent 0.056em);
+	--smoke-filter: blur(0.4px);
+	--smoke-opacity: 0.55;
+	--smoke-blend: screen;
+	--smoke-motion: biolume-snow-near-v2 17s linear 1.1s infinite;
+	--smoke-mask: linear-gradient(90deg, transparent 0, black 0.9em), radial-gradient(ellipse 50% 52% at 40% 50%, black 0 48%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	--aux-width: 5.6em;
+	--aux-height: 2.6em;
+	--aux-size: 100% 100%;
+	--aux-bg: radial-gradient(circle at 2.4em 1.3em, transparent 0 0.6em, rgba(160, 255, 238, 0.5) 0.64em 0.68em, rgba(80, 230, 210, 0.16) 0.74em, transparent 0.82em);
+	--aux-filter: blur(0.5px) drop-shadow(0 0 6px rgba(96, 240, 220, 0.35));
+	--aux-opacity: 0.8;
+	--aux-blend: screen;
+	--aux-motion: biolume-ring-v2 1.5s cubic-bezier(0.2, 0.6, 0.3, 1) 760ms both;
+	--aux-mask: linear-gradient(90deg, transparent 0, black 0.5em), radial-gradient(ellipse 52% 52% at 46% 50%, black 0 52%, rgba(0, 0, 0, 0.5) 76%, transparent 96%);
+	--next-color: rgba(210, 245, 240, 0.95);
+	--next-shadow:
+		0 1px 2px rgba(1, 10, 14, 0.6),
+		0 0 10px rgba(140, 255, 230, 0.32),
+		0 0 26px rgba(60, 220, 200, 0.16),
+		0 0 48px rgba(30, 170, 190, 0.08);
+	--tail-color: rgba(126, 178, 172, 0.34);
+}
+
+/* Beams carry the plankton again: undo the legacy zeroing pass and
+   re-anchor. Cluster C and the second ring sit right of the caret so the
+   wave reads as travel along the reveal direction. */
+.stage[data-glow='biolume'] .field[data-glow] .prediction > .beam {
+	display: block;
+	left: -0.03em;
+	transform-origin: left center;
+}
+
+.stage[data-glow='biolume'] .field[data-glow] .prediction > .beam-spark {
+	left: 2em;
+	transform-origin: 1em center;
+}
+
+.stage[data-glow='biolume'] .field[data-glow] .prediction > .beam-aux {
+	left: 0.3em;
+	transform-origin: 2.4em center;
+}
+
+/* Two-layer masks (left fade x radial falloff) need intersection, not
+   union — on the pseudo layers too. */
+.stage[data-glow='biolume'] .field[data-glow] .prediction > .beam,
+.stage[data-glow='biolume'] .field[data-glow] .torch-beam,
+.stage[data-glow='biolume'] .field[data-glow] .prediction::before,
+.stage[data-glow='biolume'] .field[data-glow] .prediction::after {
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+}
+
+/* Torch layers serve the waiting organism only; never double-print in ready. */
+.stage[data-glow='biolume'] .field[data-glow] .caret-origin-glow[data-mode='ready'] {
+	display: none;
+}
+
+.stage[data-glow='biolume'] .field[data-glow] .prediction {
+	isolation: isolate;
+}
+
+/* Abyssal vessel: near-black blue, the faintest cold light from above. */
+.stage[data-glow='biolume'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 110% 180% at 76% -40%, rgba(40, 90, 130, 0.1), transparent 56%),
+		linear-gradient(180deg, rgba(170, 230, 235, 0.02), transparent 42%),
+		linear-gradient(90deg, rgb(3, 10, 18), rgb(4, 13, 22) 52%, rgb(5, 15, 26));
+}
+
+.stage[data-glow='biolume'] .field[data-glow]::before {
+	background: var(--field-wash);
+	background-size: 100% 100%;
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: screen;
+	opacity: 0.85;
+	animation: biolume-abyss-tide-v2 9s ease-in-out infinite;
+}
+
+/* Dissolve into the field's rounded clip, not the paint box; edge overlays
+   extended into the 64px padding so brightness never steps at the content box. */
+.stage[data-glow='biolume'] .field[data-glow] .paint {
+	overflow: visible;
+	clip-path: inset(-3.4em -5em -3.4em 0);
+}
+
+.stage[data-glow='biolume'] .field[data-glow] .edge-left {
+	left: -64px;
+	width: 156px;
+	background: linear-gradient(90deg, rgb(3, 10, 18) 0%, rgb(3, 10, 18) 40%, rgba(3, 10, 18, 0) 100%);
+	opacity: 0;
+}
+
+.stage[data-glow='biolume'] .field[data-glow] .viewport.scrolled .edge-left {
+	opacity: 1;
+}
+
+.stage[data-glow='biolume'] .field[data-glow] .edge-right {
+	right: -64px;
+	width: 224px;
+	background: linear-gradient(
+		270deg,
+		rgba(5, 15, 26, 0.9) 0%,
+		rgba(5, 15, 26, 0.55) 30%,
+		rgba(5, 15, 26, 0.16) 68%,
+		rgba(5, 15, 26, 0) 100%
+	);
+	opacity: 0.85;
+}
+
+/* PLANKTON WAVE, cluster B (mid depth): flares second, decays to embers,
+   then keeps a slow irregular shimmer. Survives flow-off as a frozen still. */
+.stage[data-glow='biolume'] .field[data-glow] .beam-body {
+	animation:
+		beam-open 650ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		biolume-wave-mid-in-v2 1.1s cubic-bezier(0.3, 0.7, 0.3, 1) 300ms both,
+		biolume-ember-mid-v2 7.2s ease-in-out 1.7s infinite;
+}
+
+/* PLANKTON WAVE, cluster A (nearest, at the caret): first to answer.
+   Crisp micro-dots with ember rims over the abyss. Survives flow-off. */
+.stage[data-glow='biolume'] .field[data-glow] .prediction::before {
+	position: absolute;
+	left: -0.9em;
+	top: 50%;
+	z-index: -2;
+	width: min(11em, calc(100% + 4.2em));
+	height: 2.6em;
+	content: '';
+	pointer-events: none;
+	border-radius: 0;
+	clip-path: none;
+	background:
+		radial-gradient(circle at 0.5em 1.2em, rgba(232, 255, 250, 0.95) 0 0.042em, rgba(130, 255, 230, 0.42) 0.052em 0.09em, transparent 0.12em),
+		radial-gradient(circle at 1.1em 0.55em, rgba(180, 255, 240, 0.85) 0 0.036em, rgba(100, 248, 220, 0.32) 0.046em 0.08em, transparent 0.108em),
+		radial-gradient(circle at 1.6em 1.9em, rgba(150, 252, 255, 0.75) 0 0.032em, rgba(84, 224, 244, 0.26) 0.042em 0.072em, transparent 0.098em),
+		radial-gradient(circle at 2.2em 1.05em, rgba(204, 255, 244, 0.7) 0 0.03em, rgba(110, 244, 218, 0.24) 0.04em 0.068em, transparent 0.094em),
+		radial-gradient(circle at 2.9em 0.5em, rgba(160, 255, 234, 0.6) 0 0.026em, rgba(92, 236, 212, 0.2) 0.036em 0.06em, transparent 0.084em),
+		radial-gradient(circle at 3.4em 1.75em, rgba(136, 248, 252, 0.52) 0 0.024em, transparent 0.066em),
+		radial-gradient(circle at 4em 1em, rgba(184, 255, 240, 0.46) 0 0.022em, transparent 0.062em),
+		radial-gradient(circle at 4.5em 2em, rgba(148, 252, 232, 0.4) 0 0.02em, transparent 0.056em);
+	filter: blur(0.25px) drop-shadow(0 0 6px rgba(96, 250, 224, 0.42));
+	-webkit-mask-image: linear-gradient(90deg, transparent 0, black 0.85em), radial-gradient(ellipse 50% 52% at 36% 50%, black 0 46%, rgba(0, 0, 0, 0.5) 72%, transparent 96%);
+	mask-image: linear-gradient(90deg, transparent 0, black 0.85em), radial-gradient(ellipse 50% 52% at 36% 50%, black 0 46%, rgba(0, 0, 0, 0.5) 72%, transparent 96%);
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+	mix-blend-mode: screen;
+	opacity: var(--bio-wave-o);
+	transform: translateY(-50%);
+	transform-origin: 0.9em center;
+	animation:
+		biolume-wave-in-v2 1s cubic-bezier(0.3, 0.7, 0.3, 1) 180ms both,
+		biolume-ember-drift-v2 7.6s ease-in-out 1.4s infinite;
+}
+
+/* THE JELLY: one translucent bell in the tail zone — dome, rim crescent,
+   inner organ gleam, three tentacle strands — contracting on a slow scaleY
+   rhythm and drifting up a touch. Survives flow-off as a frozen still. */
+.stage[data-glow='biolume'] .field[data-glow] .prediction::after {
+	position: absolute;
+	left: 4.6em;
+	top: 50%;
+	z-index: -1;
+	width: 5.5em;
+	height: 2.6em;
+	content: '';
+	pointer-events: none;
+	border-radius: 0;
+	clip-path: none;
+	background:
+		radial-gradient(circle at 2.6em 0.72em, rgba(224, 255, 248, 0.55) 0 0.07em, rgba(160, 250, 232, 0.2) 0.16em, transparent 0.3em),
+		radial-gradient(ellipse 0.92em 0.62em at 2.6em 0.82em, transparent 0 72%, rgba(180, 255, 242, 0.4) 82% 90%, transparent 98%),
+		radial-gradient(ellipse 0.88em 0.58em at 2.6em 0.76em, rgba(140, 240, 224, 0.3), rgba(90, 210, 196, 0.14) 58%, transparent 84%),
+		linear-gradient(180deg, rgba(150, 244, 228, 0.34), rgba(110, 216, 202, 0.12) 55%, transparent 92%) 2.24em 1.06em / 0.04em 1.1em no-repeat,
+		linear-gradient(180deg, rgba(170, 250, 236, 0.4), rgba(120, 224, 208, 0.14) 58%, transparent 94%) 2.58em 1.1em / 0.045em 1.25em no-repeat,
+		linear-gradient(180deg, rgba(150, 244, 228, 0.32), rgba(110, 216, 202, 0.1) 52%, transparent 90%) 2.92em 1.04em / 0.04em 0.95em no-repeat,
+		radial-gradient(circle at 1.15em 1.95em, rgba(170, 255, 240, 0.3) 0 0.02em, transparent 0.055em),
+		radial-gradient(circle at 4.1em 0.6em, rgba(150, 250, 234, 0.24) 0 0.018em, transparent 0.05em);
+	filter: blur(0.5px) saturate(1.15) drop-shadow(0 0 8px rgba(110, 236, 216, 0.3));
+	-webkit-mask-image: linear-gradient(90deg, transparent 0, black 0.7em), radial-gradient(ellipse 50% 52% at 47% 50%, black 0 46%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	mask-image: linear-gradient(90deg, transparent 0, black 0.7em), radial-gradient(ellipse 50% 52% at 47% 50%, black 0 46%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+	mix-blend-mode: screen;
+	opacity: var(--bio-jelly-o);
+	transform: translateY(-50%);
+	transform-origin: 2.6em 0.78em;
+	animation:
+		biolume-jelly-in-v2 900ms cubic-bezier(0.16, 1, 0.3, 1) 260ms both,
+		biolume-jelly-pulse-v2 4.4s ease-in-out 1.4s infinite;
+}
+
+/* ---------- Text is sacred: the word is lit from inside ---------- */
+.stage[data-glow='biolume'] .field[data-glow] .next-word {
+	position: relative;
+	isolation: isolate;
+	z-index: 2;
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: var(--next-shadow);
+	animation:
+		biolume-word-in-v2 300ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		biolume-afterglow-v2 5s ease-in-out 1.6s infinite;
+}
+
+/* Deep-water scrim between the plankton and the glyphs: contrast insurance. */
+.stage[data-glow='biolume'] .field[data-glow] .next-word::before {
+	position: absolute;
+	inset: -0.22em -0.6em -0.26em -0.35em;
+	z-index: -2;
+	content: '';
+	pointer-events: none;
+	border-radius: 0.75em;
+	clip-path: none;
+	background: radial-gradient(ellipse 82% 96% at 36% 54%, rgba(1, 12, 15, 0.6), rgba(1, 12, 15, 0.26) 58%, transparent 88%);
+	filter: blur(6px);
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: normal;
+	opacity: var(--bio-scrim-o);
+	transform: none;
+	animation: biolume-scrim-in-v2 420ms ease-out both;
+}
+
+/* RIPPLE RING #1: a thin ring expands from the word's ignition point and
+   dies. Finite by design — it still plays with light flow off. */
+.stage[data-glow='biolume'] .field[data-glow] .next-word::after {
+	position: absolute;
+	inset: -0.55em -0.9em -0.55em -0.55em;
+	z-index: -1;
+	content: '';
+	pointer-events: none;
+	background: radial-gradient(ellipse 44% 42% at 30% 50%, transparent 0 76%, rgba(170, 255, 240, 0.55) 83% 88%, rgba(90, 236, 214, 0.18) 92%, transparent 97%);
+	filter: blur(0.4px) drop-shadow(0 0 4px rgba(110, 246, 224, 0.3));
+	mix-blend-mode: screen;
+	opacity: 0;
+	transform-origin: 30% 50%;
+	animation: biolume-ring-word-v2 1.3s cubic-bezier(0.2, 0.6, 0.3, 1) 460ms both;
+}
+
+/* Per-glyph living glow: dark organism -> cyan-white flare from within ->
+   soft aqua settle. Parity nudges the flare drift via --bio-drift; the
+   nth-child variants outrank the legacy float tints. */
+.stage[data-glow='biolume'] .field[data-glow] .next-word .glyph,
+.stage[data-glow='biolume'] .field[data-glow] .next-word .glyph:nth-child(even),
+.stage[data-glow='biolume'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-glow='biolume'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
+	--bio-drift: 1;
+	color: var(--next-color);
+	background: none;
+	opacity: 1;
+	filter: none;
+	text-shadow: var(--next-shadow);
+	transform-origin: 50% 55%;
+	animation: biolume-glyph-flare-v2 760ms cubic-bezier(0.25, 0.7, 0.25, 1) both;
+	animation-delay: calc(160ms + var(--i) * 55ms);
+}
+
+.stage[data-glow='biolume'] .field[data-glow] .next-word .glyph:nth-child(even) {
+	--bio-drift: -1;
+}
+
+/* The data-alt ghost is a plankton spark: it rises off the glyph and
+   dissolves as the real letter ignites. */
+.stage[data-glow='biolume'] .field[data-glow] .next-word .glyph::after {
+	z-index: 2;
+	content: attr(data-alt);
+	color: rgba(190, 255, 240, 0.9);
+	opacity: 0;
+	filter: none;
+	text-shadow: 0 0 0.3em rgba(130, 255, 230, 0.6);
+	transform: none;
+	transform-origin: 50% 40%;
+	animation: biolume-alt-spark-v2 520ms cubic-bezier(0.4, 0.1, 0.6, 1) both;
+	animation-delay: calc(160ms + var(--i) * 55ms);
+}
+
+/* Tail: dim deep-teal below the photic zone, masked fade. */
+.stage[data-glow='biolume'] .field[data-glow] .tail {
+	position: relative;
+	z-index: 2;
+	color: var(--tail-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: 0 0 0.2em rgba(90, 220, 200, 0.1);
+	-webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.85) 0, rgba(0, 0, 0, 0.5) 2.6em, transparent 8.5em);
+	mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.85) 0, rgba(0, 0, 0, 0.5) 2.6em, transparent 8.5em);
+}
+
+.stage[data-glow='biolume'] .field[data-glow] .tail .glyph {
+	color: inherit;
+	background: none;
+	filter: none;
+	opacity: clamp(0.4, calc(0.68 - var(--i) * 0.014), 0.68);
+	text-shadow: none;
+	transform: none;
+	animation: none;
+}
+
+/* One shy organism between the tail words: a single dot that glimmers
+   every ~7.5s and goes dark again. */
+.stage[data-glow='biolume'] .field[data-glow] .tail::after {
+	position: absolute;
+	left: 3.1em;
+	top: 50%;
+	z-index: -1;
+	width: 1.4em;
+	height: 1.2em;
+	content: '';
+	pointer-events: none;
+	background: radial-gradient(circle at 0.7em 0.44em, rgba(190, 255, 240, 0.9) 0 0.028em, rgba(100, 246, 220, 0.3) 0.038em 0.07em, transparent 0.1em);
+	filter: blur(0.2px) drop-shadow(0 0 5px rgba(100, 246, 220, 0.4));
+	mix-blend-mode: screen;
+	opacity: 0;
+	transform: translateY(-50%);
+	animation: biolume-tail-glimmer-v2 7.5s ease-in-out 3s infinite;
+}
+
+/* Light flow off: wave, rings and jelly hold as stills, snow parks — the
+   finite entrances (wave flare-in, jelly bloom, glyph ignition) still play. */
+.stage[data-glow='biolume'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: biolume-wave-in-v2 1s cubic-bezier(0.3, 0.7, 0.3, 1) 180ms both;
+}
+
+.stage[data-glow='biolume'][data-light-flow='off'] .field[data-glow] .prediction::after {
+	animation: biolume-jelly-in-v2 900ms cubic-bezier(0.16, 1, 0.3, 1) 260ms both;
+}
+
+.stage[data-glow='biolume'][data-light-flow='off'] .field[data-glow] .beam-veil {
+	animation: beam-open 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='biolume'][data-light-flow='off'] .field[data-glow] .beam-body {
+	animation:
+		beam-open 650ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		biolume-wave-mid-in-v2 1.1s cubic-bezier(0.3, 0.7, 0.3, 1) 300ms both;
+}
+
+.stage[data-glow='biolume'][data-light-flow='off'] .field[data-glow] .beam-hot {
+	animation: beam-hot 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='biolume'][data-light-flow='off'] .field[data-glow] .next-word {
+	animation: biolume-word-in-v2 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='biolume'][data-light-flow='off'] .field[data-glow] .next-word::before {
+	animation: biolume-scrim-in-v2 420ms ease-out both;
+}
+
+.stage[data-glow='biolume'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
+	animation: biolume-glyph-flare-v2 760ms cubic-bezier(0.25, 0.7, 0.25, 1) both;
+	animation-delay: calc(160ms + var(--i) * 55ms);
+}
+
+.stage[data-glow='biolume'][data-light-flow='off'] .field[data-glow] .tail::after {
+	animation: none;
+}
+
+/* ---------- Light theme: aquarium by day ---------- */
+.field[data-theme='light'][data-glow='biolume'] {
+	--bio-wave-o: 0.85;
+	--bio-jelly-o: 0.75;
+	--bio-scrim-o: 0.9;
+	--ready-border: rgba(34, 138, 128, 0.34);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.98) inset,
+		0 -18px 50px rgba(96, 190, 178, 0.1) inset,
+		0 18px 46px rgba(30, 62, 60, 0.13),
+		0 0 76px rgba(56, 186, 170, 0.1);
+	--field-wash:
+		radial-gradient(ellipse 34% 110% at 24% 56%, rgba(40, 170, 156, 0.1), transparent 70%),
+		radial-gradient(ellipse 55% 150% at 78% -30%, rgba(140, 210, 216, 0.22), transparent 62%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.5), transparent 40%);
+	--caret-gradient: linear-gradient(
+		180deg,
+		rgb(6, 52, 54) 0%,
+		rgb(14, 108, 104) 34%,
+		rgb(34, 168, 156) 64%,
+		rgb(130, 224, 210) 86%,
+		rgb(216, 248, 242) 100%
+	);
+	--caret-shadow:
+		0 0 6px rgba(40, 160, 148, 0.4),
+		0 0 16px rgba(24, 130, 122, 0.22);
+	--haze-bg:
+		radial-gradient(circle at 0.5em 0.6em, rgba(96, 136, 140, 0.4) 0 0.017em, transparent 0.046em),
+		radial-gradient(circle at 2.1em 1.7em, rgba(112, 150, 152, 0.3) 0 0.014em, transparent 0.04em),
+		radial-gradient(circle at 1.2em 2.5em, rgba(90, 130, 134, 0.34) 0 0.015em, transparent 0.042em);
+	--haze-opacity: 0.62;
+	--body-bg:
+		radial-gradient(circle at 1.6em 0.7em, rgba(10, 116, 106, 0.6) 0 0.032em, rgba(34, 150, 138, 0.24) 0.04em 0.075em, transparent 0.105em),
+		radial-gradient(circle at 2.4em 1.95em, rgba(14, 124, 112, 0.5) 0 0.028em, rgba(44, 158, 146, 0.2) 0.036em 0.068em, transparent 0.095em),
+		radial-gradient(circle at 3.2em 0.95em, rgba(16, 118, 130, 0.46) 0 0.026em, rgba(50, 150, 162, 0.16) 0.034em 0.062em, transparent 0.088em),
+		radial-gradient(circle at 4.1em 1.6em, rgba(12, 120, 110, 0.42) 0 0.028em, rgba(40, 152, 140, 0.16) 0.036em 0.064em, transparent 0.09em),
+		radial-gradient(circle at 5em 0.6em, rgba(20, 128, 118, 0.38) 0 0.024em, transparent 0.066em),
+		radial-gradient(circle at 5.9em 1.9em, rgba(24, 122, 132, 0.32) 0 0.022em, transparent 0.062em),
+		radial-gradient(circle at 6.8em 1.1em, rgba(16, 126, 114, 0.28) 0 0.02em, transparent 0.058em);
+	--body-filter: blur(0.3px) drop-shadow(0 0 4px rgba(30, 150, 138, 0.24));
+	--body-opacity: 0.85;
+	--core-bg:
+		radial-gradient(circle at 0.52em 0.85em, rgba(14, 118, 110, 0.5) 0 0.05em, rgba(40, 150, 140, 0.2) 0.14em, transparent 0.3em),
+		radial-gradient(ellipse 0.85em 0.5em at 0.6em 0.85em, rgba(60, 168, 156, 0.16), transparent 76%);
+	--core-filter: blur(5px) saturate(1.05);
+	--core-opacity: 0.8;
+	--flow-bg:
+		radial-gradient(ellipse 2.1em 0.95em at 1.6em 50%, rgba(30, 150, 138, 0.22), rgba(50, 166, 154, 0.08) 55%, transparent 80%),
+		radial-gradient(ellipse 3.6em 0.55em at 2em 54%, rgba(40, 158, 146, 0.07), transparent 76%);
+	--flow-filter: blur(9px) saturate(1);
+	--flow-high: 0.42;
+	--spark-bg:
+		radial-gradient(circle at 0.6em 0.9em, rgba(6, 104, 96, 0.75) 0 0.04em, rgba(30, 140, 130, 0.3) 0.05em 0.085em, transparent 0.115em),
+		radial-gradient(circle at 1.7em 1.8em, rgba(10, 112, 102, 0.62) 0 0.034em, rgba(36, 146, 136, 0.24) 0.044em 0.076em, transparent 0.104em),
+		radial-gradient(circle at 2.9em 0.7em, rgba(12, 108, 120, 0.56) 0 0.03em, rgba(42, 140, 152, 0.2) 0.04em 0.068em, transparent 0.094em),
+		radial-gradient(circle at 4.2em 1.55em, rgba(10, 114, 104, 0.48) 0 0.028em, rgba(36, 148, 136, 0.16) 0.038em 0.062em, transparent 0.086em),
+		radial-gradient(circle at 5.5em 1em, rgba(16, 120, 110, 0.4) 0 0.024em, transparent 0.066em),
+		radial-gradient(circle at 6.6em 1.9em, rgba(20, 116, 126, 0.34) 0 0.02em, transparent 0.058em);
+	--spark-filter: blur(0.2px) drop-shadow(0 0 4px rgba(24, 138, 128, 0.3));
+	--spark-low: 0.5;
+	--spark-high: 0.9;
+	--smoke-bg:
+		radial-gradient(circle at 0.7em 0.8em, rgba(104, 142, 146, 0.34) 0 0.024em, transparent 0.06em),
+		radial-gradient(circle at 2.5em 2.1em, rgba(120, 156, 158, 0.26) 0 0.02em, transparent 0.052em),
+		radial-gradient(circle at 1.5em 3em, rgba(96, 136, 140, 0.3) 0 0.022em, transparent 0.056em);
+	--smoke-opacity: 0.5;
+	--smoke-blend: normal;
+	--aux-bg: radial-gradient(circle at 2.4em 1.3em, transparent 0 0.6em, rgba(20, 132, 122, 0.5) 0.64em 0.68em, rgba(50, 160, 150, 0.14) 0.74em, transparent 0.82em);
+	--aux-filter: blur(0.5px) drop-shadow(0 0 4px rgba(28, 140, 130, 0.24));
+	--aux-opacity: 0.7;
+	--aux-blend: normal;
+	--next-color: rgba(8, 74, 70, 0.94);
+	--next-shadow:
+		0 0 1px rgba(255, 255, 255, 0.85),
+		0 0 10px rgba(96, 200, 186, 0.22),
+		0 0 22px rgba(50, 160, 170, 0.09);
+	--tail-color: rgba(56, 104, 100, 0.42);
+}
+
+.stage[data-theme='light'][data-glow='biolume'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 90% 170% at 76% -34%, rgba(196, 236, 232, 0.34), transparent 56%),
+		linear-gradient(180deg, rgba(252, 255, 254, 0.98), rgba(243, 250, 248, 0.86) 48%, rgba(235, 246, 244, 0.88)),
+		linear-gradient(90deg, rgba(251, 254, 253, 0.98), rgba(242, 249, 247, 0.92));
+}
+
+.stage[data-theme='light'][data-glow='biolume'] .field[data-glow]::before {
+	mix-blend-mode: normal;
+	opacity: 0.7;
+	animation: biolume-abyss-tide-v2 9s ease-in-out infinite;
+}
+
+/* Teal ink must darken the paper, never screen into it. */
+.stage[data-theme='light'][data-glow='biolume'] .field[data-glow] .prediction > .beam,
+.stage[data-theme='light'][data-glow='biolume'] .field[data-glow] .torch-beam {
+	mix-blend-mode: normal;
+}
+
+/* Ink plankton: saturated teal dots that darken the paper. */
+.stage[data-theme='light'][data-glow='biolume'] .field[data-glow] .prediction::before {
+	background:
+		radial-gradient(circle at 0.5em 1.2em, rgba(4, 96, 88, 0.8) 0 0.042em, rgba(28, 134, 124, 0.32) 0.052em 0.09em, transparent 0.12em),
+		radial-gradient(circle at 1.1em 0.55em, rgba(8, 104, 96, 0.68) 0 0.036em, rgba(34, 142, 132, 0.26) 0.046em 0.08em, transparent 0.108em),
+		radial-gradient(circle at 1.6em 1.9em, rgba(10, 100, 112, 0.6) 0 0.032em, rgba(40, 134, 146, 0.2) 0.042em 0.072em, transparent 0.098em),
+		radial-gradient(circle at 2.2em 1.05em, rgba(6, 106, 98, 0.54) 0 0.03em, rgba(30, 142, 132, 0.18) 0.04em 0.068em, transparent 0.094em),
+		radial-gradient(circle at 2.9em 0.5em, rgba(12, 110, 100, 0.46) 0 0.026em, rgba(38, 148, 138, 0.14) 0.036em 0.06em, transparent 0.084em),
+		radial-gradient(circle at 3.4em 1.75em, rgba(16, 106, 118, 0.4) 0 0.024em, transparent 0.066em),
+		radial-gradient(circle at 4em 1em, rgba(10, 112, 102, 0.34) 0 0.022em, transparent 0.062em),
+		radial-gradient(circle at 4.5em 2em, rgba(14, 108, 100, 0.3) 0 0.02em, transparent 0.056em);
+	filter: blur(0.25px) drop-shadow(0 0 4px rgba(22, 136, 126, 0.26));
+	mix-blend-mode: normal;
+}
+
+/* Watercolor jelly: a pale teal bell bleeding into the paper. */
+.stage[data-theme='light'][data-glow='biolume'] .field[data-glow] .prediction::after {
+	background:
+		radial-gradient(circle at 2.6em 0.72em, rgba(26, 138, 128, 0.34) 0 0.07em, rgba(70, 170, 160, 0.14) 0.16em, transparent 0.3em),
+		radial-gradient(ellipse 0.92em 0.62em at 2.6em 0.82em, transparent 0 72%, rgba(30, 144, 134, 0.34) 82% 90%, transparent 98%),
+		radial-gradient(ellipse 0.88em 0.58em at 2.6em 0.76em, rgba(96, 186, 176, 0.24), rgba(130, 200, 192, 0.1) 58%, transparent 84%),
+		linear-gradient(180deg, rgba(40, 150, 140, 0.3), rgba(80, 176, 166, 0.1) 55%, transparent 92%) 2.24em 1.06em / 0.04em 1.1em no-repeat,
+		linear-gradient(180deg, rgba(30, 144, 134, 0.34), rgba(72, 170, 160, 0.12) 58%, transparent 94%) 2.58em 1.1em / 0.045em 1.25em no-repeat,
+		linear-gradient(180deg, rgba(40, 150, 140, 0.28), rgba(80, 176, 166, 0.08) 52%, transparent 90%) 2.92em 1.04em / 0.04em 0.95em no-repeat,
+		radial-gradient(circle at 1.15em 1.95em, rgba(30, 140, 130, 0.24) 0 0.02em, transparent 0.055em),
+		radial-gradient(circle at 4.1em 0.6em, rgba(36, 146, 136, 0.2) 0 0.018em, transparent 0.05em);
+	filter: blur(0.5px) saturate(1) drop-shadow(0 0.04em 0.2em rgba(26, 120, 112, 0.16));
+	mix-blend-mode: normal;
+}
+
+.stage[data-theme='light'][data-glow='biolume'] .field[data-glow] .next-word {
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: var(--next-shadow);
+	animation: biolume-word-in-v2 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Paper scrim keeps the ink legible over the aquarium wash. */
+.stage[data-theme='light'][data-glow='biolume'] .field[data-glow] .next-word::before {
+	background: radial-gradient(ellipse 82% 96% at 36% 54%, rgba(252, 255, 254, 0.88), rgba(252, 255, 254, 0.45) 58%, transparent 88%);
+	filter: blur(5px);
+	mix-blend-mode: normal;
+	opacity: var(--bio-scrim-o);
+	animation: biolume-scrim-in-v2 420ms ease-out both;
+}
+
+/* Ink ripple on paper. */
+.stage[data-theme='light'][data-glow='biolume'] .field[data-glow] .next-word::after {
+	background: radial-gradient(ellipse 44% 42% at 30% 50%, transparent 0 76%, rgba(20, 132, 122, 0.45) 83% 88%, rgba(50, 160, 150, 0.14) 92%, transparent 97%);
+	filter: blur(0.4px) drop-shadow(0 0 3px rgba(28, 140, 130, 0.2));
+	mix-blend-mode: normal;
+}
+
+.stage[data-theme='light'][data-glow='biolume'] .field[data-glow] .next-word .glyph,
+.stage[data-theme='light'][data-glow='biolume'] .field[data-glow] .next-word .glyph:nth-child(even),
+.stage[data-theme='light'][data-glow='biolume'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-theme='light'][data-glow='biolume'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
+	color: var(--next-color);
+	text-shadow: var(--next-shadow);
+	animation-name: biolume-glyph-flare-light-v2;
+}
+
+.stage[data-theme='light'][data-glow='biolume'] .field[data-glow] .next-word .glyph::after {
+	color: rgba(24, 134, 124, 0.8);
+	text-shadow: 0 0 0.22em rgba(50, 160, 150, 0.35);
+}
+
+.stage[data-theme='light'][data-glow='biolume'] .field[data-glow] .tail,
+.stage[data-theme='light'][data-glow='biolume'] .field[data-glow] .tail .glyph {
+	color: var(--tail-color);
+	text-shadow: none;
+}
+
+.stage[data-theme='light'][data-glow='biolume'] .field[data-glow] .tail::after {
+	background: radial-gradient(circle at 0.7em 0.44em, rgba(12, 118, 108, 0.75) 0 0.028em, rgba(40, 148, 138, 0.24) 0.038em 0.07em, transparent 0.1em);
+	filter: blur(0.2px) drop-shadow(0 0 3px rgba(28, 140, 130, 0.24));
+	mix-blend-mode: normal;
+}
+
+.stage[data-theme='light'][data-glow='biolume'] .field[data-glow] .edge-left {
+	background: linear-gradient(90deg, rgb(251, 254, 253) 0%, rgb(251, 254, 253) 40%, rgba(251, 254, 253, 0) 100%);
+}
+
+.stage[data-theme='light'][data-glow='biolume'] .field[data-glow] .edge-right {
+	background: linear-gradient(
+		270deg,
+		rgba(242, 249, 247, 0.5) 0%,
+		rgba(242, 249, 247, 0.22) 42%,
+		rgba(242, 249, 247, 0) 100%
+	);
+	opacity: 0.55;
+}
+
+/* Light theme + flow off: re-win against the animation kills above. */
+.stage[data-theme='light'][data-glow='biolume'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: biolume-wave-in-v2 1s cubic-bezier(0.3, 0.7, 0.3, 1) 180ms both;
+}
+
+.stage[data-theme='light'][data-glow='biolume'][data-light-flow='off'] .field[data-glow] .prediction::after {
+	animation: biolume-jelly-in-v2 900ms cubic-bezier(0.16, 1, 0.3, 1) 260ms both;
+}
+
+.stage[data-theme='light'][data-glow='biolume'][data-light-flow='off'] .field[data-glow] .next-word::before {
+	animation: biolume-scrim-in-v2 420ms ease-out both;
+}
+
+.stage[data-theme='light'][data-glow='biolume'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
+	animation: biolume-glyph-flare-light-v2 760ms cubic-bezier(0.25, 0.7, 0.25, 1) both;
+	animation-delay: calc(160ms + var(--i) * 55ms);
+}
+
+.stage[data-theme='light'][data-glow='biolume'][data-light-flow='off'] .field[data-glow] .tail::after {
+	animation: none;
+}
+
+/* ---------- Waiting state: one dim organism at the caret ---------- */
+.field[data-state='waiting'][data-glow='biolume'] {
+	--haze-width: 4.8em;
+	--haze-height: 2.4em;
+	--haze-size: auto;
+	--haze-bg: radial-gradient(ellipse 1.9em 1.1em at 0.8em 50%, rgba(60, 210, 190, 0.18), rgba(30, 150, 140, 0.07) 58%, transparent 82%);
+	--haze-filter: blur(14px) saturate(1.1);
+	--haze-opacity: 0.75;
+	--haze-mask: linear-gradient(90deg, transparent 0, black 0.3em), radial-gradient(ellipse 50% 50% at 32% 50%, black 0 46%, rgba(0, 0, 0, 0.5) 72%, transparent 96%);
+	--core-width: 2.4em;
+	--core-height: 2.2em;
+	--core-size: auto;
+	--core-bg:
+		radial-gradient(circle at 0.62em 0.86em, rgba(228, 255, 248, 0.9) 0 0.034em, rgba(150, 250, 230, 0.3) 0.05em, transparent 0.1em),
+		radial-gradient(ellipse 0.36em 0.26em at 0.62em 0.92em, transparent 0 68%, rgba(184, 255, 242, 0.5) 78% 88%, transparent 98%),
+		radial-gradient(ellipse 0.34em 0.24em at 0.62em 0.86em, rgba(140, 244, 226, 0.42), rgba(90, 212, 196, 0.18) 60%, transparent 86%),
+		linear-gradient(180deg, rgba(150, 244, 228, 0.4), transparent 92%) 0.5em 1.14em / 0.03em 0.6em no-repeat,
+		linear-gradient(180deg, rgba(170, 250, 236, 0.45), transparent 94%) 0.62em 1.18em / 0.032em 0.72em no-repeat,
+		linear-gradient(180deg, rgba(150, 244, 228, 0.36), transparent 90%) 0.74em 1.12em / 0.03em 0.54em no-repeat;
+	--core-filter: blur(0.3px) drop-shadow(0 0 6px rgba(110, 240, 220, 0.4));
+	--core-opacity: 0.95;
+	--core-mask: linear-gradient(90deg, transparent 0, black 0.22em), radial-gradient(ellipse 52% 52% at 34% 50%, black 0 50%, rgba(0, 0, 0, 0.5) 76%, transparent 94%);
+	--flow-width: 2.2em;
+	--flow-height: 2.2em;
+	--flow-size: 100% 100%;
+	--flow-bg:
+		linear-gradient(180deg, rgba(200, 255, 244, 0.5), rgba(130, 240, 220, 0.16) 60%, transparent 94%) 0.56em 1.16em / 0.022em 0.66em no-repeat,
+		linear-gradient(180deg, rgba(200, 255, 244, 0.4), rgba(130, 240, 220, 0.12) 55%, transparent 92%) 0.7em 1.2em / 0.02em 0.56em no-repeat;
+	--flow-filter: blur(0.3px) drop-shadow(0 0 4px rgba(120, 244, 222, 0.3));
+	--flow-low: 0.25;
+	--flow-high: 0.6;
+	--flow-motion: biolume-wait-tentacle-v2 3.4s ease-in-out infinite;
+	--flow-mask: linear-gradient(90deg, transparent 0, black 0.24em), radial-gradient(ellipse 52% 52% at 36% 50%, black 0 50%, rgba(0, 0, 0, 0.5) 74%, transparent 94%);
+	--spark-width: 2.6em;
+	--spark-height: 2.4em;
+	--spark-size: 2em 1.7em;
+	--spark-bg:
+		radial-gradient(circle at 0.42em 0.4em, rgba(200, 228, 226, 0.5) 0 0.016em, transparent 0.044em),
+		radial-gradient(circle at 1.42em 1.2em, rgba(182, 214, 214, 0.4) 0 0.014em, transparent 0.04em);
+	--spark-filter: blur(0.4px);
+	--spark-low: 0.5;
+	--spark-high: 0.7;
+	--spark-motion: biolume-wait-snow-v2 10s linear infinite;
+	--spark-mask: linear-gradient(90deg, transparent 0, black 0.24em), radial-gradient(ellipse 52% 52% at 40% 50%, black 0 52%, rgba(0, 0, 0, 0.5) 76%, transparent 94%);
+	--smoke-width: 3.2em;
+	--smoke-height: 2.4em;
+	--smoke-size: auto;
+	--smoke-bg: radial-gradient(ellipse 1.2em 0.75em at 0.8em 50%, rgba(1, 8, 10, 0.45), transparent 80%);
+	--smoke-filter: blur(11px);
+	--smoke-opacity: 0.4;
+	--smoke-blend: normal;
+	--smoke-motion: none;
+	--smoke-mask: linear-gradient(90deg, transparent 0, black 0.22em), radial-gradient(ellipse 50% 50% at 34% 50%, black 0 48%, transparent 94%);
+	--aux-opacity: 0;
+}
+
+.field[data-theme='light'][data-state='waiting'][data-glow='biolume'] {
+	--haze-bg: radial-gradient(ellipse 1.9em 1.1em at 0.8em 50%, rgba(40, 150, 140, 0.14), rgba(80, 176, 166, 0.05) 58%, transparent 82%);
+	--haze-opacity: 0.55;
+	--core-bg:
+		radial-gradient(circle at 0.62em 0.86em, rgba(10, 110, 102, 0.6) 0 0.034em, rgba(40, 148, 138, 0.22) 0.05em, transparent 0.1em),
+		radial-gradient(ellipse 0.36em 0.26em at 0.62em 0.92em, transparent 0 68%, rgba(22, 134, 124, 0.45) 78% 88%, transparent 98%),
+		radial-gradient(ellipse 0.34em 0.24em at 0.62em 0.86em, rgba(90, 184, 174, 0.3), rgba(130, 202, 194, 0.12) 60%, transparent 86%),
+		linear-gradient(180deg, rgba(30, 144, 134, 0.36), transparent 92%) 0.5em 1.14em / 0.03em 0.6em no-repeat,
+		linear-gradient(180deg, rgba(24, 138, 128, 0.4), transparent 94%) 0.62em 1.18em / 0.032em 0.72em no-repeat,
+		linear-gradient(180deg, rgba(30, 144, 134, 0.32), transparent 90%) 0.74em 1.12em / 0.03em 0.54em no-repeat;
+	--core-filter: blur(0.3px) drop-shadow(0 0 4px rgba(28, 140, 130, 0.28));
+	--core-opacity: 0.9;
+	--flow-bg:
+		linear-gradient(180deg, rgba(20, 128, 118, 0.45), rgba(60, 164, 154, 0.14) 60%, transparent 94%) 0.56em 1.16em / 0.022em 0.66em no-repeat,
+		linear-gradient(180deg, rgba(20, 128, 118, 0.36), rgba(60, 164, 154, 0.1) 55%, transparent 92%) 0.7em 1.2em / 0.02em 0.56em no-repeat;
+	--flow-filter: blur(0.3px) drop-shadow(0 0 3px rgba(28, 140, 130, 0.2));
+	--spark-bg:
+		radial-gradient(circle at 0.42em 0.4em, rgba(96, 136, 140, 0.45) 0 0.016em, transparent 0.044em),
+		radial-gradient(circle at 1.42em 1.2em, rgba(112, 150, 152, 0.36) 0 0.014em, transparent 0.04em);
+	--smoke-bg: radial-gradient(ellipse 1.2em 0.75em at 0.8em 50%, rgba(100, 138, 142, 0.14), transparent 80%);
+	--smoke-opacity: 0.3;
+}
+
+/* Waiting + flow off: the organism hangs mid-pulse, snow held in the water. */
+.field[data-light-flow='off'][data-state='waiting'][data-glow='biolume'] {
+	--torch-haze-motion: none;
+	--torch-core-motion: none;
+	--flow-motion: none;
+	--spark-motion: none;
+	--smoke-motion: none;
+}
+
+/* ---------- Keyframes (biolume-*-v2) ---------- */
+@keyframes biolume-abyss-tide-v2 {
+	0%,
+	100% {
+		opacity: 0.72;
+	}
+	50% {
+		opacity: 0.9;
+	}
+}
+
+/* Seamless marine snow: background-position deltas are exact whole-tile
+   multiples (haze tile 3.2em x 3em, smoke tile 3.6em x 3.4em); mid stops
+   only sway sideways. */
+@keyframes biolume-snow-far-v2 {
+	0% {
+		background-position: 0em 0em;
+	}
+	25% {
+		background-position: 0.24em 1.5em;
+	}
+	50% {
+		background-position: -0.14em 3em;
+	}
+	75% {
+		background-position: 0.18em 4.5em;
+	}
+	100% {
+		background-position: 0em 6em;
+	}
+}
+
+@keyframes biolume-snow-near-v2 {
+	0% {
+		background-position: 0em 0em;
+	}
+	25% {
+		background-position: 0.3em 1.7em;
+	}
+	50% {
+		background-position: -0.18em 3.4em;
+	}
+	75% {
+		background-position: 0.22em 5.1em;
+	}
+	100% {
+		background-position: 0em 6.8em;
+	}
+}
+
+/* Cluster A: dark water -> flare -> decay to dim embers. */
+@keyframes biolume-wave-in-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-50%) scale(0.985);
+	}
+	32% {
+		opacity: var(--bio-wave-o, 0.9);
+		transform: translateY(-50%) scale(1.008);
+	}
+	100% {
+		opacity: calc(var(--bio-wave-o, 0.9) * 0.68);
+		transform: translateY(-50%) scale(1);
+	}
+}
+
+@keyframes biolume-ember-drift-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--bio-wave-o, 0.9) * 0.68);
+		transform: translateY(-50%) translateX(0em);
+	}
+	38% {
+		opacity: calc(var(--bio-wave-o, 0.9) * 0.9);
+		transform: translateY(-50.8%) translateX(0.05em);
+	}
+	58% {
+		opacity: calc(var(--bio-wave-o, 0.9) * 0.74);
+	}
+	76% {
+		opacity: calc(var(--bio-wave-o, 0.9) * 0.84);
+		transform: translateY(-49.4%) translateX(0.09em);
+	}
+}
+
+/* Cluster B: same story, second beat. */
+@keyframes biolume-wave-mid-in-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-50%) scale(0.985);
+	}
+	32% {
+		opacity: var(--body-opacity, 0.8);
+		transform: translateY(-50%) scale(1.008);
+	}
+	100% {
+		opacity: calc(var(--body-opacity, 0.8) * 0.7);
+		transform: translateY(-50%) scale(1);
+	}
+}
+
+@keyframes biolume-ember-mid-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--body-opacity, 0.8) * 0.7);
+		transform: translateY(-50%) translateX(0em);
+	}
+	34% {
+		opacity: calc(var(--body-opacity, 0.8) * 0.92);
+		transform: translateY(-50.6%) translateX(0.06em);
+	}
+	56% {
+		opacity: calc(var(--body-opacity, 0.8) * 0.76);
+	}
+	78% {
+		opacity: calc(var(--body-opacity, 0.8) * 0.86);
+		transform: translateY(-49.6%) translateX(0.1em);
+	}
+}
+
+/* Cluster C: the wave crests far right, third beat, brightest flare. */
+@keyframes biolume-wave-crest-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-50%) scale(0.96);
+	}
+	30% {
+		opacity: var(--spark-high, 1);
+		transform: translateY(-50%) scale(1.02);
+	}
+	100% {
+		opacity: var(--spark-low, 0.55);
+		transform: translateY(-50%) scale(1);
+	}
+}
+
+@keyframes biolume-ember-near-v2 {
+	0%,
+	100% {
+		opacity: var(--spark-low, 0.55);
+		transform: translateY(-50%) translateX(0em);
+	}
+	42% {
+		opacity: calc(var(--spark-high, 1) * 0.8);
+		transform: translateY(-50.8%) translateX(0.05em);
+	}
+	62% {
+		opacity: calc(var(--spark-low, 0.55) * 0.85);
+	}
+	80% {
+		opacity: calc(var(--spark-high, 1) * 0.62);
+		transform: translateY(-49.4%) translateX(0.08em);
+	}
+}
+
+/* ONE traveling brightness sweep along the reveal direction, then gone. */
+@keyframes biolume-sweep-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-50%) translateX(-0.4em) scaleX(0.5);
+	}
+	28% {
+		opacity: var(--flow-high, 0.6);
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(-50%) translateX(5.5em) scaleX(1.15);
+	}
+}
+
+@keyframes biolume-drift-glow-v2 {
+	0%,
+	100% {
+		opacity: 0.05;
+		transform: translateY(-50%) translateX(0.4em) scaleX(1);
+	}
+	50% {
+		opacity: 0.16;
+		transform: translateY(-50%) translateX(0.9em) scaleX(1.06);
+	}
+}
+
+/* Ripple ring #2 on the water: expand thin, fade, done. */
+@keyframes biolume-ring-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-50%) scale(0.35);
+	}
+	14% {
+		opacity: var(--aux-opacity, 0.8);
+		transform: translateY(-50%) scale(0.62);
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(-50%) scale(1.6);
+	}
+}
+
+/* Ripple ring #1 around the word: finite, survives flow-off. */
+@keyframes biolume-ring-word-v2 {
+	0% {
+		opacity: 0;
+		transform: scale(0.3);
+	}
+	16% {
+		opacity: 0.85;
+		transform: scale(0.58);
+	}
+	100% {
+		opacity: 0;
+		transform: scale(1.45);
+	}
+}
+
+@keyframes biolume-jelly-in-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-42%) scale(0.9);
+	}
+	100% {
+		opacity: var(--bio-jelly-o, 0.85);
+		transform: translateY(-50%) scale(1);
+	}
+}
+
+/* Bell contraction: squeeze, recoil upward a touch, relax. */
+@keyframes biolume-jelly-pulse-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--bio-jelly-o, 0.85) * 0.82);
+		transform: translateY(-50%) scaleX(1) scaleY(1);
+	}
+	36% {
+		opacity: var(--bio-jelly-o, 0.85);
+		transform: translateY(-52.6%) scaleX(1.04) scaleY(0.93);
+	}
+	54% {
+		transform: translateY(-51.2%) scaleX(0.99) scaleY(1.025);
+	}
+	76% {
+		opacity: calc(var(--bio-jelly-o, 0.85) * 0.9);
+		transform: translateY(-50.4%) scaleX(1.005) scaleY(0.995);
+	}
+}
+
+@keyframes biolume-heartlight-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--core-opacity, 0.85) * 0.68);
+		transform: translateY(-50%) scale(0.96);
+	}
+	46% {
+		opacity: var(--core-opacity, 0.85);
+		transform: translateY(-50%) scale(1.05);
+	}
+	68% {
+		opacity: calc(var(--core-opacity, 0.85) * 0.82);
+	}
+}
+
+@keyframes biolume-scrim-in-v2 {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: var(--bio-scrim-o, 0.8);
+	}
+}
+
+@keyframes biolume-word-in-v2 {
+	0% {
+		opacity: 0;
+		transform: translateX(-0.06em);
+	}
+	100% {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+/* Whole-word luminescence: a 5s two-peak organic breath, never symmetric. */
+@keyframes biolume-afterglow-v2 {
+	0%,
+	100% {
+		text-shadow:
+			0 1px 2px rgba(1, 10, 14, 0.6),
+			0 0 10px rgba(140, 255, 230, 0.26),
+			0 0 26px rgba(60, 220, 200, 0.12),
+			0 0 48px rgba(30, 170, 190, 0.06);
+	}
+	26% {
+		text-shadow:
+			0 1px 2px rgba(1, 10, 14, 0.6),
+			0 0 12px rgba(170, 255, 238, 0.44),
+			0 0 30px rgba(80, 236, 214, 0.24),
+			0 0 56px rgba(40, 190, 200, 0.12);
+	}
+	42% {
+		text-shadow:
+			0 1px 2px rgba(1, 10, 14, 0.6),
+			0 0 10px rgba(140, 255, 230, 0.3),
+			0 0 26px rgba(60, 220, 200, 0.14),
+			0 0 48px rgba(30, 170, 190, 0.07);
+	}
+	60% {
+		text-shadow:
+			0 1px 2px rgba(1, 10, 14, 0.6),
+			0 0 11px rgba(160, 255, 236, 0.38),
+			0 0 28px rgba(72, 230, 208, 0.2),
+			0 0 52px rgba(36, 182, 196, 0.1);
+	}
+	78% {
+		text-shadow:
+			0 1px 2px rgba(1, 10, 14, 0.6),
+			0 0 10px rgba(146, 255, 232, 0.3),
+			0 0 26px rgba(64, 224, 202, 0.15),
+			0 0 48px rgba(32, 174, 192, 0.07);
+	}
+}
+
+/* The living glyph: dark organism, flare from within, soft aqua settle. */
+@keyframes biolume-glyph-flare-v2 {
+	0% {
+		opacity: 0.25;
+		color: rgb(22, 62, 60);
+		transform: translateY(calc(var(--bio-drift, 1) * 0.03em)) scale(0.99);
+		filter: brightness(0.8);
+		text-shadow: none;
+	}
+	26% {
+		opacity: 0.8;
+		color: rgb(140, 244, 222);
+		filter: brightness(1.15) saturate(1.2);
+		text-shadow:
+			0 0 3px rgba(200, 255, 244, 0.5),
+			0 0 12px rgba(110, 250, 224, 0.4);
+	}
+	46% {
+		opacity: 1;
+		color: rgb(238, 255, 250);
+		transform: translateY(calc(var(--bio-drift, 1) * -0.012em)) scale(1.015);
+		filter: brightness(1.55) saturate(1.3);
+		text-shadow:
+			0 0 2px rgba(255, 255, 255, 0.9),
+			0 0 14px rgba(160, 255, 236, 0.85),
+			0 0 34px rgba(80, 244, 216, 0.55),
+			0 0 56px rgba(40, 200, 205, 0.3);
+	}
+	72% {
+		opacity: 1;
+		color: rgb(224, 250, 244);
+		transform: translateY(0) scale(1.004);
+		filter: brightness(1.14) saturate(1.1);
+		text-shadow:
+			0 0 1px rgba(255, 255, 255, 0.5),
+			0 0 12px rgba(150, 255, 232, 0.5),
+			0 0 28px rgba(66, 226, 204, 0.26);
+	}
+	100% {
+		opacity: 1;
+		color: var(--next-color);
+		transform: translateY(0) scale(1);
+		filter: brightness(1) saturate(1);
+		text-shadow: var(--next-shadow);
+	}
+}
+
+@keyframes biolume-glyph-flare-light-v2 {
+	0% {
+		opacity: 0.25;
+		color: rgb(168, 204, 198);
+		transform: translateY(calc(var(--bio-drift, 1) * 0.03em)) scale(0.99);
+		filter: none;
+		text-shadow: none;
+	}
+	26% {
+		opacity: 0.82;
+		color: rgb(24, 138, 126);
+		filter: saturate(1.25);
+		text-shadow:
+			0 0 2px rgba(255, 255, 255, 0.8),
+			0 0 10px rgba(70, 190, 174, 0.35);
+	}
+	46% {
+		opacity: 1;
+		color: rgb(6, 112, 104);
+		transform: translateY(calc(var(--bio-drift, 1) * -0.012em)) scale(1.015);
+		filter: saturate(1.4) contrast(1.2);
+		text-shadow:
+			0 0 2px rgba(255, 255, 255, 0.95),
+			0 0 12px rgba(60, 190, 174, 0.5),
+			0 0 26px rgba(30, 160, 165, 0.24);
+	}
+	72% {
+		opacity: 1;
+		color: rgb(10, 90, 84);
+		transform: translateY(0) scale(1.004);
+		filter: saturate(1.12) contrast(1.06);
+		text-shadow:
+			0 0 1px rgba(255, 255, 255, 0.9),
+			0 0 10px rgba(80, 196, 182, 0.3);
+	}
+	100% {
+		opacity: 1;
+		color: var(--next-color);
+		transform: translateY(0) scale(1);
+		filter: saturate(1) contrast(1);
+		text-shadow: var(--next-shadow);
+	}
+}
+
+/* The alt ghost rises off the glyph like a startled spark. */
+@keyframes biolume-alt-spark-v2 {
+	0% {
+		opacity: 0.7;
+		transform: translateY(0.05em) scale(0.9);
+		filter: blur(0.018em);
+	}
+	55% {
+		opacity: 0.3;
+		transform: translateY(-0.16em) scale(1.08);
+		filter: blur(0.032em);
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(-0.32em) scale(1.16);
+		filter: blur(0.05em);
+	}
+}
+
+/* Mostly dormant; one shy double-wink, then dark again. */
+@keyframes biolume-tail-glimmer-v2 {
+	0%,
+	52%,
+	100% {
+		opacity: 0;
+		transform: translateY(-50%) scale(0.85);
+	}
+	58% {
+		opacity: 0.55;
+		transform: translateY(-52%) scale(1);
+	}
+	64% {
+		opacity: 0.1;
+		transform: translateY(-52.6%) scale(0.96);
+	}
+	70% {
+		opacity: 0.34;
+		transform: translateY(-53.4%) scale(1.02);
+	}
+	80% {
+		opacity: 0;
+		transform: translateY(-54%) scale(0.9);
+	}
+}
+
+@keyframes biolume-wait-pool-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--haze-opacity, 0.75) * 0.7);
+		transform: translateY(-50%) scale(0.96);
+	}
+	50% {
+		opacity: var(--haze-opacity, 0.75);
+		transform: translateY(-50%) scale(1.04);
+	}
+}
+
+/* The waiting bell: contract, recoil upward, relax — slow and quiet. */
+@keyframes biolume-wait-bell-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--core-opacity, 0.95) * 0.72);
+		transform: translateY(-50%) scaleX(1) scaleY(1);
+	}
+	38% {
+		opacity: var(--core-opacity, 0.95);
+		transform: translateY(-52.4%) scaleX(1.05) scaleY(0.92);
+	}
+	56% {
+		transform: translateY(-51%) scaleX(0.98) scaleY(1.03);
+	}
+	78% {
+		opacity: calc(var(--core-opacity, 0.95) * 0.85);
+		transform: translateY(-50.4%) scaleX(1.005) scaleY(0.99);
+	}
+}
+
+@keyframes biolume-wait-tentacle-v2 {
+	0%,
+	100% {
+		opacity: var(--flow-low, 0.25);
+		transform: translateY(-50%) translateX(0em);
+	}
+	40% {
+		opacity: var(--flow-high, 0.6);
+		transform: translateY(-49.4%) translateX(0.025em);
+	}
+	68% {
+		opacity: calc(var(--flow-high, 0.6) * 0.7);
+		transform: translateY(-50.4%) translateX(-0.02em);
+	}
+}
+
+/* Two motes sinking past the organism: whole-tile loop (2em x 1.7em). */
+@keyframes biolume-wait-snow-v2 {
+	0% {
+		background-position: 0em 0em;
+	}
+	25% {
+		background-position: 0.1em 0.85em;
+	}
+	50% {
+		background-position: -0.06em 1.7em;
+	}
+	75% {
+		background-position: 0.08em 2.55em;
+	}
+	100% {
+		background-position: 0em 3.4em;
+	}
+}
