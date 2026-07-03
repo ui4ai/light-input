@@ -21,7 +21,8 @@ const PRESET_CSS_FILES = [
 	'src/lib/effects/heart/index.css',
 	'src/lib/effects/liquidglass/index.css',
 	'src/lib/effects/android/index.css',
-	'src/lib/effects/fontshift/index.css'
+	'src/lib/effects/fontshift/index.css',
+	'src/lib/effects/rorschach/index.css'
 ];
 
 function readPresetCss(): string {

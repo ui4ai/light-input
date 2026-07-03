@@ -1,0 +1,863 @@
+/* ============================================================
+   RORSCHACH v2 — "Тест Роршаха: слово — это то, что вы видите
+   в пятне". BILATERAL SYMMETRY IS EVERYTHING: one irregular
+   multi-lobe ink half (an inline SVG data-URI path — three big
+   lobes, a wing, satellite specks, and a translucent stroke halo
+   as the ink-bleed ring) sits on prediction::before LEFT of a
+   vertical fold axis ~1.3em right of the caret; its EXACT MIRROR
+   is the same image on prediction::after flipped with transform:
+   scaleX(-1) — masks, drips and specks flip with it, so symmetry
+   is geometric, not approximate. THE STAMP (ignite): both halves
+   press in like folded paper being squeezed — the independent
+   `scale` property squishes 0.15 -> 1.06 -> 1 in sync (the flip
+   lives in `transform`, so one keyframe track serves both
+   halves), then a one-shot ink BLEED spreads the settled blot
+   1 -> 1.03 over 2s — wet ink settling. A 1px CREASE pair marks
+   the fold: the left half carries the shadow line on its inner
+   edge, the mirrored half the highlight — both appear with the
+   stamp. WORD FROM INK: glyphs arrive as ink blobs (blur 8px,
+   squashed scaleX 1.3) and SHARPEN into letters per glyph via
+   var(--i) with a small overshoot — the eye suddenly reads the
+   word in the blot; a soft card-tone scrim (next-word::before)
+   parts the ink under the letters so the settled word stays
+   crisp ink-on-card. DRIPS: one thin drip per half (two total,
+   mirrored) draws slowly downward from the bottom lobe via a
+   background-size height grow, stops at ~0.42em and stays.
+   SYMMETRY BREATH: both halves run the same scaleX oscillation
+   (+1.5% about their own centers); because one is flipped the
+   pair breathes in perfect mirror sync, 7s. TAIL: dimmed ink
+   letters with tiny static smudge specks (tail glyph::before)
+   between them, masked fade completing inside the box. FIELD: a
+   charcoal card with faint paper grain and a thin neutral rim in
+   dark theme (pale-silver ink — the photographic negative of the
+   classic card); classic cream card + black ink in light theme.
+   Caret = ink pen nib: translucent stem with a solid wider tip
+   bar at the bottom. WAITING: a small symmetric blot at the
+   caret — two mirrored lobes plus a self-mirrored bridge —
+   slowly morphing via symmetric background-size keyframes over a
+   quiet ink pool and a floor shade; monochrome, no spinner.
+   data-light-flow='off': stamp + bleed + glyph sharpen + drips
+   play once (finite); breath and the waiting morph hold static.
+   Shared beams stay dead; torch layers serve waiting only. No
+   color anywhere — ink and card only; text ends crisp; every
+   decorated layer dissolves through intersected masks whose
+   fades complete INSIDE their boxes. Keyframes: rorschach-*-v2
+   only (legacy rorschach-* keyframes stay untouched).
+   ============================================================ */
+
+.field[data-glow='rorschach'] {
+	--layer-radius: 0;
+	--layer-clip: none;
+	--ro-blot-o: 0.97;
+	--ro-scrim-o: 0.92;
+	--ro-ink: rgba(212, 216, 226, 0.88);
+	--ro-ink-soft: rgba(212, 216, 226, 0.42);
+	--ro-crease-sh: rgba(4, 5, 8, 0.6);
+	--ro-crease-hi: rgba(244, 246, 250, 0.16);
+	--ro-blot: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 100' preserveAspectRatio='none'%3E%3Cpath fill='%23d6dae4' fill-opacity='.93' stroke='%23d6dae4' stroke-opacity='.28' stroke-width='4' stroke-linejoin='round' d='M120 14 C102 8 90 16 82 26 C74 10 50 8 42 22 C36 33 44 40 54 42 C38 42 24 52 30 64 C35 74 50 72 60 63 C54 78 62 90 76 88 C88 86 94 76 91 66 C100 74 112 72 120 64 Z'/%3E%3Cellipse cx='22' cy='26' rx='3.4' ry='2.4' fill='%23d6dae4' fill-opacity='.74'/%3E%3Cellipse cx='14' cy='56' rx='2.6' ry='3.4' fill='%23d6dae4' fill-opacity='.62'/%3E%3Ccircle cx='28' cy='84' r='2' fill='%23d6dae4' fill-opacity='.55'/%3E%3Ccircle cx='68' cy='10' r='1.6' fill='%23d6dae4' fill-opacity='.5'/%3E%3C/svg%3E");
+	--ro-drip: linear-gradient(180deg, var(--ro-ink) 0, var(--ro-ink) 26%, var(--ro-ink-soft) 58%, var(--ro-ink) 88%, var(--ro-ink) 100%);
+	--ro-half-l: linear-gradient(180deg, var(--ro-crease-sh), var(--ro-crease-sh)), var(--ro-blot), var(--ro-drip);
+	--ro-half-r: linear-gradient(180deg, var(--ro-crease-hi), var(--ro-crease-hi)), var(--ro-blot), var(--ro-drip);
+	--ro-half-filter: blur(0.4px) contrast(1.04) drop-shadow(0 0 9px rgba(214, 218, 228, 0.14));
+	--ro-scrim-bg: radial-gradient(ellipse 82% 96% at 40% 52%, rgba(24, 25, 28, 0.88), rgba(24, 25, 28, 0.42) 58%, transparent 86%);
+	--ro-speck: rgba(206, 210, 220, 0.32);
+	--ro-pool-ink: rgba(212, 216, 226, 0.07);
+	--ro-shade-ink: rgba(3, 4, 6, 0.42);
+	--ro-wait-ink: rgba(214, 218, 228, 0.52);
+	--ro-wait-ink-soft: rgba(214, 218, 228, 0.2);
+	--ready-border: rgba(206, 209, 216, 0.2);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.05) inset,
+		0 -34px 88px rgba(8, 9, 11, 0.5) inset,
+		0 30px 66px rgba(0, 0, 0, 0.48);
+	--field-wash:
+		radial-gradient(ellipse 60% 150% at 74% -30%, rgba(240, 241, 246, 0.035), transparent 60%),
+		linear-gradient(180deg, rgba(244, 245, 249, 0.03), transparent 40%);
+	--caret-gradient: linear-gradient(
+		180deg,
+		rgba(226, 229, 236, 0.85) 0%,
+		rgba(226, 229, 236, 0.85) 4%,
+		rgba(222, 226, 234, 0.4) 4%,
+		rgba(222, 226, 234, 0.4) 84%,
+		rgb(242, 244, 249) 84%,
+		rgb(242, 244, 249) 100%
+	);
+	--caret-shadow:
+		0 1px 0 rgba(0, 0, 0, 0.4),
+		0 0 5px rgba(232, 235, 242, 0.16);
+	--haze-bg: none;
+	--haze-opacity: 0;
+	--haze-motion: none;
+	--torch-haze-motion: none;
+	--haze-mask: none;
+	--body-bg: none;
+	--body-opacity: 0;
+	--body-mask: none;
+	--core-bg: none;
+	--core-opacity: 0;
+	--core-motion: none;
+	--torch-core-motion: none;
+	--core-mask: none;
+	--flow-bg: none;
+	--flow-low: 0;
+	--flow-high: 0;
+	--flow-motion: none;
+	--flow-mask: none;
+	--spark-bg: none;
+	--spark-low: 0;
+	--spark-high: 0;
+	--spark-motion: none;
+	--spark-mask: none;
+	--smoke-bg: none;
+	--smoke-opacity: 0;
+	--smoke-motion: none;
+	--smoke-blend: normal;
+	--smoke-mask: none;
+	--aux-bg: none;
+	--aux-opacity: 0;
+	--aux-motion: none;
+	--aux-mask: none;
+	--next-color: rgba(228, 232, 240, 0.97);
+	--next-shadow:
+		0 1px 1px rgba(6, 7, 10, 0.55),
+		0 0 1px rgba(228, 232, 240, 0.22);
+	--tail-color: rgba(196, 201, 212, 0.42);
+}
+
+/* Ink only: the shared beams stay dead (the legacy pass hides them;
+   re-asserted so this module owns the fact). Torch layers serve waiting. */
+.stage[data-glow='rorschach'] .field[data-glow] .prediction > .beam {
+	display: none;
+}
+
+.stage[data-glow='rorschach'] .field[data-glow] .caret-origin-glow[data-mode='ready'] {
+	display: none;
+}
+
+/* Two-layer masks (outer fade x vertical falloff) need intersection, not
+   union — on the waiting torch layers and both blot halves alike. The
+   halves' masks flip with their transform, so the mirrored half fades on
+   its OUTER edge too: symmetry survives the mask. */
+.stage[data-glow='rorschach'] .field[data-glow] .torch-beam,
+.stage[data-glow='rorschach'] .field[data-glow] .prediction::before,
+.stage[data-glow='rorschach'] .field[data-glow] .prediction::after {
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+}
+
+.stage[data-glow='rorschach'] .field[data-glow] .prediction {
+	isolation: isolate;
+}
+
+/* The charcoal test card: faint paper grain under a thin neutral rim —
+   the photographic negative of the classic cream plate. */
+.stage[data-glow='rorschach'] .field[data-glow] {
+	background:
+		linear-gradient(180deg, rgba(246, 247, 250, 0.02), transparent 38%),
+		repeating-linear-gradient(97deg, rgba(255, 255, 255, 0.014) 0 2px, transparent 2px 5px),
+		repeating-linear-gradient(171deg, rgba(0, 0, 0, 0.05) 0 1px, transparent 1px 4px),
+		linear-gradient(90deg, rgb(24, 25, 28), rgb(27, 28, 31) 52%, rgb(31, 32, 35));
+}
+
+/* Quiet card sheen; only wakes with a prediction (or field-mode loading). */
+.stage[data-glow='rorschach'] .field[data-glow]::before {
+	background: var(--field-wash);
+	background-size: 100% 100%;
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: normal;
+	opacity: 0;
+	animation: none;
+}
+
+.stage[data-glow='rorschach'] .field[data-glow][data-state='ready']::before {
+	opacity: 0.85;
+}
+
+.stage[data-glow='rorschach'] .field[data-glow][data-state='waiting'][data-loading-glow='field']::before {
+	opacity: 0.5;
+}
+
+/* Dissolve into the field's rounded clip, not the paint box; edge overlays
+   extended into the 64px padding so the card never steps at the content
+   box. */
+.stage[data-glow='rorschach'] .field[data-glow] .paint {
+	overflow: visible;
+	clip-path: inset(-3.4em -6em -3.4em 0);
+}
+
+.stage[data-glow='rorschach'] .field[data-glow] .edge-left {
+	left: -64px;
+	width: 156px;
+	background: linear-gradient(90deg, rgb(24, 25, 28) 0%, rgb(24, 25, 28) 40%, rgba(24, 25, 28, 0) 100%);
+	opacity: 0;
+}
+
+.stage[data-glow='rorschach'] .field[data-glow] .viewport.scrolled .edge-left {
+	opacity: 1;
+}
+
+.stage[data-glow='rorschach'] .field[data-glow] .edge-right {
+	right: -64px;
+	width: 224px;
+	background: linear-gradient(
+		270deg,
+		rgba(31, 32, 35, 0.9) 0%,
+		rgba(31, 32, 35, 0.55) 30%,
+		rgba(31, 32, 35, 0.16) 68%,
+		rgba(31, 32, 35, 0) 100%
+	);
+	opacity: 0.85;
+}
+
+/* ---------- THE BLOT: two mirrored halves at the fold ---------- */
+/* Identical 2.6em boxes abut at the fold axis (x = 1.3em right of the
+   caret): ::before holds the half as authored, ::after the same image
+   flipped about its own center — background, drips, specks and masks all
+   mirror geometrically. Layer order per half: [crease line at the inner
+   edge, the SVG ink half, the drip]. The stamp/bleed/breath run on the
+   independent `scale` property so the flip in `transform` is never
+   overwritten; base background-size holds the drawn drip — the drip
+   animation's backwards fill hides it before its turn. */
+.stage[data-glow='rorschach'] .field[data-glow] .prediction::before,
+.stage[data-glow='rorschach'] .field[data-glow] .prediction::after {
+	position: absolute;
+	top: -0.9em;
+	z-index: 1;
+	width: 2.6em;
+	height: 3.8em;
+	content: '';
+	pointer-events: none;
+	border: 0;
+	border-radius: 0;
+	clip-path: none;
+	box-shadow: none;
+	background-position:
+		100% 0.16em,
+		0 0.1em,
+		1.62em 2.3em;
+	background-size:
+		1px 2.6em,
+		2.6em 2.75em,
+		0.055em 0.42em;
+	background-repeat: no-repeat;
+	filter: var(--ro-half-filter);
+	-webkit-mask-image: linear-gradient(90deg, transparent 0, black 0.55em), linear-gradient(180deg, transparent 0.02em, black 0.4em, black calc(100% - 0.6em), transparent calc(100% - 0.05em));
+	mask-image: linear-gradient(90deg, transparent 0, black 0.55em), linear-gradient(180deg, transparent 0.02em, black 0.4em, black calc(100% - 0.6em), transparent calc(100% - 0.05em));
+	mix-blend-mode: normal;
+	opacity: var(--ro-blot-o);
+	transform-origin: 50% 50%;
+	animation:
+		rorschach-stamp-v2 620ms cubic-bezier(0.22, 1.1, 0.32, 1) 80ms both,
+		rorschach-bleed-v2 2s cubic-bezier(0.25, 0.6, 0.3, 1) 760ms forwards,
+		rorschach-drip-v2 2.4s cubic-bezier(0.3, 0.7, 0.4, 1) 1.4s both,
+		rorschach-breath-v2 7s ease-in-out 2.9s infinite;
+}
+
+/* Left half: as authored, dense fold edge on its right; crease shadow. */
+.stage[data-glow='rorschach'] .field[data-glow] .prediction::before {
+	left: -0.75em;
+	background-image: var(--ro-half-l);
+	transform: none;
+}
+
+/* Right half: the mirror — same image flipped about its own center;
+   crease highlight lands exactly at the axis. */
+.stage[data-glow='rorschach'] .field[data-glow] .prediction::after {
+	left: 1.85em;
+	background-image: var(--ro-half-r);
+	transform: scaleX(-1);
+}
+
+/* ---------- The word: read in the blot ---------- */
+.stage[data-glow='rorschach'] .field[data-glow] .next-word {
+	position: relative;
+	isolation: isolate;
+	z-index: 5;
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: var(--next-shadow);
+	animation: rorschach-word-in-v2 220ms ease-out both;
+}
+
+/* Card-tone scrim: the ink parts around the letters — the figure you see
+   in the blot. Radial fade completes inside its own inset box. */
+.stage[data-glow='rorschach'] .field[data-glow] .next-word::before {
+	position: absolute;
+	inset: -0.3em -1.7em -0.36em -0.55em;
+	z-index: -1;
+	content: '';
+	pointer-events: none;
+	border-radius: 1.2em;
+	clip-path: none;
+	background: var(--ro-scrim-bg);
+	filter: blur(7px);
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: normal;
+	opacity: var(--ro-scrim-o);
+	transform: none;
+	animation: rorschach-scrim-in-v2 520ms ease-out 340ms both;
+}
+
+/* The legacy mirror-strip pseudo retires: this blot never doubles the word. */
+.stage[data-glow='rorschach'] .field[data-glow] .next-word::after {
+	content: none;
+	animation: none;
+}
+
+/* WORD FROM INK: each glyph starts as an ink blob — heavy blur, squashed
+   wide — and sharpens into a letter with a small overshoot, staggered via
+   var(--i) right after the stamp lands. The nth-child variants outrank the
+   legacy per-glyph warp loops. */
+.stage[data-glow='rorschach'] .field[data-glow] .next-word .glyph,
+.stage[data-glow='rorschach'] .field[data-glow] .next-word .glyph:nth-child(2n),
+.stage[data-glow='rorschach'] .field[data-glow] .next-word .glyph:nth-child(3n) {
+	display: inline-block;
+	color: var(--next-color);
+	background: none;
+	opacity: 1;
+	filter: none;
+	text-shadow: var(--next-shadow);
+	transform: none;
+	transform-origin: 50% 62%;
+	animation: rorschach-read-v2 640ms cubic-bezier(0.3, 0.7, 0.25, 1) both;
+	animation-delay: calc(560ms + var(--i) * 70ms);
+}
+
+/* The data-alt ghost stays unused: one reading per subject. */
+.stage[data-glow='rorschach'] .field[data-glow] .next-word .glyph::after {
+	content: attr(data-alt);
+	color: var(--next-color);
+	opacity: 0;
+	filter: none;
+	text-shadow: none;
+	transform: none;
+	animation: none;
+}
+
+/* ---------- Tail: dimmed ink with smudge specks ---------- */
+.stage[data-glow='rorschach'] .field[data-glow] .tail {
+	position: relative;
+	z-index: 2;
+	color: var(--tail-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: 0 1px 1px rgba(6, 7, 10, 0.35);
+	-webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0, rgba(0, 0, 0, 0.5) 3.2em, rgba(0, 0, 0, 0.2) 7em, transparent 10.5em);
+	mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0, rgba(0, 0, 0, 0.5) 3.2em, rgba(0, 0, 0, 0.2) 7em, transparent 10.5em);
+	animation: rorschach-tail-in-v2 460ms ease-out 200ms both;
+}
+
+/* Crisp dimmed letters — the legacy warp/blur loops are retired. */
+.stage[data-glow='rorschach'] .field[data-glow] .tail .glyph,
+.stage[data-glow='rorschach'] .field[data-glow] .tail .glyph:nth-child(3n + 1),
+.stage[data-glow='rorschach'] .field[data-glow] .tail .glyph:nth-child(3n + 2) {
+	display: inline-block;
+	position: relative;
+	color: inherit;
+	background: none;
+	opacity: clamp(0.4, calc(0.66 - var(--i) * 0.014), 0.66);
+	filter: none;
+	text-shadow: none;
+	transform: none;
+	animation: none;
+}
+
+.stage[data-glow='rorschach'] .field[data-glow] .tail .glyph::after {
+	content: attr(data-alt);
+	color: inherit;
+	opacity: 0;
+	filter: none;
+	transform: none;
+	animation: none;
+}
+
+/* Smudge specks between dimmed letters: tiny static gray blots on some
+   glyphs' left edges — ink dust on the card. The tail's own mask fades
+   them out with the letters. */
+.stage[data-glow='rorschach'] .field[data-glow] .tail .glyph:nth-child(3n)::before {
+	position: absolute;
+	left: -0.14em;
+	top: 0.58em;
+	width: 0.16em;
+	height: 0.11em;
+	content: '';
+	pointer-events: none;
+	border-radius: 62% 38% 55% 45% / 55% 60% 40% 45%;
+	background: var(--ro-speck);
+	filter: blur(0.6px);
+	opacity: 0.5;
+	animation: none;
+}
+
+.stage[data-glow='rorschach'] .field[data-glow] .tail .glyph:nth-child(4n + 2)::before {
+	position: absolute;
+	left: -0.1em;
+	top: 0.24em;
+	width: 0.1em;
+	height: 0.09em;
+	content: '';
+	pointer-events: none;
+	border-radius: 45% 55% 60% 40% / 50% 45% 55% 50%;
+	background: var(--ro-speck);
+	filter: blur(0.5px);
+	opacity: 0.38;
+	animation: none;
+}
+
+/* Light flow off: stamp, bleed, drips and the glyph sharpen are finite and
+   play once; the symmetry breath holds still on the settled blot. */
+.stage[data-glow='rorschach'][data-light-flow='off'] .field[data-glow] .prediction::before,
+.stage[data-glow='rorschach'][data-light-flow='off'] .field[data-glow] .prediction::after {
+	animation:
+		rorschach-stamp-v2 620ms cubic-bezier(0.22, 1.1, 0.32, 1) 80ms both,
+		rorschach-bleed-v2 2s cubic-bezier(0.25, 0.6, 0.3, 1) 760ms forwards,
+		rorschach-drip-v2 2.4s cubic-bezier(0.3, 0.7, 0.4, 1) 1.4s both;
+}
+
+.stage[data-glow='rorschach'][data-light-flow='off'] .field[data-glow] .next-word {
+	animation: rorschach-word-in-v2 220ms ease-out both;
+}
+
+.stage[data-glow='rorschach'][data-light-flow='off'] .field[data-glow] .next-word::before {
+	animation: rorschach-scrim-in-v2 520ms ease-out 340ms both;
+}
+
+.stage[data-glow='rorschach'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
+	animation: rorschach-read-v2 640ms cubic-bezier(0.3, 0.7, 0.25, 1) both;
+	animation-delay: calc(560ms + var(--i) * 70ms);
+}
+
+.stage[data-glow='rorschach'][data-light-flow='off'] .field[data-glow] .tail {
+	animation: rorschach-tail-in-v2 460ms ease-out 200ms both;
+}
+
+/* ---------- Light theme: the classic card ---------- */
+/* Cream paper, black ink, the same fold — the plate every subject knows. */
+.field[data-theme='light'][data-glow='rorschach'] {
+	--ro-blot-o: 0.94;
+	--ro-scrim-o: 0.9;
+	--ro-ink: rgba(26, 27, 32, 0.9);
+	--ro-ink-soft: rgba(26, 27, 32, 0.42);
+	--ro-crease-sh: rgba(26, 24, 18, 0.32);
+	--ro-crease-hi: rgba(255, 255, 255, 0.78);
+	--ro-blot: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 100' preserveAspectRatio='none'%3E%3Cpath fill='%23181a20' fill-opacity='.94' stroke='%23181a20' stroke-opacity='.3' stroke-width='4' stroke-linejoin='round' d='M120 14 C102 8 90 16 82 26 C74 10 50 8 42 22 C36 33 44 40 54 42 C38 42 24 52 30 64 C35 74 50 72 60 63 C54 78 62 90 76 88 C88 86 94 76 91 66 C100 74 112 72 120 64 Z'/%3E%3Cellipse cx='22' cy='26' rx='3.4' ry='2.4' fill='%23181a20' fill-opacity='.76'/%3E%3Cellipse cx='14' cy='56' rx='2.6' ry='3.4' fill='%23181a20' fill-opacity='.64'/%3E%3Ccircle cx='28' cy='84' r='2' fill='%23181a20' fill-opacity='.56'/%3E%3Ccircle cx='68' cy='10' r='1.6' fill='%23181a20' fill-opacity='.5'/%3E%3C/svg%3E");
+	--ro-half-filter: blur(0.4px) contrast(1.02) drop-shadow(0 0.02em 0.12em rgba(26, 27, 32, 0.25));
+	--ro-scrim-bg: radial-gradient(ellipse 82% 96% at 40% 52%, rgba(247, 243, 234, 0.92), rgba(247, 243, 234, 0.5) 58%, transparent 86%);
+	--ro-speck: rgba(40, 41, 48, 0.28);
+	--ro-pool-ink: rgba(52, 54, 62, 0.07);
+	--ro-shade-ink: rgba(90, 92, 100, 0.16);
+	--ro-wait-ink: rgba(30, 31, 36, 0.5);
+	--ro-wait-ink-soft: rgba(30, 31, 36, 0.2);
+	--ready-border: rgba(148, 142, 126, 0.36);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.95) inset,
+		0 -18px 50px rgba(168, 158, 134, 0.12) inset,
+		0 18px 46px rgba(70, 64, 50, 0.14);
+	--field-wash:
+		radial-gradient(ellipse 90% 170% at 76% -34%, rgba(255, 253, 246, 0.7), transparent 58%),
+		linear-gradient(180deg, rgba(255, 254, 250, 0.5), transparent 42%);
+	--caret-gradient: linear-gradient(
+		180deg,
+		rgba(24, 25, 30, 0.8) 0%,
+		rgba(24, 25, 30, 0.8) 4%,
+		rgba(30, 31, 38, 0.45) 4%,
+		rgba(30, 31, 38, 0.45) 84%,
+		rgb(16, 17, 21) 84%,
+		rgb(16, 17, 21) 100%
+	);
+	--caret-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.6),
+		0 0 4px rgba(20, 21, 26, 0.2);
+	--next-color: rgba(22, 23, 28, 0.95);
+	--next-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.55),
+		0 0 1px rgba(22, 23, 28, 0.28);
+	--tail-color: rgba(64, 62, 56, 0.5);
+}
+
+/* The legacy pass scopes rorschach light vars on the stage: re-win the
+   contested ones at the same strength so this module's palette holds. */
+.stage[data-theme='light'][data-glow='rorschach'] .field[data-glow] {
+	--ready-border: rgba(148, 142, 126, 0.36);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.95) inset,
+		0 -18px 50px rgba(168, 158, 134, 0.12) inset,
+		0 18px 46px rgba(70, 64, 50, 0.14);
+	--field-wash:
+		radial-gradient(ellipse 90% 170% at 76% -34%, rgba(255, 253, 246, 0.7), transparent 58%),
+		linear-gradient(180deg, rgba(255, 254, 250, 0.5), transparent 42%);
+	--haze-opacity: 0;
+	--body-opacity: 0;
+	--core-opacity: 0;
+	--flow-low: 0;
+	--flow-high: 0;
+	--spark-low: 0;
+	--spark-high: 0;
+	--smoke-opacity: 0;
+	--aux-opacity: 0;
+	--next-color: rgba(22, 23, 28, 0.95);
+	--next-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.55),
+		0 0 1px rgba(22, 23, 28, 0.28);
+	--tail-color: rgba(64, 62, 56, 0.5);
+}
+
+/* Cream card vessel with the same faint grain. */
+.stage[data-theme='light'][data-glow='rorschach'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 90% 160% at 76% -30%, rgba(255, 253, 246, 0.8), transparent 56%),
+		repeating-linear-gradient(97deg, rgba(120, 110, 88, 0.028) 0 2px, transparent 2px 5px),
+		repeating-linear-gradient(171deg, rgba(255, 255, 255, 0.35) 0 1px, transparent 1px 4px),
+		linear-gradient(180deg, rgb(249, 245, 236), rgb(246, 241, 230) 55%, rgb(242, 236, 223));
+	box-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.95) inset,
+		0 -1px 0 rgba(168, 158, 134, 0.14) inset,
+		0 20px 50px rgba(70, 64, 50, 0.13);
+}
+
+/* Re-pin the wash against legacy light rules that leave it drifting. */
+.stage[data-theme='light'][data-glow='rorschach'] .field[data-glow]::before {
+	mix-blend-mode: normal;
+	opacity: 0;
+	animation: none;
+}
+
+.stage[data-theme='light'][data-glow='rorschach'] .field[data-glow][data-state='ready']::before {
+	opacity: 0.8;
+}
+
+.stage[data-theme='light'][data-glow='rorschach'] .field[data-glow][data-state='waiting'][data-loading-glow='field']::before {
+	opacity: 0.45;
+}
+
+/* Ink must be shaped as ink on paper, never screened. */
+.stage[data-theme='light'][data-glow='rorschach'] .field[data-glow] .torch-beam {
+	mix-blend-mode: normal;
+}
+
+/* Black ink halves re-win over the legacy light multiply pass — same
+   geometry, the theme vars carry the palette. */
+.stage[data-theme='light'][data-glow='rorschach'] .field[data-glow] .prediction::before {
+	background-image: var(--ro-half-l);
+	filter: var(--ro-half-filter);
+	mix-blend-mode: normal;
+	opacity: var(--ro-blot-o);
+}
+
+.stage[data-theme='light'][data-glow='rorschach'] .field[data-glow] .prediction::after {
+	background-image: var(--ro-half-r);
+	filter: var(--ro-half-filter);
+	mix-blend-mode: normal;
+	opacity: var(--ro-blot-o);
+}
+
+.stage[data-theme='light'][data-glow='rorschach'] .field[data-glow] .next-word {
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: var(--next-shadow);
+}
+
+.stage[data-theme='light'][data-glow='rorschach'] .field[data-glow] .next-word::before {
+	background: var(--ro-scrim-bg);
+	mix-blend-mode: normal;
+	opacity: var(--ro-scrim-o);
+}
+
+.stage[data-theme='light'][data-glow='rorschach'] .field[data-glow] .next-word .glyph {
+	color: var(--next-color);
+	background: none;
+	text-shadow: var(--next-shadow);
+}
+
+.stage[data-theme='light'][data-glow='rorschach'] .field[data-glow] .next-word .glyph::after {
+	color: var(--next-color);
+	opacity: 0;
+}
+
+.stage[data-theme='light'][data-glow='rorschach'] .field[data-glow] .tail {
+	color: var(--tail-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.stage[data-theme='light'][data-glow='rorschach'] .field[data-glow] .tail .glyph {
+	color: inherit;
+	text-shadow: none;
+}
+
+.stage[data-theme='light'][data-glow='rorschach'] .field[data-glow] .edge-left {
+	background: linear-gradient(90deg, rgb(249, 245, 236) 0%, rgb(249, 245, 236) 40%, rgba(249, 245, 236, 0) 100%);
+}
+
+.stage[data-theme='light'][data-glow='rorschach'] .field[data-glow] .edge-right {
+	background: linear-gradient(
+		270deg,
+		rgba(242, 236, 223, 0.5) 0%,
+		rgba(242, 236, 223, 0.22) 42%,
+		rgba(242, 236, 223, 0) 100%
+	);
+	opacity: 0.55;
+}
+
+/* Light theme + flow off: re-win the finite passes against the
+   higher-specificity light rules above. */
+.stage[data-theme='light'][data-glow='rorschach'][data-light-flow='off'] .field[data-glow] .prediction::before,
+.stage[data-theme='light'][data-glow='rorschach'][data-light-flow='off'] .field[data-glow] .prediction::after {
+	animation:
+		rorschach-stamp-v2 620ms cubic-bezier(0.22, 1.1, 0.32, 1) 80ms both,
+		rorschach-bleed-v2 2s cubic-bezier(0.25, 0.6, 0.3, 1) 760ms forwards,
+		rorschach-drip-v2 2.4s cubic-bezier(0.3, 0.7, 0.4, 1) 1.4s both;
+}
+
+.stage[data-theme='light'][data-glow='rorschach'][data-light-flow='off'] .field[data-glow] .next-word {
+	animation: rorschach-word-in-v2 220ms ease-out both;
+}
+
+.stage[data-theme='light'][data-glow='rorschach'][data-light-flow='off'] .field[data-glow] .next-word::before {
+	animation: rorschach-scrim-in-v2 520ms ease-out 340ms both;
+}
+
+.stage[data-theme='light'][data-glow='rorschach'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
+	animation: rorschach-read-v2 640ms cubic-bezier(0.3, 0.7, 0.25, 1) both;
+	animation-delay: calc(560ms + var(--i) * 70ms);
+}
+
+.stage[data-theme='light'][data-glow='rorschach'][data-light-flow='off'] .field[data-glow] .tail {
+	animation: rorschach-tail-in-v2 460ms ease-out 200ms both;
+}
+
+/* ---------- Waiting state: the test forming ---------- */
+/* A small symmetric blot at the caret: two mirrored lobes and a
+   self-mirrored bridge morphing slowly via symmetric background-size
+   keyframes (both lobes share every value, so the fold stays exact) over
+   a quiet ink pool and a faint floor shade. Layer order on torch-core:
+   [left lobe, right lobe, bridge]. */
+.field[data-state='waiting'][data-glow='rorschach'] {
+	--haze-width: 4.6em;
+	--haze-height: 2.6em;
+	--haze-size: 100% 100%;
+	--haze-bg: radial-gradient(ellipse 1.7em 1em at 1em 50%, var(--ro-pool-ink), transparent 78%);
+	--haze-filter: blur(10px);
+	--haze-opacity: 0.75;
+	--torch-haze-motion: rorschach-wait-pool-v2 5.2s ease-in-out infinite;
+	--haze-mask: linear-gradient(90deg, transparent 0, black 0.3em), radial-gradient(ellipse 50% 50% at 36% 50%, black 0 46%, rgba(0, 0, 0, 0.5) 72%, transparent 96%);
+	--body-bg: none;
+	--body-opacity: 0;
+	--core-width: 3.2em;
+	--core-height: 2.6em;
+	--core-size:
+		0.62em 0.8em,
+		0.62em 0.8em,
+		0.4em 0.34em;
+	--core-bg:
+		radial-gradient(ellipse at 50% 50%, var(--ro-wait-ink) 0 44%, var(--ro-wait-ink-soft) 60%, transparent 76%) 0.6em 0.9em no-repeat,
+		radial-gradient(ellipse at 50% 50%, var(--ro-wait-ink) 0 44%, var(--ro-wait-ink-soft) 60%, transparent 76%) 1.28em 0.9em no-repeat,
+		radial-gradient(ellipse at 50% 50%, var(--ro-wait-ink) 0 40%, transparent 72%) 1.05em 1.42em no-repeat;
+	--core-filter: blur(1.2px);
+	--core-opacity: 0.9;
+	--torch-core-motion: rorschach-wait-morph-v2 3.8s ease-in-out infinite;
+	--core-mask: linear-gradient(90deg, transparent 0, black 0.16em), radial-gradient(ellipse 56% 56% at 40% 50%, black 0 52%, rgba(0, 0, 0, 0.5) 78%, transparent 96%);
+	--flow-bg: none;
+	--flow-low: 0;
+	--flow-high: 0;
+	--flow-motion: none;
+	--spark-bg: none;
+	--spark-low: 0;
+	--spark-high: 0;
+	--spark-motion: none;
+	--smoke-width: 3.6em;
+	--smoke-height: 2.6em;
+	--smoke-size: auto;
+	--smoke-bg: radial-gradient(ellipse 1.4em 0.32em at 1em 1.95em, var(--ro-shade-ink), transparent 80%);
+	--smoke-filter: blur(5px);
+	--smoke-opacity: 0.5;
+	--smoke-blend: normal;
+	--smoke-motion: none;
+	--smoke-mask: linear-gradient(90deg, transparent 0, black 0.22em), radial-gradient(ellipse 50% 50% at 36% 58%, black 0 48%, transparent 94%);
+	--aux-bg: none;
+	--aux-opacity: 0;
+	--aux-motion: none;
+}
+
+/* Paper waiting: the same forming blot in black ink; only the quiet parts
+   need re-tuning against the generic light dimming pass. */
+.field[data-theme='light'][data-state='waiting'][data-glow='rorschach'] {
+	--haze-filter: blur(9px);
+	--haze-opacity: 0.6;
+	--core-filter: blur(1px);
+	--core-opacity: 0.85;
+	--smoke-opacity: 0.4;
+}
+
+/* Waiting + flow off: the forming blot holds perfectly still. */
+.field[data-light-flow='off'][data-state='waiting'][data-glow='rorschach'] {
+	--torch-haze-motion: none;
+	--torch-core-motion: none;
+}
+
+/* ---------- Keyframes (rorschach-*-v2) ---------- */
+/* THE STAMP: folded paper squeezed — both halves squish in from a thin
+   band, overshoot, settle. Runs on the independent `scale` property so
+   the mirrored half's transform flip never breaks. */
+@keyframes rorschach-stamp-v2 {
+	0% {
+		opacity: 0;
+		scale: 0.94 0.15;
+	}
+	38% {
+		opacity: calc(var(--ro-blot-o, 0.97) * 0.9);
+	}
+	60% {
+		opacity: var(--ro-blot-o, 0.97);
+		scale: 1.005 1.06;
+	}
+	80% {
+		scale: 1 0.99;
+	}
+	100% {
+		opacity: var(--ro-blot-o, 0.97);
+		scale: 1 1;
+	}
+}
+
+/* Wet ink settles: a one-shot 3% spread after the stamp. */
+@keyframes rorschach-bleed-v2 {
+	0% {
+		scale: 1 1;
+	}
+	100% {
+		scale: 1.03 1.03;
+	}
+}
+
+/* SYMMETRY BREATH: the same scaleX swell on both halves — one is flipped,
+   so the pair breathes in perfect mirror sync about the fold. */
+@keyframes rorschach-breath-v2 {
+	0%,
+	100% {
+		scale: 1.03 1.03;
+	}
+	50% {
+		scale: 1.0455 1.03;
+	}
+}
+
+/* The drip draws downward from the bottom lobe and stays; crease and blot
+   sizes ride along unchanged. */
+@keyframes rorschach-drip-v2 {
+	0% {
+		background-size:
+			1px 2.6em,
+			2.6em 2.75em,
+			0.055em 0em;
+	}
+	100% {
+		background-size:
+			1px 2.6em,
+			2.6em 2.75em,
+			0.055em 0.42em;
+	}
+}
+
+/* The word surfaces under the reading. */
+@keyframes rorschach-word-in-v2 {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+/* WORD FROM INK: blob -> letter. Heavy blur and a squashed inkdrop shape
+   sharpen with a small overshoot — the eye suddenly reads the word. */
+@keyframes rorschach-read-v2 {
+	0% {
+		opacity: 0;
+		filter: blur(8px);
+		transform: scale(1.3, 0.82);
+	}
+	16% {
+		opacity: 0.72;
+	}
+	48% {
+		opacity: 0.92;
+		filter: blur(3.2px);
+		transform: scale(1.12, 0.95);
+	}
+	78% {
+		opacity: 1;
+		filter: blur(0.5px);
+		transform: scale(0.97, 1.015);
+	}
+	100% {
+		opacity: 1;
+		filter: blur(0);
+		transform: scale(1, 1);
+	}
+}
+
+/* The card tone parts the ink under the letters. */
+@keyframes rorschach-scrim-in-v2 {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: var(--ro-scrim-o, 0.9);
+	}
+}
+
+/* The tail settles onto the card. */
+@keyframes rorschach-tail-in-v2 {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+/* Waiting: the small blot morphs — lobes flatten as the bridge swells,
+   every value shared by both lobes so the mirror never slips. */
+@keyframes rorschach-wait-morph-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--core-opacity, 0.9) * 0.8);
+		background-size:
+			0.62em 0.8em,
+			0.62em 0.8em,
+			0.4em 0.34em;
+	}
+	50% {
+		opacity: var(--core-opacity, 0.9);
+		background-size:
+			0.62em 0.62em,
+			0.62em 0.62em,
+			0.4em 0.46em;
+	}
+}
+
+/* ...over a quiet pool of ink air. */
+@keyframes rorschach-wait-pool-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--haze-opacity, 0.75) * 0.7);
+		transform: translateY(-50%) scale(0.97);
+	}
+	50% {
+		opacity: var(--haze-opacity, 0.75);
+		transform: translateY(-50%) scale(1.03);
+	}
+}
