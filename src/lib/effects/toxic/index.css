@@ -1,0 +1,1134 @@
+/* ============================================================
+   TOXIC v2 — "Radioactive acid spill at the caret"
+   A luminous acid puddle spreads rightward under the suggestion
+   with a living, irregular meniscus: two puddle phases (beam-body
+   = phase A, prediction::before = phase B) are warped by two
+   different inline-SVG feTurbulence/feDisplacementMap filters and
+   crossfade opacity in opposite phase for a viscous churn — the
+   displacement params are static, only cheap opacity/transform
+   animate. prediction::after (survives flow-off) carries the
+   crisp undulating surface line plus two hero bubbles with dark
+   refraction centers and bright rims, warped by a third, higher
+   frequency displacement field. Young bubbles inflate and wobble
+   up on beam-spark; beam-aux flashes thin pop rings at the end of
+   the same 3.6s cycle. Sickly yellow-green fumes curl up on
+   beam-smoke. The field wash micro-flickers with steps() — a
+   Geiger unease, never a lamp. Text is etched in per glyph: a
+   dark silhouette gets eaten by a lime acid edge, the data-alt
+   ghost melts downward, and every third glyph grows a small acid
+   drip under its baseline. Contrast is guaranteed by a swamp-dark
+   scrim under .next-word. No capsule: layer-radius 0, layer-clip
+   none, every layer dissolves through intersected left-fade x
+   radial masks and the displaced blob edges. Waiting = one acid
+   drop swelling at the caret, detaching, falling and splashing
+   into a thin ring (~2.4s). Light theme = hazmat lab paper with a
+   saturated wet stain at normal blend, dark-rimmed bubbles and
+   bottle-green ink. Chrome-only tech is intentional.
+   ============================================================ */
+
+.field[data-glow='toxic'] {
+	--layer-radius: 0;
+	--layer-clip: none;
+	--wash-o: 0.9;
+	--spill-o: 0.55;
+	--menis-o: 0.95;
+	--scrim-o: 0.85;
+	--warp-a: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='toxA' x='-20%25' y='-20%25' width='140%25' height='140%25' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='0.011 0.05' numOctaves='2' seed='11'/><feDisplacementMap in='SourceGraphic' scale='26' xChannelSelector='R' yChannelSelector='G'/></filter></svg>#toxA");
+	--warp-b: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='toxB' x='-20%25' y='-20%25' width='140%25' height='140%25' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='0.013 0.055' numOctaves='2' seed='29'/><feDisplacementMap in='SourceGraphic' scale='30' xChannelSelector='R' yChannelSelector='G'/></filter></svg>#toxB");
+	--warp-c: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='toxC' x='-20%25' y='-20%25' width='140%25' height='140%25' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='0.02 0.09' numOctaves='2' seed='47'/><feDisplacementMap in='SourceGraphic' scale='14' xChannelSelector='R' yChannelSelector='G'/></filter></svg>#toxC");
+	--ready-border: rgba(186, 255, 60, 0.34);
+	--ready-shadow:
+		0 1px 0 rgba(234, 255, 200, 0.06) inset,
+		0 -34px 92px rgba(4, 18, 6, 0.66) inset,
+		0 30px 70px rgba(0, 0, 0, 0.52),
+		0 0 90px rgba(150, 255, 30, 0.16),
+		0 0 160px rgba(40, 255, 120, 0.07);
+	--field-wash:
+		radial-gradient(ellipse 32% 110% at 20% 66%, rgba(96, 220, 40, 0.15), transparent 70%),
+		radial-gradient(ellipse 18% 70% at 17% 58%, rgba(200, 255, 80, 0.09), transparent 66%),
+		radial-gradient(ellipse 52% 40% at 26% 112%, rgba(50, 150, 30, 0.12), transparent 76%),
+		radial-gradient(ellipse 90% 160% at 78% -30%, rgba(20, 60, 30, 0.18), transparent 66%);
+	--caret-gradient: linear-gradient(180deg, rgb(255, 255, 250), rgb(240, 255, 200) 24%, rgb(198, 255, 70) 52%, rgb(90, 230, 60) 78%, rgb(20, 130, 50));
+	--caret-shadow:
+		0 0 5px rgba(250, 255, 230, 0.9),
+		0 0 14px rgba(200, 255, 80, 0.6),
+		0 0 30px rgba(90, 240, 80, 0.35);
+	--haze-width: 13em;
+	--haze-height: 2.6em;
+	--haze-size: auto;
+	--haze-bg:
+		radial-gradient(ellipse 5.4em 1.5em at 1.6em 66%, rgba(140, 255, 40, 0.26), rgba(60, 200, 60, 0.12) 55%, transparent 80%),
+		radial-gradient(ellipse 8em 1.1em at 5em 72%, rgba(90, 240, 70, 0.12), transparent 78%),
+		radial-gradient(ellipse 2.6em 1.4em at 0.8em 56%, rgba(230, 255, 150, 0.1), transparent 72%);
+	--haze-filter: blur(22px) saturate(1.3);
+	--haze-opacity: 0.8;
+	--haze-motion: toxic-underglow-v2 4.4s ease-in-out 760ms infinite;
+	--torch-haze-motion: toxic-waiting-glow-v2 2.4s ease-in-out infinite;
+	--haze-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 96% 94% at 26% 58%, black 0 40%, rgba(0, 0, 0, 0.5) 68%, transparent 96%);
+	--body-width: 12.5em;
+	--body-height: 2.5em;
+	--body-size: auto;
+	--body-bg:
+		radial-gradient(ellipse 2em 0.68em at 1.05em 70%, rgba(246, 255, 190, 0.85), rgba(200, 255, 60, 0.5) 48%, transparent 82%),
+		radial-gradient(ellipse 3.2em 0.78em at 3.2em 72%, rgba(172, 255, 34, 0.55), rgba(80, 240, 90, 0.26) 56%, transparent 86%),
+		radial-gradient(ellipse 3.6em 0.7em at 5.9em 75%, rgba(84, 245, 108, 0.4), rgba(40, 190, 80, 0.18) 60%, transparent 88%),
+		radial-gradient(ellipse 3.8em 0.6em at 8.8em 78%, rgba(46, 210, 95, 0.24), transparent 88%),
+		linear-gradient(180deg, transparent 42%, rgba(30, 110, 34, 0.1) 58%, rgba(96, 220, 44, 0.16) 76%, rgba(14, 66, 22, 0.12) 96%);
+	--body-filter: var(--warp-a) blur(5px) saturate(1.55) contrast(1.05);
+	--body-opacity: 0.95;
+	--body-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 100% 92% at 24% 66%, black 0 42%, rgba(0, 0, 0, 0.55) 68%, transparent 96%);
+	--core-width: 3.4em;
+	--core-height: 1.6em;
+	--core-size: auto;
+	--core-bg:
+		radial-gradient(ellipse 0.8em 0.32em at 0.72em 66%, rgba(255, 255, 245, 0.95), rgba(232, 255, 160, 0.55) 52%, transparent 84%),
+		radial-gradient(ellipse 1.9em 0.4em at 1.5em 68%, rgba(214, 255, 90, 0.6), rgba(150, 255, 40, 0.24) 62%, transparent 90%);
+	--core-filter: blur(3px) saturate(1.35);
+	--core-opacity: 1;
+	--core-motion: toxic-seethe-v2 1.9s ease-in-out 620ms infinite;
+	--torch-core-motion: toxic-drop-v2 2.4s cubic-bezier(0.42, 0.06, 0.58, 0.94) infinite;
+	--core-mask: linear-gradient(90deg, transparent 0, black 0.6em), radial-gradient(ellipse 96% 92% at 26% 62%, black 0 45%, rgba(0, 0, 0, 0.5) 72%, transparent 95%);
+	--flow-width: 11em;
+	--flow-height: 1.7em;
+	--flow-size: 220% 100%;
+	--flow-bg:
+		linear-gradient(94deg, transparent 0%, rgba(238, 255, 180, 0.18) 14%, rgba(150, 255, 60, 0.14) 30%, transparent 48%, rgba(110, 250, 80, 0.1) 64%, transparent 84%),
+		radial-gradient(ellipse 6.5em 0.4em at 4.5em 72%, rgba(210, 255, 120, 0.1), transparent 78%);
+	--flow-filter: blur(10px) saturate(1.25);
+	--flow-low: 0.12;
+	--flow-high: 0.4;
+	--flow-motion: toxic-sheen-v2 4.6s ease-in-out 900ms infinite;
+	--flow-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 96% 80% at 28% 68%, black 0 40%, rgba(0, 0, 0, 0.5) 68%, transparent 96%);
+	--spark-width: 8em;
+	--spark-height: 2.6em;
+	--spark-size: auto;
+	--spark-bg:
+		radial-gradient(circle at 1.55em 1.85em, rgba(10, 42, 12, 0.6) 0 0.052em, rgba(226, 255, 140, 0.95) 0.058em 0.08em, transparent 0.108em),
+		radial-gradient(circle at 1.44em 1.74em, rgba(255, 255, 244, 0.9) 0 0.016em, transparent 0.04em),
+		radial-gradient(circle at 3.3em 2em, rgba(10, 42, 12, 0.5) 0 0.04em, rgba(198, 255, 80, 0.85) 0.046em 0.064em, transparent 0.09em),
+		radial-gradient(circle at 3.21em 1.92em, rgba(255, 255, 240, 0.8) 0 0.013em, transparent 0.034em),
+		radial-gradient(circle at 4.9em 1.7em, rgba(10, 40, 12, 0.45) 0 0.034em, rgba(170, 255, 60, 0.75) 0.04em 0.055em, transparent 0.078em),
+		radial-gradient(circle at 6.3em 1.95em, rgba(150, 255, 60, 0.5) 0 0.024em, transparent 0.06em);
+	--spark-filter: blur(0.3px) drop-shadow(0 0 6px rgba(190, 255, 70, 0.6));
+	--spark-low: 0;
+	--spark-high: 0.95;
+	--spark-motion: toxic-bubble-rise-v2 3.6s cubic-bezier(0.35, 0.1, 0.5, 1) 900ms infinite;
+	--spark-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 96% 94% at 32% 62%, black 0 52%, rgba(0, 0, 0, 0.5) 76%, transparent 98%);
+	--smoke-width: 7.5em;
+	--smoke-height: 2.8em;
+	--smoke-size: auto;
+	--smoke-bg:
+		radial-gradient(ellipse 0.5em 1.1em at 2.4em 0.9em, rgba(196, 226, 96, 0.3), transparent 76%),
+		radial-gradient(ellipse 0.4em 0.9em at 4.1em 0.75em, rgba(168, 210, 70, 0.22), transparent 78%),
+		radial-gradient(ellipse 0.7em 1.2em at 5.8em 1em, rgba(140, 190, 60, 0.16), transparent 80%);
+	--smoke-filter: blur(12px) saturate(1.1);
+	--smoke-opacity: 0.55;
+	--smoke-blend: screen;
+	--smoke-motion: toxic-fume-rise-v2 6.4s ease-in-out 1.1s infinite;
+	--smoke-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 94% 94% at 45% 32%, black 0 42%, rgba(0, 0, 0, 0.5) 70%, transparent 94%);
+	--aux-width: 8em;
+	--aux-height: 2.6em;
+	--aux-size: auto;
+	--aux-bg:
+		radial-gradient(circle at 1.7em 1.3em, transparent 0 0.085em, rgba(224, 255, 150, 0.85) 0.092em 0.108em, transparent 0.135em),
+		radial-gradient(circle at 3.45em 1.45em, transparent 0 0.065em, rgba(198, 255, 90, 0.7) 0.072em 0.086em, transparent 0.11em),
+		radial-gradient(circle at 5.05em 1.2em, transparent 0 0.055em, rgba(170, 255, 70, 0.6) 0.06em 0.074em, transparent 0.095em);
+	--aux-filter: blur(0.4px) drop-shadow(0 0 5px rgba(190, 255, 80, 0.5));
+	--aux-opacity: 0.85;
+	--aux-blend: screen;
+	--aux-motion: toxic-bubble-pop-v2 3.6s cubic-bezier(0.3, 0.2, 0.5, 1) 900ms infinite;
+	--aux-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 96% 94% at 34% 55%, black 0 48%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	--next-color: rgba(230, 255, 210, 0.95);
+	--next-shadow:
+		0 1px 2px rgba(4, 14, 4, 0.7),
+		0 0 8px rgba(210, 255, 150, 0.35),
+		0 0 20px rgba(140, 255, 40, 0.22),
+		0 0 40px rgba(40, 220, 90, 0.12);
+	--tail-color: rgba(186, 226, 150, 0.44);
+}
+
+/* Beams carry the spill again: undo the legacy pass that hid them. */
+.stage[data-glow='toxic'] .field[data-glow] .prediction > .beam {
+	display: block;
+	left: -0.03em;
+	transform-origin: left center;
+}
+
+/* Two-layer masks (left fade x radial falloff) need intersection, not union. */
+.stage[data-glow='toxic'] .field[data-glow] .prediction > .beam,
+.stage[data-glow='toxic'] .field[data-glow] .torch-beam {
+	mask-composite: intersect;
+}
+
+/* Torch layers serve the waiting state only; never double-print in ready. */
+.stage[data-glow='toxic'] .field[data-glow] .caret-origin-glow[data-mode='ready'] {
+	display: none;
+}
+
+.stage[data-glow='toxic'] .field[data-glow] .prediction {
+	isolation: isolate;
+}
+
+/* Deep swamp-dark vessel: green undertone only where the spill lives. */
+.stage[data-glow='toxic'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 46% 150% at 20% 66%, rgba(28, 68, 16, 0.42), transparent 64%),
+		radial-gradient(ellipse 120% 180% at 78% -40%, rgba(10, 24, 14, 0.5), transparent 66%),
+		linear-gradient(90deg, rgb(8, 13, 7), rgb(7, 12, 8) 52%, rgb(6, 11, 9));
+}
+
+/* Geiger flicker: irregular steps() luminance jitter, low amplitude. */
+.stage[data-glow='toxic'] .field[data-glow]::before {
+	background: var(--field-wash);
+	background-size: 100% 100%;
+	-webkit-mask-image: radial-gradient(ellipse 100% 96% at 28% 60%, black 0 44%, rgba(0, 0, 0, 0.5) 72%, transparent 100%);
+	mask-image: radial-gradient(ellipse 100% 96% at 28% 60%, black 0 44%, rgba(0, 0, 0, 0.5) 72%, transparent 100%);
+	mix-blend-mode: screen;
+	opacity: var(--wash-o);
+	animation: toxic-geiger-v2 2.6s steps(1, end) infinite;
+}
+
+/* Dissolve into the field's rounded clip, not the paint box; edge overlays
+   extended into the 64px padding so brightness never steps at the content box. */
+.stage[data-glow='toxic'] .field[data-glow] .paint {
+	overflow: visible;
+	clip-path: inset(-3.4em -5em -3.4em 0);
+}
+
+.stage[data-glow='toxic'] .field[data-glow] .edge-left {
+	left: -64px;
+	width: 156px;
+	background: linear-gradient(90deg, rgb(8, 13, 7) 0%, rgb(8, 13, 7) 40%, rgba(8, 13, 7, 0) 100%);
+	opacity: 0;
+}
+
+.stage[data-glow='toxic'] .field[data-glow] .viewport.scrolled .edge-left {
+	opacity: 1;
+}
+
+.stage[data-glow='toxic'] .field[data-glow] .edge-right {
+	right: -64px;
+	width: 224px;
+	background: linear-gradient(
+		270deg,
+		rgba(7, 12, 8, 0.9) 0%,
+		rgba(7, 12, 8, 0.55) 30%,
+		rgba(7, 12, 8, 0.16) 68%,
+		rgba(7, 12, 8, 0) 100%
+	);
+	opacity: 0.88;
+}
+
+/* Puddle phase B: a second displacement field, crossfading against
+   beam-body (phase A) in opposite phase — the viscous churn. */
+.stage[data-glow='toxic'] .field[data-glow] .prediction::before {
+	position: absolute;
+	left: -0.7em;
+	top: 50%;
+	z-index: -2;
+	width: min(13.5em, calc(100% + 4.5em));
+	height: 2.5em;
+	content: '';
+	pointer-events: none;
+	border-radius: 0;
+	clip-path: none;
+	background:
+		radial-gradient(ellipse 2.4em 0.72em at 1.5em 72%, rgba(238, 255, 170, 0.7), rgba(190, 255, 50, 0.4) 50%, transparent 84%),
+		radial-gradient(ellipse 3.4em 0.8em at 4.2em 75%, rgba(150, 255, 30, 0.46), rgba(66, 235, 96, 0.22) 58%, transparent 88%),
+		radial-gradient(ellipse 3.8em 0.66em at 7.2em 77%, rgba(60, 225, 100, 0.3), transparent 90%),
+		linear-gradient(180deg, transparent 44%, rgba(80, 200, 40, 0.14) 74%, rgba(12, 60, 20, 0.1) 96%);
+	filter: var(--warp-b) blur(6px) saturate(1.5);
+	-webkit-mask-image: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 98% 94% at 28% 66%, black 0 42%, rgba(0, 0, 0, 0.5) 70%, transparent 98%);
+	mask-image: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 98% 94% at 28% 66%, black 0 42%, rgba(0, 0, 0, 0.5) 70%, transparent 98%);
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+	mix-blend-mode: screen;
+	opacity: var(--spill-o);
+	transform: translateY(-50%);
+	transform-origin: 0.7em center;
+	animation:
+		toxic-spill-in-v2 560ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		toxic-churn-b-v2 5.6s ease-in-out 640ms infinite;
+}
+
+/* The meniscus: crisp undulating surface line + hero bubbles with dark
+   refraction centers and bright rims; alive with or without light flow. */
+.stage[data-glow='toxic'] .field[data-glow] .prediction::after {
+	position: absolute;
+	left: -0.55em;
+	top: 50%;
+	z-index: -1;
+	width: min(13em, calc(100% + 4.2em));
+	height: 2.5em;
+	content: '';
+	pointer-events: none;
+	border-radius: 0;
+	clip-path: none;
+	background:
+		radial-gradient(ellipse 5.2em 0.09em at 2.8em 1.42em, rgba(240, 255, 170, 0.85), rgba(190, 255, 60, 0.4) 60%, transparent 90%),
+		radial-gradient(ellipse 4.5em 0.07em at 7.6em 1.5em, rgba(160, 255, 60, 0.4), transparent 88%),
+		radial-gradient(circle at 2.05em 1.78em, rgba(8, 34, 10, 0.65) 0 0.085em, rgba(232, 255, 150, 0.95) 0.094em 0.12em, transparent 0.15em),
+		radial-gradient(circle at 1.9em 1.66em, rgba(255, 255, 246, 0.95) 0 0.024em, transparent 0.055em),
+		radial-gradient(circle at 3.9em 1.9em, rgba(8, 34, 10, 0.55) 0 0.06em, rgba(206, 255, 100, 0.85) 0.068em 0.088em, transparent 0.112em),
+		radial-gradient(circle at 3.8em 1.8em, rgba(255, 255, 240, 0.85) 0 0.016em, transparent 0.04em),
+		radial-gradient(ellipse 1.6em 0.3em at 9.6em 1.5em, rgba(120, 250, 90, 0.22), transparent 84%);
+	filter: var(--warp-c) blur(0.4px) saturate(1.4) drop-shadow(0 0 9px rgba(180, 255, 60, 0.45));
+	-webkit-mask-image: linear-gradient(90deg, transparent 0, black 1em), radial-gradient(ellipse 98% 96% at 30% 62%, black 0 46%, rgba(0, 0, 0, 0.5) 74%, transparent 98%);
+	mask-image: linear-gradient(90deg, transparent 0, black 1em), radial-gradient(ellipse 98% 96% at 30% 62%, black 0 46%, rgba(0, 0, 0, 0.5) 74%, transparent 98%);
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+	mix-blend-mode: screen;
+	opacity: var(--menis-o);
+	transform: translateY(-50%);
+	transform-origin: 0.55em center;
+	animation:
+		toxic-menis-in-v2 620ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		toxic-meniscus-v2 4.2s ease-in-out 620ms infinite;
+}
+
+/* Puddle phase A churn, layered after the shared entrance. */
+.stage[data-glow='toxic'] .field[data-glow] .beam-body {
+	animation:
+		beam-open 650ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		toxic-churn-a-v2 5.6s ease-in-out 640ms infinite;
+}
+
+/* ---------- Text is sacred: corrosion etch ---------- */
+.stage[data-glow='toxic'] .field[data-glow] .next-word {
+	position: relative;
+	isolation: isolate;
+	z-index: 2;
+	color: var(--next-color);
+	background: none;
+	filter: none;
+	text-shadow: var(--next-shadow);
+	animation: toxic-word-in-v2 340ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Swamp-dark scrim between the acid glare and the glyphs: contrast insurance. */
+.stage[data-glow='toxic'] .field[data-glow] .next-word::before {
+	position: absolute;
+	inset: -0.18em -0.55em -0.24em -0.3em;
+	z-index: -1;
+	content: '';
+	pointer-events: none;
+	border-radius: 0.7em;
+	clip-path: none;
+	background: radial-gradient(ellipse 78% 94% at 34% 56%, rgba(5, 14, 6, 0.6), rgba(5, 14, 6, 0.26) 60%, transparent 88%);
+	filter: blur(6px);
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: normal;
+	opacity: var(--scrim-o);
+	transform: none;
+	animation: toxic-scrim-in-v2 420ms ease-out both;
+}
+
+/* Per-glyph corrosion: dark silhouette -> lime acid bite -> pale settle.
+   nth-child variants grouped to outrank the legacy tints. */
+.stage[data-glow='toxic'] .field[data-glow] .next-word .glyph,
+.stage[data-glow='toxic'] .field[data-glow] .next-word .glyph:nth-child(2n),
+.stage[data-glow='toxic'] .field[data-glow] .next-word .glyph:nth-child(3n),
+.stage[data-glow='toxic'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-glow='toxic'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
+	color: var(--next-color);
+	background: none;
+	transform-origin: 50% 78%;
+	animation: toxic-glyph-etch-v2 640ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+	animation-delay: calc(140ms + var(--i) * 62ms);
+}
+
+/* The data-alt ghost is eaten first: it melts downward and dissolves. */
+.stage[data-glow='toxic'] .field[data-glow] .next-word .glyph::after {
+	z-index: 2;
+	content: attr(data-alt);
+	color: rgba(198, 255, 90, 0.9);
+	opacity: 0;
+	filter: none;
+	text-shadow: 0 0 0.3em rgba(180, 255, 60, 0.65);
+	transform: none;
+	transform-origin: 50% 12%;
+	animation: toxic-glyph-melt-v2 540ms cubic-bezier(0.4, 0.2, 0.6, 1) both;
+	animation-delay: calc(140ms + var(--i) * 62ms);
+}
+
+/* Every third glyph grows a small acid drip under its baseline. */
+.stage[data-glow='toxic'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
+	background-image: radial-gradient(closest-side, rgba(210, 255, 110, 0.9), rgba(140, 240, 50, 0.4) 62%, transparent);
+	background-repeat: no-repeat;
+	background-size: 0.05em 0.05em;
+	background-position: 52% 70%;
+	animation:
+		toxic-glyph-etch-v2 640ms cubic-bezier(0.2, 0.8, 0.3, 1) both,
+		toxic-drip-v2 3.4s ease-in infinite;
+	animation-delay: calc(140ms + var(--i) * 62ms), calc(900ms + var(--i) * 210ms);
+}
+
+/* Tail: sickly dim green with a faint vapor tint, masked fade. */
+.stage[data-glow='toxic'] .field[data-glow] .tail {
+	position: relative;
+	z-index: 2;
+	color: var(--tail-color);
+	filter: none;
+	text-shadow: 0 0 0.22em rgba(120, 240, 90, 0.12);
+	-webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0, rgba(0, 0, 0, 0.5) 2.6em, transparent 8em);
+	mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0, rgba(0, 0, 0, 0.5) 2.6em, transparent 8em);
+}
+
+.stage[data-glow='toxic'] .field[data-glow] .tail .glyph {
+	color: inherit;
+	filter: none;
+	text-shadow: none;
+	animation: none;
+}
+
+/* Light flow off: the spill freezes mid-churn (bubble loops and Geiger
+   stop) but the pour-in and the corrosion etch still play. */
+.stage[data-glow='toxic'][data-light-flow='off'] .field[data-glow]::before {
+	animation: none;
+}
+
+.stage[data-glow='toxic'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: toxic-spill-in-v2 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='toxic'][data-light-flow='off'] .field[data-glow] .prediction::after {
+	animation: toxic-menis-in-v2 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='toxic'][data-light-flow='off'] .field[data-glow] .beam-veil {
+	animation: beam-open 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='toxic'][data-light-flow='off'] .field[data-glow] .beam-body {
+	animation: beam-open 650ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='toxic'][data-light-flow='off'] .field[data-glow] .beam-hot {
+	animation: beam-hot 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='toxic'][data-light-flow='off'] .field[data-glow] .next-word::before {
+	animation: toxic-scrim-in-v2 420ms ease-out both;
+}
+
+.stage[data-glow='toxic'][data-light-flow='off'] .field[data-glow] .next-word .glyph,
+.stage[data-glow='toxic'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(2n),
+.stage[data-glow='toxic'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(3n),
+.stage[data-glow='toxic'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-glow='toxic'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
+	animation: toxic-glyph-etch-v2 640ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+	animation-delay: calc(140ms + var(--i) * 62ms);
+}
+
+/* ---------- Light theme: acid stain on hazmat lab paper ---------- */
+.field[data-theme='light'][data-glow='toxic'] {
+	--wash-o: 0.7;
+	--spill-o: 0.55;
+	--menis-o: 0.92;
+	--scrim-o: 0.92;
+	--ready-border: rgba(110, 160, 24, 0.42);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.98) inset,
+		0 -16px 44px rgba(150, 200, 60, 0.08) inset,
+		0 18px 44px rgba(60, 80, 30, 0.14),
+		0 0 70px rgba(140, 210, 40, 0.14);
+	--field-wash:
+		radial-gradient(ellipse 30% 100% at 20% 66%, rgba(150, 200, 60, 0.16), transparent 70%),
+		radial-gradient(ellipse 50% 40% at 26% 112%, rgba(110, 170, 40, 0.12), transparent 76%),
+		radial-gradient(ellipse 16% 60% at 17% 58%, rgba(190, 230, 90, 0.12), transparent 66%);
+	--caret-gradient: linear-gradient(180deg, rgb(18, 58, 20), rgb(62, 128, 20) 40%, rgb(140, 208, 30) 74%, rgb(226, 250, 170));
+	--caret-shadow:
+		0 0 6px rgba(150, 210, 60, 0.5),
+		0 0 16px rgba(100, 180, 30, 0.28);
+	--haze-bg:
+		radial-gradient(ellipse 5.2em 1.4em at 1.6em 66%, rgba(150, 200, 70, 0.26), rgba(170, 210, 110, 0.1) 55%, transparent 80%),
+		radial-gradient(ellipse 7.6em 1em at 5em 72%, rgba(140, 190, 70, 0.12), transparent 78%);
+	--haze-filter: blur(20px) saturate(1.15);
+	--haze-opacity: 0.55;
+	--body-bg:
+		radial-gradient(ellipse 2em 0.66em at 1.05em 70%, rgba(150, 210, 30, 0.72), rgba(110, 180, 20, 0.44) 50%, transparent 84%),
+		radial-gradient(ellipse 3.2em 0.76em at 3.2em 72%, rgba(110, 180, 18, 0.55), rgba(70, 140, 14, 0.3) 58%, transparent 86%),
+		radial-gradient(ellipse 3.6em 0.68em at 5.9em 75%, rgba(84, 150, 16, 0.4), rgba(52, 110, 12, 0.2) 62%, transparent 88%),
+		radial-gradient(ellipse 3.8em 0.58em at 8.8em 78%, rgba(60, 120, 14, 0.26), transparent 88%),
+		linear-gradient(180deg, transparent 44%, rgba(90, 150, 30, 0.14) 62%, rgba(60, 116, 16, 0.22) 78%, rgba(36, 78, 10, 0.16) 96%);
+	--body-filter: var(--warp-a) blur(4px) saturate(1.35) drop-shadow(0 0.16em 0.4em rgba(70, 120, 20, 0.2));
+	--body-opacity: 0.9;
+	--core-bg:
+		radial-gradient(ellipse 0.8em 0.3em at 0.72em 66%, rgba(220, 245, 130, 0.95), rgba(160, 215, 40, 0.6) 52%, transparent 84%),
+		radial-gradient(ellipse 1.9em 0.38em at 1.5em 68%, rgba(130, 195, 26, 0.6), rgba(90, 160, 18, 0.26) 62%, transparent 90%);
+	--flow-bg: linear-gradient(94deg, transparent 0%, rgba(226, 244, 170, 0.3) 14%, rgba(150, 200, 70, 0.16) 30%, transparent 48%, rgba(170, 215, 90, 0.12) 64%, transparent 84%);
+	--flow-low: 0.08;
+	--flow-high: 0.28;
+	--spark-bg:
+		radial-gradient(circle at 1.55em 1.85em, rgba(240, 250, 220, 0.9) 0 0.05em, rgba(46, 100, 10, 0.85) 0.056em 0.078em, transparent 0.105em),
+		radial-gradient(circle at 1.44em 1.74em, rgba(255, 255, 250, 0.95) 0 0.014em, transparent 0.036em),
+		radial-gradient(circle at 3.3em 2em, rgba(238, 248, 214, 0.85) 0 0.038em, rgba(52, 110, 12, 0.75) 0.044em 0.062em, transparent 0.088em),
+		radial-gradient(circle at 4.9em 1.7em, rgba(235, 246, 210, 0.75) 0 0.032em, rgba(58, 118, 14, 0.65) 0.038em 0.053em, transparent 0.076em);
+	--spark-filter: blur(0.3px) drop-shadow(0 0 4px rgba(120, 180, 40, 0.4));
+	--spark-high: 0.85;
+	--smoke-bg:
+		radial-gradient(ellipse 0.5em 1.05em at 2.4em 0.9em, rgba(150, 175, 90, 0.2), transparent 76%),
+		radial-gradient(ellipse 0.4em 0.85em at 4.1em 0.75em, rgba(135, 160, 80, 0.14), transparent 78%);
+	--smoke-opacity: 0.4;
+	--smoke-blend: normal;
+	--aux-bg:
+		radial-gradient(circle at 1.7em 1.3em, transparent 0 0.085em, rgba(56, 116, 14, 0.7) 0.092em 0.108em, transparent 0.135em),
+		radial-gradient(circle at 3.45em 1.45em, transparent 0 0.065em, rgba(64, 126, 16, 0.6) 0.072em 0.086em, transparent 0.11em);
+	--aux-filter: blur(0.4px) drop-shadow(0 0 4px rgba(110, 170, 40, 0.35));
+	--aux-opacity: 0.7;
+	--aux-blend: normal;
+	--next-color: rgba(16, 54, 24, 0.95);
+	--next-shadow:
+		0 0 1px rgba(255, 255, 255, 0.85),
+		0 0 10px rgba(160, 215, 70, 0.28),
+		0 0 22px rgba(90, 170, 30, 0.12);
+	--tail-color: rgba(84, 110, 56, 0.45);
+}
+
+.stage[data-theme='light'][data-glow='toxic'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 50% 130% at 22% 70%, rgba(232, 244, 214, 0.6), transparent 62%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(251, 253, 248, 0.92) 50%, rgba(246, 250, 240, 0.92)),
+		linear-gradient(90deg, rgb(255, 255, 253), rgb(251, 253, 247));
+}
+
+.stage[data-theme='light'][data-glow='toxic'] .field[data-glow]::before {
+	mix-blend-mode: normal;
+	opacity: var(--wash-o);
+	animation: toxic-geiger-v2 2.6s steps(1, end) infinite;
+}
+
+/* The wet stain must darken the paper, not screen into it. */
+.stage[data-theme='light'][data-glow='toxic'] .field[data-glow] .prediction > .beam,
+.stage[data-theme='light'][data-glow='toxic'] .field[data-glow] .torch-beam {
+	mix-blend-mode: normal;
+}
+
+.stage[data-theme='light'][data-glow='toxic'] .field[data-glow] .prediction::before {
+	background:
+		radial-gradient(ellipse 2.4em 0.7em at 1.5em 72%, rgba(130, 190, 26, 0.6), rgba(96, 156, 18, 0.34) 52%, transparent 86%),
+		radial-gradient(ellipse 3.4em 0.78em at 4.2em 75%, rgba(96, 160, 16, 0.44), rgba(64, 124, 12, 0.22) 60%, transparent 88%),
+		radial-gradient(ellipse 3.8em 0.64em at 7.2em 77%, rgba(70, 132, 14, 0.3), transparent 90%),
+		linear-gradient(180deg, transparent 46%, rgba(80, 140, 24, 0.16) 76%, rgba(44, 90, 12, 0.12) 96%);
+	filter: var(--warp-b) blur(5px) saturate(1.3);
+	mix-blend-mode: normal;
+	animation:
+		toxic-spill-in-v2 560ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		toxic-churn-b-v2 5.6s ease-in-out 640ms infinite;
+}
+
+.stage[data-theme='light'][data-glow='toxic'] .field[data-glow] .prediction::after {
+	background:
+		radial-gradient(ellipse 5.2em 0.08em at 2.8em 1.42em, rgba(56, 108, 12, 0.7), rgba(90, 150, 26, 0.3) 60%, transparent 90%),
+		radial-gradient(ellipse 4.5em 0.06em at 7.6em 1.5em, rgba(70, 130, 18, 0.4), transparent 88%),
+		radial-gradient(circle at 2.05em 1.78em, rgba(238, 248, 216, 0.9) 0 0.08em, rgba(44, 96, 10, 0.8) 0.09em 0.115em, transparent 0.145em),
+		radial-gradient(circle at 1.9em 1.66em, rgba(255, 255, 250, 0.95) 0 0.022em, transparent 0.05em),
+		radial-gradient(circle at 3.9em 1.9em, rgba(240, 248, 220, 0.8) 0 0.055em, rgba(50, 106, 12, 0.7) 0.063em 0.083em, transparent 0.108em),
+		radial-gradient(ellipse 1.6em 0.28em at 9.6em 1.5em, rgba(90, 150, 30, 0.2), transparent 84%);
+	filter: var(--warp-c) blur(0.3px) saturate(1.2) drop-shadow(0 0.05em 0.2em rgba(70, 120, 20, 0.25));
+	mix-blend-mode: normal;
+	animation:
+		toxic-menis-in-v2 620ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		toxic-meniscus-v2 4.2s ease-in-out 620ms infinite;
+}
+
+.stage[data-theme='light'][data-glow='toxic'] .field[data-glow] .next-word {
+	color: var(--next-color);
+	background: none;
+	text-shadow: var(--next-shadow);
+	animation: toxic-word-in-v2 340ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-theme='light'][data-glow='toxic'] .field[data-glow] .next-word::before {
+	background: radial-gradient(ellipse 78% 94% at 34% 56%, rgba(253, 255, 248, 0.85), rgba(253, 255, 248, 0.45) 60%, transparent 88%);
+	filter: blur(5px);
+	mix-blend-mode: normal;
+	opacity: var(--scrim-o);
+	animation: toxic-scrim-in-v2 420ms ease-out both;
+}
+
+.stage[data-theme='light'][data-glow='toxic'] .field[data-glow] .next-word .glyph,
+.stage[data-theme='light'][data-glow='toxic'] .field[data-glow] .next-word .glyph:nth-child(2n),
+.stage[data-theme='light'][data-glow='toxic'] .field[data-glow] .next-word .glyph:nth-child(3n),
+.stage[data-theme='light'][data-glow='toxic'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-theme='light'][data-glow='toxic'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
+	color: var(--next-color);
+	text-shadow: var(--next-shadow);
+	animation-name: toxic-glyph-etch-light-v2;
+}
+
+.stage[data-theme='light'][data-glow='toxic'] .field[data-glow] .next-word .glyph::after {
+	color: rgba(96, 160, 20, 0.85);
+	text-shadow: 0 0 0.24em rgba(130, 190, 40, 0.45);
+}
+
+.stage[data-theme='light'][data-glow='toxic'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
+	background-image: radial-gradient(closest-side, rgba(96, 160, 20, 0.85), rgba(66, 124, 14, 0.4) 62%, transparent);
+	animation:
+		toxic-glyph-etch-light-v2 640ms cubic-bezier(0.2, 0.8, 0.3, 1) both,
+		toxic-drip-v2 3.4s ease-in infinite;
+	animation-delay: calc(140ms + var(--i) * 62ms), calc(900ms + var(--i) * 210ms);
+}
+
+.stage[data-theme='light'][data-glow='toxic'] .field[data-glow] .tail {
+	color: var(--tail-color);
+	filter: none;
+	text-shadow: none;
+}
+
+.stage[data-theme='light'][data-glow='toxic'] .field[data-glow] .tail .glyph {
+	color: inherit;
+	filter: none;
+	text-shadow: none;
+	animation: none;
+}
+
+.stage[data-theme='light'][data-glow='toxic'] .field[data-glow] .edge-left {
+	background: linear-gradient(90deg, rgb(255, 255, 253) 0%, rgb(255, 255, 253) 40%, rgba(255, 255, 253, 0) 100%);
+}
+
+.stage[data-theme='light'][data-glow='toxic'] .field[data-glow] .edge-right {
+	background: linear-gradient(
+		270deg,
+		rgba(251, 253, 247, 0.5) 0%,
+		rgba(251, 253, 247, 0.22) 42%,
+		rgba(251, 253, 247, 0) 100%
+	);
+	opacity: 0.55;
+}
+
+/* Light theme + flow off: re-win against the legacy animation kills. */
+.stage[data-theme='light'][data-glow='toxic'][data-light-flow='off'] .field[data-glow]::before {
+	animation: none;
+}
+
+.stage[data-theme='light'][data-glow='toxic'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: toxic-spill-in-v2 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-theme='light'][data-glow='toxic'][data-light-flow='off'] .field[data-glow] .prediction::after {
+	animation: toxic-menis-in-v2 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-theme='light'][data-glow='toxic'][data-light-flow='off'] .field[data-glow] .next-word::before {
+	animation: toxic-scrim-in-v2 420ms ease-out both;
+}
+
+.stage[data-theme='light'][data-glow='toxic'][data-light-flow='off'] .field[data-glow] .next-word .glyph,
+.stage[data-theme='light'][data-glow='toxic'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(2n),
+.stage[data-theme='light'][data-glow='toxic'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(3n),
+.stage[data-theme='light'][data-glow='toxic'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-theme='light'][data-glow='toxic'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
+	animation: toxic-glyph-etch-light-v2 640ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+	animation-delay: calc(140ms + var(--i) * 62ms);
+}
+
+/* ---------- Waiting state: one acid drop forming at the caret ---------- */
+.field[data-state='waiting'][data-glow='toxic'] {
+	--haze-width: 4.8em;
+	--haze-height: 2.5em;
+	--haze-size: auto;
+	--haze-bg:
+		radial-gradient(ellipse 1.6em 1em at 0.55em 60%, rgba(160, 255, 60, 0.2), transparent 78%),
+		radial-gradient(ellipse 0.9em 0.6em at 0.5em 40%, rgba(235, 255, 180, 0.12), transparent 74%);
+	--haze-filter: blur(14px) saturate(1.2);
+	--haze-opacity: 0.8;
+	--haze-mask: linear-gradient(90deg, transparent 0, black 0.35em), radial-gradient(ellipse 92% 92% at 28% 55%, black 0 44%, rgba(0, 0, 0, 0.5) 70%, transparent 96%);
+	--torch-haze-motion: toxic-waiting-glow-v2 2.4s ease-in-out infinite;
+	--core-width: 1.5em;
+	--core-height: 2.5em;
+	--core-size: auto;
+	--core-bg:
+		radial-gradient(ellipse 0.13em 0.19em at 0.5em 0.6em, rgba(255, 255, 244, 0.98), rgba(214, 255, 120, 0.7) 42%, rgba(110, 245, 60, 0.28) 74%, transparent 92%),
+		radial-gradient(ellipse 0.05em 0.2em at 0.5em 0.38em, rgba(228, 255, 170, 0.55), transparent 80%);
+	--core-filter: blur(0.8px) drop-shadow(0 0 8px rgba(190, 255, 80, 0.55));
+	--core-opacity: 1;
+	--core-mask: linear-gradient(90deg, transparent 0, black 0.3em), radial-gradient(ellipse 94% 98% at 30% 50%, black 0 55%, transparent 96%);
+	--torch-core-motion: toxic-drop-v2 2.4s cubic-bezier(0.42, 0.06, 0.58, 0.94) infinite;
+	--flow-width: 3.2em;
+	--flow-height: 2.4em;
+	--flow-size: 220% 100%;
+	--flow-bg: linear-gradient(94deg, transparent 0%, rgba(220, 255, 160, 0.12) 20%, rgba(140, 255, 60, 0.08) 44%, transparent 74%);
+	--flow-filter: blur(9px);
+	--flow-low: 0.05;
+	--flow-high: 0.16;
+	--flow-motion: toxic-sheen-v2 5.2s ease-in-out infinite;
+	--flow-mask: linear-gradient(90deg, transparent 0, black 0.35em), radial-gradient(ellipse 92% 76% at 28% 72%, black 0 44%, transparent 96%);
+	--spark-width: 2.4em;
+	--spark-height: 2.5em;
+	--spark-size: auto;
+	--spark-bg:
+		radial-gradient(circle at 0.5em 2em, transparent 0 0.08em, rgba(224, 255, 150, 0.9) 0.088em 0.104em, transparent 0.132em),
+		radial-gradient(circle at 0.24em 1.8em, rgba(230, 255, 170, 0.8) 0 0.02em, transparent 0.05em),
+		radial-gradient(circle at 0.8em 1.76em, rgba(206, 255, 120, 0.7) 0 0.017em, transparent 0.045em);
+	--spark-filter: blur(0.3px) drop-shadow(0 0 5px rgba(200, 255, 100, 0.5));
+	--spark-low: 0;
+	--spark-high: 0.9;
+	--spark-motion: toxic-splash-v2 2.4s linear infinite;
+	--spark-mask: linear-gradient(90deg, transparent 0, black 0.3em), radial-gradient(ellipse 94% 96% at 30% 60%, black 0 55%, transparent 96%);
+	--smoke-width: 3em;
+	--smoke-height: 2.4em;
+	--smoke-size: auto;
+	--smoke-bg: radial-gradient(ellipse 0.4em 0.8em at 0.7em 0.9em, rgba(180, 215, 90, 0.22), transparent 78%);
+	--smoke-filter: blur(10px);
+	--smoke-opacity: 0.32;
+	--smoke-motion: toxic-waiting-fume-v2 5.2s ease-in-out infinite;
+	--smoke-mask: linear-gradient(90deg, transparent 0, black 0.3em), radial-gradient(ellipse 92% 94% at 32% 38%, black 0 46%, transparent 94%);
+	--aux-opacity: 0;
+}
+
+.field[data-theme='light'][data-state='waiting'][data-glow='toxic'] {
+	--haze-bg:
+		radial-gradient(ellipse 1.6em 1em at 0.55em 60%, rgba(140, 190, 60, 0.24), transparent 78%),
+		radial-gradient(ellipse 0.9em 0.6em at 0.5em 40%, rgba(190, 225, 120, 0.16), transparent 74%);
+	--haze-opacity: 0.55;
+	--core-bg:
+		radial-gradient(ellipse 0.13em 0.19em at 0.5em 0.6em, rgba(238, 250, 200, 0.95), rgba(140, 200, 40, 0.8) 45%, rgba(80, 150, 20, 0.35) 75%, transparent 92%),
+		radial-gradient(ellipse 0.05em 0.2em at 0.5em 0.38em, rgba(120, 180, 40, 0.5), transparent 80%);
+	--core-filter: blur(0.7px) drop-shadow(0 0 6px rgba(130, 190, 40, 0.4));
+	--core-opacity: 0.95;
+	--spark-bg:
+		radial-gradient(circle at 0.5em 2em, transparent 0 0.08em, rgba(70, 130, 18, 0.8) 0.088em 0.104em, transparent 0.132em),
+		radial-gradient(circle at 0.24em 1.8em, rgba(88, 150, 24, 0.7) 0 0.02em, transparent 0.05em),
+		radial-gradient(circle at 0.8em 1.76em, rgba(100, 160, 28, 0.6) 0 0.017em, transparent 0.045em);
+	--spark-filter: blur(0.3px) drop-shadow(0 0 4px rgba(110, 170, 40, 0.35));
+	--spark-high: 0.75;
+	--smoke-bg: radial-gradient(ellipse 0.4em 0.8em at 0.7em 0.9em, rgba(140, 165, 85, 0.16), transparent 78%);
+	--smoke-opacity: 0.22;
+	--smoke-blend: normal;
+}
+
+/* Waiting + flow off: the drop hangs, splash and fume held still. */
+.field[data-light-flow='off'][data-state='waiting'][data-glow='toxic'] {
+	--torch-haze-motion: none;
+	--torch-core-motion: none;
+	--flow-motion: none;
+	--spark-motion: none;
+	--smoke-motion: none;
+}
+
+/* ---------- Keyframes (toxic-*-v2) ---------- */
+@keyframes toxic-geiger-v2 {
+	0% {
+		opacity: calc(var(--wash-o, 0.9) * 0.84);
+	}
+	8% {
+		opacity: calc(var(--wash-o, 0.9) * 0.97);
+	}
+	12% {
+		opacity: calc(var(--wash-o, 0.9) * 0.8);
+	}
+	21% {
+		opacity: calc(var(--wash-o, 0.9) * 0.9);
+	}
+	27% {
+		opacity: var(--wash-o, 0.9);
+	}
+	33% {
+		opacity: calc(var(--wash-o, 0.9) * 0.82);
+	}
+	44% {
+		opacity: calc(var(--wash-o, 0.9) * 0.93);
+	}
+	52% {
+		opacity: calc(var(--wash-o, 0.9) * 0.86);
+	}
+	58% {
+		opacity: calc(var(--wash-o, 0.9) * 0.99);
+	}
+	66% {
+		opacity: calc(var(--wash-o, 0.9) * 0.8);
+	}
+	74% {
+		opacity: calc(var(--wash-o, 0.9) * 0.92);
+	}
+	83% {
+		opacity: calc(var(--wash-o, 0.9) * 0.85);
+	}
+	91% {
+		opacity: calc(var(--wash-o, 0.9) * 0.98);
+	}
+	100% {
+		opacity: calc(var(--wash-o, 0.9) * 0.84);
+	}
+}
+
+@keyframes toxic-underglow-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--haze-opacity) * 0.8);
+		transform: translateY(-50%) scaleX(0.99) scaleY(0.96);
+	}
+	50% {
+		opacity: var(--haze-opacity);
+		transform: translateY(-50%) scaleX(1.015) scaleY(1.04);
+	}
+}
+
+@keyframes toxic-churn-a-v2 {
+	0%,
+	100% {
+		opacity: 0.95;
+		transform: translateY(-50%) scaleY(0.985) scaleX(1);
+	}
+	32% {
+		opacity: 0.6;
+		transform: translateY(-50.6%) scaleY(1.03) scaleX(1.008);
+	}
+	66% {
+		opacity: 0.86;
+		transform: translateY(-49.6%) scaleY(1.005) scaleX(0.996);
+	}
+}
+
+@keyframes toxic-churn-b-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--spill-o, 0.55) * 0.8);
+		transform: translateY(-50%) scaleY(1.02);
+	}
+	32% {
+		opacity: calc(var(--spill-o, 0.55) * 1.7);
+		transform: translateY(-49.5%) scaleY(0.99);
+	}
+	66% {
+		opacity: var(--spill-o, 0.55);
+		transform: translateY(-50.4%) scaleY(1.035);
+	}
+}
+
+@keyframes toxic-meniscus-v2 {
+	0%,
+	100% {
+		opacity: var(--menis-o, 0.95);
+		transform: translateY(-50%) scaleY(0.985);
+	}
+	26% {
+		opacity: calc(var(--menis-o, 0.95) * 0.88);
+		transform: translateY(-50.8%) scaleY(1.03) skewX(-0.6deg);
+	}
+	58% {
+		opacity: var(--menis-o, 0.95);
+		transform: translateY(-49.4%) scaleY(1);
+	}
+	80% {
+		opacity: calc(var(--menis-o, 0.95) * 0.94);
+		transform: translateY(-50.5%) scaleY(1.02) skewX(0.5deg);
+	}
+}
+
+@keyframes toxic-spill-in-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-50%) scaleX(0.18) scaleY(0.6);
+	}
+	100% {
+		opacity: calc(var(--spill-o, 0.55) * 0.8);
+		transform: translateY(-50%) scaleX(1) scaleY(1);
+	}
+}
+
+@keyframes toxic-menis-in-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-50%) scaleX(0.2);
+	}
+	100% {
+		opacity: var(--menis-o, 0.95);
+		transform: translateY(-50%) scaleX(1);
+	}
+}
+
+@keyframes toxic-seethe-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--core-opacity) * 0.8);
+		transform: translateY(-50%) scaleX(0.97);
+	}
+	23% {
+		opacity: var(--core-opacity);
+		transform: translateY(-50.6%) scaleX(1.05);
+	}
+	47% {
+		opacity: calc(var(--core-opacity) * 0.88);
+		transform: translateY(-49.6%) scaleX(1);
+	}
+	72% {
+		opacity: var(--core-opacity);
+		transform: translateY(-50.3%) scaleX(1.03);
+	}
+}
+
+@keyframes toxic-sheen-v2 {
+	0% {
+		opacity: var(--flow-low);
+		background-position: 0% 50%;
+	}
+	24% {
+		opacity: var(--flow-high);
+	}
+	60% {
+		opacity: calc(var(--flow-high) * 0.55);
+	}
+	100% {
+		opacity: var(--flow-low);
+		background-position: 200% 50%;
+	}
+}
+
+@keyframes toxic-bubble-rise-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-45%) translateX(0) scale(0.9);
+	}
+	12% {
+		opacity: var(--spark-high);
+	}
+	55% {
+		opacity: var(--spark-high);
+		transform: translateY(-54%) translateX(0.06em) scale(1);
+	}
+	74% {
+		opacity: calc(var(--spark-high) * 0.9);
+		transform: translateY(-60%) translateX(-0.03em) scale(1.04);
+	}
+	82%,
+	100% {
+		opacity: 0;
+		transform: translateY(-62%) translateX(-0.04em) scale(1.1);
+	}
+}
+
+@keyframes toxic-bubble-pop-v2 {
+	0%,
+	72% {
+		opacity: 0;
+		transform: translateY(-56%) scale(0.72);
+	}
+	78% {
+		opacity: var(--aux-opacity);
+		transform: translateY(-58%) scale(0.95);
+	}
+	88% {
+		opacity: calc(var(--aux-opacity) * 0.5);
+		transform: translateY(-59%) scale(1.22);
+	}
+	96%,
+	100% {
+		opacity: 0;
+		transform: translateY(-60%) scale(1.32);
+	}
+}
+
+@keyframes toxic-fume-rise-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-42%) translateX(0) scaleY(0.8);
+	}
+	26% {
+		opacity: var(--smoke-opacity);
+	}
+	60% {
+		opacity: calc(var(--smoke-opacity) * 0.8);
+		transform: translateY(-68%) translateX(0.34em) scaleY(1.12) skewX(-4deg);
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(-92%) translateX(0.72em) scaleY(1.25) skewX(3deg);
+	}
+}
+
+@keyframes toxic-scrim-in-v2 {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: var(--scrim-o, 0.85);
+	}
+}
+
+@keyframes toxic-word-in-v2 {
+	0% {
+		opacity: 0;
+		transform: translateX(-0.08em);
+	}
+	100% {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+@keyframes toxic-glyph-etch-v2 {
+	0% {
+		opacity: 0;
+		color: rgb(8, 20, 8);
+		transform: translateY(0.05em);
+		filter: blur(4px) brightness(0.7) saturate(0.8);
+	}
+	26% {
+		opacity: 1;
+		color: rgb(20, 40, 14);
+		transform: translateY(0.02em);
+		filter: blur(1.2px) brightness(0.9) saturate(0.9);
+	}
+	54% {
+		opacity: 1;
+		color: rgb(214, 255, 92);
+		transform: translateY(0);
+		filter: blur(0.4px) brightness(1.7) saturate(1.45) drop-shadow(0 0 0.14em rgba(198, 255, 70, 0.9));
+	}
+	78% {
+		color: rgb(236, 255, 200);
+		filter: blur(0) brightness(1.15) saturate(1.1) drop-shadow(0 0 0.07em rgba(190, 255, 110, 0.45));
+	}
+	100% {
+		opacity: 1;
+		color: var(--next-color);
+		transform: translateY(0);
+		filter: blur(0) brightness(1) saturate(1) drop-shadow(0 0 0 rgba(190, 255, 110, 0));
+	}
+}
+
+@keyframes toxic-glyph-etch-light-v2 {
+	0% {
+		opacity: 0;
+		color: rgb(206, 232, 150);
+		transform: translateY(0.05em);
+		filter: blur(3px) saturate(1.2);
+	}
+	40% {
+		opacity: 1;
+		color: rgb(120, 186, 20);
+		transform: translateY(0.01em);
+		filter: blur(0.6px) saturate(1.5) drop-shadow(0 0 0.1em rgba(150, 220, 40, 0.7));
+	}
+	72% {
+		color: rgb(52, 108, 20);
+		filter: blur(0) saturate(1.15) drop-shadow(0 0 0.05em rgba(120, 190, 30, 0.35));
+	}
+	100% {
+		opacity: 1;
+		color: var(--next-color);
+		transform: translateY(0);
+		filter: blur(0) saturate(1) drop-shadow(0 0 0 rgba(120, 190, 30, 0));
+	}
+}
+
+@keyframes toxic-glyph-melt-v2 {
+	0% {
+		opacity: 0.9;
+		filter: blur(0.02em);
+		transform: translateY(-0.05em) scaleY(1);
+	}
+	55% {
+		opacity: 0.45;
+		filter: blur(0.04em);
+		transform: translateY(0.16em) scaleY(1.18);
+	}
+	100% {
+		opacity: 0;
+		filter: blur(0.06em);
+		transform: translateY(0.4em) scaleY(1.35);
+	}
+}
+
+@keyframes toxic-drip-v2 {
+	0%,
+	18% {
+		background-size: 0.05em 0.05em;
+		background-position: 52% 70%;
+	}
+	45% {
+		background-size: 0.07em 0.11em;
+		background-position: 52% 82%;
+	}
+	70% {
+		background-size: 0.055em 0.14em;
+		background-position: 52% 94%;
+	}
+	100% {
+		background-size: 0.015em 0.015em;
+		background-position: 52% 100%;
+	}
+}
+
+@keyframes toxic-drop-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-62%) scale(0.5);
+	}
+	10% {
+		opacity: 0.9;
+		transform: translateY(-62%) scaleX(0.9) scaleY(0.7);
+	}
+	30% {
+		opacity: 1;
+		transform: translateY(-60%) scaleX(0.96) scaleY(1.08);
+	}
+	40% {
+		transform: translateY(-52%) scaleX(0.86) scaleY(1.26);
+	}
+	56% {
+		transform: translateY(-22%) scaleX(0.9) scaleY(1.18);
+	}
+	62% {
+		opacity: 1;
+		transform: translateY(-12%) scaleX(1.28) scaleY(0.62);
+	}
+	70% {
+		opacity: 0;
+		transform: translateY(-10%) scaleX(1.4) scaleY(0.5);
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(-62%) scale(0.5);
+	}
+}
+
+@keyframes toxic-splash-v2 {
+	0%,
+	58% {
+		opacity: 0;
+		transform: translateY(-50%) scale(0.5);
+	}
+	64% {
+		opacity: var(--spark-high, 0.9);
+		transform: translateY(-50%) scale(0.8);
+	}
+	78% {
+		opacity: calc(var(--spark-high, 0.9) * 0.45);
+		transform: translateY(-52%) scale(1.3);
+	}
+	90%,
+	100% {
+		opacity: 0;
+		transform: translateY(-53%) scale(1.45);
+	}
+}
+
+@keyframes toxic-waiting-glow-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--haze-opacity) * 0.7);
+		transform: translateY(-50%) scale(0.96);
+	}
+	45% {
+		opacity: var(--haze-opacity);
+		transform: translateY(-50%) scale(1.04);
+	}
+}
+
+@keyframes toxic-waiting-fume-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-40%) scale(0.7);
+	}
+	32% {
+		opacity: var(--smoke-opacity);
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(-92%) translateX(0.5em) scale(1.15);
+	}
+}
