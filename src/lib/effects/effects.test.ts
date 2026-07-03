@@ -24,7 +24,8 @@ const PRESET_CSS_FILES = [
 	'src/lib/effects/fontshift/index.css',
 	'src/lib/effects/rorschach/index.css',
 	'src/lib/effects/diffusion/index.css',
-	'src/lib/effects/chromabloom/index.css'
+	'src/lib/effects/chromabloom/index.css',
+	'src/lib/effects/infrared/index.css'
 ];
 
 function readPresetCss(): string {
