@@ -1,0 +1,792 @@
+/* ============================================================
+   FONT SHIFT v2 — "Кинетическая типографика: спесимен, который
+   дышит". The type IS the animation — no glow, no capsules, no
+   colored light anywhere. The field is designer-dark charcoal
+   paper (slightly warm); the caret is a typographic I-BEAM: a
+   thin ink rule whose --caret-gradient hard stops draw a bright
+   top bar, a translucent stem and a bright bottom bar (the
+   android needle technique). THE SIGNATURE — WEIGHT WAVE: the
+   next word arrives ULTRA-LIGHT (font-weight 100, letter-spacing
+   opened to 0.06em) and a wave rolls l -> r per glyph via
+   var(--i) at 55ms stagger: each glyph swells to 900 black with
+   a tiny optical rise (translateY -0.01em at peak), settles to
+   560 while its tracking relaxes to 0 — Chrome animates
+   font-weight SMOOTHLY on the SF Pro variable font, so the
+   keyframes drive font-weight directly. Right after the swell
+   the same track runs the SLANT PASS: one quick italic ripple
+   (skewX -6deg with an elastic overshoot settle) — the "shift".
+   After settle the whole word breathes weight 560<->620 over 6s
+   (fontshift-breath-v2, same 2.6s delay on every glyph so the
+   word breathes as one). Weight, spacing, rise and slant all
+   live in ONE keyframe track per glyph (fontshift-wave-v2) so no
+   second animation ever overrides the font-weight interpolation;
+   the ambient breath is a separate font-weight-only animation
+   that starts after every wave has finished. TYPE GUIDES
+   (prediction::before): a specimen-sheet ruler — three 1px
+   hairlines (cap-height, x-height, baseline), start/end tick
+   marks and a small circular marker at the baseline origin; they
+   DRAW IN l -> r via a background-size wipe, then hold faint.
+   KERN TICKS (glyph::before — free, the component only uses
+   ::after): a thin vertical tick blinks at each glyph's left
+   edge exactly during that glyph's wave beat. SPECIMEN TAIL: the
+   whole tail is a classic serif footnote — Georgia italic,
+   dimmed ink, masked fade completing inside the box; only its
+   first two glyphs keep a faint ink breath (amplitude clamped to
+   zero via var(--i)). All shared beams stay display:none (the
+   legacy pass already kills them; re-asserted here) — the torch
+   layers serve waiting only: the I-beam caret with the three
+   guide hairlines extending a short distance from it, breathing
+   in-out via a background-size pulse (torch-core), over a quiet
+   neutral pool (torch-haze) and a faint floor shade
+   (torch-smoke) — the typographer measuring. Light theme = pure
+   editorial: white paper, black ink, grid-paper blue guides
+   rgba(90,130,220,.35) and one classic layout-red origin marker;
+   the wave keyframes are color-agnostic so the same track plays
+   in ink. data-light-flow='off': weight wave + slant + guide
+   draw-in play once (finite); ambient breath, tail breath and
+   kern blinks hold static. Text always readable: no blur, no
+   glow ever lands on a glyph; every decorated layer dissolves
+   through intersected left-fade x radial masks whose fades
+   complete INSIDE their boxes. Keyframes: fontshift-*-v2 only
+   (legacy fontshift-* keyframes stay untouched).
+   ============================================================ */
+
+.field[data-glow='fontshift'] {
+	--layer-radius: 0;
+	--layer-clip: none;
+	--fs-guides-o: 0.9;
+	--fs-guide-w: 5.1em;
+	--fs-ink: rgba(210, 215, 225, 0.22);
+	--fs-ink-strong: rgba(210, 215, 225, 0.34);
+	--fs-tick-ink: rgba(228, 232, 240, 0.6);
+	--fs-origin-ink: rgba(210, 215, 225, 0.45);
+	--fs-pool-ink: rgba(214, 218, 226, 0.08);
+	--fs-shade-ink: rgba(2, 3, 4, 0.4);
+	--ready-border: rgba(206, 202, 192, 0.2);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.05) inset,
+		0 -34px 88px rgba(12, 11, 9, 0.5) inset,
+		0 30px 66px rgba(0, 0, 0, 0.48);
+	--field-wash:
+		radial-gradient(ellipse 60% 150% at 76% -30%, rgba(236, 230, 220, 0.04), transparent 60%),
+		linear-gradient(180deg, rgba(240, 236, 228, 0.03), transparent 40%);
+	--caret-gradient: linear-gradient(
+		180deg,
+		rgb(248, 247, 244) 0%,
+		rgb(248, 247, 244) 6.5%,
+		rgba(226, 224, 218, 0.38) 6.5%,
+		rgba(226, 224, 218, 0.38) 93.5%,
+		rgb(248, 247, 244) 93.5%,
+		rgb(248, 247, 244) 100%
+	);
+	--caret-shadow:
+		-1px 0 0 rgba(248, 247, 244, 0.2),
+		1px 0 0 rgba(248, 247, 244, 0.2),
+		0 0 6px rgba(240, 238, 232, 0.16);
+	--haze-bg: none;
+	--haze-opacity: 0;
+	--haze-motion: none;
+	--torch-haze-motion: none;
+	--haze-mask: none;
+	--body-bg: none;
+	--body-opacity: 0;
+	--body-mask: none;
+	--core-bg: none;
+	--core-opacity: 0;
+	--core-motion: none;
+	--torch-core-motion: none;
+	--core-mask: none;
+	--flow-bg: none;
+	--flow-low: 0;
+	--flow-high: 0;
+	--flow-motion: none;
+	--flow-mask: none;
+	--spark-bg: none;
+	--spark-low: 0;
+	--spark-high: 0;
+	--spark-motion: none;
+	--spark-mask: none;
+	--smoke-bg: none;
+	--smoke-opacity: 0;
+	--smoke-motion: none;
+	--smoke-blend: normal;
+	--smoke-mask: none;
+	--aux-bg: none;
+	--aux-opacity: 0;
+	--aux-motion: none;
+	--aux-mask: none;
+	--next-color: rgba(240, 242, 246, 0.97);
+	--next-shadow:
+		0 0 1px rgba(255, 255, 255, 0.12),
+		0 1px 2px rgba(0, 0, 0, 0.35);
+	--tail-color: rgba(198, 206, 218, 0.44);
+}
+
+/* Typography only: the shared beams stay dead (the legacy pass hides them;
+   re-asserted so this module owns the fact). Torch layers serve waiting. */
+.stage[data-glow='fontshift'] .field[data-glow] .prediction > .beam {
+	display: none;
+}
+
+.stage[data-glow='fontshift'] .field[data-glow] .caret-origin-glow[data-mode='ready'] {
+	display: none;
+}
+
+/* Two-layer masks (left fade x radial falloff) need intersection, not
+   union — on the waiting torch layers and the guide sheet alike. */
+.stage[data-glow='fontshift'] .field[data-glow] .torch-beam,
+.stage[data-glow='fontshift'] .field[data-glow] .prediction::before {
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+}
+
+.stage[data-glow='fontshift'] .field[data-glow] .prediction {
+	isolation: isolate;
+}
+
+/* Designer-dark charcoal paper, slightly warm — a specimen sheet at night,
+   not a lightbox. No colored glow in the vessel shadows. */
+.stage[data-glow='fontshift'] .field[data-glow] {
+	background:
+		linear-gradient(180deg, rgba(244, 240, 232, 0.025), transparent 36%),
+		linear-gradient(90deg, rgb(22, 21, 19), rgb(25, 24, 22) 50%, rgb(29, 28, 25));
+}
+
+/* Quiet paper sheen; only wakes with a prediction (or field-mode loading). */
+.stage[data-glow='fontshift'] .field[data-glow]::before {
+	background: var(--field-wash);
+	background-size: 100% 100%;
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: normal;
+	opacity: 0;
+	animation: none;
+}
+
+.stage[data-glow='fontshift'] .field[data-glow][data-state='ready']::before {
+	opacity: 0.85;
+}
+
+.stage[data-glow='fontshift'] .field[data-glow][data-state='waiting'][data-loading-glow='field']::before {
+	opacity: 0.5;
+}
+
+/* Dissolve into the field's rounded clip, not the paint box; edge overlays
+   extended into the 64px padding so the paper never steps at the content
+   box. */
+.stage[data-glow='fontshift'] .field[data-glow] .paint {
+	overflow: visible;
+	clip-path: inset(-3.4em -6em -3.4em 0);
+}
+
+.stage[data-glow='fontshift'] .field[data-glow] .edge-left {
+	left: -64px;
+	width: 156px;
+	background: linear-gradient(90deg, rgb(22, 21, 19) 0%, rgb(22, 21, 19) 40%, rgba(22, 21, 19, 0) 100%);
+	opacity: 0;
+}
+
+.stage[data-glow='fontshift'] .field[data-glow] .viewport.scrolled .edge-left {
+	opacity: 1;
+}
+
+.stage[data-glow='fontshift'] .field[data-glow] .edge-right {
+	right: -64px;
+	width: 224px;
+	background: linear-gradient(
+		270deg,
+		rgba(29, 28, 25, 0.9) 0%,
+		rgba(29, 28, 25, 0.55) 30%,
+		rgba(29, 28, 25, 0.16) 68%,
+		rgba(29, 28, 25, 0) 100%
+	);
+	opacity: 0.85;
+}
+
+/* TYPE GUIDES: the specimen ruler. Three 1px hairlines (cap / x-height /
+   baseline, staggered lengths like a real spec sheet), a start and an end
+   tick crossing them, and a small circular marker sitting on the baseline
+   origin. They draw in l -> r with the word (background-size wipe) and hold
+   faint. Layer order: [cap, x, baseline, start tick, end tick, origin ring]. */
+.stage[data-glow='fontshift'] .field[data-glow] .prediction::before {
+	position: absolute;
+	left: -0.35em;
+	top: 50%;
+	z-index: -1;
+	width: min(13em, calc(100% + 2.6em));
+	height: 1.6em;
+	content: '';
+	pointer-events: none;
+	border: 0;
+	border-radius: 0;
+	clip-path: none;
+	box-shadow: none;
+	backdrop-filter: none;
+	-webkit-backdrop-filter: none;
+	background-image:
+		linear-gradient(90deg, var(--fs-ink), var(--fs-ink) 72%, transparent),
+		linear-gradient(90deg, var(--fs-ink), var(--fs-ink) 72%, transparent),
+		linear-gradient(90deg, var(--fs-ink-strong), var(--fs-ink-strong) 78%, transparent),
+		linear-gradient(180deg, var(--fs-ink-strong), var(--fs-ink-strong)),
+		linear-gradient(180deg, var(--fs-ink), var(--fs-ink)),
+		radial-gradient(circle, transparent 0 44%, var(--fs-origin-ink) 52% 70%, transparent 78%);
+	background-position:
+		0.1em 0.47em,
+		0.1em 0.65em,
+		0.1em 1.17em,
+		0.34em 0.4em,
+		4.6em 0.4em,
+		0.24em 1.06em;
+	background-size:
+		calc(var(--fs-guide-w) - 1.1em) 1px,
+		calc(var(--fs-guide-w) - 0.55em) 1px,
+		var(--fs-guide-w) 1px,
+		1px 0.9em,
+		1px 0.9em,
+		0.22em 0.22em;
+	background-repeat: no-repeat;
+	filter: none;
+	-webkit-mask-image: linear-gradient(90deg, transparent 0, black 0.5em), radial-gradient(ellipse 54% 62% at 34% 50%, black 0 50%, rgba(0, 0, 0, 0.5) 76%, transparent 96%);
+	mask-image: linear-gradient(90deg, transparent 0, black 0.5em), radial-gradient(ellipse 54% 62% at 34% 50%, black 0 50%, rgba(0, 0, 0, 0.5) 76%, transparent 96%);
+	mix-blend-mode: normal;
+	opacity: var(--fs-guides-o);
+	transform: translateY(-50%);
+	animation: fontshift-guides-in-v2 640ms cubic-bezier(0.16, 1, 0.3, 1) 60ms both;
+}
+
+/* ---------- The word: a living specimen ---------- */
+/* Ghost zone only changes font — the input measures typed text alone.
+   -apple-system resolves to SF Pro, a VARIABLE font: Chrome interpolates
+   font-weight smoothly, so the wave keyframes drive weight directly. The
+   word-level rule holds the settle values (weight 560, tracking 0); every
+   kinetic property lives in the per-glyph track. */
+.stage[data-glow='fontshift'] .field[data-glow] .next-word {
+	position: relative;
+	isolation: isolate;
+	z-index: 2;
+	font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+	font-size: 1em;
+	font-style: normal;
+	font-weight: 560;
+	font-optical-sizing: auto;
+	letter-spacing: 0;
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: var(--next-shadow);
+	animation: fontshift-word-in-v2 200ms ease-out both;
+}
+
+/* WEIGHT WAVE + SLANT PASS, one track per glyph: arrive at weight 100 with
+   opened tracking (backwards fill shows it through the stagger delay),
+   swell to 900 with a -0.01em optical rise, settle to 560 as the tracking
+   closes, then the italic ripple snaps through with an elastic settle.
+   The trailing breath is a font-weight-only animation that starts after
+   every wave is done — it never fights the wave for transform or spacing.
+   The nth-child variants outrank the legacy per-glyph typeface loops. */
+.stage[data-glow='fontshift'] .field[data-glow] .next-word .glyph,
+.stage[data-glow='fontshift'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-glow='fontshift'] .field[data-glow] .next-word .glyph:nth-child(3n + 2),
+.stage[data-glow='fontshift'] .field[data-glow] .next-word .glyph:nth-child(3n) {
+	font-family: inherit;
+	font-size: 1em;
+	font-style: normal;
+	font-weight: 560;
+	color: var(--next-color);
+	background: none;
+	opacity: 1;
+	filter: none;
+	text-shadow: var(--next-shadow);
+	transform: none;
+	transform-origin: 50% 78%;
+	animation:
+		fontshift-wave-v2 760ms cubic-bezier(0.35, 0.1, 0.3, 1) both,
+		fontshift-breath-v2 6s ease-in-out infinite;
+	animation-delay: calc(140ms + var(--i) * 55ms), 2.6s;
+}
+
+/* KERN TICKS: a thin vertical caret mark blinks at the glyph's left edge —
+   only during that glyph's wave beat. The component never touches
+   glyph::before; it is ours. */
+.stage[data-glow='fontshift'] .field[data-glow] .next-word .glyph::before {
+	position: absolute;
+	left: -0.045em;
+	top: 56%;
+	width: 1.5px;
+	height: 0.15em;
+	content: '';
+	pointer-events: none;
+	border-radius: 1px;
+	background: var(--fs-tick-ink);
+	opacity: 0;
+	animation: fontshift-kern-v2 760ms linear both;
+	animation-delay: calc(140ms + var(--i) * 55ms);
+}
+
+/* The data-alt ghost stays unused: this specimen never doubles its image. */
+.stage[data-glow='fontshift'] .field[data-glow] .next-word .glyph::after {
+	content: attr(data-alt);
+	opacity: 0;
+	animation: none;
+}
+
+/* ---------- SPECIMEN TAIL: the serif footnote ---------- */
+/* The whole tail switches to a classic editorial serif, italic, dimmed
+   ink — a footnote under the specimen. Masked fade completes inside the
+   box. Only the first two glyphs keep a faint ink breath. */
+.stage[data-glow='fontshift'] .field[data-glow] .tail {
+	position: relative;
+	z-index: 2;
+	font-family: Georgia, 'Times New Roman', ui-serif, serif;
+	font-size: 0.96em;
+	font-style: italic;
+	font-weight: 400;
+	letter-spacing: 0.01em;
+	color: var(--tail-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-text-fill-color: currentColor;
+	filter: none;
+	text-shadow: none;
+	-webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0, rgba(0, 0, 0, 0.55) 3.4em, rgba(0, 0, 0, 0.24) 7.5em, transparent 11em);
+	mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0, rgba(0, 0, 0, 0.55) 3.4em, rgba(0, 0, 0, 0.24) 7.5em, transparent 11em);
+	animation: fontshift-tail-in-v2 420ms ease-out 120ms both;
+}
+
+.stage[data-glow='fontshift'] .field[data-glow] .tail .glyph,
+.stage[data-glow='fontshift'] .field[data-glow] .tail .glyph:nth-child(3n) {
+	--fs-tail-o: clamp(0.34, calc(0.6 - var(--i) * 0.012), 0.6);
+	--fs-tail-breath: clamp(0, calc(0.14 - var(--i) * 0.07), 0.14);
+	color: inherit;
+	background: none;
+	opacity: var(--fs-tail-o);
+	filter: none;
+	text-shadow: none;
+	transform: none;
+	animation: fontshift-tail-breath-v2 6s ease-in-out 3s infinite;
+}
+
+.stage[data-glow='fontshift'] .field[data-glow] .tail .glyph::after {
+	content: attr(data-alt);
+	opacity: 0;
+	animation: none;
+}
+
+/* Light flow off: the wave, the slant and the guide draw-in are finite and
+   play once; the ambient breath, tail breath and kern blinks hold static. */
+.stage[data-glow='fontshift'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: fontshift-guides-in-v2 640ms cubic-bezier(0.16, 1, 0.3, 1) 60ms both;
+}
+
+.stage[data-glow='fontshift'][data-light-flow='off'] .field[data-glow] .next-word {
+	animation: fontshift-word-in-v2 200ms ease-out both;
+}
+
+.stage[data-glow='fontshift'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
+	animation: fontshift-wave-v2 760ms cubic-bezier(0.35, 0.1, 0.3, 1) both;
+	animation-delay: calc(140ms + var(--i) * 55ms);
+}
+
+.stage[data-glow='fontshift'][data-light-flow='off'] .field[data-glow] .next-word .glyph::before {
+	opacity: 0;
+	animation: none;
+}
+
+.stage[data-glow='fontshift'][data-light-flow='off'] .field[data-glow] .tail {
+	animation: fontshift-tail-in-v2 420ms ease-out 120ms both;
+}
+
+.stage[data-glow='fontshift'][data-light-flow='off'] .field[data-glow] .tail .glyph {
+	animation: none;
+}
+
+/* ---------- Light theme: pure editorial ---------- */
+/* White paper, black ink, grid-paper blue guides, one classic layout-red
+   origin marker. The wave keyframes are color-agnostic — the same kinetic
+   track plays in ink. */
+.field[data-theme='light'][data-glow='fontshift'] {
+	--fs-guides-o: 0.92;
+	--fs-ink: rgba(90, 130, 220, 0.35);
+	--fs-ink-strong: rgba(90, 130, 220, 0.5);
+	--fs-tick-ink: rgba(30, 36, 48, 0.55);
+	--fs-origin-ink: rgba(198, 44, 38, 0.6);
+	--fs-pool-ink: rgba(96, 104, 120, 0.08);
+	--fs-shade-ink: rgba(96, 104, 118, 0.14);
+	--ready-border: rgba(126, 134, 150, 0.34);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.98) inset,
+		0 -18px 50px rgba(130, 136, 148, 0.08) inset,
+		0 18px 46px rgba(48, 52, 62, 0.12);
+	--field-wash:
+		radial-gradient(ellipse 90% 170% at 76% -34%, rgba(255, 255, 255, 0.7), transparent 58%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.5), transparent 42%);
+	--caret-gradient: linear-gradient(
+		180deg,
+		rgb(18, 19, 22) 0%,
+		rgb(18, 19, 22) 6.5%,
+		rgba(40, 42, 48, 0.42) 6.5%,
+		rgba(40, 42, 48, 0.42) 93.5%,
+		rgb(18, 19, 22) 93.5%,
+		rgb(18, 19, 22) 100%
+	);
+	--caret-shadow:
+		-1px 0 0 rgba(255, 255, 255, 0.7),
+		1px 0 0 rgba(255, 255, 255, 0.7),
+		0 0 5px rgba(30, 34, 42, 0.18);
+	--next-color: rgba(17, 19, 24, 0.96);
+	--next-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.55),
+		0 0 1px rgba(255, 255, 255, 0.35);
+	--tail-color: rgba(58, 64, 76, 0.55);
+}
+
+/* White paper vessel. */
+.stage[data-theme='light'][data-glow='fontshift'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 90% 170% at 78% -36%, rgba(255, 255, 255, 0.9), transparent 58%),
+		linear-gradient(180deg, rgb(255, 255, 255), rgb(251, 251, 250) 52%, rgb(246, 246, 244)),
+		linear-gradient(90deg, rgb(254, 254, 253), rgb(249, 249, 247));
+	box-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.98) inset,
+		0 -1px 0 rgba(150, 156, 168, 0.1) inset,
+		0 20px 50px rgba(48, 52, 62, 0.12);
+}
+
+/* Re-pin the wash against legacy light rules that leave it drifting. */
+.stage[data-theme='light'][data-glow='fontshift'] .field[data-glow]::before {
+	mix-blend-mode: normal;
+	opacity: 0;
+	animation: none;
+}
+
+.stage[data-theme='light'][data-glow='fontshift'] .field[data-glow][data-state='ready']::before {
+	opacity: 0.8;
+}
+
+.stage[data-theme='light'][data-glow='fontshift'] .field[data-glow][data-state='waiting'][data-loading-glow='field']::before {
+	opacity: 0.45;
+}
+
+/* Ink must be shaped as ink on paper, never screened. */
+.stage[data-theme='light'][data-glow='fontshift'] .field[data-glow] .torch-beam {
+	mix-blend-mode: normal;
+}
+
+/* Ink text re-wins over the legacy light background-clip pass. */
+.stage[data-theme='light'][data-glow='fontshift'] .field[data-glow] .next-word {
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: var(--next-shadow);
+	animation: fontshift-word-in-v2 200ms ease-out both;
+}
+
+.stage[data-theme='light'][data-glow='fontshift'] .field[data-glow] .next-word .glyph {
+	color: var(--next-color);
+	background: none;
+	text-shadow: var(--next-shadow);
+}
+
+.stage[data-theme='light'][data-glow='fontshift'] .field[data-glow] .tail {
+	color: var(--tail-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	text-shadow: none;
+}
+
+.stage[data-theme='light'][data-glow='fontshift'] .field[data-glow] .tail .glyph {
+	color: inherit;
+	text-shadow: none;
+}
+
+.stage[data-theme='light'][data-glow='fontshift'] .field[data-glow] .edge-left {
+	background: linear-gradient(90deg, rgb(254, 254, 253) 0%, rgb(254, 254, 253) 40%, rgba(254, 254, 253, 0) 100%);
+}
+
+.stage[data-theme='light'][data-glow='fontshift'] .field[data-glow] .edge-right {
+	background: linear-gradient(
+		270deg,
+		rgba(246, 246, 244, 0.5) 0%,
+		rgba(246, 246, 244, 0.22) 42%,
+		rgba(246, 246, 244, 0) 100%
+	);
+	opacity: 0.55;
+}
+
+/* Light theme + flow off: re-win the finite passes against the
+   higher-specificity light rules above. */
+.stage[data-theme='light'][data-glow='fontshift'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: fontshift-guides-in-v2 640ms cubic-bezier(0.16, 1, 0.3, 1) 60ms both;
+}
+
+.stage[data-theme='light'][data-glow='fontshift'][data-light-flow='off'] .field[data-glow] .next-word {
+	animation: fontshift-word-in-v2 200ms ease-out both;
+}
+
+.stage[data-theme='light'][data-glow='fontshift'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
+	animation: fontshift-wave-v2 760ms cubic-bezier(0.35, 0.1, 0.3, 1) both;
+	animation-delay: calc(140ms + var(--i) * 55ms);
+}
+
+.stage[data-theme='light'][data-glow='fontshift'][data-light-flow='off'] .field[data-glow] .tail .glyph {
+	animation: none;
+}
+
+/* ---------- Waiting state: the typographer measures ---------- */
+/* No spinner, no glow: the I-beam caret grows its own ruler — the three
+   guide hairlines (cap / x-height / baseline) extend a short distance from
+   the caret with the origin marker on the baseline, breathing in-out via a
+   background-size pulse, over a quiet neutral pool and a faint floor
+   shade. Layer order on torch-core: [cap, x, baseline, origin ring]. */
+.field[data-state='waiting'][data-glow='fontshift'] {
+	--haze-width: 4.6em;
+	--haze-height: 2.6em;
+	--haze-size: 100% 100%;
+	--haze-bg: radial-gradient(ellipse 1.6em 0.9em at 0.8em 50%, var(--fs-pool-ink), transparent 78%);
+	--haze-filter: blur(10px);
+	--haze-opacity: 0.7;
+	--torch-haze-motion: fontshift-wait-pool-v2 4.2s ease-in-out infinite;
+	--haze-mask: linear-gradient(90deg, transparent 0, black 0.3em), radial-gradient(ellipse 50% 50% at 34% 50%, black 0 46%, rgba(0, 0, 0, 0.5) 72%, transparent 96%);
+	--body-bg: none;
+	--body-opacity: 0;
+	--core-width: 3.4em;
+	--core-height: 2.6em;
+	--core-size:
+		1.9em 1px,
+		1.5em 1px,
+		2.3em 1px,
+		0.2em 0.2em;
+	--core-bg:
+		linear-gradient(90deg, var(--fs-ink), var(--fs-ink) 62%, transparent) 0.14em 0.97em no-repeat,
+		linear-gradient(90deg, var(--fs-ink), var(--fs-ink) 62%, transparent) 0.14em 1.15em no-repeat,
+		linear-gradient(90deg, var(--fs-ink-strong), var(--fs-ink-strong) 68%, transparent) 0.14em 1.67em no-repeat,
+		radial-gradient(circle, transparent 0 44%, var(--fs-origin-ink) 52% 70%, transparent 78%) 0.04em 1.57em no-repeat;
+	--core-filter: none;
+	--core-opacity: 0.9;
+	--torch-core-motion: fontshift-wait-measure-v2 3.4s ease-in-out infinite;
+	--core-mask: linear-gradient(90deg, transparent 0, black 0.1em), radial-gradient(ellipse 56% 56% at 34% 50%, black 0 52%, rgba(0, 0, 0, 0.5) 78%, transparent 96%);
+	--flow-bg: none;
+	--flow-low: 0;
+	--flow-high: 0;
+	--flow-motion: none;
+	--spark-bg: none;
+	--spark-low: 0;
+	--spark-high: 0;
+	--spark-motion: none;
+	--smoke-width: 3.4em;
+	--smoke-height: 2.6em;
+	--smoke-size: auto;
+	--smoke-bg: radial-gradient(ellipse 1.3em 0.3em at 0.8em 1.9em, var(--fs-shade-ink), transparent 80%);
+	--smoke-filter: blur(5px);
+	--smoke-opacity: 0.5;
+	--smoke-blend: normal;
+	--smoke-motion: none;
+	--smoke-mask: linear-gradient(90deg, transparent 0, black 0.22em), radial-gradient(ellipse 50% 50% at 36% 56%, black 0 48%, transparent 94%);
+	--aux-bg: none;
+	--aux-opacity: 0;
+	--aux-motion: none;
+}
+
+/* Paper waiting: the same ruler in grid-blue ink; only the quiet parts
+   need re-tuning against the generic light dimming pass. */
+.field[data-theme='light'][data-state='waiting'][data-glow='fontshift'] {
+	--haze-filter: blur(9px);
+	--haze-opacity: 0.6;
+	--core-opacity: 0.85;
+	--smoke-opacity: 0.4;
+}
+
+/* Waiting + flow off: the ruler holds perfectly still. */
+.field[data-light-flow='off'][data-state='waiting'][data-glow='fontshift'] {
+	--torch-haze-motion: none;
+	--torch-core-motion: none;
+}
+
+/* ---------- Keyframes (fontshift-*-v2) ---------- */
+/* The specimen ruler draws in l -> r: hairlines wipe wide, ticks drop,
+   the origin marker inks itself onto the baseline. */
+@keyframes fontshift-guides-in-v2 {
+	0% {
+		opacity: 0;
+		background-size:
+			0 1px,
+			0 1px,
+			0 1px,
+			1px 0.02em,
+			1px 0.02em,
+			0.22em 0.02em;
+	}
+	35% {
+		opacity: var(--fs-guides-o, 0.9);
+	}
+	100% {
+		opacity: var(--fs-guides-o, 0.9);
+		background-size:
+			calc(var(--fs-guide-w, 5.1em) - 1.1em) 1px,
+			calc(var(--fs-guide-w, 5.1em) - 0.55em) 1px,
+			var(--fs-guide-w, 5.1em) 1px,
+			1px 0.9em,
+			1px 0.9em,
+			0.22em 0.22em;
+	}
+}
+
+/* The word steps onto the sheet, ultra-light and wide-tracked. */
+@keyframes fontshift-word-in-v2 {
+	0% {
+		opacity: 0;
+		transform: translateX(-0.02em);
+	}
+	100% {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+/* WEIGHT WAVE + SLANT PASS, one track: hairline 100 -> black 900 with a
+   -0.01em optical rise -> settle 560 as the tracking closes, then the
+   italic ripple (skewX -6deg) snaps through with an elastic settle. */
+@keyframes fontshift-wave-v2 {
+	0% {
+		font-weight: 100;
+		letter-spacing: 0.06em;
+		transform: translateY(0) skewX(0deg);
+	}
+	8% {
+		font-weight: 130;
+		letter-spacing: 0.058em;
+		transform: translateY(0) skewX(0deg);
+	}
+	34% {
+		font-weight: 900;
+		letter-spacing: 0.018em;
+		transform: translateY(-0.01em) skewX(0deg);
+	}
+	50% {
+		font-weight: 640;
+		letter-spacing: 0.004em;
+		transform: translateY(0.004em) skewX(0deg);
+	}
+	60% {
+		font-weight: 560;
+		letter-spacing: 0em;
+		transform: translateY(0) skewX(0deg);
+	}
+	70% {
+		font-weight: 560;
+		letter-spacing: 0em;
+		transform: translateY(0) skewX(-6deg);
+	}
+	84% {
+		font-weight: 560;
+		letter-spacing: 0em;
+		transform: translateY(0) skewX(2deg);
+	}
+	93% {
+		font-weight: 560;
+		letter-spacing: 0em;
+		transform: translateY(0) skewX(-0.6deg);
+	}
+	100% {
+		font-weight: 560;
+		letter-spacing: 0em;
+		transform: translateY(0) skewX(0deg);
+	}
+}
+
+/* Ambient micro-breath of weight — the settled word keeps breathing,
+   barely. Starts only after every wave has finished; touches nothing but
+   font-weight so it never overrides the wave's transform or tracking. */
+@keyframes fontshift-breath-v2 {
+	0%,
+	100% {
+		font-weight: 560;
+	}
+	50% {
+		font-weight: 620;
+	}
+}
+
+/* Kern tick: blinks at the glyph's left edge only during its wave beat. */
+@keyframes fontshift-kern-v2 {
+	0% {
+		opacity: 0;
+	}
+	14% {
+		opacity: 0.9;
+	}
+	30% {
+		opacity: 0.25;
+	}
+	44% {
+		opacity: 0.75;
+	}
+	62% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+
+/* The serif footnote settles under the specimen. */
+@keyframes fontshift-tail-in-v2 {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+/* Only the first tail glyphs keep an ink breath — the clamp on
+   --fs-tail-breath zeroes the amplitude beyond the second glyph. */
+@keyframes fontshift-tail-breath-v2 {
+	0%,
+	100% {
+		opacity: var(--fs-tail-o, 0.6);
+	}
+	50% {
+		opacity: calc(var(--fs-tail-o, 0.6) + var(--fs-tail-breath, 0));
+	}
+}
+
+/* Waiting: the ruler extends and relaxes — measuring. */
+@keyframes fontshift-wait-measure-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--core-opacity, 0.9) * 0.78);
+		background-size:
+			1.9em 1px,
+			1.5em 1px,
+			2.3em 1px,
+			0.2em 0.2em;
+	}
+	50% {
+		opacity: var(--core-opacity, 0.9);
+		background-size:
+			2.5em 1px,
+			2em 1px,
+			2.9em 1px,
+			0.24em 0.24em;
+	}
+}
+
+/* ...over a pool of quiet ink air. */
+@keyframes fontshift-wait-pool-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--haze-opacity, 0.7) * 0.72);
+		transform: translateY(-50%) scale(0.97);
+	}
+	50% {
+		opacity: var(--haze-opacity, 0.7);
+		transform: translateY(-50%) scale(1.03);
+	}
+}
