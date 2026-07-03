@@ -1,0 +1,999 @@
+/* ============================================================
+   STAGED v2 — "Сцена: следующее слово — актёр в свете рампы".
+   The field is a theatre in stage blacks: near-black warm
+   charcoal vessel, soft top-down darkness, a row of tiny warm
+   FOOTLIGHTS breathing along the bottom edge, and at the far
+   right a whisper of deep crimson velvet — the CURTAIN EDGE
+   (edge-right extended into the padding, vertical fold stripes
+   melting into backstage shadow). THE SIGNATURE — SPOTLIGHT
+   CONE (prediction::before): a soft-edged wedge of warm light
+   leaning down from above/behind the caret onto the next word —
+   two nested conic wedges (penumbra around a brighter core)
+   from an apex near the box top, plus a landing glow where the
+   beam meets the word; the apex fades out INSIDE the pill via
+   the top mask so the cone reads as coming from beyond the
+   frame. LIGHT POOL (prediction::after): an elliptical pool of
+   warm light on the stage floor under the word, wider than the
+   word, with a faint cooler rim; the glyphs cast a tiny contact
+   shadow at their feet. THE ACTOR'S ENTRANCE: per-glyph
+   (var(--i)) walk-on — each glyph rises from below
+   (translateY 0.15em) as a dim backlit silhouette, catches the
+   light as it lands (dark warm-gray -> cream-gold overshoot),
+   settles with a tiny bounce (keyframes carry no 100% frame, so
+   glyphs land on the live cream-gold slot), then keeps a
+   whisper limelight breathe (brightness oscillation). BACKSTAGE
+   TAIL: dark warm-gray silhouettes waiting in the wings,
+   --i-driven opacity decay, a faint cool-blue backstage wash
+   behind them; only the first tail glyph catches a rim of spill
+   light (nth-child(-n+2): a space glyph may lead the tail).
+   DUST MOTES (.beam-spark, the only shared beam left alive):
+   six tiny warm specks drifting slowly inside the cone. Caret =
+   a hairline of warm white light through the curtains. WAITING:
+   the followspot HUNTS for the actor — a soft warm pool
+   (torch-haze) under a brighter soft-edged disc (torch-core)
+   sway left-right (translateX +-0.3em in the keyframes — safe
+   anywhere, no animated custom property is consumed in a
+   background) while slowly breathing; every other torch layer
+   is dead. LIGHT THEME — MATINEE REHEARSAL: the same stage
+   under work lights — warm paper vessel, the cone becomes a
+   soft golden wash whose SURROUNDINGS dim gently (an inverted
+   multiply wedge outside the beam instead of a bright cone),
+   the word is deep warm brown-black ink over a multiply-amber
+   pool underline, tail pale gray-mauve, curtain pale dusty
+   rose, footlights tiny amber ink dots. data-light-flow='off':
+   entrance, cone and pool settle still play once (finite);
+   limelight breathe, motes, footlight breathing and the
+   followspot sway freeze. Every decorated layer's masks
+   complete INSIDE their boxes (mask-composite: intersect).
+   Keyframes staged-*-v2 and vars --st-*-v2 only; legacy
+   staged-* rules in legacy.css are superseded and get deleted.
+   ============================================================ */
+
+.field[data-glow='staged'] {
+	--layer-radius: 999px;
+	--layer-clip: inset(0 round 999px);
+	--st-cone-o-v2: 0.85;
+	--st-cone-blend-v2: screen;
+	--st-cone-bg-v2:
+		conic-gradient(
+			from 0deg at 13% 2%,
+			transparent 0deg 121deg,
+			rgba(255, 226, 162, 0.03) 128deg,
+			rgba(255, 226, 162, 0.1) 136deg 158deg,
+			rgba(255, 226, 162, 0.03) 166deg,
+			transparent 173deg 360deg
+		),
+		conic-gradient(
+			from 0deg at 13% 2%,
+			transparent 0deg 131deg,
+			rgba(255, 240, 198, 0.05) 136deg,
+			rgba(255, 238, 190, 0.2) 141deg 153deg,
+			rgba(255, 240, 198, 0.05) 158deg,
+			transparent 163deg 360deg
+		),
+		radial-gradient(ellipse 34% 26% at 36% 84%, rgba(255, 236, 176, 0.26), transparent 76%);
+	--st-pool-o-v2: 0.9;
+	--st-pool-blend-v2: screen;
+	--st-pool-bg-v2:
+		radial-gradient(ellipse 46% 44% at 38% 40%, rgba(255, 236, 182, 0.32), rgba(255, 216, 132, 0.14) 56%, transparent 80%),
+		radial-gradient(ellipse 60% 58% at 38% 42%, transparent 0 60%, rgba(148, 188, 228, 0.09) 72% 82%, transparent 92%);
+	--st-curtain-o-v2: 0.9;
+	--st-curtain-bg-v2:
+		repeating-linear-gradient(
+			90deg,
+			rgba(96, 20, 34, 0.14) 0 7px,
+			rgba(14, 3, 7, 0.22) 12px 20px,
+			rgba(64, 12, 24, 0.1) 25px 30px
+		),
+		linear-gradient(
+			270deg,
+			rgb(26, 6, 12) 0%,
+			rgba(26, 6, 12, 0.8) 26%,
+			rgba(22, 6, 11, 0.36) 58%,
+			rgba(18, 6, 10, 0) 100%
+		);
+	--st-wings-wash-v2: linear-gradient(90deg, oklch(0.55 0.035 255 / 0.06), oklch(0.55 0.035 255 / 0.028) 50%, transparent 90%);
+	--st-glyph-shadow-v2:
+		0 0.05em 0.06em rgba(8, 5, 3, 0.55),
+		0 0 0.28em color-mix(in oklab, currentcolor 32%, transparent),
+		0 0 0.85em rgba(255, 208, 116, 0.2);
+	--st-house-bg-v2:
+		radial-gradient(circle 3px at 50% 38%, rgba(255, 232, 178, 0.6) 0 32%, rgba(255, 196, 110, 0.2) 60%, transparent 100%)
+			left 0 bottom 8px / 130px 20px repeat-x,
+		linear-gradient(0deg, rgba(255, 202, 122, 0.06), transparent 100%) left 0 bottom 0 / 100% 62px no-repeat,
+		radial-gradient(ellipse 46% 90% at 30% -10%, rgba(255, 226, 160, 0.05), transparent 70%) 0 0 / 100% 100% no-repeat,
+		linear-gradient(180deg, rgba(0, 0, 0, 0.42), transparent 36%) 0 0 / 100% 100% no-repeat,
+		radial-gradient(ellipse 92% 150% at 50% 55%, transparent 0 48%, rgba(0, 0, 0, 0.5) 100%) 0 0 / 100% 100% no-repeat;
+	--ready-border: rgba(255, 214, 160, 0.13);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.04) inset,
+		0 -36px 92px rgba(6, 4, 3, 0.6) inset,
+		0 0 54px oklch(0.55 0.06 70 / 0.1) inset,
+		0 30px 66px rgba(0, 0, 0, 0.52),
+		0 0 78px oklch(0.75 0.12 80 / 0.07);
+	--field-wash:
+		radial-gradient(ellipse 46% 90% at 30% -10%, rgba(255, 226, 160, 0.05), transparent 70%),
+		linear-gradient(180deg, rgba(0, 0, 0, 0.42), transparent 36%);
+	--caret-gradient: linear-gradient(
+		180deg,
+		rgb(255, 253, 246) 0%,
+		rgb(255, 238, 205) 45%,
+		rgb(255, 212, 137) 78%,
+		rgb(184, 121, 46) 100%
+	);
+	--caret-shadow:
+		0 0 6px rgba(255, 244, 214, 0.75),
+		0 0 18px rgba(255, 196, 110, 0.4),
+		0 0 40px rgba(255, 170, 70, 0.18);
+	--haze-bg: none;
+	--haze-opacity: 0;
+	--haze-motion: none;
+	--torch-haze-motion: none;
+	--haze-mask: none;
+	--body-bg: none;
+	--body-opacity: 0;
+	--body-mask: none;
+	--core-bg: none;
+	--core-opacity: 0;
+	--core-motion: none;
+	--torch-core-motion: none;
+	--core-mask: none;
+	--flow-bg: none;
+	--flow-low: 0;
+	--flow-high: 0;
+	--flow-motion: none;
+	--flow-mask: none;
+	--spark-width: 3.4em;
+	--spark-height: 2.2em;
+	--spark-bg:
+		radial-gradient(circle at 0.35em 0.35em, rgba(255, 240, 202, 0.55) 0 0.026em, transparent 0.07em),
+		radial-gradient(circle at 0.8em 0.75em, rgba(255, 234, 188, 0.45) 0 0.03em, transparent 0.078em),
+		radial-gradient(circle at 1.3em 1.05em, rgba(255, 238, 196, 0.4) 0 0.024em, transparent 0.068em),
+		radial-gradient(circle at 1.75em 1.45em, rgba(255, 230, 178, 0.42) 0 0.028em, transparent 0.074em),
+		radial-gradient(circle at 1.05em 1.75em, rgba(255, 226, 170, 0.32) 0 0.024em, transparent 0.066em),
+		radial-gradient(circle at 1.5em 0.55em, rgba(255, 242, 208, 0.3) 0 0.022em, transparent 0.062em);
+	--spark-filter: blur(0.4px);
+	--spark-low: 0;
+	--spark-high: 0.7;
+	--spark-motion: staged-motes-v2 7.4s ease-in-out 1.2s infinite;
+	--spark-mask: radial-gradient(ellipse 68% 76% at 34% 48%, black 0 52%, rgba(0, 0, 0, 0.45) 76%, transparent 96%);
+	--smoke-bg: none;
+	--smoke-opacity: 0;
+	--smoke-motion: none;
+	--smoke-blend: normal;
+	--smoke-mask: none;
+	--aux-bg: none;
+	--aux-opacity: 0;
+	--aux-motion: none;
+	--aux-mask: none;
+	--next-color: oklch(0.95 0.055 92 / 0.98);
+	--next-shadow: var(--st-glyph-shadow-v2);
+	--tail-color: oklch(0.42 0.02 65 / 0.62);
+}
+
+/* The stage owns its light: every shared beam dies except the spark
+   layer, which carries the dust motes. Torch layers serve waiting only. */
+.stage[data-glow='staged'] .field[data-glow] .prediction > .beam:not(.beam-spark) {
+	display: none;
+}
+
+/* The legacy pass killed ALL staged beams — bring the mote layer back... */
+.stage[data-glow='staged'] .field[data-glow] .prediction > .beam-spark {
+	display: block;
+}
+
+/* ...but never past the component's flow-off spark hide. */
+.stage[data-glow='staged'][data-light-flow='off'] .field[data-glow] .prediction > .beam-spark {
+	display: none;
+}
+
+.stage[data-glow='staged'] .field[data-glow] .caret-origin-glow[data-mode='ready'] {
+	display: none;
+}
+
+/* Two-layer masks (left fade x shaped falloff) need intersection, not
+   union — waiting torch layers and both prediction pseudos alike, so
+   every fade completes inside its own box. */
+.stage[data-glow='staged'] .field[data-glow] .torch-beam,
+.stage[data-glow='staged'] .field[data-glow] .prediction::before,
+.stage[data-glow='staged'] .field[data-glow] .prediction::after {
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+}
+
+.stage[data-glow='staged'] .field[data-glow] .prediction {
+	isolation: isolate;
+}
+
+/* Stage blacks: near-black warm charcoal, house lights down. */
+.stage[data-glow='staged'] .field[data-glow] {
+	background:
+		linear-gradient(180deg, rgba(255, 244, 226, 0.014), transparent 32%),
+		linear-gradient(90deg, rgb(13, 11, 9), rgb(15, 13, 10) 52%, rgb(18, 15, 12));
+}
+
+/* HOUSE OVERLAY: footlight dots along the bottom edge, their faint
+   upglow, a warm spill vignette on the cone side, soft top-down darkness
+   and the auditorium vignette. */
+.stage[data-glow='staged'] .field[data-glow]::before {
+	background: var(--st-house-bg-v2);
+	background-size: auto;
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: normal;
+	animation: none;
+}
+
+/* The footlights breathe while the show is on — whisper amplitude. */
+.stage[data-glow='staged'][data-light-flow='on'] .field[data-glow][data-state='ready']::before,
+.stage[data-glow='staged'][data-light-flow='on'] .field[data-glow][data-state='waiting'][data-loading-glow='field']::before {
+	animation: staged-footlights-v2 4.2s ease-in-out infinite;
+}
+
+/* Dissolve into the field's rounded clip, not the paint box; edge
+   overlays extended into the 64px padding, painted in the vessel color
+   so the stage never steps at the content box. */
+.stage[data-glow='staged'] .field[data-glow] .paint {
+	overflow: visible;
+	clip-path: inset(-3.4em -6em -3.4em 0);
+}
+
+.stage[data-glow='staged'] .field[data-glow] .edge-left {
+	left: -64px;
+	width: 156px;
+	background: linear-gradient(90deg, rgb(13, 11, 9) 0%, rgb(13, 11, 9) 40%, rgba(13, 11, 9, 0) 100%);
+	opacity: 0;
+}
+
+.stage[data-glow='staged'] .field[data-glow] .viewport.scrolled .edge-left {
+	opacity: 1;
+}
+
+/* CURTAIN EDGE: a whisper of deep crimson velvet at the frame's right —
+   vertical fold stripes melting leftward into the backstage shadow. */
+.stage[data-glow='staged'] .field[data-glow] .edge-right {
+	display: block;
+	right: -64px;
+	width: 216px;
+	background: var(--st-curtain-bg-v2);
+	-webkit-mask-image: linear-gradient(270deg, black 0 46%, rgba(0, 0, 0, 0.5) 70%, transparent 100%);
+	mask-image: linear-gradient(270deg, black 0 46%, rgba(0, 0, 0, 0.5) 70%, transparent 100%);
+	opacity: var(--st-curtain-o-v2);
+}
+
+/* ---------- SPOTLIGHT CONE: the beam finds the actor ---------- */
+/* Two nested conic wedges (penumbra around a brighter core) lean down
+   from an apex above/behind the caret onto the word, plus a landing glow
+   where the light meets the stage; the apex fades inside the box, so the
+   cone reads as coming from beyond the pill's top edge. */
+.stage[data-glow='staged'] .field[data-glow] .prediction::before {
+	position: absolute;
+	left: -1.35em;
+	top: -0.8em;
+	right: auto;
+	bottom: auto;
+	z-index: -3;
+	width: min(6.6em, calc(100% + 1.9em));
+	height: 2.42em;
+	content: '';
+	pointer-events: none;
+	border: 0;
+	border-radius: 0;
+	clip-path: none;
+	box-shadow: none;
+	background: var(--st-cone-bg-v2);
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	filter: blur(3px);
+	-webkit-mask-image:
+		linear-gradient(180deg, transparent 0, rgba(0, 0, 0, 0.6) 16%, black 36%, black 80%, rgba(0, 0, 0, 0.5) 93%, transparent 100%),
+		linear-gradient(90deg, transparent 0, black 0.45em, black calc(100% - 0.5em), transparent 100%);
+	mask-image:
+		linear-gradient(180deg, transparent 0, rgba(0, 0, 0, 0.6) 16%, black 36%, black 80%, rgba(0, 0, 0, 0.5) 93%, transparent 100%),
+		linear-gradient(90deg, transparent 0, black 0.45em, black calc(100% - 0.5em), transparent 100%);
+	mix-blend-mode: var(--st-cone-blend-v2);
+	opacity: var(--st-cone-o-v2);
+	transform: none;
+	transform-origin: 13% 2%;
+	animation:
+		staged-cone-in-v2 720ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		staged-cone-breathe-v2 5.6s ease-in-out 720ms infinite;
+}
+
+/* ---------- LIGHT POOL: warm light on the stage floor ---------- */
+/* An elliptical pool under the word, wider than the word, with a faint
+   cooler rim — the floor the actor stands on. */
+.stage[data-glow='staged'] .field[data-glow] .prediction::after {
+	position: absolute;
+	left: -0.7em;
+	top: 0.66em;
+	right: auto;
+	bottom: auto;
+	z-index: -2;
+	width: min(5.6em, calc(100% + 1.4em));
+	height: 0.92em;
+	content: '';
+	pointer-events: none;
+	border: 0;
+	border-radius: 0;
+	clip-path: none;
+	box-shadow: none;
+	background: var(--st-pool-bg-v2);
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	filter: blur(3px);
+	-webkit-mask-image:
+		radial-gradient(ellipse 54% 60% at 40% 46%, black 0 52%, rgba(0, 0, 0, 0.5) 74%, transparent 96%),
+		linear-gradient(90deg, transparent 0, black 0.4em, black calc(100% - 0.45em), transparent 100%);
+	mask-image:
+		radial-gradient(ellipse 54% 60% at 40% 46%, black 0 52%, rgba(0, 0, 0, 0.5) 74%, transparent 96%),
+		linear-gradient(90deg, transparent 0, black 0.4em, black calc(100% - 0.45em), transparent 100%);
+	mix-blend-mode: var(--st-pool-blend-v2);
+	opacity: var(--st-pool-o-v2);
+	transform: none;
+	transform-origin: 40% 42%;
+	animation:
+		staged-pool-in-v2 680ms cubic-bezier(0.16, 1, 0.3, 1) 80ms both,
+		staged-pool-breathe-v2 5.6s ease-in-out 760ms infinite;
+}
+
+/* ---------- The word: an actor stepping into the light ---------- */
+.stage[data-glow='staged'] .field[data-glow] .next-word {
+	position: relative;
+	isolation: isolate;
+	z-index: 5;
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: none;
+	transform: none;
+	animation: staged-word-in-v2 200ms ease-out both;
+}
+
+/* The spotlight paints the stage; no legacy word auras. */
+.stage[data-glow='staged'] .field[data-glow] .next-word::before,
+.stage[data-glow='staged'] .field[data-glow] .next-word::after {
+	content: none;
+	background: none;
+	animation: none;
+}
+
+/* THE ENTRANCE: each glyph rises from below as a dim backlit silhouette,
+   catches the light as it lands (dark warm-gray -> cream-gold overshoot),
+   settles with a tiny bounce onto the live slot color (no 100% frame),
+   then keeps a whisper limelight breathe. The contact shadow at the
+   glyph's feet stands the actor in the light. The nth-child group
+   re-wins legacy tint splits. */
+.stage[data-glow='staged'] .field[data-glow] .next-word .glyph,
+.stage[data-glow='staged'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-glow='staged'] .field[data-glow] .next-word .glyph:nth-child(3n + 2),
+.stage[data-glow='staged'] .field[data-glow] .next-word .glyph:nth-child(3n) {
+	display: inline-block;
+	position: relative;
+	color: oklch(0.95 0.055 92 / 0.98);
+	background: none;
+	opacity: 1;
+	filter: none;
+	text-shadow: var(--st-glyph-shadow-v2);
+	transform: none;
+	animation:
+		staged-entrance-v2 620ms cubic-bezier(0.22, 0.85, 0.3, 1) both,
+		staged-limelight-v2 4.8s ease-in-out infinite;
+	animation-delay: calc(140ms + var(--i, 0) * 75ms), calc(760ms + var(--i, 0) * 75ms);
+}
+
+/* The stage changes light, not letters: no scrambled alter egos. */
+.stage[data-glow='staged'] .field[data-glow] .next-word .glyph::after,
+.stage[data-glow='staged'] .field[data-glow] .tail .glyph::after {
+	opacity: 0;
+	animation: none;
+}
+
+/* ---------- Tail: the future waits in the wings ---------- */
+/* Dark warm-gray silhouettes under a faint cool backstage wash; the
+   strip fades inside its own masked box. */
+.stage[data-glow='staged'] .field[data-glow] .tail {
+	position: relative;
+	isolation: isolate;
+	z-index: 2;
+	color: var(--tail-color);
+	background: var(--st-wings-wash-v2);
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-text-fill-color: currentColor;
+	filter: none;
+	text-shadow: none;
+	-webkit-mask-image: linear-gradient(90deg, black 0, rgba(0, 0, 0, 0.55) 3em, rgba(0, 0, 0, 0.18) 6.5em, transparent 9.5em);
+	mask-image: linear-gradient(90deg, black 0, rgba(0, 0, 0, 0.55) 3em, rgba(0, 0, 0, 0.18) 6.5em, transparent 9.5em);
+	animation: staged-tail-in-v2 380ms ease-out 200ms both;
+}
+
+/* Silhouettes fade deeper into the wings with distance (--i continues
+   across the word into the tail). */
+.stage[data-glow='staged'] .field[data-glow] .tail .glyph,
+.stage[data-glow='staged'] .field[data-glow] .tail .glyph:nth-child(3n + 1),
+.stage[data-glow='staged'] .field[data-glow] .tail .glyph:nth-child(3n + 2),
+.stage[data-glow='staged'] .field[data-glow] .tail .glyph:nth-child(3n) {
+	display: inline-block;
+	position: relative;
+	color: oklch(0.4 0.018 65 / 0.72);
+	background: none;
+	opacity: clamp(0.18, calc(0.72 - var(--i, 0) * 0.045), 0.6);
+	filter: none;
+	text-shadow: none;
+	transform: none;
+	animation: staged-wings-in-v2 420ms ease-out both;
+	animation-delay: calc(240ms + var(--i, 0) * 45ms);
+}
+
+/* Only the first tail glyph catches a rim of spill light (the tail may
+   lead with a space glyph, so cover the first two children). */
+.stage[data-glow='staged'] .field[data-glow] .tail .glyph:nth-child(-n + 2) {
+	color: oklch(0.56 0.035 78 / 0.85);
+	opacity: 0.72;
+	text-shadow: 0 0 0.24em rgba(255, 216, 140, 0.3);
+}
+
+/* ---------- Light flow off: one full entrance, then a still ---------- */
+/* The walk-on, the cone and the pool settle still play once (finite);
+   limelight breathe, motes (component spark hide), footlight breathing
+   and the cone sway freeze — a production photo. */
+.stage[data-glow='staged'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: staged-cone-in-v2 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='staged'][data-light-flow='off'] .field[data-glow] .prediction::after {
+	animation: staged-pool-in-v2 680ms cubic-bezier(0.16, 1, 0.3, 1) 80ms both;
+}
+
+.stage[data-glow='staged'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
+	animation: staged-entrance-v2 620ms cubic-bezier(0.22, 0.85, 0.3, 1) both;
+	animation-delay: calc(140ms + var(--i, 0) * 75ms);
+}
+
+.stage[data-glow='staged'][data-light-flow='off'] .field[data-glow] .tail .glyph {
+	animation: staged-wings-in-v2 420ms ease-out both;
+	animation-delay: calc(240ms + var(--i, 0) * 45ms);
+}
+
+/* ---------- Light theme: MATINEE REHEARSAL on paper ---------- */
+/* The same stage under work lights: the cone becomes a soft golden wash
+   whose surroundings dim gently (inverted multiply wedge), the word is
+   deep warm brown-black ink over an amber pool underline, the tail pale
+   gray-mauve, the curtain pale dusty rose, footlights amber ink dots. */
+.field[data-theme='light'][data-glow='staged'] {
+	--st-cone-o-v2: 0.8;
+	--st-cone-blend-v2: multiply;
+	--st-cone-bg-v2:
+		conic-gradient(
+			from 0deg at 13% 2%,
+			oklch(0.62 0.02 320 / 0.1) 0deg 117deg,
+			oklch(0.62 0.02 320 / 0.04) 127deg,
+			transparent 137deg 159deg,
+			oklch(0.62 0.02 320 / 0.04) 169deg,
+			oklch(0.62 0.02 320 / 0.1) 179deg 360deg
+		),
+		conic-gradient(
+			from 0deg at 13% 2%,
+			transparent 0deg 131deg,
+			oklch(0.9 0.07 88 / 0.1) 138deg,
+			oklch(0.88 0.08 85 / 0.3) 143deg 152deg,
+			oklch(0.9 0.07 88 / 0.1) 158deg,
+			transparent 164deg 360deg
+		),
+		radial-gradient(ellipse 34% 26% at 36% 84%, oklch(0.86 0.09 82 / 0.3), transparent 76%);
+	--st-pool-o-v2: 0.85;
+	--st-pool-blend-v2: multiply;
+	--st-pool-bg-v2:
+		radial-gradient(ellipse 46% 42% at 38% 38%, oklch(0.84 0.1 80 / 0.42), oklch(0.88 0.08 82 / 0.18) 58%, transparent 82%),
+		radial-gradient(ellipse 60% 56% at 38% 40%, transparent 0 62%, oklch(0.6 0.03 320 / 0.1) 74% 84%, transparent 94%);
+	--st-curtain-o-v2: 0.6;
+	--st-curtain-bg-v2:
+		repeating-linear-gradient(
+			90deg,
+			oklch(0.78 0.04 15 / 0.2) 0 7px,
+			oklch(0.86 0.02 20 / 0.12) 12px 20px,
+			oklch(0.8 0.03 15 / 0.08) 25px 30px
+		),
+		linear-gradient(270deg, oklch(0.85 0.035 18 / 0.75), oklch(0.86 0.03 18 / 0.35) 45%, transparent 100%);
+	--st-wings-wash-v2: linear-gradient(90deg, oklch(0.6 0.025 300 / 0.05), oklch(0.6 0.025 300 / 0.022) 50%, transparent 90%);
+	--st-glyph-shadow-v2:
+		0 1px 0 rgba(255, 255, 255, 0.55),
+		0 0.04em 0.05em oklch(0.45 0.04 60 / 0.25),
+		0 0 0.3em oklch(0.8 0.09 85 / 0.14);
+	--st-house-bg-v2:
+		radial-gradient(circle 3px at 50% 38%, oklch(0.66 0.11 70 / 0.55) 0 40%, oklch(0.72 0.1 75 / 0.16) 68%, transparent 100%)
+			left 0 bottom 8px / 130px 20px repeat-x,
+		radial-gradient(ellipse 90% 160% at 70% -30%, rgba(255, 255, 255, 0.7), transparent 60%) 0 0 / 100% 100% no-repeat,
+		radial-gradient(ellipse 94% 160% at 50% 52%, transparent 0 52%, oklch(0.6 0.02 320 / 0.1) 100%) 0 0 / 100% 100% no-repeat;
+	--ready-border: rgba(151, 138, 128, 0.34);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.96) inset,
+		0 -18px 50px rgba(151, 138, 128, 0.1) inset,
+		0 18px 46px rgba(66, 56, 50, 0.13),
+		0 0 58px oklch(0.7 0.08 80 / 0.09);
+	--field-wash:
+		radial-gradient(ellipse 90% 170% at 70% -34%, rgba(255, 255, 255, 0.7), transparent 58%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.5), transparent 42%);
+	--caret-gradient: linear-gradient(180deg, rgb(32, 23, 14) 0%, rgb(72, 50, 27) 55%, rgb(142, 98, 45) 100%);
+	--caret-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.5),
+		0 0 8px rgba(142, 98, 45, 0.3),
+		0 6px 14px rgba(88, 66, 42, 0.18);
+	--spark-bg:
+		radial-gradient(circle at 0.35em 0.35em, oklch(0.55 0.06 75 / 0.5) 0 0.026em, transparent 0.07em),
+		radial-gradient(circle at 0.8em 0.75em, oklch(0.55 0.06 75 / 0.42) 0 0.03em, transparent 0.078em),
+		radial-gradient(circle at 1.3em 1.05em, oklch(0.58 0.05 72 / 0.38) 0 0.024em, transparent 0.068em),
+		radial-gradient(circle at 1.75em 1.45em, oklch(0.55 0.06 75 / 0.4) 0 0.028em, transparent 0.074em),
+		radial-gradient(circle at 1.05em 1.75em, oklch(0.58 0.05 72 / 0.3) 0 0.024em, transparent 0.066em),
+		radial-gradient(circle at 1.5em 0.55em, oklch(0.6 0.05 75 / 0.28) 0 0.022em, transparent 0.062em);
+	--spark-high: 0.4;
+	--next-color: oklch(0.25 0.05 55 / 0.96);
+	--next-shadow: var(--st-glyph-shadow-v2);
+	--tail-color: oklch(0.62 0.02 330 / 0.62);
+}
+
+/* Legacy scopes staged light vars on the stage and re-tunes torch
+   opacities there: re-win the contested ones at the same strength so the
+   matinee palette (and the motes) holds. */
+.stage[data-theme='light'][data-glow='staged'] .field[data-glow] {
+	--ready-border: rgba(151, 138, 128, 0.34);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.96) inset,
+		0 -18px 50px rgba(151, 138, 128, 0.1) inset,
+		0 18px 46px rgba(66, 56, 50, 0.13),
+		0 0 58px oklch(0.7 0.08 80 / 0.09);
+	--haze-opacity: 0;
+	--body-opacity: 0;
+	--core-opacity: 0;
+	--flow-low: 0;
+	--flow-high: 0;
+	--spark-low: 0;
+	--spark-high: 0.4;
+	--smoke-opacity: 0;
+	--aux-opacity: 0;
+	--next-color: oklch(0.25 0.05 55 / 0.96);
+	--next-shadow: var(--st-glyph-shadow-v2);
+	--tail-color: oklch(0.62 0.02 330 / 0.62);
+}
+
+/* Warm paper vessel — the stage with the work lights up. */
+.stage[data-theme='light'][data-glow='staged'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 90% 160% at 70% -30%, rgba(255, 255, 255, 0.85), transparent 56%),
+		linear-gradient(180deg, rgb(251, 249, 245), rgb(248, 245, 240) 55%, rgb(242, 238, 232));
+	box-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.96) inset,
+		0 -1px 0 rgba(151, 138, 128, 0.12) inset,
+		0 20px 50px rgba(66, 56, 50, 0.12);
+}
+
+/* Re-pin the house overlay against legacy light rules that blend it away. */
+.stage[data-theme='light'][data-glow='staged'] .field[data-glow]::before {
+	background: var(--st-house-bg-v2);
+	mix-blend-mode: normal;
+	animation: none;
+}
+
+.stage[data-theme='light'][data-glow='staged'][data-light-flow='on'] .field[data-glow][data-state='ready']::before,
+.stage[data-theme='light'][data-glow='staged'][data-light-flow='on'] .field[data-glow][data-state='waiting'][data-loading-glow='field']::before {
+	animation: staged-footlights-v2 4.2s ease-in-out infinite;
+}
+
+/* Amber light dims paper by multiplying; pigment specks sit on it plain. */
+.stage[data-theme='light'][data-glow='staged'] .field[data-glow] .torch-beam {
+	mix-blend-mode: multiply;
+}
+
+.stage[data-theme='light'][data-glow='staged'] .field[data-glow] .prediction > .beam-spark {
+	mix-blend-mode: normal;
+}
+
+/* Matinee cone: golden wash inside the beam, a gentle multiply vignette
+   outside it; same geometry, multiply paint. */
+.stage[data-theme='light'][data-glow='staged'] .field[data-glow] .prediction::before {
+	background: var(--st-cone-bg-v2);
+	filter: blur(3px);
+	mix-blend-mode: var(--st-cone-blend-v2);
+	opacity: var(--st-cone-o-v2);
+}
+
+.stage[data-theme='light'][data-glow='staged'] .field[data-glow] .prediction::after {
+	background: var(--st-pool-bg-v2);
+	filter: blur(3px);
+	mix-blend-mode: var(--st-pool-blend-v2);
+	opacity: var(--st-pool-o-v2);
+}
+
+.stage[data-theme='light'][data-glow='staged'] .field[data-glow] .next-word {
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: none;
+}
+
+/* Ink actor: deep warm brown-black, over-inked at the landing beat;
+   nth-child(n) matches the legacy light specificity. */
+.stage[data-theme='light'][data-glow='staged'] .field[data-glow] .next-word .glyph:nth-child(n) {
+	color: oklch(0.25 0.05 55 / 0.96);
+	background: none;
+	filter: none;
+	text-shadow: var(--st-glyph-shadow-v2);
+	animation:
+		staged-entrance-light-v2 620ms cubic-bezier(0.22, 0.85, 0.3, 1) both,
+		staged-limelight-light-v2 4.8s ease-in-out infinite;
+	animation-delay: calc(140ms + var(--i, 0) * 75ms), calc(760ms + var(--i, 0) * 75ms);
+}
+
+.stage[data-theme='light'][data-glow='staged'] .field[data-glow] .tail {
+	color: var(--tail-color);
+	background: var(--st-wings-wash-v2);
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-text-fill-color: currentColor;
+	filter: none;
+	text-shadow: none;
+}
+
+.stage[data-theme='light'][data-glow='staged'] .field[data-glow] .tail .glyph:nth-child(n) {
+	color: oklch(0.62 0.02 330 / 0.72);
+	background: none;
+	opacity: clamp(0.24, calc(0.8 - var(--i, 0) * 0.045), 0.7);
+	filter: none;
+	text-shadow: none;
+	animation: staged-wings-in-v2 420ms ease-out both;
+	animation-delay: calc(240ms + var(--i, 0) * 45ms);
+}
+
+/* Spill light on the first silhouette, matinee version. */
+.stage[data-theme='light'][data-glow='staged'] .field[data-glow] .tail .glyph:nth-child(-n + 2) {
+	color: oklch(0.5 0.045 70 / 0.85);
+	opacity: 0.78;
+	text-shadow: 0 0 0.24em oklch(0.8 0.1 85 / 0.35);
+}
+
+.stage[data-theme='light'][data-glow='staged'] .field[data-glow] .edge-left {
+	background: linear-gradient(90deg, rgb(251, 249, 245) 0%, rgb(251, 249, 245) 40%, rgba(251, 249, 245, 0) 100%);
+}
+
+/* Dusty-rose curtain in daylight. */
+.stage[data-theme='light'][data-glow='staged'] .field[data-glow] .edge-right {
+	background: var(--st-curtain-bg-v2);
+	opacity: var(--st-curtain-o-v2);
+}
+
+/* Light theme + flow off: re-win the finite passes against the
+   higher-specificity light rules above. */
+.stage[data-theme='light'][data-glow='staged'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: staged-cone-in-v2 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-theme='light'][data-glow='staged'][data-light-flow='off'] .field[data-glow] .prediction::after {
+	animation: staged-pool-in-v2 680ms cubic-bezier(0.16, 1, 0.3, 1) 80ms both;
+}
+
+.stage[data-theme='light'][data-glow='staged'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(n) {
+	animation: staged-entrance-light-v2 620ms cubic-bezier(0.22, 0.85, 0.3, 1) both;
+	animation-delay: calc(140ms + var(--i, 0) * 75ms);
+}
+
+.stage[data-theme='light'][data-glow='staged'][data-light-flow='off'] .field[data-glow] .tail .glyph:nth-child(n) {
+	animation: staged-wings-in-v2 420ms ease-out both;
+	animation-delay: calc(240ms + var(--i, 0) * 45ms);
+}
+
+.stage[data-theme='light'][data-glow='staged'][data-light-flow='off'] .field[data-glow]::before {
+	animation: none;
+}
+
+/* ---------- Waiting: the followspot hunts for the actor ---------- */
+/* A soft warm pool (torch-haze) under a brighter soft-edged disc
+   (torch-core) sway left-right at the caret while slowly breathing —
+   a followspot searching the dark. The sway is a plain transform in the
+   keyframes (no animated custom property is consumed inside a
+   background, so nothing needs to live on the torch element). Every
+   other torch layer is dead. */
+.field[data-state='waiting'][data-glow='staged'] {
+	--haze-width: 5.2em;
+	--haze-height: 2.6em;
+	--haze-size: 100% 100%;
+	--haze-bg: radial-gradient(ellipse 1.7em 1.05em at 1.05em 50%, rgba(255, 228, 156, 0.16), rgba(255, 214, 130, 0.06) 56%, transparent 80%);
+	--haze-filter: blur(10px);
+	--haze-opacity: 0.6;
+	--torch-haze-motion: staged-followspot-haze-v2 3.6s ease-in-out 120ms infinite;
+	--haze-mask:
+		linear-gradient(90deg, transparent 0, black 0.3em, black calc(100% - 0.4em), transparent 100%),
+		radial-gradient(ellipse 56% 58% at 26% 50%, black 0 52%, rgba(0, 0, 0, 0.5) 75%, transparent 96%);
+	--body-bg: none;
+	--body-opacity: 0;
+	--core-width: 3.6em;
+	--core-height: 2.6em;
+	--core-size: 100% 100%;
+	--core-bg:
+		radial-gradient(
+			circle 0.66em at 1.05em 50%,
+			rgba(255, 246, 216, 0.42) 0 22%,
+			rgba(255, 226, 148, 0.26) 48%,
+			rgba(255, 200, 110, 0.1) 72%,
+			transparent 92%
+		),
+		radial-gradient(circle 0.72em at 1.05em 50%, transparent 0 80%, rgba(255, 238, 186, 0.12) 86% 92%, transparent 100%);
+	--core-filter: blur(2.5px);
+	--core-opacity: 0.95;
+	--torch-core-motion: staged-followspot-v2 3.6s ease-in-out infinite;
+	--core-mask:
+		linear-gradient(90deg, transparent 0, black 0.28em, black calc(100% - 0.3em), transparent 100%),
+		radial-gradient(circle 1.25em at 29% 50%, black 0 70%, rgba(0, 0, 0, 0.5) 86%, transparent 100%);
+	--flow-bg: none;
+	--flow-low: 0;
+	--flow-high: 0;
+	--flow-motion: none;
+	--spark-bg: none;
+	--spark-low: 0;
+	--spark-high: 0;
+	--spark-motion: none;
+	--smoke-bg: none;
+	--smoke-opacity: 0;
+	--smoke-motion: none;
+	--aux-bg: none;
+	--aux-opacity: 0;
+	--aux-motion: none;
+}
+
+/* Matinee waiting: the followspot becomes a soft amber work-light pool —
+   multiply paint darkens the paper into gold. */
+.field[data-theme='light'][data-state='waiting'][data-glow='staged'] {
+	--haze-bg: radial-gradient(ellipse 1.7em 1.05em at 1.05em 50%, oklch(0.85 0.07 82 / 0.3), transparent 78%);
+	--haze-opacity: 0.55;
+	--core-bg:
+		radial-gradient(circle 0.66em at 1.05em 50%, oklch(0.88 0.09 85 / 0.5) 0 30%, oklch(0.86 0.08 82 / 0.24) 60%, transparent 90%),
+		radial-gradient(circle 0.72em at 1.05em 50%, transparent 0 78%, oklch(0.62 0.04 60 / 0.14) 86% 92%, transparent 100%);
+	--core-opacity: 0.9;
+}
+
+/* Light + waiting: the stage-scoped light pass above out-specifies the
+   field-level waiting block and smothers the followspot — re-raise the
+   torch opacities over it. */
+.stage[data-theme='light'][data-glow='staged'] .field[data-glow][data-state='waiting'] {
+	--haze-opacity: 0.55;
+	--core-opacity: 0.9;
+}
+
+/* Waiting + flow off: the followspot holds perfectly still. */
+.field[data-light-flow='off'][data-state='waiting'][data-glow='staged'] {
+	--torch-haze-motion: none;
+	--torch-core-motion: none;
+}
+
+/* ---------- Keyframes (staged-*-v2) ---------- */
+/* The word row mounts under the beam. */
+@keyframes staged-word-in-v2 {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+/* The wings settle in. */
+@keyframes staged-tail-in-v2 {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+/* THE ENTRANCE: rise from below as a backlit silhouette, catch the light
+   at the top of the step (cream-gold overshoot), settle with a tiny
+   bounce — no 100% frame, so the glyph lands on its live slot color. */
+@keyframes staged-entrance-v2 {
+	0% {
+		opacity: 0;
+		color: oklch(0.34 0.02 70 / 0.9);
+		transform: translateY(0.15em);
+		filter: blur(1.4px);
+	}
+	30% {
+		opacity: 1;
+		color: oklch(0.5 0.03 72);
+		transform: translateY(0.05em);
+		filter: blur(0.7px);
+	}
+	56% {
+		color: oklch(0.99 0.075 95);
+		transform: translateY(-0.032em);
+		filter: blur(0.2px);
+	}
+	74% {
+		color: oklch(0.9 0.06 90);
+		transform: translateY(0.012em);
+		filter: blur(0);
+	}
+	90% {
+		transform: translateY(0);
+	}
+}
+
+/* Matinee entrance: the silhouette is pale, the landing beat over-inked. */
+@keyframes staged-entrance-light-v2 {
+	0% {
+		opacity: 0;
+		color: oklch(0.72 0.015 70 / 0.8);
+		transform: translateY(0.15em);
+		filter: blur(1.2px);
+	}
+	30% {
+		opacity: 1;
+		color: oklch(0.5 0.03 60);
+		transform: translateY(0.05em);
+		filter: blur(0.6px);
+	}
+	56% {
+		color: oklch(0.12 0.05 50);
+		transform: translateY(-0.032em);
+		filter: blur(0.2px);
+	}
+	74% {
+		transform: translateY(0.012em);
+		filter: blur(0);
+	}
+	90% {
+		transform: translateY(0);
+	}
+}
+
+/* Settled limelight breathe: whisper amplitude. */
+@keyframes staged-limelight-v2 {
+	0%,
+	100% {
+		filter: brightness(0.98);
+	}
+	50% {
+		filter: brightness(1.07);
+	}
+}
+
+/* On paper the breathe is a faint amber halo, not brightness. */
+@keyframes staged-limelight-light-v2 {
+	0%,
+	100% {
+		text-shadow:
+			0 1px 0 rgba(255, 255, 255, 0.55),
+			0 0.04em 0.05em oklch(0.45 0.04 60 / 0.25),
+			0 0 0.3em oklch(0.8 0.09 85 / 0.12);
+	}
+	50% {
+		text-shadow:
+			0 1px 0 rgba(255, 255, 255, 0.55),
+			0 0.04em 0.05em oklch(0.45 0.04 60 / 0.25),
+			0 0 0.42em oklch(0.8 0.1 85 / 0.3);
+	}
+}
+
+/* Silhouettes shuffle into the wings. */
+@keyframes staged-wings-in-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(0.06em);
+	}
+}
+
+/* The beam swells on from the apex... */
+@keyframes staged-cone-in-v2 {
+	0% {
+		opacity: 0;
+		transform: scaleX(0.7) scaleY(0.6);
+		filter: blur(9px);
+	}
+	100% {
+		opacity: var(--st-cone-o-v2, 0.85);
+		transform: none;
+		filter: blur(3px);
+	}
+}
+
+/* ...then the lamp barely sways on its yoke. */
+@keyframes staged-cone-breathe-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--st-cone-o-v2, 0.85) * 0.92);
+		transform: rotate(-0.3deg);
+	}
+	50% {
+		opacity: var(--st-cone-o-v2, 0.85);
+		transform: rotate(0.35deg);
+	}
+}
+
+/* The pool spreads on the boards... */
+@keyframes staged-pool-in-v2 {
+	0% {
+		opacity: 0;
+		transform: scale(0.7);
+	}
+	100% {
+		opacity: var(--st-pool-o-v2, 0.9);
+		transform: scale(1);
+	}
+}
+
+/* ...and breathes with the beam. */
+@keyframes staged-pool-breathe-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--st-pool-o-v2, 0.9) * 0.92);
+		transform: scale(1);
+	}
+	50% {
+		opacity: var(--st-pool-o-v2, 0.9);
+		transform: scale(1.035);
+	}
+}
+
+/* DUST MOTES: specks drift slowly through the beam. */
+@keyframes staged-motes-v2 {
+	0% {
+		opacity: 0;
+		transform: translate(0.1em, calc(-50% + 0.16em));
+	}
+	18% {
+		opacity: var(--spark-high, 0.7);
+	}
+	60% {
+		opacity: calc(var(--spark-high, 0.7) * 0.55);
+	}
+	100% {
+		opacity: 0;
+		transform: translate(-0.12em, calc(-50% - 0.2em));
+	}
+}
+
+/* The footlights breathe along the apron. */
+@keyframes staged-footlights-v2 {
+	0%,
+	100% {
+		opacity: 0.92;
+	}
+	50% {
+		opacity: 1;
+	}
+}
+
+/* WAITING: the followspot sweeps left-right, hunting... */
+@keyframes staged-followspot-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--core-opacity, 0.95) * 0.78);
+		transform: translate(-0.3em, -50%) scale(0.97);
+	}
+	28% {
+		opacity: var(--core-opacity, 0.95);
+	}
+	50% {
+		opacity: var(--core-opacity, 0.95);
+		transform: translate(0.3em, -50%) scale(1.05);
+	}
+	76% {
+		opacity: calc(var(--core-opacity, 0.95) * 0.85);
+	}
+}
+
+/* ...its halo trailing a beat behind. */
+@keyframes staged-followspot-haze-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--haze-opacity, 0.6) * 0.75);
+		transform: translate(-0.22em, -50%) scale(0.96);
+	}
+	50% {
+		opacity: var(--haze-opacity, 0.6);
+		transform: translate(0.22em, -50%) scale(1.06);
+	}
+}
