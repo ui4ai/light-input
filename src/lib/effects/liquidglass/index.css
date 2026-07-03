@@ -1,0 +1,1384 @@
+/* ============================================================
+   LIQUID GLASS v2 — "Капля жидкого стекла: the lens arrives as liquid"
+   Not a frosted smear — a REFRACTIVE GLASS LOZENGE with a
+   precise silhouette hovering over the next word. The field is a
+   neutral dark graphite vessel with a cool hairline rim; the
+   caret is a crisp glass needle (double white edge). THE
+   SIGNATURE — THE LOZENGE (next-word::before): a crisp rounded
+   glass slab, pill-shaped, word-hugging (inset pseudo, height
+   ~1.5em), with a bright TOP-LEFT rim hairline, a subtle darker
+   bottom-right rim, a transparent glass body over a faint 6-10%
+   milk vertical gradient, ONE fixed diagonal specular band, and
+   a hot glint dot near the top-left corner. Its
+   backdrop-filter is brightness(1.16) saturate(1.25)
+   contrast(1.04) — NO blur over the word: the text stays
+   sacredly crisp and the brightened, saturated backdrop sells
+   the glass. LIQUID ARRIVAL: at ignite a droplet lands at the
+   caret (beam-hot splash) and SPREADS into the lozenge —
+   border-radius morphs blob -> pill while scaleX grows with an
+   overshoot and two damped jelly oscillations (~860ms); a finite
+   ripple sheet (beam-flow) chases the spread. The word MAGNIFIES
+   to 1.05 under the lens (transform-origin left center), glyphs
+   arrive per glyph via var(--i) — pulled UP into the lens from
+   slight blur and translateY, overshoot, settle crisp cool-white
+   rgba(240,248,255,.98); the data-alt ghost lifts off refracted.
+   SPECULAR SWEEP (next-word::after): one diagonal highlight
+   crosses the slab in ~640ms at ignite, then a very slow 12s
+   ambient sheen loop. CAUSTIC (prediction::before): a thin
+   bright light line + soft pool cast on the floor below the
+   baseline, swaying gently; beam-aux is a faint crossing caustic
+   web on the floor, beam-smoke a normal-blend shadow pool the
+   slab casts. SATELLITE DROPLETS (prediction::after): two small
+   glass droplets (rim ring + glint) rest near the slab; every
+   ~6.5s the upper one slides in and is ABSORBED — travel via
+   background-position, shrink via background-size, merge flash —
+   then reappears after a long pause. FROST TAIL (tail::before):
+   the tail is read through fog — a milky veil whose blur lives
+   on the tail glyphs themselves (1.5-2.5px growing with --i)
+   with a clean WIPED STREAK just right of the lozenge: a
+   sharp-edged transparent gap in the frost with a thin
+   condensation hairline on its trailing edge. beam-veil is cool
+   ambient air, beam-body the floor illumination under the lens,
+   beam-spark rare rim glints. Waiting = ONE DROPLET at the caret
+   (torch-core) wobbling on a gentle border-radius morph loop
+   with a moving internal glint (torch-flow), a faint halo
+   (torch-haze) and a small shadow pool (torch-smoke). Quiet.
+   Light theme = glass on bright paper: the slab reads through a
+   gray-blue tint, white rims and a soft drop shadow below,
+   backdrop-filter brightness(0.97) saturate(1.1); ink text
+   crisp under glass; frost as pale milk. data-light-flow='off':
+   droplet spread, glyph rise, word magnify and one specular
+   sweep still play (finite); absorption loop, sheen, caustic
+   sway, frost breathe and the hover float hold static. Text
+   crispness is sacred: no backdrop blur over the word, frost
+   blur only in the tail zone. No capsule smears: layer-radius 0
+   in ready, masks fade INSIDE their boxes and two-layer masks
+   intersect (pseudos included). Keyframes: liquidglass-*-v2 only
+   (legacy liquidglass-* / liquidglass-*-new stay untouched).
+   ============================================================ */
+
+.field[data-glow='liquidglass'] {
+	--layer-radius: 0;
+	--layer-clip: none;
+	--lg-lozenge-o: 0.98;
+	--lg-sweep-o: 0.75;
+	--lg-caustic-o: 0.85;
+	--lg-drops-o: 0.9;
+	--lg-frost-o: 0.85;
+	--ready-border: rgba(198, 222, 246, 0.24);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.07) inset,
+		0 -36px 92px rgba(8, 10, 14, 0.52) inset,
+		0 32px 70px rgba(0, 0, 0, 0.5),
+		0 0 78px rgba(160, 208, 255, 0.07),
+		0 0 140px rgba(110, 150, 220, 0.04);
+	--field-wash:
+		radial-gradient(ellipse 60% 150% at 76% -32%, rgba(190, 220, 250, 0.07), transparent 60%),
+		radial-gradient(ellipse 34% 90% at 20% 60%, rgba(160, 200, 245, 0.045), transparent 74%),
+		linear-gradient(180deg, rgba(235, 245, 255, 0.03), transparent 40%);
+	--caret-gradient: linear-gradient(
+		180deg,
+		rgb(255, 255, 255) 0%,
+		rgb(240, 248, 255) 30%,
+		rgb(205, 228, 252) 55%,
+		rgb(150, 185, 225) 80%,
+		rgb(96, 128, 178) 100%
+	);
+	--caret-shadow:
+		-1.5px 0 0 rgba(255, 255, 255, 0.4),
+		1.5px 0 0 rgba(255, 255, 255, 0.4),
+		0 0 6px rgba(220, 240, 255, 0.5),
+		0 8px 20px rgba(70, 110, 180, 0.35);
+	--haze-width: 11em;
+	--haze-height: 2.6em;
+	--haze-size: 100% 100%;
+	--haze-bg:
+		radial-gradient(ellipse 40% 60% at 22% 46%, rgba(190, 222, 252, 0.1), transparent 76%),
+		linear-gradient(180deg, transparent 0 30%, rgba(180, 215, 250, 0.06) 52%, transparent 78%);
+	--haze-filter: blur(12px) saturate(1.15);
+	--haze-opacity: 0.65;
+	--haze-motion: liquidglass-air-v2 8.5s ease-in-out 1.2s infinite;
+	--torch-haze-motion: liquidglass-wait-halo-v2 4.5s ease-in-out infinite;
+	--haze-mask: linear-gradient(90deg, transparent 0, black 0.9em), radial-gradient(ellipse 52% 54% at 36% 50%, black 0 46%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	--body-width: 9.5em;
+	--body-height: 2.6em;
+	--body-size: 100% 100%;
+	--body-bg:
+		radial-gradient(ellipse 46% 34% at 26% 72%, rgba(150, 195, 245, 0.12), transparent 78%),
+		radial-gradient(ellipse 60% 60% at 34% 55%, rgba(190, 222, 252, 0.05), transparent 80%);
+	--body-filter: blur(9px) saturate(1.1);
+	--body-opacity: 0.85;
+	--body-mask: linear-gradient(90deg, transparent 0, black 0.85em), radial-gradient(ellipse 52% 54% at 38% 54%, black 0 48%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	--core-width: 3em;
+	--core-height: 2.6em;
+	--core-size: auto;
+	--core-bg:
+		radial-gradient(ellipse 0.9em 0.55em at 0.55em 50%, rgba(255, 255, 255, 0.75), rgba(205, 235, 255, 0.3) 55%, transparent 80%),
+		radial-gradient(ellipse 1.6em 0.28em at 0.8em 1.85em, rgba(190, 225, 255, 0.35), transparent 75%);
+	--core-filter: blur(4px) saturate(1.15);
+	--core-opacity: 0.9;
+	--core-motion: liquidglass-splash-v2 950ms ease-out 80ms both;
+	--torch-core-motion: liquidglass-wait-wobble-v2 3.6s ease-in-out infinite;
+	--core-mask: linear-gradient(90deg, transparent 0, black 0.3em), radial-gradient(ellipse 52% 52% at 34% 54%, black 0 48%, rgba(0, 0, 0, 0.5) 74%, transparent 94%);
+	--flow-width: 8.5em;
+	--flow-height: 2.2em;
+	--flow-size: 100% 100%;
+	--flow-bg:
+		linear-gradient(94deg, transparent 0 6%, rgba(235, 248, 255, 0.3) 14%, rgba(180, 220, 255, 0.14) 30%, transparent 52%),
+		radial-gradient(ellipse 1.1em 0.4em at 16% 60%, rgba(255, 255, 255, 0.3), transparent 78%);
+	--flow-filter: blur(7px) saturate(1.2);
+	--flow-low: 0;
+	--flow-high: 0.6;
+	--flow-motion: liquidglass-ripple-v2 820ms cubic-bezier(0.3, 0.7, 0.3, 1) 160ms both;
+	--flow-mask: linear-gradient(90deg, transparent 0, black 0.8em), radial-gradient(ellipse 50% 52% at 40% 52%, black 0 46%, rgba(0, 0, 0, 0.5) 72%, transparent 96%);
+	--spark-width: 8em;
+	--spark-height: 2.6em;
+	--spark-size: 100% 100%;
+	--spark-bg:
+		radial-gradient(circle at 1.2em 0.92em, rgba(255, 255, 255, 0.9) 0 0.022em, rgba(200, 235, 255, 0.3) 0.03em 0.05em, transparent 0.07em),
+		radial-gradient(circle at 3.6em 1.98em, rgba(235, 248, 255, 0.7) 0 0.018em, transparent 0.05em),
+		radial-gradient(circle at 5.6em 0.98em, rgba(225, 244, 255, 0.6) 0 0.016em, transparent 0.045em);
+	--spark-filter: blur(0.2px) drop-shadow(0 0 4px rgba(190, 230, 255, 0.5));
+	--spark-low: 0.08;
+	--spark-high: 0.7;
+	--spark-motion: liquidglass-glints-v2 4.6s ease-in-out 2s infinite;
+	--spark-mask: linear-gradient(90deg, transparent 0, black 0.6em), radial-gradient(ellipse 52% 52% at 42% 54%, black 0 50%, rgba(0, 0, 0, 0.5) 76%, transparent 96%);
+	--smoke-width: 10em;
+	--smoke-height: 2.6em;
+	--smoke-size: 100% 100%;
+	--smoke-bg:
+		radial-gradient(ellipse 52% 26% at 30% 80%, rgba(3, 6, 11, 0.5), rgba(3, 6, 11, 0.2) 58%, transparent 82%),
+		linear-gradient(180deg, transparent 0 55%, rgba(3, 6, 11, 0.28) 88% 100%);
+	--smoke-filter: blur(8px);
+	--smoke-opacity: 0.55;
+	--smoke-blend: normal;
+	--smoke-motion: liquidglass-pool-breathe-v2 8s ease-in-out 1.4s infinite;
+	--smoke-mask: linear-gradient(90deg, transparent 0, black 0.9em), radial-gradient(ellipse 52% 54% at 38% 56%, black 0 48%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	--aux-width: 9em;
+	--aux-height: 2.6em;
+	--aux-size: 100% 100%, 100% 100%;
+	--aux-bg:
+		repeating-linear-gradient(102deg, transparent 0 0.55em, rgba(195, 232, 255, 0.1) 0.58em 0.62em, transparent 0.66em 1.15em),
+		repeating-linear-gradient(78deg, transparent 0 0.6em, rgba(180, 222, 252, 0.08) 0.63em 0.66em, transparent 0.7em 1.25em);
+	--aux-filter: blur(0.4px) saturate(1.2);
+	--aux-opacity: 0.55;
+	--aux-blend: screen;
+	--aux-motion: liquidglass-web-drift-v2 7.5s ease-in-out 1.8s infinite;
+	--aux-mask: linear-gradient(90deg, transparent 0, black 0.8em), radial-gradient(ellipse 50% 42% at 36% 70%, black 0 42%, rgba(0, 0, 0, 0.5) 70%, transparent 94%);
+	--next-color: rgba(240, 248, 255, 0.98);
+	--next-shadow:
+		0 1px 1px rgba(6, 14, 26, 0.45),
+		0 0 1px rgba(255, 255, 255, 0.4),
+		0 0 12px rgba(190, 228, 255, 0.18);
+	--tail-color: rgba(198, 216, 236, 0.3);
+}
+
+/* The lens rides the shared beams again: undo the legacy display:none pass
+   and anchor each layer around the caret / suggestion zone. */
+.stage[data-glow='liquidglass'] .field[data-glow] .prediction > .beam {
+	display: block;
+	left: -0.03em;
+	transform-origin: left center;
+}
+
+.stage[data-glow='liquidglass'] .field[data-glow] .prediction > .beam-veil {
+	left: -0.35em;
+}
+
+.stage[data-glow='liquidglass'] .field[data-glow] .prediction > .beam-body {
+	left: -0.5em;
+}
+
+.stage[data-glow='liquidglass'] .field[data-glow] .prediction > .beam-hot {
+	left: -0.3em;
+}
+
+.stage[data-glow='liquidglass'] .field[data-glow] .prediction > .beam-flow {
+	left: -0.4em;
+}
+
+.stage[data-glow='liquidglass'] .field[data-glow] .prediction > .beam-spark {
+	left: -0.05em;
+}
+
+.stage[data-glow='liquidglass'] .field[data-glow] .prediction > .beam-smoke {
+	left: -0.65em;
+}
+
+.stage[data-glow='liquidglass'] .field[data-glow] .prediction > .beam-aux {
+	left: -0.15em;
+}
+
+/* Two-layer masks (left fade x radial falloff) need intersection, not
+   union — on the pseudo layers too. */
+.stage[data-glow='liquidglass'] .field[data-glow] .prediction > .beam,
+.stage[data-glow='liquidglass'] .field[data-glow] .torch-beam,
+.stage[data-glow='liquidglass'] .field[data-glow] .prediction::before,
+.stage[data-glow='liquidglass'] .field[data-glow] .prediction::after,
+.stage[data-glow='liquidglass'] .field[data-glow] .tail::before {
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+}
+
+/* Torch layers serve the waiting droplet only; never double-print in ready. */
+.stage[data-glow='liquidglass'] .field[data-glow] .caret-origin-glow[data-mode='ready'] {
+	display: none;
+}
+
+.stage[data-glow='liquidglass'] .field[data-glow] .prediction {
+	isolation: isolate;
+}
+
+/* Neutral dark graphite vessel with a cool hairline — the glass shows off
+   against something matte. Legacy's full-field frosted backdrop-filter is
+   the shapeless-smear problem: gone. */
+.stage[data-glow='liquidglass'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 120% 190% at 78% -55%, rgba(168, 190, 214, 0.1), transparent 56%),
+		linear-gradient(180deg, rgba(228, 240, 252, 0.035), transparent 36%),
+		linear-gradient(90deg, rgb(16, 18, 21), rgb(21, 23, 27) 50%, rgb(26, 29, 34));
+	box-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.06) inset,
+		0 -1px 0 rgba(140, 170, 205, 0.05) inset,
+		0 -36px 90px rgba(8, 10, 14, 0.5) inset,
+		0 32px 70px rgba(0, 0, 0, 0.5),
+		0 0 90px rgba(150, 200, 255, 0.05);
+	backdrop-filter: none;
+	-webkit-backdrop-filter: none;
+}
+
+/* Quiet cool wash; only wakes with a prediction (or field-mode loading). */
+.stage[data-glow='liquidglass'] .field[data-glow]::before {
+	background: var(--field-wash);
+	background-size: 100% 100%;
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: screen;
+	opacity: 0;
+	animation: none;
+}
+
+.stage[data-glow='liquidglass'] .field[data-glow][data-state='ready']::before {
+	opacity: 0.85;
+}
+
+.stage[data-glow='liquidglass'] .field[data-glow][data-state='waiting'][data-loading-glow='field']::before {
+	opacity: 0.5;
+}
+
+/* Dissolve into the field's rounded clip, not the paint box; edge overlays
+   extended into the 64px padding so the vessel never steps at the content
+   box. */
+.stage[data-glow='liquidglass'] .field[data-glow] .paint {
+	overflow: visible;
+	clip-path: inset(-3.4em -6em -3.4em 0);
+}
+
+.stage[data-glow='liquidglass'] .field[data-glow] .edge-left {
+	left: -64px;
+	width: 156px;
+	background: linear-gradient(90deg, rgb(16, 18, 21) 0%, rgb(16, 18, 21) 40%, rgba(16, 18, 21, 0) 100%);
+	opacity: 0;
+}
+
+.stage[data-glow='liquidglass'] .field[data-glow] .viewport.scrolled .edge-left {
+	opacity: 1;
+}
+
+.stage[data-glow='liquidglass'] .field[data-glow] .edge-right {
+	right: -64px;
+	width: 224px;
+	background: linear-gradient(
+		270deg,
+		rgba(26, 29, 34, 0.92) 0%,
+		rgba(26, 29, 34, 0.56) 30%,
+		rgba(26, 29, 34, 0.16) 68%,
+		rgba(26, 29, 34, 0) 100%
+	);
+	opacity: 0.9;
+}
+
+/* THE CAUSTIC: light the lens focuses onto the floor — a thin bright line
+   plus a soft pool below the baseline, swaying very slightly. Base holds
+   the lit state; the entrance's backwards fill hides it before ignite. */
+.stage[data-glow='liquidglass'] .field[data-glow] .prediction::before {
+	position: absolute;
+	left: -0.7em;
+	top: 50%;
+	z-index: -2;
+	width: min(22em, calc(100% + 5em));
+	height: 3.2em;
+	content: '';
+	pointer-events: none;
+	border: 0;
+	border-radius: 0;
+	clip-path: none;
+	box-shadow: none;
+	backdrop-filter: none;
+	-webkit-backdrop-filter: none;
+	background-image:
+		linear-gradient(90deg, transparent, rgba(240, 250, 255, 0.5) 18%, rgba(210, 240, 255, 0.68) 38%, rgba(200, 235, 255, 0.3) 62%, transparent 88%),
+		radial-gradient(ellipse 50% 50% at 50% 50%, rgba(170, 215, 255, 0.28), rgba(140, 190, 245, 0.1) 55%, transparent 80%),
+		radial-gradient(ellipse 50% 100% at 50% 0%, rgba(210, 240, 255, 0.24), transparent 70%),
+		radial-gradient(ellipse 50% 100% at 50% 0%, rgba(196, 232, 255, 0.16), transparent 68%);
+	background-position:
+		0.4em 2.06em,
+		0.8em 2.2em,
+		1.6em 2.12em,
+		4.4em 2.15em;
+	background-size:
+		9em 0.055em,
+		7.5em 0.9em,
+		2.6em 0.3em,
+		2.2em 0.26em;
+	background-repeat: no-repeat;
+	filter: blur(0.6px) drop-shadow(0 0 6px rgba(170, 220, 255, 0.35));
+	-webkit-mask-image: linear-gradient(90deg, transparent 0, black 0.8em), radial-gradient(ellipse 52% 54% at 40% 56%, black 0 46%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	mask-image: linear-gradient(90deg, transparent 0, black 0.8em), radial-gradient(ellipse 52% 54% at 40% 56%, black 0 46%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	mix-blend-mode: screen;
+	opacity: var(--lg-caustic-o);
+	transform: translateY(-50%);
+	animation:
+		liquidglass-caustic-in-v2 620ms ease-out 460ms both,
+		liquidglass-caustic-sway-v2 6.8s ease-in-out 1.6s infinite;
+}
+
+/* SATELLITE DROPLETS: two small glass beads (rim ring + glint) near the
+   slab; every ~6.5s the upper one slides in and is absorbed — travel on
+   background-position, shrink on background-size, a merge flash — then it
+   reforms after a long pause. Static (both resting) with flow off. */
+.stage[data-glow='liquidglass'] .field[data-glow] .prediction::after {
+	position: absolute;
+	left: -0.55em;
+	top: 50%;
+	z-index: -1;
+	width: 5.4em;
+	height: 3.4em;
+	content: '';
+	pointer-events: none;
+	border-radius: 0;
+	clip-path: none;
+	background-image:
+		radial-gradient(circle, rgba(230, 244, 255, 0.1) 0 44%, rgba(255, 255, 255, 0.6) 58% 70%, rgba(150, 185, 225, 0.28) 78%, transparent 88%),
+		radial-gradient(circle, rgba(255, 255, 255, 0.95) 0 30%, transparent 70%),
+		radial-gradient(circle, rgba(230, 244, 255, 0.1) 0 44%, rgba(255, 255, 255, 0.6) 58% 70%, rgba(150, 185, 225, 0.28) 78%, transparent 88%),
+		radial-gradient(circle, rgba(255, 255, 255, 0.95) 0 30%, transparent 70%),
+		radial-gradient(circle, rgba(255, 255, 255, 0.9) 0 30%, rgba(190, 225, 255, 0.4) 55%, transparent 75%);
+	background-position:
+		0.35em 2.4em,
+		0.46em 2.47em,
+		2.2em 0.42em,
+		2.28em 0.48em,
+		1.42em 0.92em;
+	background-size:
+		0.46em 0.46em,
+		0.09em 0.09em,
+		0.32em 0.32em,
+		0.07em 0.07em,
+		0em 0em;
+	background-repeat: no-repeat;
+	filter: blur(0.2px) drop-shadow(0 0.1em 0.22em rgba(0, 0, 0, 0.3));
+	-webkit-mask-image: linear-gradient(90deg, transparent 0, black 0.4em), radial-gradient(ellipse 54% 54% at 40% 50%, black 0 52%, rgba(0, 0, 0, 0.5) 76%, transparent 96%);
+	mask-image: linear-gradient(90deg, transparent 0, black 0.4em), radial-gradient(ellipse 54% 54% at 40% 50%, black 0 52%, rgba(0, 0, 0, 0.5) 76%, transparent 96%);
+	mix-blend-mode: screen;
+	opacity: var(--lg-drops-o);
+	transform: translateY(-50%);
+	animation: liquidglass-drops-absorb-v2 6.5s ease-in-out 2.8s infinite;
+}
+
+/* ---------- The word under glass: crisp, bright, magnified ---------- */
+.stage[data-glow='liquidglass'] .field[data-glow] .next-word {
+	position: relative;
+	isolation: isolate;
+	z-index: 2;
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: var(--next-shadow);
+	transform-origin: left center;
+	animation: liquidglass-word-magnify-v2 720ms cubic-bezier(0.34, 1.4, 0.44, 1) 180ms both;
+}
+
+/* THE LOZENGE: the refractive slab itself. Bright top-left rim, darker
+   bottom-right rim, transparent body over faint milk, one fixed specular
+   band, a hot glint dot. backdrop-filter brightens and saturates what is
+   behind — never blurs: the word stays crisp. Arrives as liquid: blob ->
+   pill with a jelly settle, then hovers. */
+.stage[data-glow='liquidglass'] .field[data-glow] .next-word::before {
+	position: absolute;
+	inset: -0.26em -0.6em -0.24em -0.45em;
+	z-index: -1;
+	content: '';
+	pointer-events: none;
+	border-radius: 999px;
+	clip-path: none;
+	background:
+		radial-gradient(circle at 9% 18%, rgba(255, 255, 255, 0.9) 0 0.03em, rgba(255, 255, 255, 0.3) 0.055em, transparent 0.13em),
+		linear-gradient(118deg, transparent 32%, rgba(255, 255, 255, 0.05) 40%, rgba(255, 255, 255, 0.14) 47%, rgba(255, 255, 255, 0.05) 54%, transparent 62%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.03) 26%, rgba(150, 180, 215, 0.04) 60%, rgba(210, 232, 252, 0.09) 88%, rgba(230, 244, 255, 0.12)),
+		linear-gradient(90deg, rgba(200, 228, 252, 0.07), rgba(190, 220, 250, 0.05) 60%, rgba(180, 214, 248, 0.08));
+	box-shadow:
+		0 1.5px 0 rgba(255, 255, 255, 0.6) inset,
+		1.5px 0.5px 0 rgba(255, 255, 255, 0.3) inset,
+		0 -1.5px 0 rgba(70, 95, 130, 0.55) inset,
+		-1.5px 0 0 rgba(80, 105, 140, 0.4) inset,
+		0 0.4em 0.7em -0.5em rgba(255, 255, 255, 0.35) inset,
+		0 0.3em 0.8em rgba(0, 0, 0, 0.38),
+		0 0 1.6em rgba(160, 210, 255, 0.12);
+	backdrop-filter: brightness(1.16) saturate(1.25) contrast(1.04);
+	-webkit-backdrop-filter: brightness(1.16) saturate(1.25) contrast(1.04);
+	filter: none;
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: normal;
+	opacity: var(--lg-lozenge-o);
+	transform-origin: left center;
+	animation:
+		liquidglass-lozenge-spread-v2 860ms cubic-bezier(0.3, 0.75, 0.3, 1) 120ms both,
+		liquidglass-lozenge-hover-v2 7s ease-in-out 1.6s infinite;
+}
+
+/* SPECULAR SWEEP: one finite diagonal highlight at ignite, then a very
+   slow ambient sheen. Clipped to the slab silhouette by its own pill
+   radius; light enough to never soften the glyphs beneath it. */
+.stage[data-glow='liquidglass'] .field[data-glow] .next-word::after {
+	position: absolute;
+	inset: -0.26em -0.6em -0.24em -0.45em;
+	z-index: 2;
+	width: auto;
+	height: auto;
+	content: '';
+	pointer-events: none;
+	border-radius: 999px;
+	clip-path: none;
+	background: linear-gradient(115deg, transparent 0 34%, rgba(255, 255, 255, 0.06) 40%, rgba(255, 255, 255, 0.32) 47%, rgba(220, 240, 255, 0.1) 53%, transparent 60%);
+	background-size: 260% 100%;
+	background-repeat: no-repeat;
+	background-position: -140% 0;
+	filter: blur(0.3px);
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: screen;
+	opacity: 0;
+	transform: none;
+	animation:
+		liquidglass-sweep-v2 640ms cubic-bezier(0.3, 0.6, 0.2, 1) 420ms both,
+		liquidglass-sheen-v2 12s ease-in-out 3s infinite;
+}
+
+/* Per-glyph reveal: pulled up into the lens from a slight blur, overshoot,
+   settle crisp. The nth-child variants outrank the legacy prism loops. */
+.stage[data-glow='liquidglass'] .field[data-glow] .next-word .glyph,
+.stage[data-glow='liquidglass'] .field[data-glow] .next-word .glyph:nth-child(even),
+.stage[data-glow='liquidglass'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-glow='liquidglass'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
+	color: var(--next-color);
+	background: none;
+	opacity: 1;
+	filter: none;
+	text-shadow: var(--next-shadow);
+	transform-origin: 50% 78%;
+	animation: liquidglass-glyph-rise-v2 640ms cubic-bezier(0.3, 0.7, 0.3, 1) both;
+	animation-delay: calc(300ms + var(--i) * 60ms);
+}
+
+/* The data-alt ghost lifts off the rising glyph like a refraction double. */
+.stage[data-glow='liquidglass'] .field[data-glow] .next-word .glyph::after {
+	z-index: 2;
+	content: attr(data-alt);
+	color: rgba(198, 230, 255, 0.6);
+	opacity: 0;
+	filter: blur(1px);
+	text-shadow: 0 0 0.25em rgba(180, 222, 255, 0.4);
+	transform: none;
+	transform-origin: 50% 30%;
+	animation: liquidglass-alt-lift-v2 480ms cubic-bezier(0.4, 0.1, 0.6, 1) both;
+	animation-delay: calc(300ms + var(--i) * 60ms);
+}
+
+/* ---------- Frost tail: fog with a wiped streak ---------- */
+.stage[data-glow='liquidglass'] .field[data-glow] .tail {
+	position: relative;
+	isolation: isolate;
+	z-index: 2;
+	color: var(--tail-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: 0 0 0.35em rgba(190, 225, 255, 0.08);
+	-webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0, rgba(0, 0, 0, 0.5) 3em, transparent 8.5em);
+	mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0, rgba(0, 0, 0, 0.5) 3em, transparent 8.5em);
+}
+
+/* The milky veil OVER the letters, with a sharp-edged wiped gap just right
+   of the slab and a thin condensation hairline on the gap's trailing edge.
+   Frost blur belongs to the glyphs; the veil keeps its edges. */
+.stage[data-glow='liquidglass'] .field[data-glow] .tail::before {
+	position: absolute;
+	inset: -0.85em -2.2em -0.85em -0.1em;
+	z-index: 1;
+	content: '';
+	pointer-events: none;
+	border-radius: 0;
+	clip-path: none;
+	background:
+		linear-gradient(96deg, rgba(226, 238, 252, 0.04) 0, rgba(226, 238, 252, 0.12) 0.7em, rgba(224, 236, 250, 0.14) 0.93em, transparent 0.95em, transparent 1.53em, rgba(255, 255, 255, 0.22) 1.55em, rgba(255, 255, 255, 0.2) 1.58em, rgba(226, 238, 252, 0.14) 1.62em, rgba(226, 238, 252, 0.13) 4.6em, rgba(228, 240, 252, 0.07) 8em, rgba(228, 240, 252, 0.02) 11em),
+		radial-gradient(ellipse 46% 62% at 34% 50%, rgba(230, 242, 254, 0.1), transparent 80%);
+	filter: blur(0.5px) saturate(1.05);
+	-webkit-mask-image: linear-gradient(90deg, transparent 0, black 0.7em), radial-gradient(ellipse 52% 56% at 38% 50%, black 0 46%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	mask-image: linear-gradient(90deg, transparent 0, black 0.7em), radial-gradient(ellipse 52% 56% at 38% 50%, black 0 46%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	mix-blend-mode: screen;
+	opacity: var(--lg-frost-o);
+	animation:
+		liquidglass-frost-in-v2 700ms ease-out 300ms both,
+		liquidglass-frost-breathe-v2 9s ease-in-out 1.6s infinite;
+}
+
+/* Tail glyphs: dim ink behind the fog, blur growing gently with --i —
+   frost blur is only ever allowed here, never over the next word. */
+.stage[data-glow='liquidglass'] .field[data-glow] .tail .glyph {
+	color: inherit;
+	background: none;
+	opacity: clamp(0.3, calc(0.58 - var(--i) * 0.012), 0.58);
+	filter: blur(calc(1.5px + min(var(--i) * 0.08px, 1px)));
+	text-shadow: none;
+	transform: none;
+	animation: none;
+}
+
+/* Light flow off: the liquid moment still happens once — droplet spread,
+   word magnify, glyph rise, alt lift, one specular sweep, caustic and
+   frost fade-ins. Absorption, sheen, sway, breathe and hover hold still.
+   (Ripple and glints ride beam-flow/spark, web and pool ride
+   beam-aux/smoke — the shared flow-off rules hide those.) */
+.stage[data-glow='liquidglass'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: liquidglass-caustic-in-v2 620ms ease-out 460ms both;
+}
+
+.stage[data-glow='liquidglass'][data-light-flow='off'] .field[data-glow] .prediction::after {
+	animation: none;
+}
+
+.stage[data-glow='liquidglass'][data-light-flow='off'] .field[data-glow] .tail::before {
+	animation: liquidglass-frost-in-v2 700ms ease-out 300ms both;
+}
+
+.stage[data-glow='liquidglass'][data-light-flow='off'] .field[data-glow] .next-word {
+	animation: liquidglass-word-magnify-v2 720ms cubic-bezier(0.34, 1.4, 0.44, 1) 180ms both;
+}
+
+.stage[data-glow='liquidglass'][data-light-flow='off'] .field[data-glow] .next-word::before {
+	animation: liquidglass-lozenge-spread-v2 860ms cubic-bezier(0.3, 0.75, 0.3, 1) 120ms both;
+}
+
+.stage[data-glow='liquidglass'][data-light-flow='off'] .field[data-glow] .next-word::after {
+	animation: liquidglass-sweep-v2 640ms cubic-bezier(0.3, 0.6, 0.2, 1) 420ms both;
+}
+
+.stage[data-glow='liquidglass'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
+	animation: liquidglass-glyph-rise-v2 640ms cubic-bezier(0.3, 0.7, 0.3, 1) both;
+	animation-delay: calc(300ms + var(--i) * 60ms);
+}
+
+.stage[data-glow='liquidglass'][data-light-flow='off'] .field[data-glow] .next-word .glyph::after {
+	animation: liquidglass-alt-lift-v2 480ms cubic-bezier(0.4, 0.1, 0.6, 1) both;
+	animation-delay: calc(300ms + var(--i) * 60ms);
+}
+
+.stage[data-glow='liquidglass'][data-light-flow='off'] .field[data-glow] .beam-hot {
+	animation:
+		beam-hot 560ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		liquidglass-splash-v2 950ms ease-out 80ms both;
+}
+
+/* ---------- Light theme: glass on bright paper ---------- */
+.field[data-theme='light'][data-glow='liquidglass'] {
+	--lg-lozenge-o: 0.96;
+	--lg-sweep-o: 0.5;
+	--lg-caustic-o: 0.7;
+	--lg-drops-o: 0.85;
+	--lg-frost-o: 0.75;
+	--ready-border: rgba(148, 174, 208, 0.4);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.98) inset,
+		0 -18px 50px rgba(150, 175, 210, 0.1) inset,
+		0 18px 46px rgba(40, 58, 88, 0.13),
+		0 0 66px rgba(130, 175, 235, 0.08);
+	--field-wash:
+		radial-gradient(ellipse 60% 150% at 76% -32%, rgba(255, 255, 255, 0.6), transparent 60%),
+		radial-gradient(ellipse 34% 90% at 20% 60%, rgba(170, 200, 240, 0.06), transparent 74%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.5), transparent 42%);
+	--caret-gradient: linear-gradient(
+		180deg,
+		rgb(44, 62, 92) 0%,
+		rgb(78, 104, 142) 34%,
+		rgb(140, 168, 205) 64%,
+		rgb(214, 230, 248) 88%,
+		rgb(255, 255, 255) 100%
+	);
+	--caret-shadow:
+		-1.5px 0 0 rgba(255, 255, 255, 0.75),
+		1.5px 0 0 rgba(255, 255, 255, 0.75),
+		0 0 6px rgba(120, 160, 215, 0.3),
+		0 6px 16px rgba(60, 90, 140, 0.22);
+	--haze-bg:
+		radial-gradient(ellipse 40% 60% at 22% 46%, rgba(150, 185, 228, 0.1), transparent 76%),
+		linear-gradient(180deg, transparent 0 30%, rgba(160, 195, 235, 0.06) 52%, transparent 78%);
+	--haze-filter: blur(11px) saturate(0.98);
+	--haze-opacity: 0.55;
+	--body-bg:
+		radial-gradient(ellipse 46% 34% at 26% 72%, rgba(120, 160, 215, 0.1), transparent 78%),
+		radial-gradient(ellipse 60% 60% at 34% 55%, rgba(255, 255, 255, 0.3), transparent 80%);
+	--body-filter: blur(9px) saturate(0.98);
+	--body-opacity: 0.7;
+	--core-bg:
+		radial-gradient(ellipse 0.9em 0.55em at 0.55em 50%, rgba(255, 255, 255, 0.9), rgba(150, 190, 235, 0.22) 55%, transparent 80%),
+		radial-gradient(ellipse 1.6em 0.28em at 0.8em 1.85em, rgba(110, 150, 205, 0.2), transparent 75%);
+	--core-filter: blur(4px) saturate(0.98);
+	--core-opacity: 0.8;
+	--flow-bg:
+		linear-gradient(94deg, transparent 0 6%, rgba(255, 255, 255, 0.5) 14%, rgba(140, 178, 225, 0.12) 30%, transparent 52%),
+		radial-gradient(ellipse 1.1em 0.4em at 16% 60%, rgba(255, 255, 255, 0.4), transparent 78%);
+	--flow-filter: blur(7px) saturate(0.98);
+	--flow-high: 0.45;
+	--spark-bg:
+		radial-gradient(circle at 1.2em 0.92em, rgba(255, 255, 255, 0.98) 0 0.02em, rgba(104, 140, 185, 0.4) 0.027em 0.045em, transparent 0.062em),
+		radial-gradient(circle at 3.6em 1.98em, rgba(255, 255, 255, 0.92) 0 0.016em, rgba(112, 148, 192, 0.3) 0.022em 0.04em, transparent 0.055em),
+		radial-gradient(circle at 5.6em 0.98em, rgba(255, 255, 255, 0.85) 0 0.015em, transparent 0.04em);
+	--spark-filter: blur(0.2px);
+	--spark-low: 0.1;
+	--spark-high: 0.6;
+	--smoke-bg:
+		radial-gradient(ellipse 52% 26% at 30% 80%, rgba(70, 95, 130, 0.2), rgba(70, 95, 130, 0.08) 58%, transparent 82%),
+		linear-gradient(180deg, transparent 0 55%, rgba(70, 95, 130, 0.1) 88% 100%);
+	--smoke-opacity: 0.6;
+	--smoke-blend: normal;
+	--aux-bg:
+		repeating-linear-gradient(102deg, transparent 0 0.55em, rgba(96, 132, 178, 0.08) 0.58em 0.62em, transparent 0.66em 1.15em),
+		repeating-linear-gradient(78deg, transparent 0 0.6em, rgba(104, 140, 185, 0.06) 0.63em 0.66em, transparent 0.7em 1.25em);
+	--aux-filter: blur(0.4px);
+	--aux-opacity: 0.5;
+	--aux-blend: normal;
+	--next-color: rgba(26, 42, 70, 0.94);
+	--next-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.7),
+		0 0 1px rgba(255, 255, 255, 0.5),
+		0 0 10px rgba(120, 160, 215, 0.12);
+	--tail-color: rgba(70, 92, 124, 0.34);
+}
+
+/* Bright cool paper. */
+.stage[data-theme='light'][data-glow='liquidglass'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 90% 170% at 78% -36%, rgba(255, 255, 255, 0.9), transparent 58%),
+		linear-gradient(180deg, rgb(252, 253, 255), rgb(245, 248, 252) 52%, rgb(238, 243, 250)),
+		linear-gradient(90deg, rgb(251, 252, 254), rgb(243, 247, 252));
+	box-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.98) inset,
+		0 -1px 0 rgba(150, 170, 200, 0.1) inset,
+		0 20px 50px rgba(40, 58, 88, 0.12),
+		0 0 60px rgba(130, 175, 235, 0.07);
+	backdrop-filter: none;
+	-webkit-backdrop-filter: none;
+}
+
+/* Re-pin the wash against legacy light rules that leave it on and drifting. */
+.stage[data-theme='light'][data-glow='liquidglass'] .field[data-glow]::before {
+	mix-blend-mode: normal;
+	opacity: 0;
+	animation: none;
+}
+
+.stage[data-theme='light'][data-glow='liquidglass'] .field[data-glow][data-state='ready']::before {
+	opacity: 0.8;
+}
+
+.stage[data-theme='light'][data-glow='liquidglass'] .field[data-glow][data-state='waiting'][data-loading-glow='field']::before {
+	opacity: 0.45;
+}
+
+/* Light must be shaped as ink and shade on paper, never screened away. */
+.stage[data-theme='light'][data-glow='liquidglass'] .field[data-glow] .prediction > .beam,
+.stage[data-theme='light'][data-glow='liquidglass'] .field[data-glow] .torch-beam {
+	mix-blend-mode: normal;
+}
+
+/* Caustic on paper: a white focus line inside a soft blue-gray shade. */
+.stage[data-theme='light'][data-glow='liquidglass'] .field[data-glow] .prediction::before {
+	background-image:
+		linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9) 18%, rgba(255, 255, 255, 0.95) 38%, rgba(255, 255, 255, 0.5) 62%, transparent 88%),
+		radial-gradient(ellipse 50% 50% at 50% 50%, rgba(88, 118, 158, 0.18), rgba(96, 126, 165, 0.08) 55%, transparent 80%),
+		radial-gradient(ellipse 50% 100% at 50% 0%, rgba(110, 148, 195, 0.14), transparent 70%),
+		radial-gradient(ellipse 50% 100% at 50% 0%, rgba(120, 156, 200, 0.1), transparent 68%);
+	border: 0;
+	box-shadow: none;
+	backdrop-filter: none;
+	-webkit-backdrop-filter: none;
+	filter: blur(0.6px) drop-shadow(0 0.03em 0.12em rgba(80, 110, 150, 0.25));
+	mix-blend-mode: normal;
+	opacity: var(--lg-caustic-o);
+	animation:
+		liquidglass-caustic-in-v2 620ms ease-out 460ms both,
+		liquidglass-caustic-sway-v2 6.8s ease-in-out 1.6s infinite;
+}
+
+/* Droplets as wet glass beads on paper: darker rims, white glints. */
+.stage[data-theme='light'][data-glow='liquidglass'] .field[data-glow] .prediction::after {
+	background-image:
+		radial-gradient(circle, rgba(255, 255, 255, 0.2) 0 44%, rgba(96, 122, 158, 0.55) 58% 70%, rgba(140, 165, 200, 0.24) 78%, transparent 88%),
+		radial-gradient(circle, rgba(255, 255, 255, 0.98) 0 30%, transparent 70%),
+		radial-gradient(circle, rgba(255, 255, 255, 0.2) 0 44%, rgba(96, 122, 158, 0.55) 58% 70%, rgba(140, 165, 200, 0.24) 78%, transparent 88%),
+		radial-gradient(circle, rgba(255, 255, 255, 0.98) 0 30%, transparent 70%),
+		radial-gradient(circle, rgba(210, 230, 250, 0.9) 0 30%, rgba(140, 172, 212, 0.4) 55%, transparent 75%);
+	filter: blur(0.2px) drop-shadow(0 0.08em 0.16em rgba(60, 85, 120, 0.28));
+	mix-blend-mode: normal;
+	opacity: var(--lg-drops-o);
+	animation: liquidglass-drops-absorb-v2 6.5s ease-in-out 2.8s infinite;
+}
+
+.stage[data-theme='light'][data-glow='liquidglass'] .field[data-glow] .next-word {
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: var(--next-shadow);
+	transform-origin: left center;
+	animation: liquidglass-word-magnify-v2 720ms cubic-bezier(0.34, 1.4, 0.44, 1) 180ms both;
+}
+
+/* The slab on paper: gray-blue tint, white rims, soft drop shadow below;
+   the backdrop dims a touch instead of brightening. */
+.stage[data-theme='light'][data-glow='liquidglass'] .field[data-glow] .next-word::before {
+	background:
+		radial-gradient(circle at 9% 18%, rgba(255, 255, 255, 0.98) 0 0.03em, rgba(255, 255, 255, 0.4) 0.055em, transparent 0.13em),
+		linear-gradient(118deg, transparent 32%, rgba(255, 255, 255, 0.14) 40%, rgba(255, 255, 255, 0.46) 47%, rgba(255, 255, 255, 0.12) 54%, transparent 62%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(240, 246, 252, 0.16) 30%, rgba(196, 212, 234, 0.22) 68%, rgba(214, 228, 244, 0.34)),
+		linear-gradient(90deg, rgba(126, 154, 190, 0.1), rgba(120, 148, 185, 0.07) 60%, rgba(112, 142, 180, 0.11));
+	box-shadow:
+		0 1.5px 0 rgba(255, 255, 255, 0.95) inset,
+		1.5px 0.5px 0 rgba(255, 255, 255, 0.6) inset,
+		0 -1.5px 0 rgba(105, 130, 165, 0.4) inset,
+		-1.5px 0 0 rgba(120, 145, 180, 0.28) inset,
+		0 0.34em 0.72em rgba(52, 74, 110, 0.2),
+		0 0.08em 0.2em rgba(52, 74, 110, 0.12);
+	backdrop-filter: brightness(0.97) saturate(1.1);
+	-webkit-backdrop-filter: brightness(0.97) saturate(1.1);
+	filter: none;
+	mix-blend-mode: normal;
+	opacity: var(--lg-lozenge-o);
+	animation:
+		liquidglass-lozenge-spread-v2 860ms cubic-bezier(0.3, 0.75, 0.3, 1) 120ms both,
+		liquidglass-lozenge-hover-v2 7s ease-in-out 1.6s infinite;
+}
+
+.stage[data-theme='light'][data-glow='liquidglass'] .field[data-glow] .next-word::after {
+	background: linear-gradient(115deg, transparent 0 34%, rgba(255, 255, 255, 0.16) 40%, rgba(255, 255, 255, 0.6) 47%, rgba(255, 255, 255, 0.18) 53%, transparent 60%);
+	background-size: 260% 100%;
+	background-repeat: no-repeat;
+	background-position: -140% 0;
+	filter: blur(0.3px);
+	mix-blend-mode: normal;
+	opacity: 0;
+	animation:
+		liquidglass-sweep-v2 640ms cubic-bezier(0.3, 0.6, 0.2, 1) 420ms both,
+		liquidglass-sheen-v2 12s ease-in-out 3s infinite;
+}
+
+.stage[data-theme='light'][data-glow='liquidglass'] .field[data-glow] .next-word .glyph,
+.stage[data-theme='light'][data-glow='liquidglass'] .field[data-glow] .next-word .glyph:nth-child(even),
+.stage[data-theme='light'][data-glow='liquidglass'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-theme='light'][data-glow='liquidglass'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
+	color: var(--next-color);
+	text-shadow: var(--next-shadow);
+	animation-name: liquidglass-glyph-rise-light-v2;
+}
+
+.stage[data-theme='light'][data-glow='liquidglass'] .field[data-glow] .next-word .glyph::after {
+	color: rgba(110, 140, 180, 0.55);
+	text-shadow: none;
+}
+
+/* Frost as pale milk on paper, same wiped streak. */
+.stage[data-theme='light'][data-glow='liquidglass'] .field[data-glow] .tail::before {
+	background:
+		linear-gradient(96deg, rgba(255, 255, 255, 0.24) 0, rgba(250, 252, 255, 0.5) 0.7em, rgba(248, 251, 255, 0.54) 0.93em, transparent 0.95em, transparent 1.53em, rgba(255, 255, 255, 0.85) 1.55em, rgba(255, 255, 255, 0.8) 1.58em, rgba(248, 251, 255, 0.54) 1.62em, rgba(248, 251, 255, 0.5) 4.6em, rgba(250, 252, 255, 0.3) 8em, rgba(250, 252, 255, 0.08) 11em),
+		radial-gradient(ellipse 46% 62% at 34% 50%, rgba(150, 172, 200, 0.08), transparent 80%);
+	mix-blend-mode: normal;
+}
+
+.stage[data-theme='light'][data-glow='liquidglass'] .field[data-glow] .tail,
+.stage[data-theme='light'][data-glow='liquidglass'] .field[data-glow] .tail .glyph {
+	color: var(--tail-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	text-shadow: none;
+}
+
+.stage[data-theme='light'][data-glow='liquidglass'] .field[data-glow] .edge-left {
+	background: linear-gradient(90deg, rgb(251, 252, 254) 0%, rgb(251, 252, 254) 40%, rgba(251, 252, 254, 0) 100%);
+}
+
+.stage[data-theme='light'][data-glow='liquidglass'] .field[data-glow] .edge-right {
+	background: linear-gradient(
+		270deg,
+		rgba(238, 243, 250, 0.5) 0%,
+		rgba(238, 243, 250, 0.22) 42%,
+		rgba(238, 243, 250, 0) 100%
+	);
+	opacity: 0.55;
+}
+
+/* Light theme + flow off: re-win against the higher-specificity kills. */
+.stage[data-theme='light'][data-glow='liquidglass'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: liquidglass-caustic-in-v2 620ms ease-out 460ms both;
+}
+
+.stage[data-theme='light'][data-glow='liquidglass'][data-light-flow='off'] .field[data-glow] .prediction::after {
+	animation: none;
+}
+
+.stage[data-theme='light'][data-glow='liquidglass'][data-light-flow='off'] .field[data-glow] .tail::before {
+	animation: liquidglass-frost-in-v2 700ms ease-out 300ms both;
+}
+
+.stage[data-theme='light'][data-glow='liquidglass'][data-light-flow='off'] .field[data-glow] .next-word {
+	animation: liquidglass-word-magnify-v2 720ms cubic-bezier(0.34, 1.4, 0.44, 1) 180ms both;
+}
+
+.stage[data-theme='light'][data-glow='liquidglass'][data-light-flow='off'] .field[data-glow] .next-word::before {
+	animation: liquidglass-lozenge-spread-v2 860ms cubic-bezier(0.3, 0.75, 0.3, 1) 120ms both;
+}
+
+.stage[data-theme='light'][data-glow='liquidglass'][data-light-flow='off'] .field[data-glow] .next-word::after {
+	animation: liquidglass-sweep-v2 640ms cubic-bezier(0.3, 0.6, 0.2, 1) 420ms both;
+}
+
+.stage[data-theme='light'][data-glow='liquidglass'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
+	animation: liquidglass-glyph-rise-light-v2 640ms cubic-bezier(0.3, 0.7, 0.3, 1) both;
+	animation-delay: calc(300ms + var(--i) * 60ms);
+}
+
+.stage[data-theme='light'][data-glow='liquidglass'][data-light-flow='off'] .field[data-glow] .next-word .glyph::after {
+	animation: liquidglass-alt-lift-v2 480ms cubic-bezier(0.4, 0.1, 0.6, 1) both;
+	animation-delay: calc(300ms + var(--i) * 60ms);
+}
+
+/* ---------- Waiting state: one droplet, thinking ---------- */
+.field[data-state='waiting'][data-glow='liquidglass'] {
+	--layer-radius: 999px;
+	--haze-width: 4.4em;
+	--haze-height: 2.6em;
+	--haze-size: 100% 100%;
+	--haze-bg: radial-gradient(ellipse 1.5em 0.9em at 0.75em 50%, rgba(180, 215, 250, 0.14), transparent 78%);
+	--haze-filter: blur(9px) saturate(1.1);
+	--haze-opacity: 0.6;
+	--haze-mask: linear-gradient(90deg, transparent 0, black 0.3em), radial-gradient(ellipse 50% 50% at 34% 50%, black 0 46%, rgba(0, 0, 0, 0.5) 72%, transparent 96%);
+	--body-opacity: 0;
+	--core-width: 0.64em;
+	--core-height: 0.68em;
+	--core-size: 100% 100%;
+	--core-bg:
+		radial-gradient(circle at 32% 26%, rgba(255, 255, 255, 0.85) 0 12%, rgba(255, 255, 255, 0.15) 30%, transparent 46%),
+		radial-gradient(circle at 50% 55%, rgba(190, 220, 250, 0.1) 0 40%, rgba(235, 248, 255, 0.5) 66% 80%, rgba(150, 185, 225, 0.25) 88%, transparent 96%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(170, 205, 245, 0.08) 55%, rgba(220, 240, 255, 0.16));
+	--core-filter: blur(0.2px) drop-shadow(0 0.14em 0.3em rgba(0, 0, 0, 0.35));
+	--core-opacity: 0.95;
+	--core-mask: none;
+	--flow-width: 0.64em;
+	--flow-height: 0.68em;
+	--flow-size: 0.2em 0.2em;
+	--flow-bg: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.95) 0 26%, rgba(255, 255, 255, 0.2) 55%, transparent 75%) 0.1em 0.12em no-repeat;
+	--flow-filter: blur(0.2px);
+	--flow-low: 0.9;
+	--flow-high: 0.9;
+	--flow-motion: liquidglass-wait-glint-v2 3.6s ease-in-out infinite;
+	--flow-mask: none;
+	--spark-width: 2em;
+	--spark-height: 2.6em;
+	--spark-size: auto;
+	--spark-bg: none;
+	--spark-low: 0;
+	--spark-high: 0;
+	--spark-motion: none;
+	--smoke-width: 3.4em;
+	--smoke-height: 2.6em;
+	--smoke-size: auto;
+	--smoke-bg: radial-gradient(ellipse 1.1em 0.28em at 0.62em 1.98em, rgba(2, 6, 12, 0.5), transparent 80%);
+	--smoke-filter: blur(5px);
+	--smoke-opacity: 0.6;
+	--smoke-blend: normal;
+	--smoke-motion: liquidglass-wait-pool-v2 5.2s ease-in-out infinite;
+	--smoke-mask: linear-gradient(90deg, transparent 0, black 0.24em), radial-gradient(ellipse 50% 50% at 36% 56%, black 0 48%, transparent 94%);
+	--aux-opacity: 0;
+	--aux-motion: none;
+}
+
+.field[data-theme='light'][data-state='waiting'][data-glow='liquidglass'] {
+	--haze-bg: radial-gradient(ellipse 1.5em 0.9em at 0.75em 50%, rgba(140, 175, 220, 0.12), transparent 78%);
+	--haze-filter: blur(8px) saturate(0.98);
+	--haze-opacity: 0.55;
+	--core-bg:
+		radial-gradient(circle at 32% 26%, rgba(255, 255, 255, 0.98) 0 12%, rgba(255, 255, 255, 0.3) 30%, transparent 46%),
+		radial-gradient(circle at 50% 55%, rgba(210, 228, 248, 0.2) 0 40%, rgba(96, 122, 158, 0.5) 66% 80%, rgba(140, 165, 200, 0.22) 88%, transparent 96%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.4), rgba(170, 195, 228, 0.14) 55%, rgba(205, 222, 244, 0.3));
+	--core-filter: blur(0.2px) drop-shadow(0 0.12em 0.24em rgba(60, 85, 120, 0.3));
+	--core-opacity: 0.92;
+	--flow-bg: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.98) 0 26%, rgba(255, 255, 255, 0.3) 55%, transparent 75%) 0.1em 0.12em no-repeat;
+	--flow-low: 0.85;
+	--flow-high: 0.85;
+	--smoke-bg: radial-gradient(ellipse 1.1em 0.28em at 0.62em 1.98em, rgba(80, 104, 140, 0.28), transparent 80%);
+	--smoke-opacity: 0.55;
+}
+
+/* Waiting + flow off: the droplet holds perfectly still. */
+.field[data-light-flow='off'][data-state='waiting'][data-glow='liquidglass'] {
+	--torch-haze-motion: none;
+	--torch-core-motion: none;
+	--flow-motion: none;
+	--smoke-motion: none;
+}
+
+/* ---------- Keyframes (liquidglass-*-v2) ---------- */
+/* LIQUID ARRIVAL: blob -> pill with an overshoot and two damped jelly
+   oscillations; the silhouette stays precise the whole way. */
+@keyframes liquidglass-lozenge-spread-v2 {
+	0% {
+		opacity: 0;
+		border-radius: 46% 54% 52% 48% / 58% 46% 54% 42%;
+		transform: scaleX(0.08) scaleY(0.52);
+	}
+	10% {
+		opacity: var(--lg-lozenge-o, 0.98);
+	}
+	34% {
+		border-radius: 44% 56% 50% 50% / 56% 44% 56% 44%;
+		transform: scaleX(0.56) scaleY(0.74);
+	}
+	58% {
+		border-radius: 999px;
+		transform: scaleX(1.06) scaleY(0.94);
+	}
+	74% {
+		transform: scaleX(0.97) scaleY(1.05);
+	}
+	87% {
+		transform: scaleX(1.015) scaleY(0.985);
+	}
+	100% {
+		opacity: var(--lg-lozenge-o, 0.98);
+		border-radius: 999px;
+		transform: scaleX(1) scaleY(1);
+	}
+}
+
+/* ...then the slab hovers, barely. */
+@keyframes liquidglass-lozenge-hover-v2 {
+	0%,
+	100% {
+		transform: translateY(0);
+	}
+	50% {
+		transform: translateY(-0.035em);
+	}
+}
+
+/* The word rises to 1.05 under the lens and stays magnified. */
+@keyframes liquidglass-word-magnify-v2 {
+	0% {
+		transform: scale(0.99);
+	}
+	55% {
+		transform: scale(1.062);
+	}
+	78% {
+		transform: scale(1.044);
+	}
+	100% {
+		transform: scale(1.05);
+	}
+}
+
+/* Glyphs pulled up into the lens: slight blur and sink below, overshoot,
+   settle crisp cool-white. Crisp is the destination, always. */
+@keyframes liquidglass-glyph-rise-v2 {
+	0% {
+		opacity: 0;
+		color: rgba(190, 212, 236, 0.25);
+		filter: blur(5px);
+		transform: translateY(0.34em) scale(0.94);
+		text-shadow: none;
+	}
+	55% {
+		opacity: 1;
+		color: rgba(255, 255, 255, 0.98);
+		filter: blur(0.7px);
+		transform: translateY(-0.05em) scale(1.03);
+		text-shadow: 0 0 14px rgba(210, 240, 255, 0.5);
+	}
+	78% {
+		filter: blur(0);
+		transform: translateY(0.015em) scale(0.995);
+	}
+	100% {
+		opacity: 1;
+		color: var(--next-color);
+		filter: blur(0);
+		transform: translateY(0) scale(1);
+		text-shadow: var(--next-shadow);
+	}
+}
+
+/* Paper version: ink condensing under the lens. */
+@keyframes liquidglass-glyph-rise-light-v2 {
+	0% {
+		opacity: 0;
+		color: rgba(150, 170, 196, 0.3);
+		filter: blur(5px);
+		transform: translateY(0.34em) scale(0.94);
+		text-shadow: none;
+	}
+	55% {
+		opacity: 1;
+		color: rgba(58, 88, 132, 0.98);
+		filter: blur(0.7px);
+		transform: translateY(-0.05em) scale(1.03);
+		text-shadow: 0 0 1px rgba(255, 255, 255, 0.9);
+	}
+	78% {
+		filter: blur(0);
+		transform: translateY(0.015em) scale(0.995);
+	}
+	100% {
+		opacity: 1;
+		color: var(--next-color);
+		filter: blur(0);
+		transform: translateY(0) scale(1);
+		text-shadow: var(--next-shadow);
+	}
+}
+
+/* The alt ghost refracts upward off the rising glyph and is gone. */
+@keyframes liquidglass-alt-lift-v2 {
+	0% {
+		opacity: 0.32;
+		transform: translateY(0.18em);
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(-0.26em);
+	}
+}
+
+/* One finite specular crossing at ignite... */
+@keyframes liquidglass-sweep-v2 {
+	0% {
+		opacity: 0;
+		background-position: -140% 0;
+	}
+	22% {
+		opacity: var(--lg-sweep-o, 0.75);
+	}
+	100% {
+		opacity: 0;
+		background-position: 240% 0;
+	}
+}
+
+/* ...then a very slow ambient sheen, mostly asleep. */
+@keyframes liquidglass-sheen-v2 {
+	0% {
+		opacity: 0;
+		background-position: -140% 0;
+	}
+	30% {
+		opacity: calc(var(--lg-sweep-o, 0.75) * 0.4);
+	}
+	55%,
+	100% {
+		opacity: 0;
+		background-position: 240% 0;
+	}
+}
+
+/* The caustic lights up on the floor... */
+@keyframes liquidglass-caustic-in-v2 {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: var(--lg-caustic-o, 0.85);
+	}
+}
+
+/* ...and sways gently, layers drifting slightly out of phase. */
+@keyframes liquidglass-caustic-sway-v2 {
+	0%,
+	100% {
+		opacity: var(--lg-caustic-o, 0.85);
+		background-position:
+			0.4em 2.06em,
+			0.8em 2.2em,
+			1.6em 2.12em,
+			4.4em 2.15em;
+	}
+	50% {
+		opacity: calc(var(--lg-caustic-o, 0.85) * 0.86);
+		background-position:
+			0.58em 2.06em,
+			0.66em 2.2em,
+			1.82em 2.12em,
+			4.22em 2.15em;
+	}
+}
+
+/* Absorption: the upper droplet slides into the slab, shrinking; a merge
+   flash pops; a long pause; the droplet reforms where it was. The lower
+   droplet only bobs. Layers: A-ring, A-glint, B-ring, B-glint, flash. */
+@keyframes liquidglass-drops-absorb-v2 {
+	0%,
+	44% {
+		background-position:
+			0.35em 2.4em,
+			0.46em 2.47em,
+			2.2em 0.42em,
+			2.28em 0.48em,
+			1.42em 0.92em;
+		background-size:
+			0.46em 0.46em,
+			0.09em 0.09em,
+			0.32em 0.32em,
+			0.07em 0.07em,
+			0em 0em;
+	}
+	56% {
+		background-position:
+			0.35em 2.37em,
+			0.46em 2.44em,
+			1.52em 0.92em,
+			1.56em 0.96em,
+			1.42em 0.92em;
+		background-size:
+			0.46em 0.46em,
+			0.09em 0.09em,
+			0.12em 0.12em,
+			0.05em 0.05em,
+			0em 0em;
+	}
+	58% {
+		background-position:
+			0.35em 2.37em,
+			0.46em 2.44em,
+			1.58em 0.98em,
+			1.6em 1em,
+			1.28em 0.68em;
+		background-size:
+			0.46em 0.46em,
+			0.09em 0.09em,
+			0em 0em,
+			0em 0em,
+			0.55em 0.55em;
+	}
+	62%,
+	84% {
+		background-position:
+			0.35em 2.4em,
+			0.46em 2.47em,
+			2.2em 0.42em,
+			2.28em 0.48em,
+			1.42em 0.92em;
+		background-size:
+			0.46em 0.46em,
+			0.09em 0.09em,
+			0em 0em,
+			0em 0em,
+			0em 0em;
+	}
+	100% {
+		background-position:
+			0.35em 2.4em,
+			0.46em 2.47em,
+			2.2em 0.42em,
+			2.28em 0.48em,
+			1.42em 0.92em;
+		background-size:
+			0.46em 0.46em,
+			0.09em 0.09em,
+			0.32em 0.32em,
+			0.07em 0.07em,
+			0em 0em;
+	}
+}
+
+/* Frost condenses over the tail... */
+@keyframes liquidglass-frost-in-v2 {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: var(--lg-frost-o, 0.85);
+	}
+}
+
+/* ...and breathes like cold air on the pane. */
+@keyframes liquidglass-frost-breathe-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--lg-frost-o, 0.85) * 0.84);
+	}
+	50% {
+		opacity: var(--lg-frost-o, 0.85);
+	}
+}
+
+/* The landing splash at the caret: flares, then leaves a faint residue. */
+@keyframes liquidglass-splash-v2 {
+	0% {
+		opacity: 0;
+	}
+	18% {
+		opacity: var(--core-opacity, 0.9);
+	}
+	100% {
+		opacity: calc(var(--core-opacity, 0.9) * 0.14);
+	}
+}
+
+/* A finite ripple sheet chases the spreading slab, then is gone. */
+@keyframes liquidglass-ripple-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-50%) translateX(-0.4em) scaleX(0.6);
+	}
+	30% {
+		opacity: var(--flow-high, 0.6);
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(-50%) translateX(4.6em) scaleX(1.1);
+	}
+}
+
+/* Ambient cool air barely breathing around the lens. */
+@keyframes liquidglass-air-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--haze-opacity, 0.65) * 0.78);
+	}
+	50% {
+		opacity: var(--haze-opacity, 0.65);
+	}
+}
+
+/* Rare glints wink on the rims. */
+@keyframes liquidglass-glints-v2 {
+	0%,
+	28%,
+	36%,
+	64%,
+	72%,
+	100% {
+		opacity: var(--spark-low, 0.08);
+	}
+	31% {
+		opacity: var(--spark-high, 0.7);
+	}
+	67% {
+		opacity: calc(var(--spark-high, 0.7) * 0.55);
+	}
+}
+
+/* The caustic web wanders on the floor. */
+@keyframes liquidglass-web-drift-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--aux-opacity, 0.55) * 0.75);
+		background-position:
+			0em 0em,
+			0em 0em;
+	}
+	50% {
+		opacity: var(--aux-opacity, 0.55);
+		background-position:
+			0.35em 0em,
+			-0.3em 0em;
+	}
+}
+
+/* The slab's shadow pool never sits quite still. */
+@keyframes liquidglass-pool-breathe-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--smoke-opacity, 0.55) * 0.8);
+	}
+	50% {
+		opacity: var(--smoke-opacity, 0.55);
+	}
+}
+
+/* Waiting: the droplet wobbles gently, a soft border-radius morph with a
+   faint jelly squish — the base translateY(-50%) must survive. */
+@keyframes liquidglass-wait-wobble-v2 {
+	0%,
+	100% {
+		border-radius: 52% 48% 55% 45% / 55% 52% 48% 45%;
+		transform: translateY(-50%) scale(1, 1);
+	}
+	25% {
+		border-radius: 46% 54% 48% 52% / 48% 55% 45% 52%;
+		transform: translateY(-50%) scale(1.03, 0.97);
+	}
+	50% {
+		border-radius: 55% 45% 50% 50% / 45% 50% 55% 50%;
+		transform: translateY(-50%) scale(0.98, 1.02);
+	}
+	75% {
+		border-radius: 48% 52% 46% 54% / 52% 46% 54% 48%;
+		transform: translateY(-50%) scale(1.02, 0.98);
+	}
+}
+
+/* ...its internal glint circles the meniscus... */
+@keyframes liquidglass-wait-glint-v2 {
+	0%,
+	100% {
+		opacity: var(--flow-high, 0.9);
+		background-position: 0.1em 0.1em;
+	}
+	25% {
+		background-position: 0.3em 0.16em;
+	}
+	50% {
+		opacity: calc(var(--flow-high, 0.9) * 0.7);
+		background-position: 0.26em 0.36em;
+	}
+	75% {
+		background-position: 0.08em 0.3em;
+	}
+}
+
+/* ...a cool halo breathes... */
+@keyframes liquidglass-wait-halo-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--haze-opacity, 0.6) * 0.7);
+	}
+	50% {
+		opacity: var(--haze-opacity, 0.6);
+	}
+}
+
+/* ...and the little shadow pool breathes with it. */
+@keyframes liquidglass-wait-pool-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--smoke-opacity, 0.6) * 0.75);
+	}
+	50% {
+		opacity: var(--smoke-opacity, 0.6);
+	}
+}

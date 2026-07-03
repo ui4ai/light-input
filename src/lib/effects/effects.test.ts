@@ -18,7 +18,8 @@ const PRESET_CSS_FILES = [
 	'src/lib/effects/biolume/index.css',
 	'src/lib/effects/ocean/index.css',
 	'src/lib/effects/horror/index.css',
-	'src/lib/effects/heart/index.css'
+	'src/lib/effects/heart/index.css',
+	'src/lib/effects/liquidglass/index.css'
 ];
 
 function readPresetCss(): string {
