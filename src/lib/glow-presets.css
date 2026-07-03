@@ -708,76 +708,6 @@
 	--tail-color: rgba(204, 229, 234, 0.34);
 }
 
-.field[data-glow='snow'] {
-	--ready-border: rgba(208, 248, 255, 0.38);
-	--ready-shadow:
-		0 1px 0 rgba(255, 255, 255, 0.09) inset,
-		0 -34px 86px rgba(6, 20, 32, 0.54) inset,
-		0 32px 68px rgba(0, 0, 0, 0.43),
-		0 0 118px rgba(130, 214, 255, 0.2);
-	--field-wash:
-		linear-gradient(90deg, rgba(220, 252, 255, 0.11), rgba(75, 162, 255, 0.07) 52%, transparent 84%),
-		radial-gradient(ellipse 38% 90% at 22% 50%, rgba(255, 255, 255, 0.1), transparent 72%);
-	--caret-gradient: linear-gradient(180deg, rgb(255, 255, 255), rgb(220, 252, 255) 32%, rgb(126, 210, 255) 66%, rgb(76, 126, 212));
-	--caret-shadow:
-		0 0 9px rgba(255, 255, 255, 0.74),
-		0 0 26px rgba(174, 232, 255, 0.48),
-		0 0 52px rgba(80, 160, 255, 0.22);
-	--haze-width: 9.8em;
-	--haze-height: 2.42em;
-	--haze-bg:
-		radial-gradient(ellipse 32% 56% at 10% 50%, rgba(255, 255, 255, 0.4), transparent 64%),
-		linear-gradient(90deg, rgba(232, 255, 255, 0.24), rgba(119, 205, 255, 0.18) 44%, rgba(78, 132, 226, 0.1) 74%, transparent 94%);
-	--haze-filter: blur(26px);
-	--haze-opacity: 0.86;
-	--haze-motion: snow-drift 6.2s ease-in-out 640ms infinite;
-	--torch-haze-motion: snow-drift 4.6s ease-in-out infinite;
-	--body-width: 7.8em;
-	--body-height: 1.58em;
-	--body-bg: radial-gradient(ellipse 72% 58% at 0% 50%, rgba(255, 255, 255, 0.58), rgba(174, 232, 255, 0.32) 42%, rgba(79, 150, 235, 0.1) 78%, transparent);
-	--body-filter: blur(17px);
-	--body-opacity: 0.84;
-	--core-bg: radial-gradient(ellipse 66% 50% at 0% 50%, rgba(255, 255, 255, 0.92), rgba(202, 248, 255, 0.5) 42%, rgba(90, 167, 245, 0) 84%);
-	--flow-bg: linear-gradient(90deg, transparent, rgba(245, 255, 255, 0.22) 16%, rgba(130, 214, 255, 0.2) 46%, rgba(70, 126, 224, 0.1) 74%, transparent);
-	--flow-filter: blur(18px);
-	--flow-low: 0.08;
-	--flow-high: 0.44;
-	--flow-motion: snow-drift 5.4s ease-in-out infinite;
-	--spark-width: 8.6em;
-	--spark-height: 1.8em;
-	--spark-bg:
-		radial-gradient(circle at 9% 45%, rgba(255, 255, 255, 0.82), transparent 2.6%),
-		radial-gradient(circle at 21% 62%, rgba(210, 248, 255, 0.62), transparent 3.2%),
-		radial-gradient(circle at 42% 36%, rgba(255, 255, 255, 0.54), transparent 2.8%),
-		radial-gradient(circle at 65% 58%, rgba(134, 214, 255, 0.38), transparent 3.5%),
-		radial-gradient(circle at 88% 42%, rgba(230, 255, 255, 0.36), transparent 2.6%);
-	--spark-filter: blur(0.3px) drop-shadow(0 0 10px rgba(196, 242, 255, 0.56));
-	--spark-high: 0.52;
-	--spark-motion: snow-flurry 4.2s ease-in-out infinite;
-	--smoke-bg:
-		radial-gradient(ellipse 36% 62% at 20% 48%, rgba(230, 250, 255, 0.14), transparent 72%),
-		radial-gradient(ellipse 52% 72% at 68% 58%, rgba(89, 134, 200, 0.08), transparent 80%);
-	--smoke-opacity: 0.22;
-	--smoke-motion: snow-drift 7s ease-in-out infinite;
-	--aux-width: 9em;
-	--aux-height: 2.2em;
-	--aux-bg:
-		radial-gradient(circle at 8% 32%, rgba(255, 255, 255, 0.86), transparent 2.2%),
-		radial-gradient(circle at 18% 66%, rgba(197, 242, 255, 0.64), transparent 1.8%),
-		radial-gradient(circle at 32% 42%, rgba(255, 255, 255, 0.78), transparent 2%),
-		radial-gradient(circle at 49% 70%, rgba(220, 250, 255, 0.58), transparent 1.7%),
-		radial-gradient(circle at 64% 30%, rgba(255, 255, 255, 0.7), transparent 2%),
-		radial-gradient(circle at 82% 58%, rgba(140, 220, 255, 0.52), transparent 2.4%);
-	--aux-filter: blur(0.35px) drop-shadow(0 0 8px rgba(205, 246, 255, 0.54));
-	--aux-opacity: 0.72;
-	--aux-motion: snow-flurry 5s ease-in-out infinite;
-	--next-color: rgba(238, 253, 255, 0.96);
-	--next-shadow:
-		0 0 12px rgba(213, 250, 255, 0.44),
-		0 0 32px rgba(94, 176, 245, 0.18);
-	--tail-color: rgba(210, 230, 238, 0.34);
-}
-
 .field[data-glow='toxic'] {
 	--ready-border: rgba(199, 255, 45, 0.46);
 	--ready-shadow:
@@ -931,39 +861,6 @@
 
 /* Refined hero glows: each keeps the shared beam anatomy, but pushes
    texture, movement, and color language further than the base presets. */
-
-.field[data-glow='snow'] {
-	--ready-border: rgba(220, 252, 255, 0.48);
-	--field-wash:
-		radial-gradient(ellipse 28% 86% at 20% 50%, rgba(255, 255, 255, 0.16), transparent 70%),
-		linear-gradient(90deg, rgba(233, 253, 255, 0.13), rgba(88, 176, 255, 0.08) 54%, transparent 88%);
-	--haze-width: 7.2em;
-	--haze-height: 2.75em;
-	--haze-filter: blur(24px) brightness(1.05);
-	--spark-bg:
-		radial-gradient(circle at 8% 42%, rgba(255, 255, 255, 0.95), transparent 2.2%),
-		radial-gradient(circle at 17% 66%, rgba(203, 246, 255, 0.74), transparent 2%),
-		radial-gradient(circle at 29% 32%, rgba(255, 255, 255, 0.78), transparent 1.9%),
-		radial-gradient(circle at 43% 70%, rgba(188, 238, 255, 0.64), transparent 2.1%),
-		radial-gradient(circle at 58% 38%, rgba(255, 255, 255, 0.66), transparent 1.8%),
-		radial-gradient(circle at 76% 62%, rgba(142, 218, 255, 0.48), transparent 2.4%),
-		radial-gradient(circle at 91% 36%, rgba(240, 255, 255, 0.42), transparent 1.8%);
-	--spark-motion: snow-sparkle-drift 4.8s ease-in-out infinite;
-	--aux-width: 10em;
-	--aux-height: 2.7em;
-	--aux-bg:
-		linear-gradient(0deg, transparent 42%, rgba(255, 255, 255, 0.45) 43% 45%, transparent 46%),
-		linear-gradient(90deg, transparent 47%, rgba(255, 255, 255, 0.44) 48% 50%, transparent 51%),
-		radial-gradient(circle at 10% 30%, rgba(255, 255, 255, 0.86), transparent 2%),
-		radial-gradient(circle at 22% 70%, rgba(200, 244, 255, 0.7), transparent 1.8%),
-		radial-gradient(circle at 40% 42%, rgba(255, 255, 255, 0.78), transparent 2%),
-		radial-gradient(circle at 61% 74%, rgba(214, 250, 255, 0.58), transparent 1.8%),
-		radial-gradient(circle at 80% 34%, rgba(150, 222, 255, 0.52), transparent 2.3%);
-	--aux-size: 18px 18px, 18px 18px, auto, auto, auto, auto, auto;
-	--aux-filter: blur(0.25px) drop-shadow(0 0 9px rgba(210, 248, 255, 0.68));
-	--aux-opacity: 0.78;
-	--aux-motion: snow-crystal-drift 6s ease-in-out infinite;
-}
 
 .field[data-glow='toxic'] {
 	--ready-border: rgba(205, 255, 43, 0.55);
@@ -1233,76 +1130,7 @@
 	--tail-color: rgba(194, 230, 228, 0.32);
 }
 
-/* Second-pass polish from screenshot QA. */
-
-.field[data-glow='snow'] {
-	--field-wash:
-		radial-gradient(ellipse 28% 86% at 20% 50%, rgba(255, 255, 255, 0.14), transparent 70%),
-		linear-gradient(90deg, rgba(233, 253, 255, 0.12), rgba(88, 176, 255, 0.075) 54%, transparent 88%);
-	--aux-bg:
-		linear-gradient(90deg, rgba(255, 255, 255, 0.12), rgba(150, 220, 255, 0.08), transparent 82%),
-		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='148' height='58' viewBox='0 0 148 58'%3E%3Cg fill='none' stroke='%23effcff' stroke-width='0.8' stroke-linecap='round' opacity='0.85'%3E%3Cpath d='M12 8v8M8 12h8M9.3 9.3l5.4 5.4M14.7 9.3l-5.4 5.4'/%3E%3Cpath d='M62 18v7M58.5 21.5h7M59.6 19.1l4.8 4.8M64.4 19.1l-4.8 4.8' opacity='0.7'/%3E%3Cpath d='M112 10v8M108 14h8M109.4 11.4l5.2 5.2M114.6 11.4l-5.2 5.2' opacity='0.76'/%3E%3C/g%3E%3Cg fill='%23f7ffff'%3E%3Ccircle cx='31' cy='36' r='1.2' opacity='0.8'/%3E%3Ccircle cx='84' cy='42' r='1.4' opacity='0.7'/%3E%3Ccircle cx='132' cy='32' r='1.1' opacity='0.62'/%3E%3Ccircle cx='44' cy='12' r='0.9' opacity='0.7'/%3E%3Ccircle cx='102' cy='48' r='0.9' opacity='0.58'/%3E%3C/g%3E%3C/svg%3E");
-	--aux-size: 100% 100%, 148px 58px;
-	--aux-filter: blur(0.18px) drop-shadow(0 0 10px rgba(215, 250, 255, 0.74));
-	--aux-opacity: 0.84;
-	--spark-high: 0.62;
-}
-
 /* Final hero-effect pass: richer concepts, soft masks, no visible layer edges. */
-
-.field[data-glow='snow'] {
-	--ready-border: rgba(209, 250, 255, 0.36);
-	--field-wash:
-		radial-gradient(ellipse 30% 88% at 20% 48%, rgba(255, 255, 255, 0.17), transparent 70%),
-		linear-gradient(90deg, rgba(224, 252, 255, 0.13), rgba(94, 177, 255, 0.07) 56%, transparent 88%);
-	--haze-width: 9.6em;
-	--haze-height: 2.35em;
-	--haze-bg:
-		linear-gradient(90deg, rgba(255, 255, 255, 0.38), rgba(176, 236, 255, 0.24) 42%, rgba(72, 150, 255, 0.1) 76%, transparent),
-		radial-gradient(ellipse 32% 72% at 16% 50%, rgba(255, 255, 255, 0.28), transparent 72%);
-	--haze-filter: blur(20px);
-	--haze-opacity: 0.78;
-	--body-width: 7.2em;
-	--body-height: 1.36em;
-	--body-bg: linear-gradient(90deg, rgba(255, 255, 255, 0.62), rgba(195, 244, 255, 0.32) 42%, rgba(103, 177, 255, 0.12) 72%, transparent);
-	--body-filter: blur(11px);
-	--body-opacity: 0.8;
-	--core-width: 3em;
-	--core-height: 0.86em;
-	--core-bg: radial-gradient(ellipse 72% 52% at 0% 50%, rgba(255, 255, 255, 0.96), rgba(198, 249, 255, 0.58) 42%, rgba(120, 195, 255, 0) 82%);
-	--core-filter: blur(5px);
-	--flow-width: 8.8em;
-	--flow-height: 1.8em;
-	--flow-bg: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3) 16%, rgba(174, 235, 255, 0.22) 42%, rgba(92, 166, 255, 0.1) 70%, transparent 92%);
-	--flow-filter: blur(16px);
-	--flow-high: 0.5;
-	--spark-width: 8.8em;
-	--spark-height: 2.25em;
-	--spark-bg:
-		radial-gradient(circle at 9% 26%, rgba(255, 255, 255, 0.95), transparent 2.4%),
-		radial-gradient(circle at 18% 68%, rgba(231, 253, 255, 0.78), transparent 2.2%),
-		radial-gradient(circle at 34% 44%, rgba(255, 255, 255, 0.72), transparent 2.1%),
-		radial-gradient(circle at 50% 66%, rgba(184, 239, 255, 0.56), transparent 2%),
-		radial-gradient(circle at 70% 34%, rgba(242, 255, 255, 0.42), transparent 1.9%);
-	--spark-filter: blur(0.25px) drop-shadow(0 0 11px rgba(215, 250, 255, 0.74));
-	--spark-high: 0.7;
-	--spark-motion: snow-glisten 5.4s ease-in-out infinite;
-	--aux-width: 8.8em;
-	--aux-height: 2.35em;
-	--aux-bg:
-		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='176' height='72' viewBox='0 0 176 72'%3E%3Cg fill='none' stroke='%23f5ffff' stroke-width='1' stroke-linecap='round'%3E%3Cg opacity='.86'%3E%3Cpath d='M18 10v11M12.5 15.5h11M14.1 11.6l7.8 7.8M21.9 11.6l-7.8 7.8'/%3E%3C/g%3E%3Cg opacity='.72'%3E%3Cpath d='M76 30v10M71 35h10M72.4 31.4l7.2 7.2M79.6 31.4l-7.2 7.2'/%3E%3C/g%3E%3Cg opacity='.66'%3E%3Cpath d='M139 16v12M133 22h12M134.8 17.8l8.4 8.4M143.2 17.8l-8.4 8.4'/%3E%3C/g%3E%3C/g%3E%3Cg fill='%23ffffff'%3E%3Ccircle cx='44' cy='49' r='1.5' opacity='.78'/%3E%3Ccircle cx='108' cy='55' r='1.2' opacity='.7'/%3E%3Ccircle cx='156' cy='44' r='1.1' opacity='.58'/%3E%3Ccircle cx='56' cy='15' r='1' opacity='.72'/%3E%3C/g%3E%3C/svg%3E"),
-		linear-gradient(90deg, rgba(255, 255, 255, 0.12), rgba(166, 234, 255, 0.08) 42%, transparent 82%);
-	--aux-size: 176px 72px, 100% 100%;
-	--aux-filter: blur(0.12px) drop-shadow(0 0 12px rgba(224, 252, 255, 0.7));
-	--aux-opacity: 0.86;
-	--aux-motion: snow-crystal-drift 7s ease-in-out infinite;
-	--aux-mask: radial-gradient(ellipse 88% 80% at 25% 50%, black 0 48%, rgba(0, 0, 0, 0.62) 68%, transparent 100%);
-	--next-color: rgba(241, 254, 255, 0.98);
-	--next-shadow:
-		0 0 9px rgba(232, 255, 255, 0.44),
-		0 0 24px rgba(118, 203, 255, 0.28);
-	--tail-color: rgba(204, 236, 245, 0.34);
-}
 
 .field[data-glow='toxic'] {
 	--ready-border: rgba(190, 255, 40, 0.4);
@@ -1658,7 +1486,6 @@
 
 /* Edge polish for high-energy variants: dissolve light before layer bounds. */
 .field[data-glow='blackhole'],
-.field[data-glow='snow'],
 .field[data-glow='toxic'],
 .field[data-glow='vortex'],
 .field[data-glow='optic'],
@@ -1679,7 +1506,6 @@
 	--layer-clip: inset(0 round 999px);
 }
 
-.field[data-glow='snow'],
 .field[data-glow='toxic'],
 .field[data-glow='vortex'],
 .field[data-glow='biolume'],
@@ -1703,34 +1529,6 @@
 }
 
 /* Deep polish pass: custom looks for the special variants only. */
-
-.field[data-glow='snow'] {
-	--ready-border: rgba(219, 252, 255, 0.4);
-	--field-wash:
-		radial-gradient(ellipse 28% 88% at 20% 48%, rgba(255, 255, 255, 0.18), transparent 68%),
-		linear-gradient(90deg, rgba(231, 253, 255, 0.13), rgba(88, 170, 255, 0.08) 54%, transparent 86%);
-	--haze-bg:
-		linear-gradient(90deg, rgba(255, 255, 255, 0.42), rgba(198, 246, 255, 0.27) 34%, rgba(82, 164, 255, 0.1) 70%, transparent),
-		radial-gradient(ellipse 28% 74% at 18% 48%, rgba(255, 255, 255, 0.32), transparent 70%);
-	--haze-filter: blur(17px);
-	--haze-motion: snow-breath-crystal 6.8s ease-in-out infinite;
-	--body-bg: linear-gradient(90deg, rgba(255, 255, 255, 0.7), rgba(202, 247, 255, 0.34) 38%, rgba(112, 190, 255, 0.11) 68%, transparent);
-	--core-bg: radial-gradient(ellipse 72% 52% at 0% 50%, rgba(255, 255, 255, 1), rgba(213, 250, 255, 0.66) 42%, rgba(118, 198, 255, 0) 82%);
-	--spark-bg:
-		radial-gradient(circle at 9% 24%, rgba(255, 255, 255, 1), transparent 2.4%),
-		radial-gradient(circle at 18% 68%, rgba(231, 253, 255, 0.82), transparent 2.2%),
-		radial-gradient(circle at 34% 44%, rgba(255, 255, 255, 0.76), transparent 2.1%),
-		radial-gradient(circle at 52% 64%, rgba(184, 239, 255, 0.6), transparent 2%),
-		radial-gradient(circle at 72% 34%, rgba(242, 255, 255, 0.46), transparent 1.9%);
-	--spark-motion: snow-glisten-deep 6.4s ease-in-out infinite;
-	--aux-bg:
-		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='184' height='82' viewBox='0 0 184 82'%3E%3Cg fill='none' stroke='%23f6ffff' stroke-width='1' stroke-linecap='round'%3E%3Cg opacity='.88'%3E%3Cpath d='M18 11v13M11.5 17.5h13M13.3 12.8l9.4 9.4M22.7 12.8l-9.4 9.4'/%3E%3C/g%3E%3Cg opacity='.74'%3E%3Cpath d='M78 34v11M72.5 39.5h11M74.1 35.6l7.8 7.8M81.9 35.6l-7.8 7.8'/%3E%3C/g%3E%3Cg opacity='.7'%3E%3Cpath d='M146 17v14M139 24h14M141 19l10 10M151 19l-10 10'/%3E%3C/g%3E%3C/g%3E%3Cg fill='%23ffffff'%3E%3Ccircle cx='45' cy='58' r='1.5' opacity='.82'/%3E%3Ccircle cx='112' cy='62' r='1.2' opacity='.74'/%3E%3Ccircle cx='162' cy='52' r='1.1' opacity='.62'/%3E%3Ccircle cx='58' cy='17' r='1' opacity='.74'/%3E%3C/g%3E%3C/svg%3E"),
-		linear-gradient(90deg, rgba(255, 255, 255, 0.12), rgba(168, 235, 255, 0.08) 42%, transparent 78%);
-	--aux-size: 184px 82px, 100% 100%;
-	--aux-filter: blur(0.05px) drop-shadow(0 0 12px rgba(226, 252, 255, 0.74));
-	--aux-opacity: 0.86;
-	--aux-motion: snow-drift-deep 8.2s ease-in-out infinite;
-}
 
 .field[data-glow='vortex'] {
 	--ready-border: rgba(116, 232, 255, 0.36);
@@ -2056,21 +1854,6 @@
 	--smoke-opacity: 0.08;
 }
 
-.field[data-theme='light'][data-glow='snow'] {
-	--ready-border: rgba(72, 145, 190, 0.3);
-	--haze-opacity: 0.5;
-	--body-opacity: 0.58;
-	--core-opacity: 0.72;
-	--flow-high: 0.22;
-	--spark-high: 0.22;
-	--smoke-opacity: 0.08;
-	--aux-opacity: 0.34;
-	--next-color: rgba(42, 83, 112, 0.84);
-	--next-shadow:
-		0 0 9px rgba(103, 190, 235, 0.2),
-		0 0 24px rgba(74, 135, 220, 0.08);
-}
-
 .field[data-theme='light'][data-glow='toxic'] {
 	--ready-border: rgba(116, 164, 20, 0.34);
 	--ready-shadow:
@@ -2109,21 +1892,6 @@
 	--next-shadow:
 		0 0 9px rgba(75, 203, 230, 0.24),
 		0 0 24px rgba(203, 74, 184, 0.1);
-}
-
-.field[data-theme='light'][data-glow='snow'] {
-	--ready-border: rgba(65, 145, 190, 0.34);
-	--haze-opacity: 0.5;
-	--body-opacity: 0.58;
-	--core-opacity: 0.72;
-	--flow-high: 0.28;
-	--spark-high: 0.26;
-	--smoke-opacity: 0.08;
-	--aux-opacity: 0.4;
-	--next-color: rgba(38, 78, 108, 0.88);
-	--next-shadow:
-		0 0 8px rgba(120, 205, 240, 0.24),
-		0 0 22px rgba(74, 135, 220, 0.1);
 }
 
 .field[data-theme='light'][data-glow='toxic'] {
@@ -2915,17 +2683,6 @@
 }
 
 /* Waiting indicators: these only affect loading states for Caret and Field modes. */
-
-.field[data-state='waiting'][data-glow='snow'] {
-	--haze-opacity: 0.96;
-	--body-opacity: 0.9;
-	--core-opacity: 1;
-	--flow-low: 0.16;
-	--flow-high: 0.58;
-	--spark-low: 0.22;
-	--spark-high: 0.82;
-	--smoke-opacity: 0.2;
-}
 
 .field[data-state='waiting'][data-glow='toxic'] {
 	--haze-opacity: 1;
@@ -4566,510 +4323,6 @@
 .stage[data-glow='infrared'][data-light-flow='off'] .field[data-glow] .next-word .glyph,
 .stage[data-glow='infrared'][data-light-flow='off'] .field[data-glow] .tail .glyph {
 	animation: none;
-}
-
-/* Snow is detached from the shared torch beam: wind-blown frost, no clipped lamp shape. */
-.field[data-glow='snow'] {
-	--ready-border: rgba(217, 250, 255, 0.34);
-	--ready-shadow:
-		0 1px 0 rgba(255, 255, 255, 0.08) inset,
-		0 -36px 104px rgba(2, 11, 24, 0.74) inset,
-		0 34px 72px rgba(0, 0, 0, 0.5),
-		0 0 68px rgba(140, 225, 255, 0.14),
-		0 0 126px rgba(80, 150, 255, 0.08);
-	--field-wash:
-		radial-gradient(ellipse 42% 138% at 78% -34%, rgba(234, 254, 255, 0.15), rgba(104, 190, 255, 0.045) 42%, transparent 72%),
-		radial-gradient(ellipse 44% 94% at 12% 62%, rgba(255, 255, 255, 0.08), rgba(135, 218, 255, 0.035) 48%, transparent 80%),
-		repeating-linear-gradient(104deg, transparent 0 0.78em, rgba(230, 252, 255, 0.04) 0.82em 0.85em, transparent 0.9em 1.46em),
-		radial-gradient(circle at 72% 30%, rgba(255, 255, 255, 0.2) 0 0.04em, transparent 0.07em),
-		radial-gradient(circle at 86% 48%, rgba(196, 240, 255, 0.16) 0 0.035em, transparent 0.065em),
-		radial-gradient(circle at 60% 72%, rgba(255, 255, 255, 0.16) 0 0.032em, transparent 0.062em);
-	--caret-gradient: linear-gradient(180deg, rgb(255, 255, 255), rgb(231, 253, 255) 31%, rgb(126, 214, 255) 66%, rgb(64, 122, 232));
-	--caret-shadow:
-		0 0 7px rgba(255, 255, 255, 0.84),
-		0 0 22px rgba(178, 238, 255, 0.54),
-		0 0 46px rgba(82, 154, 255, 0.28);
-	--next-color: rgba(246, 254, 255, 0.98);
-	--next-shadow:
-		0 0 6px rgba(249, 255, 255, 0.66),
-		0 0 18px rgba(170, 232, 255, 0.32),
-		0 0 34px rgba(78, 146, 245, 0.16);
-	--tail-color: rgba(194, 228, 244, 0.25);
-}
-
-.stage[data-glow='snow'] .field[data-glow] {
-	background:
-		radial-gradient(ellipse 90% 180% at 78% -36%, rgba(88, 154, 220, 0.12), transparent 52%),
-		linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0) 44%),
-		linear-gradient(90deg, rgba(7, 11, 17, 0.995), rgba(10, 17, 27, 0.99) 48%, rgba(14, 24, 38, 0.97));
-}
-
-.stage[data-glow='snow'] .field[data-glow]::before {
-	background: var(--field-wash);
-	background-size:
-		100% 100%,
-		100% 100%,
-		100% 100%;
-	opacity: 0.82;
-	mix-blend-mode: screen;
-	animation: none;
-}
-
-.stage[data-glow='snow'][data-light-flow='on'] .field[data-glow][data-state='ready']::before,
-.stage[data-glow='snow'][data-light-flow='on'] .field[data-glow][data-state='waiting'][data-loading-glow='field']::before {
-	animation: snow-field-breath 7.6s ease-in-out infinite;
-}
-
-.stage[data-glow='snow'] .field[data-glow] .caret-origin-glow[data-mode='ready'],
-.stage[data-glow='snow'] .field[data-glow] .prediction > .beam {
-	display: none;
-}
-
-.stage[data-glow='snow'] .field[data-glow] .paint {
-	overflow: visible;
-	clip-path: inset(-3em -4.2em -3em 0);
-}
-
-.stage[data-glow='snow'] .field[data-glow] .edge-left {
-	width: 150px;
-	background: linear-gradient(90deg, rgba(7, 10, 15, 0.92), rgba(12, 23, 34, 0.42) 44%, transparent);
-	opacity: 0;
-}
-
-.stage[data-glow='snow'] .field[data-glow] .viewport.scrolled .edge-left {
-	opacity: 0;
-}
-
-.stage[data-glow='snow'] .field[data-glow] .edge-right {
-	width: 168px;
-	background: linear-gradient(270deg, rgba(10, 18, 28, 0.68), rgba(14, 30, 44, 0.28) 46%, transparent);
-	opacity: 0;
-}
-
-.stage[data-glow='snow'] .field[data-glow] .prediction {
-	isolation: isolate;
-}
-
-.stage[data-glow='snow'] .field[data-glow] .prediction::before {
-	position: absolute;
-	left: -0.48em;
-	top: 50%;
-	z-index: -4;
-	width: 5.9em;
-	height: 2.55em;
-	content: '';
-	pointer-events: none;
-	background:
-		radial-gradient(ellipse 16% 34% at 10% 50%, rgba(255, 255, 255, 0.58), rgba(218, 250, 255, 0.16) 48%, transparent 76%),
-		linear-gradient(100deg, rgba(255, 255, 255, 0.13), rgba(190, 242, 255, 0.09) 24%, rgba(88, 160, 248, 0.03) 48%, transparent 64%),
-		repeating-linear-gradient(104deg, transparent 0 0.36em, rgba(242, 254, 255, 0.1) 0.39em 0.412em, transparent 0.48em 0.84em);
-	border-radius: 999px;
-	filter: blur(10px) saturate(1.16);
-	-webkit-mask-image: linear-gradient(90deg, transparent 0%, black 8%, rgba(0, 0, 0, 0.72) 28%, rgba(0, 0, 0, 0.22) 46%, transparent 62%);
-	mask-image: linear-gradient(90deg, transparent 0%, black 8%, rgba(0, 0, 0, 0.72) 28%, rgba(0, 0, 0, 0.22) 46%, transparent 62%);
-	mix-blend-mode: screen;
-	opacity: 0.44;
-	transform: translateY(-50%);
-	animation: snow-veil-breathe 6.2s ease-in-out infinite;
-}
-
-.stage[data-glow='snow'] .field[data-glow] .prediction::after {
-	position: absolute;
-	left: -0.42em;
-	top: 50%;
-	z-index: -2;
-	width: 6.4em;
-	height: 2.08em;
-	content: '';
-	pointer-events: none;
-	background:
-		radial-gradient(circle at 8% 35%, rgba(255, 255, 255, 0.96) 0 0.036em, transparent 0.066em),
-		radial-gradient(circle at 17% 66%, rgba(224, 252, 255, 0.82) 0 0.03em, transparent 0.058em),
-		radial-gradient(circle at 27% 24%, rgba(255, 255, 255, 0.72) 0 0.027em, transparent 0.054em),
-		radial-gradient(circle at 39% 72%, rgba(188, 238, 255, 0.58) 0 0.032em, transparent 0.06em),
-		radial-gradient(circle at 51% 42%, rgba(255, 255, 255, 0.52) 0 0.025em, transparent 0.05em),
-		radial-gradient(circle at 64% 65%, rgba(176, 228, 255, 0.26) 0 0.026em, transparent 0.052em),
-		repeating-linear-gradient(105deg, transparent 0 0.52em, rgba(238, 254, 255, 0.16) 0.55em 0.585em, transparent 0.64em 1.08em),
-		linear-gradient(92deg, transparent, rgba(255, 255, 255, 0.05) 16%, rgba(146, 216, 255, 0.035) 40%, transparent 58%);
-	background-size:
-		100% 100%,
-		100% 100%,
-		100% 100%,
-		100% 100%,
-		100% 100%,
-		100% 100%,
-		1.4em 100%,
-		100% 100%;
-	filter: blur(0.12px) drop-shadow(0 0 7px rgba(218, 252, 255, 0.64));
-	-webkit-mask-image: linear-gradient(90deg, transparent 0%, black 7%, black 38%, rgba(0, 0, 0, 0.36) 52%, transparent 66%);
-	mask-image: linear-gradient(90deg, transparent 0%, black 7%, black 38%, rgba(0, 0, 0, 0.36) 52%, transparent 66%);
-	mix-blend-mode: screen;
-	opacity: 0.9;
-	transform: translateY(-50%);
-	animation: snow-powder-drift 7.4s ease-in-out infinite;
-}
-
-.stage[data-glow='snow'] .field[data-glow] .next-word {
-	position: relative;
-	isolation: isolate;
-	color: rgba(246, 254, 255, 0.96);
-	background:
-		linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(226, 253, 255, 0.98) 42%, rgba(150, 222, 255, 0.88)),
-		linear-gradient(90deg, rgba(255, 255, 255, 0.08), transparent 36%, rgba(110, 188, 255, 0.08) 70%, transparent);
-	-webkit-background-clip: text;
-	background-clip: text;
-	text-shadow:
-		0 0 5px rgba(249, 255, 255, 0.72),
-		0 0 15px rgba(170, 232, 255, 0.38),
-		0 0 32px rgba(78, 146, 245, 0.18);
-}
-
-.stage[data-glow='snow'] .field[data-glow] .next-word::before {
-	position: absolute;
-	inset: -0.34em -0.18em -0.26em -0.18em;
-	z-index: -1;
-	content: '';
-	pointer-events: none;
-	background:
-		linear-gradient(108deg, transparent 0 34%, rgba(255, 255, 255, 0.62) 44%, rgba(174, 238, 255, 0.2) 52%, transparent 66%),
-		radial-gradient(ellipse 62% 34% at 24% 54%, rgba(255, 255, 255, 0.16), transparent 70%);
-	background-size:
-		220% 100%,
-		100% 100%;
-	filter: blur(6px);
-	-webkit-mask-image: linear-gradient(90deg, transparent 0%, black 16%, black 68%, transparent 100%);
-	mask-image: linear-gradient(90deg, transparent 0%, black 16%, black 68%, transparent 100%);
-	opacity: 0.62;
-	mix-blend-mode: screen;
-	animation: snow-word-glint 5.8s ease-in-out infinite;
-}
-
-.stage[data-glow='snow'] .field[data-glow] .tail {
-	color: rgba(194, 228, 244, 0.24);
-	filter: blur(0.18px);
-	text-shadow: 0 0 14px rgba(130, 208, 255, 0.11);
-}
-
-.stage[data-glow='snow'] .field[data-glow] .next-word .glyph:nth-child(3n + 1) {
-	color: rgba(255, 255, 255, 0.98);
-	filter: drop-shadow(0 0 0.05em rgba(255, 255, 255, 0.74));
-}
-
-.stage[data-glow='snow'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
-	color: rgba(226, 252, 255, 0.96);
-	filter: drop-shadow(0 0 0.045em rgba(176, 235, 255, 0.54));
-}
-
-.stage[data-glow='snow'] .field[data-glow] .next-word .glyph:nth-child(4n + 1) {
-	animation: snow-glyph-freeze 4.9s ease-in-out infinite;
-}
-
-.stage[data-glow='snow'] .field[data-glow] .next-word .glyph:nth-child(4n + 3) {
-	animation: snow-glyph-freeze 5.4s ease-in-out 180ms infinite;
-}
-
-.stage[data-glow='snow'][data-light-flow='off'] .field[data-glow]::before,
-.stage[data-glow='snow'][data-light-flow='off'] .field[data-glow] .prediction::before,
-.stage[data-glow='snow'][data-light-flow='off'] .field[data-glow] .prediction::after,
-.stage[data-glow='snow'][data-light-flow='off'] .field[data-glow] .next-word::before {
-	animation: none;
-}
-
-.field[data-theme='light'][data-glow='snow'] {
-	--ready-border: rgba(86, 162, 204, 0.32);
-	--ready-shadow:
-		0 1px 0 rgba(255, 255, 255, 0.96) inset,
-		0 -20px 56px rgba(108, 182, 218, 0.12) inset,
-		0 18px 46px rgba(42, 52, 74, 0.12),
-		0 0 66px rgba(90, 178, 225, 0.1);
-	--field-wash:
-		radial-gradient(ellipse 40% 132% at 78% -34%, rgba(255, 255, 255, 0.46), rgba(114, 195, 232, 0.1) 42%, transparent 72%),
-		radial-gradient(ellipse 44% 94% at 12% 62%, rgba(255, 255, 255, 0.36), rgba(135, 218, 255, 0.055) 48%, transparent 80%),
-		repeating-linear-gradient(104deg, transparent 0 0.78em, rgba(92, 166, 210, 0.034) 0.82em 0.85em, transparent 0.9em 1.46em),
-		radial-gradient(circle at 72% 30%, rgba(255, 255, 255, 0.64) 0 0.04em, transparent 0.07em),
-		radial-gradient(circle at 86% 48%, rgba(90, 158, 204, 0.16) 0 0.035em, transparent 0.065em),
-		radial-gradient(circle at 60% 72%, rgba(255, 255, 255, 0.46) 0 0.032em, transparent 0.062em);
-	--next-color: rgba(30, 72, 106, 0.9);
-	--next-shadow:
-		0 0 1px rgba(255, 255, 255, 0.86),
-		0 0 8px rgba(120, 205, 240, 0.18),
-		0 0 18px rgba(72, 140, 220, 0.07);
-	--tail-color: rgba(46, 82, 108, 0.2);
-}
-
-.stage[data-theme='light'][data-glow='snow'] .field[data-glow] {
-	background:
-		radial-gradient(ellipse 90% 180% at 78% -36%, rgba(126, 192, 232, 0.1), transparent 52%),
-		linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(246, 252, 255, 0.82) 48%, rgba(233, 243, 251, 0.84)),
-		linear-gradient(90deg, rgba(250, 253, 255, 0.99), rgba(240, 248, 253, 0.93));
-}
-
-.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .edge-left {
-	background: linear-gradient(90deg, rgba(248, 253, 255, 0.9), rgba(232, 246, 253, 0.34) 44%, transparent);
-}
-
-.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .edge-right {
-	background: linear-gradient(270deg, rgba(238, 248, 253, 0.64), rgba(218, 238, 248, 0.22) 46%, transparent);
-	opacity: 0;
-}
-
-.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .prediction::before {
-	background:
-		radial-gradient(ellipse 16% 34% at 10% 50%, rgba(255, 255, 255, 0.58), rgba(118, 194, 224, 0.12) 48%, transparent 76%),
-		linear-gradient(100deg, rgba(255, 255, 255, 0.24), rgba(116, 198, 232, 0.065) 24%, rgba(68, 132, 206, 0.02) 48%, transparent 64%),
-		repeating-linear-gradient(104deg, transparent 0 0.36em, rgba(86, 154, 204, 0.05) 0.39em 0.412em, transparent 0.48em 0.84em);
-	opacity: 0.2;
-	mix-blend-mode: normal;
-	animation: snow-veil-breathe-light 6.2s ease-in-out infinite;
-}
-
-.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .prediction::after {
-	background:
-		radial-gradient(circle at 8% 35%, rgba(255, 255, 255, 0.86) 0 0.036em, transparent 0.066em),
-		radial-gradient(circle at 17% 66%, rgba(86, 160, 204, 0.36) 0 0.03em, transparent 0.058em),
-		radial-gradient(circle at 27% 24%, rgba(255, 255, 255, 0.64) 0 0.027em, transparent 0.054em),
-		radial-gradient(circle at 39% 72%, rgba(84, 150, 196, 0.3) 0 0.032em, transparent 0.06em),
-		radial-gradient(circle at 51% 42%, rgba(255, 255, 255, 0.45) 0 0.025em, transparent 0.05em),
-		radial-gradient(circle at 64% 65%, rgba(72, 132, 190, 0.14) 0 0.026em, transparent 0.052em),
-		repeating-linear-gradient(105deg, transparent 0 0.52em, rgba(70, 136, 188, 0.08) 0.55em 0.585em, transparent 0.64em 1.08em),
-		linear-gradient(92deg, transparent, rgba(255, 255, 255, 0.12) 16%, rgba(92, 158, 204, 0.034) 40%, transparent 58%);
-	opacity: 0.5;
-	mix-blend-mode: normal;
-	animation: snow-powder-drift-light 7.4s ease-in-out infinite;
-}
-
-.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .next-word {
-	color: rgba(30, 72, 106, 0.86);
-	background:
-		linear-gradient(180deg, rgba(31, 74, 108, 0.96), rgba(48, 104, 142, 0.88) 48%, rgba(82, 138, 176, 0.76)),
-		linear-gradient(90deg, rgba(255, 255, 255, 0.18), transparent 36%, rgba(86, 160, 210, 0.08) 70%, transparent);
-	-webkit-background-clip: text;
-	background-clip: text;
-	text-shadow:
-		0 0 1px rgba(255, 255, 255, 0.86),
-		0 0 8px rgba(120, 205, 240, 0.18),
-		0 0 18px rgba(72, 140, 220, 0.07);
-}
-
-.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .next-word::before {
-	opacity: 0.18;
-	mix-blend-mode: normal;
-	animation: snow-word-glint-light 5.8s ease-in-out infinite;
-}
-
-.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .next-word .glyph,
-.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
-.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
-	color: rgba(30, 72, 106, 0.86);
-}
-
-.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .tail {
-	color: rgba(46, 82, 108, 0.2);
-	text-shadow: 0 0 12px rgba(80, 160, 210, 0.07);
-}
-
-.stage[data-theme='light'][data-glow='snow'][data-light-flow='off'] .field[data-glow]::before,
-.stage[data-theme='light'][data-glow='snow'][data-light-flow='off'] .field[data-glow] .prediction::before,
-.stage[data-theme='light'][data-glow='snow'][data-light-flow='off'] .field[data-glow] .prediction::after,
-.stage[data-theme='light'][data-glow='snow'][data-light-flow='off'] .field[data-glow] .next-word::before {
-	animation: none;
-}
-
-/* Snow final: wide powder plume and crystal dust with feathered masks, no clipped block edge. */
-.field[data-glow='snow'] {
-	--snow-crystal-tile: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22148%22%20height%3D%2278%22%20viewBox%3D%220%200%20148%2078%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23f8fdff%22%20stroke-width%3D%221.15%22%20stroke-linecap%3D%22round%22%20opacity%3D%22.82%22%3E%3Cpath%20d%3D%22M19%2011v12M13%2017h12M15%2013l8%208M23%2013l-8%208%22%2F%3E%3Cpath%20d%3D%22M92%2022v10M87%2027h10M89%2024l6%206M95%2024l-6%206%22%20opacity%3D%22.62%22%2F%3E%3Cpath%20d%3D%22M132%2052v9M128%2056h9M129%2053l6%206M135%2053l-6%206%22%20opacity%3D%22.5%22%2F%3E%3C%2Fg%3E%3Cg%20fill%3D%22%23ffffff%22%3E%3Ccircle%20cx%3D%2248%22%20cy%3D%2217%22%20r%3D%221.5%22%20opacity%3D%22.76%22%2F%3E%3Ccircle%20cx%3D%2273%22%20cy%3D%2249%22%20r%3D%221.2%22%20opacity%3D%22.64%22%2F%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2260%22%20r%3D%221%22%20opacity%3D%22.52%22%2F%3E%3Ccircle%20cx%3D%22116%22%20cy%3D%2212%22%20r%3D%221.1%22%20opacity%3D%22.55%22%2F%3E%3Ccircle%20cx%3D%22138%22%20cy%3D%2231%22%20r%3D%22.9%22%20opacity%3D%22.45%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
-	--ready-border: rgba(220, 250, 255, 0.38);
-	--ready-shadow:
-		0 1px 0 rgba(255, 255, 255, 0.1) inset,
-		0 -34px 104px rgba(2, 10, 22, 0.72) inset,
-		0 34px 72px rgba(0, 0, 0, 0.48),
-		0 0 78px rgba(154, 232, 255, 0.16),
-		0 0 136px rgba(86, 156, 255, 0.08);
-	--field-wash:
-		radial-gradient(ellipse 48% 130% at 78% -30%, rgba(242, 254, 255, 0.13), rgba(96, 180, 255, 0.04) 44%, transparent 74%),
-		radial-gradient(ellipse 64% 92% at 42% 54%, rgba(255, 255, 255, 0.055), rgba(104, 190, 255, 0.025) 52%, transparent 84%),
-		var(--snow-crystal-tile);
-	--tail-color: rgba(204, 234, 248, 0.34);
-}
-
-.stage[data-glow='snow'] .field[data-glow]::before {
-	background: var(--field-wash);
-	background-repeat:
-		no-repeat,
-		no-repeat,
-		repeat;
-	background-size:
-		100% 100%,
-		100% 100%,
-		7.2em 3.8em;
-	background-position:
-		0 0,
-		0 0,
-		0 0;
-	opacity: 0.76;
-	mix-blend-mode: screen;
-	animation: snow-field-powder-final 9.4s ease-in-out infinite;
-}
-
-.stage[data-glow='snow'] .field[data-glow] .prediction::before {
-	left: -0.72em;
-	top: 50%;
-	z-index: -4;
-	width: min(17.6em, calc(100% + 8.8em));
-	height: 3.15em;
-	border-radius: 48% 52% 46% 54% / 62% 42% 58% 38%;
-	background:
-		radial-gradient(ellipse 34% 72% at 8% 52%, rgba(255, 255, 255, 0.62), rgba(220, 250, 255, 0.2) 42%, transparent 76%),
-		radial-gradient(ellipse 80% 62% at 38% 50%, rgba(224, 250, 255, 0.28), rgba(128, 210, 255, 0.07) 56%, transparent 92%),
-		linear-gradient(100deg, transparent 0%, rgba(250, 254, 255, 0.16) 18%, rgba(178, 236, 255, 0.09) 48%, transparent 88%);
-	filter: blur(16px) saturate(1.12);
-	-webkit-mask-image: radial-gradient(ellipse 96% 82% at 26% 52%, black 0 42%, rgba(0, 0, 0, 0.54) 66%, transparent 98%);
-	mask-image: radial-gradient(ellipse 96% 82% at 26% 52%, black 0 42%, rgba(0, 0, 0, 0.54) 66%, transparent 98%);
-	opacity: 0.58;
-	mix-blend-mode: screen;
-	animation: snow-plume-breathe-final 7.6s ease-in-out infinite;
-}
-
-.stage[data-glow='snow'] .field[data-glow] .prediction::after {
-	left: -0.7em;
-	top: 50%;
-	z-index: -2;
-	width: min(18em, calc(100% + 9em));
-	height: 3.2em;
-	background:
-		var(--snow-crystal-tile),
-		radial-gradient(circle at 8% 42%, rgba(255, 255, 255, 0.95) 0 0.035em, transparent 0.07em),
-		radial-gradient(circle at 18% 68%, rgba(226, 252, 255, 0.86) 0 0.03em, transparent 0.062em),
-		radial-gradient(circle at 36% 28%, rgba(255, 255, 255, 0.64) 0 0.026em, transparent 0.056em),
-		radial-gradient(circle at 58% 65%, rgba(168, 224, 255, 0.42) 0 0.024em, transparent 0.052em),
-		linear-gradient(96deg, transparent, rgba(255, 255, 255, 0.09) 18%, rgba(128, 205, 255, 0.045) 50%, transparent 84%);
-	background-repeat:
-		repeat,
-		no-repeat,
-		no-repeat,
-		no-repeat,
-		no-repeat,
-		no-repeat;
-	background-size:
-		5.7em 3em,
-		100% 100%,
-		100% 100%,
-		100% 100%,
-		100% 100%,
-		100% 100%;
-	background-position:
-		0 0,
-		0 0,
-		0 0,
-		0 0,
-		0 0,
-		0 0;
-	filter: blur(0.14px) saturate(1.15) drop-shadow(0 0 8px rgba(226, 252, 255, 0.62));
-	-webkit-mask-image: radial-gradient(ellipse 98% 84% at 32% 50%, black 0 46%, rgba(0, 0, 0, 0.52) 70%, transparent 100%);
-	mask-image: radial-gradient(ellipse 98% 84% at 32% 50%, black 0 46%, rgba(0, 0, 0, 0.52) 70%, transparent 100%);
-	opacity: 0.72;
-	mix-blend-mode: screen;
-	animation: snow-crystal-stream-final 8.6s ease-in-out infinite;
-}
-
-.stage[data-glow='snow'] .field[data-glow] .next-word {
-	position: relative;
-	isolation: isolate;
-	z-index: 5;
-	color: rgba(247, 254, 255, 0.98);
-	background:
-		linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(232, 253, 255, 0.98) 48%, rgba(158, 224, 255, 0.9)),
-		linear-gradient(90deg, rgba(255, 255, 255, 0.1), transparent 40%, rgba(110, 188, 255, 0.08) 72%, transparent);
-	-webkit-background-clip: text;
-	background-clip: text;
-	text-shadow:
-		0 1px 1px rgba(0, 10, 20, 0.42),
-		0 0 6px rgba(250, 255, 255, 0.72),
-		0 0 18px rgba(172, 234, 255, 0.36),
-		0 0 34px rgba(78, 146, 245, 0.16);
-}
-
-.stage[data-glow='snow'] .field[data-glow] .next-word::before {
-	inset: -0.42em -1.4em -0.42em -0.22em;
-	border-radius: 999px;
-	background:
-		linear-gradient(108deg, transparent 0 30%, rgba(255, 255, 255, 0.5) 43%, rgba(174, 238, 255, 0.18) 53%, transparent 68%),
-		radial-gradient(ellipse 78% 50% at 30% 52%, rgba(255, 255, 255, 0.14), transparent 74%);
-	background-size:
-		220% 100%,
-		100% 100%;
-	filter: blur(8px);
-	-webkit-mask-image: radial-gradient(ellipse 96% 76% at 36% 50%, black 0 58%, rgba(0, 0, 0, 0.45) 78%, transparent 100%);
-	mask-image: radial-gradient(ellipse 96% 76% at 36% 50%, black 0 58%, rgba(0, 0, 0, 0.45) 78%, transparent 100%);
-	opacity: 0.48;
-	animation: snow-word-glint-final 6.2s ease-in-out infinite;
-}
-
-.stage[data-glow='snow'] .field[data-glow] .tail,
-.stage[data-glow='snow'] .field[data-glow] .tail .glyph {
-	color: rgba(204, 234, 248, 0.34);
-	filter: blur(0.1px);
-	text-shadow:
-		0 0 10px rgba(172, 232, 255, 0.14),
-		0 0 22px rgba(86, 148, 230, 0.1);
-}
-
-.field[data-theme='light'][data-glow='snow'] {
-	--ready-border: rgba(84, 158, 204, 0.32);
-	--snow-crystal-tile: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22148%22%20height%3D%2278%22%20viewBox%3D%220%200%20148%2078%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%235e9ac4%22%20stroke-width%3D%221.05%22%20stroke-linecap%3D%22round%22%20opacity%3D%22.42%22%3E%3Cpath%20d%3D%22M19%2011v12M13%2017h12M15%2013l8%208M23%2013l-8%208%22%2F%3E%3Cpath%20d%3D%22M92%2022v10M87%2027h10M89%2024l6%206M95%2024l-6%206%22%20opacity%3D%22.48%22%2F%3E%3Cpath%20d%3D%22M132%2052v9M128%2056h9M129%2053l6%206M135%2053l-6%206%22%20opacity%3D%22.38%22%2F%3E%3C%2Fg%3E%3Cg%20fill%3D%22%235e9ac4%22%3E%3Ccircle%20cx%3D%2248%22%20cy%3D%2217%22%20r%3D%221.5%22%20opacity%3D%22.42%22%2F%3E%3Ccircle%20cx%3D%2273%22%20cy%3D%2249%22%20r%3D%221.2%22%20opacity%3D%22.36%22%2F%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2260%22%20r%3D%221%22%20opacity%3D%22.32%22%2F%3E%3Ccircle%20cx%3D%22116%22%20cy%3D%2212%22%20r%3D%221.1%22%20opacity%3D%22.34%22%2F%3E%3Ccircle%20cx%3D%22138%22%20cy%3D%2231%22%20r%3D%22.9%22%20opacity%3D%22.28%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
-	--field-wash:
-		radial-gradient(ellipse 48% 130% at 78% -30%, rgba(255, 255, 255, 0.5), rgba(108, 185, 225, 0.08) 44%, transparent 74%),
-		radial-gradient(ellipse 64% 92% at 42% 54%, rgba(255, 255, 255, 0.32), rgba(104, 190, 255, 0.03) 52%, transparent 84%),
-		var(--snow-crystal-tile);
-	--tail-color: rgba(42, 82, 108, 0.28);
-}
-
-.stage[data-theme='light'][data-glow='snow'] .field[data-glow]::before {
-	opacity: 0.62;
-	mix-blend-mode: normal;
-}
-
-.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .prediction::before {
-	background:
-		radial-gradient(ellipse 34% 72% at 8% 52%, rgba(255, 255, 255, 0.56), rgba(118, 194, 224, 0.1) 42%, transparent 76%),
-		radial-gradient(ellipse 80% 62% at 38% 50%, rgba(255, 255, 255, 0.28), rgba(96, 170, 220, 0.04) 56%, transparent 92%),
-		linear-gradient(100deg, transparent 0%, rgba(255, 255, 255, 0.18) 18%, rgba(92, 158, 204, 0.05) 48%, transparent 88%);
-	filter: blur(17px) saturate(1.05);
-	opacity: 0.34;
-	mix-blend-mode: normal;
-	animation: snow-plume-breathe-light-final 7.6s ease-in-out infinite;
-}
-
-.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .prediction::after {
-	opacity: 0.36;
-	filter: blur(0.14px) saturate(1.05) drop-shadow(0 0 7px rgba(92, 158, 204, 0.16));
-	mix-blend-mode: normal;
-	animation: snow-crystal-stream-light-final 8.6s ease-in-out infinite;
-}
-
-.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .next-word {
-	color: rgba(26, 68, 104, 0.88);
-	background:
-		linear-gradient(180deg, rgba(28, 70, 104, 0.96), rgba(50, 104, 142, 0.88) 48%, rgba(84, 136, 174, 0.76)),
-		linear-gradient(90deg, rgba(255, 255, 255, 0.18), transparent 36%, rgba(86, 160, 210, 0.08) 70%, transparent);
-	-webkit-background-clip: text;
-	background-clip: text;
-	text-shadow:
-		0 0 1px rgba(255, 255, 255, 0.92),
-		0 0 8px rgba(120, 205, 240, 0.18);
-}
-
-.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .next-word::before {
-	opacity: 0.14;
-	mix-blend-mode: normal;
-	animation: snow-word-glint-light-final 6.2s ease-in-out infinite;
-}
-
-.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .tail,
-.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .tail .glyph {
-	color: rgba(42, 82, 108, 0.28);
-	filter: blur(0.08px);
-	text-shadow: 0 0 10px rgba(80, 160, 210, 0.08);
 }
 
 /* Toxic uses a viscous acid-gum membrane instead of the shared rectangular beam. */
@@ -7678,41 +6931,6 @@
 	mix-blend-mode: normal;
 }
 
-@keyframes snow-drift {
-	0%,
-	100% {
-		opacity: calc(var(--haze-opacity) * 0.58);
-		background-position: 0% 50%;
-		transform: translateY(-52%) translateX(-0.2em) scaleX(0.9);
-	}
-	48% {
-		opacity: var(--haze-opacity);
-		background-position: 100% 50%;
-		transform: translateY(-47%) translateX(0.34em) scaleX(1.06);
-	}
-	74% {
-		opacity: calc(var(--haze-opacity) * 0.72);
-		background-position: 58% 50%;
-		transform: translateY(-54%) translateX(0.12em) scaleX(0.98);
-	}
-}
-
-@keyframes snow-flurry {
-	0%,
-	100% {
-		opacity: calc(var(--aux-opacity, var(--spark-low)) * 0.58);
-		transform: translateY(-62%) translateX(-0.12em) scaleX(0.86);
-	}
-	42% {
-		opacity: var(--aux-opacity, var(--spark-high));
-		transform: translateY(-44%) translateX(0.34em) scaleX(1.04);
-	}
-	70% {
-		opacity: calc(var(--aux-opacity, var(--spark-high)) * 0.68);
-		transform: translateY(-56%) translateX(0.7em) scaleX(0.94);
-	}
-}
-
 @keyframes toxic-boil {
 	0%,
 	100% {
@@ -7827,56 +7045,6 @@
 	62% {
 		opacity: calc(var(--spark-high) * 0.5);
 		transform: translateY(-38%) translateX(0.82em) scaleX(0.88) skewX(-3deg);
-	}
-}
-
-@keyframes snow-sparkle-drift {
-	0%,
-	100% {
-		opacity: var(--spark-low);
-		transform: translateY(-62%) translateX(-0.16em) scaleX(0.92);
-	}
-	40% {
-		opacity: var(--spark-high);
-		transform: translateY(-42%) translateX(0.28em) scaleX(1.04);
-	}
-	72% {
-		opacity: calc(var(--spark-high) * 0.64);
-		transform: translateY(-55%) translateX(0.68em) scaleX(0.96);
-	}
-}
-
-@keyframes snow-crystal-drift {
-	0%,
-	100% {
-		opacity: calc(var(--aux-opacity) * 0.58);
-		background-position:
-			0 0,
-			0 0,
-			0 0,
-			0 0,
-			0 0,
-			0 0,
-			0 0,
-			0 0;
-		transform: translateY(-62%) translateX(-0.16em) scaleX(0.9);
-	}
-	45% {
-		opacity: var(--aux-opacity);
-		background-position:
-			7px 11px,
-			-6px 9px,
-			0 0,
-			0 0,
-			0 0,
-			0 0,
-			0 0,
-			0 0;
-		transform: translateY(-42%) translateX(0.32em) scaleX(1.04);
-	}
-	74% {
-		opacity: calc(var(--aux-opacity) * 0.7);
-		transform: translateY(-56%) translateX(0.72em) scaleX(0.96);
 	}
 }
 
@@ -8218,22 +7386,6 @@
 	}
 }
 
-@keyframes snow-glisten {
-	0%,
-	100% {
-		opacity: var(--spark-low);
-		transform: translateY(-48%) translateX(-0.1em) scale(0.92);
-	}
-	44% {
-		opacity: var(--spark-high);
-		transform: translateY(-58%) translateX(0.34em) scale(1.06);
-	}
-	70% {
-		opacity: calc(var(--spark-high) * 0.48);
-		transform: translateY(-42%) translateX(0.7em) scale(0.94);
-	}
-}
-
 @keyframes toxic-breathe {
 	0%,
 	100% {
@@ -8494,56 +7646,6 @@
 			54px -16px,
 			60% 50%;
 		transform: translateY(-72%) translateX(0.76em) scale(0.94);
-	}
-}
-
-@keyframes snow-breath-crystal {
-	0%,
-	100% {
-		opacity: calc(var(--haze-opacity) * 0.68);
-		transform: translateY(-50%) translateX(-0.1em) scaleX(0.94);
-	}
-	50% {
-		opacity: var(--haze-opacity);
-		transform: translateY(-53%) translateX(0.24em) scaleX(1.05);
-	}
-}
-
-@keyframes snow-glisten-deep {
-	0%,
-	100% {
-		opacity: var(--spark-low);
-		transform: translateY(-46%) translateX(-0.08em) scale(0.9);
-	}
-	44% {
-		opacity: var(--spark-high);
-		transform: translateY(-62%) translateX(0.3em) scale(1.08);
-	}
-	72% {
-		opacity: calc(var(--spark-high) * 0.5);
-		transform: translateY(-40%) translateX(0.68em) scale(0.94);
-	}
-}
-
-@keyframes snow-drift-deep {
-	0%,
-	100% {
-		opacity: calc(var(--aux-opacity) * 0.58);
-		background-position:
-			0 0,
-			0% 50%;
-		transform: translateY(-46%) translateX(-0.12em) scale(0.94);
-	}
-	50% {
-		opacity: var(--aux-opacity);
-		background-position:
-			26px 11px,
-			100% 50%;
-		transform: translateY(-58%) translateX(0.36em) scale(1.04);
-	}
-	78% {
-		opacity: calc(var(--aux-opacity) * 0.66);
-		transform: translateY(-42%) translateX(0.74em) scale(0.96);
 	}
 }
 
@@ -9879,375 +8981,6 @@
 	72% {
 		opacity: var(--staged-dust-mid, 0.62);
 		transform: rotate(-7.3deg) translate3d(0.08em, -0.04em, 0);
-	}
-}
-
-@keyframes snow-field-breath {
-	0%,
-	100% {
-		opacity: 0.72;
-		background-position:
-			0% 50%,
-			0% 50%,
-			0% 50%,
-			0% 0%,
-			0% 0%,
-			0% 0%;
-		filter: saturate(1) brightness(1);
-	}
-	46% {
-		opacity: 0.9;
-		background-position:
-			7% 50%,
-			-5% 50%,
-			0.22em 50%,
-			0.08em -0.06em,
-			-0.06em 0.1em,
-			0.06em 0.08em;
-		filter: saturate(1.08) brightness(1.04);
-	}
-	74% {
-		opacity: 0.78;
-		background-position:
-			3% 50%,
-			4% 50%,
-			-0.12em 50%,
-			-0.05em 0.04em,
-			0.06em -0.03em,
-			-0.03em 0.06em;
-	}
-}
-
-@keyframes snow-veil-breathe {
-	0%,
-	100% {
-		opacity: 0.32;
-		transform: translateY(-50%) translateX(-0.1em) scaleX(0.94) skewX(-2deg);
-	}
-	42% {
-		opacity: 0.52;
-		transform: translateY(-50%) translateX(0.08em) scaleX(1.04) skewX(1.6deg);
-	}
-	72% {
-		opacity: 0.38;
-		transform: translateY(-50%) translateX(0.02em) scaleX(0.99) skewX(-0.6deg);
-	}
-}
-
-@keyframes snow-powder-drift {
-	0%,
-	100% {
-		opacity: 0.64;
-		background-position:
-			0 0,
-			0 0,
-			0 0,
-			0 0,
-			0 0,
-			0 0,
-			0 0,
-			0 0,
-			0% 50%;
-		transform: translateY(-50%) translate3d(-0.08em, 0.06em, 0) skewX(-1deg);
-	}
-	48% {
-		opacity: 0.96;
-		background-position:
-			0.08em 0.28em,
-			-0.16em 0.2em,
-			0.22em -0.12em,
-			-0.08em 0.18em,
-			0.16em 0.1em,
-			-0.2em -0.04em,
-			0.42em -0.1em,
-			48% 50%;
-		transform: translateY(-50%) translate3d(0.18em, -0.1em, 0) skewX(1.4deg);
-	}
-	76% {
-		opacity: 0.72;
-		transform: translateY(-50%) translate3d(0.05em, -0.04em, 0) skewX(0.2deg);
-	}
-}
-
-@keyframes snow-word-glint {
-	0%,
-	100% {
-		opacity: 0.28;
-		background-position:
-			-92% 0,
-			0 0;
-		transform: translateX(-0.08em) scaleX(0.94);
-	}
-	44% {
-		opacity: 0.72;
-		background-position:
-			42% 0,
-			0 0;
-		transform: translateX(0.08em) scaleX(1.04);
-	}
-	70% {
-		opacity: 0.42;
-		background-position:
-			112% 0,
-			0 0;
-		transform: translateX(0.02em) scaleX(1);
-	}
-}
-
-@keyframes snow-veil-breathe-light {
-	0%,
-	100% {
-		opacity: 0.12;
-		transform: translateY(-50%) translateX(-0.1em) scaleX(0.94) skewX(-2deg);
-	}
-	42% {
-		opacity: 0.22;
-		transform: translateY(-50%) translateX(0.08em) scaleX(1.04) skewX(1.6deg);
-	}
-	72% {
-		opacity: 0.15;
-		transform: translateY(-50%) translateX(0.02em) scaleX(0.99) skewX(-0.6deg);
-	}
-}
-
-@keyframes snow-powder-drift-light {
-	0%,
-	100% {
-		opacity: 0.24;
-		background-position:
-			0 0,
-			0 0,
-			0 0,
-			0 0,
-			0 0,
-			0 0,
-			0 0,
-			0% 50%;
-		transform: translateY(-50%) translate3d(-0.08em, 0.06em, 0) skewX(-1deg);
-	}
-	48% {
-		opacity: 0.46;
-		background-position:
-			0.08em 0.28em,
-			-0.16em 0.2em,
-			0.22em -0.12em,
-			-0.08em 0.18em,
-			0.16em 0.1em,
-			-0.2em -0.04em,
-			0.42em -0.1em,
-			48% 50%;
-		transform: translateY(-50%) translate3d(0.18em, -0.1em, 0) skewX(1.4deg);
-	}
-	76% {
-		opacity: 0.3;
-		transform: translateY(-50%) translate3d(0.05em, -0.04em, 0) skewX(0.2deg);
-	}
-}
-
-@keyframes snow-word-glint-light {
-	0%,
-	100% {
-		opacity: 0.1;
-		background-position:
-			-92% 0,
-			0 0;
-		transform: translateX(-0.08em) scaleX(0.94);
-	}
-	44% {
-		opacity: 0.24;
-		background-position:
-			42% 0,
-			0 0;
-		transform: translateX(0.08em) scaleX(1.04);
-	}
-	70% {
-		opacity: 0.14;
-		background-position:
-			112% 0,
-			0 0;
-		transform: translateX(0.02em) scaleX(1);
-	}
-}
-
-@keyframes snow-glyph-freeze {
-	0%,
-	100% {
-		transform: translateY(0);
-		filter: drop-shadow(0 0 0.045em rgba(255, 255, 255, 0.42));
-	}
-	46% {
-		transform: translateY(-0.012em);
-		filter: drop-shadow(0 0 0.075em rgba(224, 250, 255, 0.72));
-	}
-	78% {
-		transform: translateY(0.006em);
-		filter: drop-shadow(0 0 0.052em rgba(172, 230, 255, 0.5));
-	}
-}
-
-@keyframes snow-field-powder-final {
-	0%,
-	100% {
-		background-position:
-			0 0,
-			0 0,
-			0 0;
-		filter: saturate(1) brightness(1);
-	}
-	46% {
-		background-position:
-			4% 0,
-			-3% 0,
-			1.6em -0.9em;
-		filter: saturate(1.08) brightness(1.04);
-	}
-	72% {
-		background-position:
-			1.5% 0,
-			2% 0,
-			-0.8em 0.7em;
-	}
-}
-
-@keyframes snow-plume-breathe-final {
-	0%,
-	100% {
-		opacity: 0.42;
-		transform: translateY(-50%) translateX(-0.16em) scaleX(0.92) scaleY(0.96) skewX(-2deg);
-	}
-	44% {
-		opacity: 0.64;
-		transform: translateY(-50%) translateX(0.12em) scaleX(1.06) scaleY(1.04) skewX(1.4deg);
-	}
-	74% {
-		opacity: 0.5;
-		transform: translateY(-50%) translateX(0.04em) scaleX(0.98) scaleY(1) skewX(-0.5deg);
-	}
-}
-
-@keyframes snow-crystal-stream-final {
-	0%,
-	100% {
-		opacity: 0.52;
-		background-position:
-			0 0,
-			0 0,
-			0 0,
-			0 0,
-			0 0,
-			0 0;
-		transform: translateY(-50%) translate3d(-0.14em, 0.08em, 0) skewX(-1.2deg);
-	}
-	48% {
-		opacity: 0.84;
-		background-position:
-			1.8em -0.92em,
-			0.08em 0.24em,
-			-0.2em 0.22em,
-			0.28em -0.12em,
-			-0.12em 0.18em,
-			50% 50%;
-		transform: translateY(-50%) translate3d(0.22em, -0.12em, 0) skewX(1.1deg);
-	}
-	76% {
-		opacity: 0.62;
-		transform: translateY(-50%) translate3d(0.06em, -0.04em, 0) skewX(0.2deg);
-	}
-}
-
-@keyframes snow-word-glint-final {
-	0%,
-	100% {
-		opacity: 0.22;
-		background-position:
-			-92% 0,
-			0 0;
-		transform: translateX(-0.08em) scaleX(0.94);
-	}
-	44% {
-		opacity: 0.52;
-		background-position:
-			42% 0,
-			0 0;
-		transform: translateX(0.08em) scaleX(1.04);
-	}
-	70% {
-		opacity: 0.32;
-		background-position:
-			112% 0,
-			0 0;
-		transform: translateX(0.02em) scaleX(1);
-	}
-}
-
-@keyframes snow-plume-breathe-light-final {
-	0%,
-	100% {
-		opacity: 0.22;
-		transform: translateY(-50%) translateX(-0.16em) scaleX(0.92) scaleY(0.96) skewX(-2deg);
-	}
-	44% {
-		opacity: 0.36;
-		transform: translateY(-50%) translateX(0.12em) scaleX(1.06) scaleY(1.04) skewX(1.4deg);
-	}
-	74% {
-		opacity: 0.26;
-		transform: translateY(-50%) translateX(0.04em) scaleX(0.98) scaleY(1) skewX(-0.5deg);
-	}
-}
-
-@keyframes snow-crystal-stream-light-final {
-	0%,
-	100% {
-		opacity: 0.24;
-		background-position:
-			0 0,
-			0 0,
-			0 0,
-			0 0,
-			0 0,
-			0 0;
-		transform: translateY(-50%) translate3d(-0.14em, 0.08em, 0) skewX(-1.2deg);
-	}
-	48% {
-		opacity: 0.42;
-		background-position:
-			1.8em -0.92em,
-			0.08em 0.24em,
-			-0.2em 0.22em,
-			0.28em -0.12em,
-			-0.12em 0.18em,
-			50% 50%;
-		transform: translateY(-50%) translate3d(0.22em, -0.12em, 0) skewX(1.1deg);
-	}
-	76% {
-		opacity: 0.3;
-		transform: translateY(-50%) translate3d(0.06em, -0.04em, 0) skewX(0.2deg);
-	}
-}
-
-@keyframes snow-word-glint-light-final {
-	0%,
-	100% {
-		opacity: 0.08;
-		background-position:
-			-92% 0,
-			0 0;
-		transform: translateX(-0.08em) scaleX(0.94);
-	}
-	44% {
-		opacity: 0.18;
-		background-position:
-			42% 0,
-			0 0;
-		transform: translateX(0.08em) scaleX(1.04);
-	}
-	70% {
-		opacity: 0.12;
-		background-position:
-			112% 0,
-			0 0;
-		transform: translateX(0.02em) scaleX(1);
 	}
 }
 
@@ -16926,5 +15659,1078 @@
 	}
 	75% {
 		opacity: var(--spark-high);
+	}
+}
+
+/* ============================================================
+   SNOW v2 — "Polar night blizzard at the caret"
+   Real falling snow with depth: three parallax dot fields
+   (veil = far, body = mid, prediction::before = near) are
+   seamless repeating radial-dot tiles animated by exact
+   whole-tile background-position deltas on a shared ~24deg
+   down-right wind with mid-keyframe sway. Hero six-arm
+   crystals ride prediction::after (survives flow-off) and
+   beam-spark; ice dust on beam-aux; wind-gust veils on
+   beam-flow; a breathing moon pool on beam-hot; breath fog
+   rising from the caret on beam-smoke. field::before carries
+   the moon wash plus a soft snow-drift mound along the bottom
+   edge. Text freezes in per glyph: a blurred ice-mote
+   (data-alt ghost) sinks into place while the real glyph
+   crystallizes with a landing sparkle and top rim-light,
+   over a navy scrim. No hard boundaries: every layer
+   dissolves through intersected left-fade x radial masks.
+   data-light-flow='off' freezes the storm mid-air but the
+   frost entrance still plays. Light theme = winter-morning
+   paper with blue-gray snow at normal blend.
+   ============================================================ */
+
+.field[data-glow='snow'] {
+	--layer-radius: 0;
+	--layer-clip: none;
+	--near-o: 0.95;
+	--hero-o: 0.92;
+	--scrim-o: 0.82;
+	--wash-o: 0.92;
+	--ready-border: rgba(214, 240, 255, 0.36);
+	--ready-shadow:
+		0 1px 0 rgba(214, 238, 255, 0.09) inset,
+		0 -34px 96px rgba(2, 9, 22, 0.66) inset,
+		0 32px 70px rgba(0, 0, 0, 0.52),
+		0 0 96px rgba(150, 214, 255, 0.15),
+		0 0 160px rgba(88, 150, 255, 0.06);
+	--field-wash:
+		radial-gradient(ellipse 44% 130% at 74% -24%, rgba(202, 230, 255, 0.13), rgba(120, 178, 255, 0.045) 46%, transparent 74%),
+		radial-gradient(ellipse 52% 96% at 20% 58%, rgba(186, 222, 255, 0.06), transparent 78%),
+		radial-gradient(ellipse 72% 46% at 30% 114%, rgba(224, 244, 255, 0.2), rgba(186, 222, 255, 0.07) 54%, transparent 80%),
+		radial-gradient(ellipse 38% 30% at 64% 110%, rgba(214, 240, 255, 0.12), transparent 74%);
+	--caret-gradient: linear-gradient(180deg, rgb(255, 255, 255), rgb(226, 246, 255) 30%, rgb(150, 214, 255) 62%, rgb(96, 150, 240) 86%, rgb(64, 104, 200));
+	--caret-shadow:
+		0 0 6px rgba(244, 252, 255, 0.9),
+		0 0 18px rgba(178, 228, 255, 0.55),
+		0 0 40px rgba(96, 160, 255, 0.3);
+	--haze-width: 14em;
+	--haze-height: 2.6em;
+	--haze-size: 2.6em 3em;
+	--haze-bg:
+		radial-gradient(circle at 0.45em 0.55em, rgba(214, 238, 255, 0.6) 0 0.022em, transparent 0.055em),
+		radial-gradient(circle at 1.65em 1.15em, rgba(190, 224, 252, 0.48) 0 0.019em, transparent 0.05em),
+		radial-gradient(circle at 0.95em 2.05em, rgba(226, 244, 255, 0.55) 0 0.021em, transparent 0.052em),
+		radial-gradient(circle at 2.25em 0.35em, rgba(198, 230, 255, 0.42) 0 0.017em, transparent 0.046em),
+		radial-gradient(circle at 2.05em 2.6em, rgba(216, 240, 255, 0.5) 0 0.02em, transparent 0.05em),
+		radial-gradient(circle at 0.3em 1.55em, rgba(206, 234, 255, 0.45) 0 0.018em, transparent 0.048em);
+	--haze-filter: blur(0.4px);
+	--haze-opacity: 0.8;
+	--haze-motion: snow-fall-far-v2 16s linear 720ms infinite;
+	--torch-haze-motion: snow-waiting-fall-v2 10s linear infinite;
+	--haze-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 98% 100% at 30% 50%, black 0 42%, rgba(0, 0, 0, 0.5) 70%, transparent 98%);
+	--body-width: 13em;
+	--body-height: 2.6em;
+	--body-size: 3.7em 4.2em;
+	--body-bg:
+		radial-gradient(circle at 0.6em 0.7em, rgba(238, 250, 255, 0.78) 0 0.034em, transparent 0.075em),
+		radial-gradient(circle at 2.3em 1.5em, rgba(212, 238, 255, 0.68) 0 0.03em, transparent 0.068em),
+		radial-gradient(circle at 1.3em 2.9em, rgba(244, 252, 255, 0.75) 0 0.038em, transparent 0.08em),
+		radial-gradient(circle at 3.1em 3.5em, rgba(202, 232, 255, 0.6) 0 0.03em, transparent 0.066em),
+		radial-gradient(circle at 2.9em 0.45em, rgba(228, 246, 255, 0.66) 0 0.032em, transparent 0.07em);
+	--body-filter: blur(0.2px);
+	--body-opacity: 0.92;
+	--body-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 98% 100% at 28% 50%, black 0 44%, rgba(0, 0, 0, 0.5) 72%, transparent 98%);
+	--core-width: 7em;
+	--core-height: 2.6em;
+	--core-size: auto;
+	--core-bg:
+		radial-gradient(ellipse 2.7em 1.4em at 1.1em 52%, rgba(222, 242, 255, 0.32), rgba(158, 205, 255, 0.12) 55%, transparent 82%),
+		radial-gradient(ellipse 1.25em 0.75em at 0.7em 52%, rgba(242, 250, 255, 0.5), rgba(210, 238, 255, 0.18) 60%, transparent 82%);
+	--core-filter: blur(13px) saturate(1.05);
+	--core-opacity: 0.92;
+	--core-motion: snow-moon-breathe-v2 6s ease-in-out 560ms infinite;
+	--torch-core-motion: snow-waiting-glimmer-v2 3.2s ease-in-out infinite;
+	--core-mask: linear-gradient(90deg, transparent 0, black 0.55em), radial-gradient(ellipse 96% 100% at 24% 50%, black 0 48%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	--flow-width: 12em;
+	--flow-height: 2.2em;
+	--flow-size: 9.4em 100%;
+	--flow-bg: linear-gradient(90deg, transparent 0%, rgba(222, 242, 255, 0.12) 17%, rgba(196, 230, 255, 0.05) 30%, transparent 45%, rgba(214, 240, 255, 0.09) 64%, rgba(222, 242, 255, 0.03) 79%, transparent 100%);
+	--flow-filter: blur(14px);
+	--flow-low: 0.1;
+	--flow-high: 0.3;
+	--flow-motion: snow-wind-gust-v2 6.5s linear 820ms infinite;
+	--flow-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 96% 92% at 30% 50%, black 0 40%, rgba(0, 0, 0, 0.5) 68%, transparent 96%);
+	--spark-width: 10em;
+	--spark-height: 2.6em;
+	--spark-size: 6.6em 5em;
+	--spark-bg:
+		radial-gradient(circle at 1.5em 1.1em, rgba(255, 255, 255, 0.96) 0 0.05em, rgba(222, 244, 255, 0.42) 0.08em, transparent 0.135em),
+		radial-gradient(ellipse 0.32em 0.045em at 1.5em 1.1em, rgba(238, 250, 255, 0.75), transparent 72%),
+		radial-gradient(ellipse 0.045em 0.32em at 1.5em 1.1em, rgba(238, 250, 255, 0.75), transparent 72%),
+		radial-gradient(circle at 1.5em 1.1em, transparent 0 0.105em, rgba(196, 234, 255, 0.28) 0.112em 0.125em, transparent 0.148em),
+		radial-gradient(circle at 4.6em 3.5em, rgba(250, 254, 255, 0.9) 0 0.042em, rgba(216, 242, 255, 0.34) 0.066em, transparent 0.115em),
+		radial-gradient(ellipse 0.26em 0.04em at 4.6em 3.5em, rgba(232, 248, 255, 0.65), transparent 72%),
+		radial-gradient(ellipse 0.04em 0.26em at 4.6em 3.5em, rgba(232, 248, 255, 0.65), transparent 72%),
+		radial-gradient(circle at 3.2em 4.4em, rgba(228, 246, 255, 0.6) 0 0.026em, transparent 0.06em);
+	--spark-filter: blur(0.2px) drop-shadow(0 0 6px rgba(210, 242, 255, 0.65));
+	--spark-low: 0.8;
+	--spark-high: 1;
+	--spark-motion: snow-hero-flurry-v2 9.5s linear 880ms infinite;
+	--spark-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 96% 98% at 34% 50%, black 0 50%, rgba(0, 0, 0, 0.5) 74%, transparent 98%);
+	--smoke-width: 4.4em;
+	--smoke-height: 2.4em;
+	--smoke-size: auto;
+	--smoke-bg:
+		radial-gradient(ellipse 1.25em 0.75em at 1.15em 1.7em, rgba(212, 234, 252, 0.34), rgba(180, 212, 244, 0.13) 55%, transparent 80%),
+		radial-gradient(ellipse 0.7em 0.45em at 0.75em 1.9em, rgba(230, 246, 255, 0.3), transparent 76%);
+	--smoke-filter: blur(11px);
+	--smoke-opacity: 0.5;
+	--smoke-blend: screen;
+	--smoke-motion: snow-breath-fog-v2 5.8s ease-in-out 900ms infinite;
+	--smoke-mask: linear-gradient(90deg, transparent 0, black 0.5em), radial-gradient(ellipse 94% 96% at 30% 40%, black 0 44%, rgba(0, 0, 0, 0.5) 70%, transparent 94%);
+	--aux-width: 9em;
+	--aux-height: 2.6em;
+	--aux-size: 4.6em 4em;
+	--aux-bg:
+		radial-gradient(circle at 0.5em 0.6em, rgba(238, 250, 255, 0.55) 0 0.018em, transparent 0.046em),
+		radial-gradient(circle at 2.1em 1.3em, rgba(214, 240, 255, 0.4) 0 0.015em, transparent 0.04em),
+		radial-gradient(circle at 3.4em 0.9em, rgba(230, 246, 255, 0.45) 0 0.016em, transparent 0.042em),
+		radial-gradient(circle at 2.8em 3.2em, rgba(208, 236, 255, 0.4) 0 0.015em, transparent 0.04em),
+		radial-gradient(circle at 3.9em 2.2em, rgba(224, 244, 255, 0.35) 0 0.014em, transparent 0.038em),
+		radial-gradient(circle at 1.2em 2.4em, rgba(252, 255, 255, 0.85) 0 0.032em, rgba(220, 244, 255, 0.28) 0.05em, transparent 0.09em),
+		radial-gradient(ellipse 0.2em 0.032em at 1.2em 2.4em, rgba(234, 248, 255, 0.6), transparent 72%),
+		radial-gradient(ellipse 0.032em 0.2em at 1.2em 2.4em, rgba(234, 248, 255, 0.6), transparent 72%);
+	--aux-filter: blur(0.3px) drop-shadow(0 0 5px rgba(198, 236, 255, 0.5));
+	--aux-opacity: 0.8;
+	--aux-blend: screen;
+	--aux-motion: snow-dust-drift-v2 7.5s linear 900ms infinite;
+	--aux-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 94% 96% at 36% 50%, black 0 44%, rgba(0, 0, 0, 0.5) 70%, transparent 96%);
+	--next-color: rgba(240, 250, 255, 0.98);
+	--next-shadow:
+		0 1px 2px rgba(3, 12, 26, 0.62),
+		0 -0.02em 1px rgba(235, 250, 255, 0.5),
+		0 0 8px rgba(220, 244, 255, 0.42),
+		0 0 22px rgba(150, 214, 255, 0.28),
+		0 0 46px rgba(84, 150, 255, 0.14);
+	--tail-color: rgba(168, 198, 226, 0.36);
+}
+
+/* Beams carry the storm again: undo the legacy pass that hid them. */
+.stage[data-glow='snow'] .field[data-glow] .prediction > .beam {
+	display: block;
+	left: -0.03em;
+	transform-origin: left center;
+}
+
+/* Two-layer masks (left fade x radial falloff) need intersection, not union. */
+.stage[data-glow='snow'] .field[data-glow] .prediction > .beam,
+.stage[data-glow='snow'] .field[data-glow] .torch-beam {
+	mask-composite: intersect;
+}
+
+/* Torch layers serve the waiting state only; never double-print in ready. */
+.stage[data-glow='snow'] .field[data-glow] .caret-origin-glow[data-mode='ready'] {
+	display: none;
+}
+
+.stage[data-glow='snow'] .field[data-glow] .prediction {
+	isolation: isolate;
+}
+
+/* Deep polar-night vessel: blue, not black; moon presence upper right. */
+.stage[data-glow='snow'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 60% 150% at 76% -30%, rgba(96, 152, 224, 0.16), transparent 62%),
+		radial-gradient(ellipse 50% 120% at 18% 62%, rgba(70, 120, 190, 0.1), transparent 66%),
+		linear-gradient(180deg, rgba(190, 220, 255, 0.04), transparent 40%),
+		linear-gradient(90deg, rgb(6, 13, 27), rgb(9, 18, 35) 52%, rgb(7, 15, 31));
+}
+
+/* Moon wash + bottom snow drift; static by default, breathes with flow on. */
+.stage[data-glow='snow'] .field[data-glow]::before {
+	background: var(--field-wash);
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	background-position: 0 0;
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: screen;
+	opacity: var(--wash-o);
+	animation: none;
+}
+
+.stage[data-glow='snow'][data-light-flow='on'] .field[data-glow][data-state='ready']::before,
+.stage[data-glow='snow'][data-light-flow='on'] .field[data-glow][data-state='waiting'][data-loading-glow='field']::before {
+	animation: snow-field-glisten-v2 8.4s ease-in-out infinite;
+}
+
+/* Dissolve into the field's rounded clip, not the paint box; edge overlays
+   extended into the 64px padding so brightness never steps at the content box. */
+.stage[data-glow='snow'] .field[data-glow] .paint {
+	overflow: visible;
+	clip-path: inset(-3.4em -5em -3.4em 0);
+}
+
+.stage[data-glow='snow'] .field[data-glow] .edge-left {
+	left: -64px;
+	width: 156px;
+	background: linear-gradient(90deg, rgb(6, 13, 27) 0%, rgb(6, 13, 27) 40%, rgba(6, 13, 27, 0) 100%);
+	opacity: 0;
+}
+
+.stage[data-glow='snow'] .field[data-glow] .viewport.scrolled .edge-left {
+	opacity: 1;
+}
+
+.stage[data-glow='snow'] .field[data-glow] .edge-right {
+	right: -64px;
+	width: 224px;
+	background: linear-gradient(
+		270deg,
+		rgba(7, 15, 30, 0.9) 0%,
+		rgba(7, 15, 30, 0.55) 30%,
+		rgba(7, 15, 30, 0.16) 68%,
+		rgba(7, 15, 30, 0) 100%
+	);
+	opacity: 0.88;
+}
+
+/* Near snow: big soft flakes above the beams, below the text. */
+.stage[data-glow='snow'] .field[data-glow] .prediction::before {
+	position: absolute;
+	left: -0.55em;
+	top: 50%;
+	z-index: 0;
+	width: min(14.5em, calc(100% + 6.5em));
+	height: 2.6em;
+	content: '';
+	pointer-events: none;
+	border-radius: 0;
+	clip-path: none;
+	background:
+		radial-gradient(circle at 1.1em 1em, rgba(255, 255, 255, 0.95) 0 0.07em, rgba(200, 236, 255, 0.3) 0.1em, transparent 0.17em),
+		radial-gradient(circle at 3.6em 2.3em, rgba(240, 250, 255, 0.85) 0 0.058em, transparent 0.12em),
+		radial-gradient(circle at 2em 3.9em, rgba(255, 255, 255, 0.9) 0 0.065em, rgba(190, 230, 255, 0.24) 0.095em, transparent 0.16em),
+		radial-gradient(circle at 4.5em 0.6em, rgba(226, 244, 255, 0.7) 0 0.05em, transparent 0.105em);
+	background-repeat: repeat;
+	background-size: 5.2em 4.8em;
+	background-position: 0em 0em;
+	filter: blur(0.5px) drop-shadow(0 0 6px rgba(204, 240, 255, 0.5));
+	-webkit-mask-image: linear-gradient(90deg, transparent 0, black 1.1em), radial-gradient(ellipse 96% 100% at 32% 50%, black 0 44%, rgba(0, 0, 0, 0.5) 72%, transparent 98%);
+	mask-image: linear-gradient(90deg, transparent 0, black 1.1em), radial-gradient(ellipse 96% 100% at 32% 50%, black 0 44%, rgba(0, 0, 0, 0.5) 72%, transparent 98%);
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+	mix-blend-mode: screen;
+	opacity: var(--near-o);
+	transform: translateY(-50%);
+	transform-origin: 0.6em center;
+	animation:
+		snow-near-in-v2 560ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		snow-fall-near-v2 7s linear 560ms infinite;
+}
+
+/* Hero crystals: six-arm flakes with halo rings; alive with or without flow. */
+.stage[data-glow='snow'] .field[data-glow] .prediction::after {
+	position: absolute;
+	left: -0.4em;
+	top: 50%;
+	z-index: 1;
+	width: min(13em, calc(100% + 6em));
+	height: 2.6em;
+	content: '';
+	pointer-events: none;
+	border-radius: 0;
+	clip-path: none;
+	background:
+		radial-gradient(circle at 2.2em 1.6em, rgba(255, 255, 255, 0.98) 0 0.06em, rgba(224, 246, 255, 0.5) 0.095em, transparent 0.16em),
+		radial-gradient(ellipse 0.46em 0.055em at 2.2em 1.6em, rgba(240, 250, 255, 0.8), transparent 72%),
+		radial-gradient(ellipse 0.055em 0.46em at 2.2em 1.6em, rgba(240, 250, 255, 0.8), transparent 72%),
+		radial-gradient(circle at 2.2em 1.6em, transparent 0 0.13em, rgba(198, 236, 255, 0.3) 0.14em 0.155em, transparent 0.18em),
+		radial-gradient(circle at 5.9em 3.8em, rgba(252, 254, 255, 0.95) 0 0.048em, rgba(220, 244, 255, 0.4) 0.075em, transparent 0.13em),
+		radial-gradient(ellipse 0.34em 0.045em at 5.9em 3.8em, rgba(236, 248, 255, 0.7), transparent 72%),
+		radial-gradient(ellipse 0.045em 0.34em at 5.9em 3.8em, rgba(236, 248, 255, 0.7), transparent 72%),
+		radial-gradient(circle at 5.9em 3.8em, transparent 0 0.1em, rgba(190, 232, 255, 0.26) 0.108em 0.12em, transparent 0.14em),
+		radial-gradient(circle at 4.2em 0.75em, rgba(244, 252, 255, 0.85) 0 0.038em, transparent 0.085em),
+		radial-gradient(ellipse 0.22em 0.035em at 4.2em 0.75em, rgba(230, 246, 255, 0.55), transparent 72%),
+		radial-gradient(ellipse 0.035em 0.22em at 4.2em 0.75em, rgba(230, 246, 255, 0.55), transparent 72%);
+	background-repeat: repeat;
+	background-size: 8em 5.6em;
+	background-position: 0em 0em;
+	filter: blur(0.2px) drop-shadow(0 0 7px rgba(206, 240, 255, 0.6));
+	-webkit-mask-image: linear-gradient(90deg, transparent 0, black 1em), radial-gradient(ellipse 96% 100% at 34% 50%, black 0 46%, rgba(0, 0, 0, 0.5) 74%, transparent 98%);
+	mask-image: linear-gradient(90deg, transparent 0, black 1em), radial-gradient(ellipse 96% 100% at 34% 50%, black 0 46%, rgba(0, 0, 0, 0.5) 74%, transparent 98%);
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+	mix-blend-mode: screen;
+	opacity: var(--hero-o);
+	transform: translateY(-50%);
+	transform-origin: 0.5em center;
+	animation:
+		snow-hero-in-v2 640ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		snow-hero-anchor-v2 13s linear 640ms infinite;
+}
+
+/* Mid snow lives on beam-body: fall layered after the shared entrance. */
+.stage[data-glow='snow'] .field[data-glow] .beam-body {
+	animation:
+		beam-open 650ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		snow-fall-mid-v2 10.5s linear 650ms infinite;
+}
+
+/* ---------- Text is sacred: frost crystallization ---------- */
+.stage[data-glow='snow'] .field[data-glow] .next-word {
+	position: relative;
+	isolation: isolate;
+	z-index: 2;
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	border-radius: 0;
+	filter: none;
+	text-shadow: var(--next-shadow);
+	animation: snow-word-in-v2 340ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Navy scrim between the blizzard and the glyphs: contrast insurance. */
+.stage[data-glow='snow'] .field[data-glow] .next-word::before {
+	position: absolute;
+	inset: -0.3em -0.75em -0.3em -0.3em;
+	z-index: -1;
+	content: '';
+	pointer-events: none;
+	border-radius: 0.7em;
+	background: radial-gradient(ellipse 82% 100% at 34% 52%, rgba(3, 13, 28, 0.66), rgba(3, 13, 28, 0.3) 60%, transparent 88%);
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	background-position: 0 0;
+	filter: blur(6px);
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: normal;
+	opacity: var(--scrim-o);
+	transform: none;
+	animation: snow-scrim-in-v2 380ms ease-out both;
+}
+
+/* Per-glyph freeze-in; nth-child variants grouped to outrank legacy tints. */
+.stage[data-glow='snow'] .field[data-glow] .next-word .glyph,
+.stage[data-glow='snow'] .field[data-glow] .next-word .glyph:nth-child(2n),
+.stage[data-glow='snow'] .field[data-glow] .next-word .glyph:nth-child(3n),
+.stage[data-glow='snow'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-glow='snow'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
+	color: var(--next-color);
+	animation: snow-glyph-freeze-v2 620ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+	animation-delay: calc(90ms + var(--i) * 52ms);
+}
+
+/* Ice-mote pass: the alt glyph sinks in as a blurred mote and dissolves. */
+.stage[data-glow='snow'] .field[data-glow] .next-word .glyph::after {
+	z-index: 2;
+	content: attr(data-alt);
+	color: rgba(216, 242, 255, 0.9);
+	opacity: 0;
+	filter: none;
+	text-shadow: 0 0 0.35em rgba(190, 235, 255, 0.6);
+	transform: none;
+	animation: snow-glyph-mote-v2 520ms cubic-bezier(0.3, 0.6, 0.4, 1) both;
+	animation-delay: calc(90ms + var(--i) * 52ms);
+}
+
+/* Tail: frosted dim blue-gray, masked fade. */
+.stage[data-glow='snow'] .field[data-glow] .tail {
+	position: relative;
+	z-index: 2;
+	color: var(--tail-color);
+	filter: none;
+	text-shadow: 0 0 0.2em rgba(150, 205, 255, 0.14);
+	-webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0, rgba(0, 0, 0, 0.5) 2.6em, transparent 8em);
+	mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0, rgba(0, 0, 0, 0.5) 2.6em, transparent 8em);
+}
+
+.stage[data-glow='snow'] .field[data-glow] .tail .glyph {
+	color: inherit;
+	filter: none;
+	text-shadow: none;
+	animation: none;
+}
+
+/* Light flow off: the storm freezes mid-air; frost entrance still plays. */
+.stage[data-glow='snow'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: snow-near-in-v2 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='snow'][data-light-flow='off'] .field[data-glow] .prediction::after {
+	animation: snow-hero-in-v2 640ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='snow'][data-light-flow='off'] .field[data-glow] .beam-veil {
+	animation: beam-open 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='snow'][data-light-flow='off'] .field[data-glow] .beam-body {
+	animation: beam-open 650ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='snow'][data-light-flow='off'] .field[data-glow] .beam-hot {
+	animation: beam-hot 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='snow'][data-light-flow='off'] .field[data-glow] .next-word::before {
+	animation: snow-scrim-in-v2 380ms ease-out both;
+}
+
+/* ---------- Light theme: winter morning paper ---------- */
+.field[data-theme='light'][data-glow='snow'] {
+	--near-o: 0.8;
+	--hero-o: 0.85;
+	--scrim-o: 0.9;
+	--wash-o: 0.85;
+	--ready-border: rgba(96, 152, 205, 0.4);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.98) inset,
+		0 -16px 44px rgba(150, 190, 235, 0.1) inset,
+		0 18px 44px rgba(50, 70, 100, 0.14),
+		0 0 70px rgba(130, 185, 240, 0.14);
+	--field-wash:
+		radial-gradient(ellipse 46% 120% at 74% -24%, rgba(214, 232, 250, 0.5), rgba(168, 200, 235, 0.14) 48%, transparent 76%),
+		radial-gradient(ellipse 52% 96% at 20% 58%, rgba(226, 240, 252, 0.4), transparent 78%),
+		radial-gradient(ellipse 72% 44% at 30% 114%, rgba(164, 196, 230, 0.3), rgba(178, 205, 235, 0.12) 54%, transparent 80%),
+		radial-gradient(ellipse 38% 28% at 64% 110%, rgba(172, 202, 234, 0.18), transparent 74%);
+	--caret-gradient: linear-gradient(180deg, rgb(16, 42, 84), rgb(38, 92, 170) 45%, rgb(96, 170, 240) 78%, rgb(190, 228, 255));
+	--caret-shadow:
+		0 0 6px rgba(110, 170, 235, 0.45),
+		0 0 16px rgba(70, 130, 220, 0.25);
+	--haze-bg:
+		radial-gradient(circle at 0.45em 0.55em, rgba(108, 142, 182, 0.42) 0 0.022em, transparent 0.055em),
+		radial-gradient(circle at 1.65em 1.15em, rgba(122, 154, 192, 0.34) 0 0.019em, transparent 0.05em),
+		radial-gradient(circle at 0.95em 2.05em, rgba(102, 136, 176, 0.38) 0 0.021em, transparent 0.052em),
+		radial-gradient(circle at 2.25em 0.35em, rgba(126, 158, 196, 0.3) 0 0.017em, transparent 0.046em),
+		radial-gradient(circle at 2.05em 2.6em, rgba(112, 146, 186, 0.35) 0 0.02em, transparent 0.05em),
+		radial-gradient(circle at 0.3em 1.55em, rgba(118, 150, 190, 0.32) 0 0.018em, transparent 0.048em);
+	--haze-opacity: 0.72;
+	--body-bg:
+		radial-gradient(circle at 0.6em 0.7em, rgba(92, 128, 170, 0.5) 0 0.034em, transparent 0.075em),
+		radial-gradient(circle at 2.3em 1.5em, rgba(108, 142, 182, 0.42) 0 0.03em, transparent 0.068em),
+		radial-gradient(circle at 1.3em 2.9em, rgba(86, 122, 164, 0.48) 0 0.038em, transparent 0.08em),
+		radial-gradient(circle at 3.1em 3.5em, rgba(116, 150, 190, 0.38) 0 0.03em, transparent 0.066em),
+		radial-gradient(circle at 2.9em 0.45em, rgba(100, 134, 175, 0.42) 0 0.032em, transparent 0.07em);
+	--body-opacity: 0.82;
+	--core-bg:
+		radial-gradient(ellipse 2.7em 1.4em at 1.1em 52%, rgba(158, 196, 238, 0.24), rgba(176, 208, 242, 0.1) 55%, transparent 82%),
+		radial-gradient(ellipse 1.25em 0.75em at 0.7em 52%, rgba(146, 188, 235, 0.28), transparent 80%);
+	--core-filter: blur(12px);
+	--core-opacity: 0.75;
+	--flow-bg: linear-gradient(90deg, transparent 0%, rgba(140, 175, 215, 0.09) 17%, rgba(160, 192, 226, 0.04) 30%, transparent 45%, rgba(148, 182, 220, 0.07) 64%, rgba(156, 190, 224, 0.025) 79%, transparent 100%);
+	--flow-low: 0.06;
+	--flow-high: 0.2;
+	--spark-bg:
+		radial-gradient(circle at 1.5em 1.1em, rgba(70, 110, 155, 0.66) 0 0.05em, rgba(120, 158, 200, 0.28) 0.08em, transparent 0.135em),
+		radial-gradient(ellipse 0.32em 0.045em at 1.5em 1.1em, rgba(96, 140, 185, 0.55), transparent 72%),
+		radial-gradient(ellipse 0.045em 0.32em at 1.5em 1.1em, rgba(96, 140, 185, 0.55), transparent 72%),
+		radial-gradient(circle at 1.5em 1.1em, transparent 0 0.105em, rgba(110, 155, 200, 0.26) 0.112em 0.125em, transparent 0.148em),
+		radial-gradient(circle at 4.6em 3.5em, rgba(78, 118, 162, 0.58) 0 0.042em, rgba(128, 165, 205, 0.24) 0.066em, transparent 0.115em),
+		radial-gradient(ellipse 0.26em 0.04em at 4.6em 3.5em, rgba(104, 146, 190, 0.48), transparent 72%),
+		radial-gradient(ellipse 0.04em 0.26em at 4.6em 3.5em, rgba(104, 146, 190, 0.48), transparent 72%),
+		radial-gradient(circle at 3.2em 4.4em, rgba(112, 150, 192, 0.42) 0 0.026em, transparent 0.06em);
+	--spark-filter: blur(0.2px) drop-shadow(0 0 4px rgba(120, 165, 215, 0.35));
+	--spark-low: 0.68;
+	--spark-high: 0.92;
+	--smoke-bg:
+		radial-gradient(ellipse 1.25em 0.75em at 1.15em 1.7em, rgba(130, 162, 198, 0.2), rgba(150, 180, 212, 0.08) 55%, transparent 80%),
+		radial-gradient(ellipse 0.7em 0.45em at 0.75em 1.9em, rgba(142, 172, 206, 0.16), transparent 76%);
+	--smoke-opacity: 0.35;
+	--smoke-blend: normal;
+	--aux-bg:
+		radial-gradient(circle at 0.5em 0.6em, rgba(110, 146, 186, 0.4) 0 0.018em, transparent 0.046em),
+		radial-gradient(circle at 2.1em 1.3em, rgba(124, 156, 194, 0.3) 0 0.015em, transparent 0.04em),
+		radial-gradient(circle at 3.4em 0.9em, rgba(104, 140, 180, 0.34) 0 0.016em, transparent 0.042em),
+		radial-gradient(circle at 2.8em 3.2em, rgba(118, 152, 190, 0.3) 0 0.015em, transparent 0.04em),
+		radial-gradient(circle at 3.9em 2.2em, rgba(128, 160, 196, 0.26) 0 0.014em, transparent 0.038em),
+		radial-gradient(circle at 1.2em 2.4em, rgba(80, 120, 162, 0.55) 0 0.032em, rgba(130, 165, 205, 0.22) 0.05em, transparent 0.09em),
+		radial-gradient(ellipse 0.2em 0.032em at 1.2em 2.4em, rgba(104, 146, 190, 0.45), transparent 72%),
+		radial-gradient(ellipse 0.032em 0.2em at 1.2em 2.4em, rgba(104, 146, 190, 0.45), transparent 72%);
+	--aux-filter: blur(0.3px) drop-shadow(0 0 4px rgba(130, 170, 215, 0.3));
+	--aux-opacity: 0.65;
+	--aux-blend: normal;
+	--next-color: rgba(16, 44, 78, 0.95);
+	--next-shadow:
+		0 0 1px rgba(255, 255, 255, 0.9),
+		0 -0.02em 1px rgba(255, 255, 255, 0.85),
+		0 0 10px rgba(140, 195, 240, 0.28),
+		0 0 24px rgba(96, 150, 220, 0.12);
+	--tail-color: rgba(74, 104, 138, 0.4);
+}
+
+.stage[data-theme='light'][data-glow='snow'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 56% 140% at 76% -30%, rgba(222, 236, 250, 0.7), transparent 62%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(246, 250, 255, 0.9) 50%, rgba(238, 245, 252, 0.92)),
+		linear-gradient(90deg, rgb(251, 253, 255), rgb(246, 250, 254));
+}
+
+.stage[data-theme='light'][data-glow='snow'] .field[data-glow]::before {
+	mix-blend-mode: normal;
+	opacity: var(--wash-o);
+}
+
+/* Blue-gray snow must darken the paper, not screen into it. */
+.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .prediction > .beam,
+.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .torch-beam {
+	mix-blend-mode: normal;
+}
+
+.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .prediction::before {
+	background:
+		radial-gradient(circle at 1.1em 1em, rgba(74, 112, 154, 0.6) 0 0.07em, rgba(124, 160, 202, 0.22) 0.1em, transparent 0.17em),
+		radial-gradient(circle at 3.6em 2.3em, rgba(88, 126, 168, 0.52) 0 0.058em, transparent 0.12em),
+		radial-gradient(circle at 2em 3.9em, rgba(70, 108, 150, 0.56) 0 0.065em, rgba(118, 155, 198, 0.18) 0.095em, transparent 0.16em),
+		radial-gradient(circle at 4.5em 0.6em, rgba(98, 136, 178, 0.44) 0 0.05em, transparent 0.105em);
+	filter: blur(0.5px) drop-shadow(0 0 4px rgba(130, 175, 225, 0.3));
+	mix-blend-mode: normal;
+	animation:
+		snow-near-in-v2 560ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		snow-fall-near-v2 7s linear 560ms infinite;
+}
+
+.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .prediction::after {
+	background:
+		radial-gradient(circle at 2.2em 1.6em, rgba(62, 100, 144, 0.66) 0 0.06em, rgba(120, 156, 198, 0.3) 0.095em, transparent 0.16em),
+		radial-gradient(ellipse 0.46em 0.055em at 2.2em 1.6em, rgba(92, 134, 180, 0.55), transparent 72%),
+		radial-gradient(ellipse 0.055em 0.46em at 2.2em 1.6em, rgba(92, 134, 180, 0.55), transparent 72%),
+		radial-gradient(circle at 2.2em 1.6em, transparent 0 0.13em, rgba(108, 150, 196, 0.26) 0.14em 0.155em, transparent 0.18em),
+		radial-gradient(circle at 5.9em 3.8em, rgba(70, 108, 152, 0.6) 0 0.048em, rgba(126, 162, 202, 0.26) 0.075em, transparent 0.13em),
+		radial-gradient(ellipse 0.34em 0.045em at 5.9em 3.8em, rgba(98, 140, 185, 0.5), transparent 72%),
+		radial-gradient(ellipse 0.045em 0.34em at 5.9em 3.8em, rgba(98, 140, 185, 0.5), transparent 72%),
+		radial-gradient(circle at 5.9em 3.8em, transparent 0 0.1em, rgba(112, 154, 198, 0.22) 0.108em 0.12em, transparent 0.14em),
+		radial-gradient(circle at 4.2em 0.75em, rgba(86, 124, 166, 0.52) 0 0.038em, transparent 0.085em),
+		radial-gradient(ellipse 0.22em 0.035em at 4.2em 0.75em, rgba(106, 146, 190, 0.4), transparent 72%),
+		radial-gradient(ellipse 0.035em 0.22em at 4.2em 0.75em, rgba(106, 146, 190, 0.4), transparent 72%);
+	filter: blur(0.2px) drop-shadow(0 0 5px rgba(130, 175, 225, 0.32));
+	mix-blend-mode: normal;
+	animation:
+		snow-hero-in-v2 640ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		snow-hero-anchor-v2 13s linear 640ms infinite;
+}
+
+.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .next-word {
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	text-shadow: var(--next-shadow);
+}
+
+.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .next-word::before {
+	background: radial-gradient(ellipse 82% 100% at 34% 52%, rgba(252, 254, 255, 0.88), rgba(252, 254, 255, 0.48) 60%, transparent 88%);
+	filter: blur(5px);
+	mix-blend-mode: normal;
+	opacity: var(--scrim-o);
+	animation: snow-scrim-in-v2 380ms ease-out both;
+}
+
+.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .next-word .glyph,
+.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .next-word .glyph:nth-child(2n),
+.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .next-word .glyph:nth-child(3n),
+.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
+	color: var(--next-color);
+	animation-name: snow-glyph-freeze-light-v2;
+}
+
+.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .next-word .glyph::after {
+	color: rgba(96, 142, 192, 0.85);
+	text-shadow: 0 0 0.3em rgba(130, 180, 230, 0.4);
+}
+
+.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .tail {
+	color: var(--tail-color);
+	filter: none;
+	text-shadow: none;
+}
+
+.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .tail .glyph {
+	color: inherit;
+	filter: none;
+	text-shadow: none;
+	animation: none;
+}
+
+.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .edge-left {
+	background: linear-gradient(90deg, rgb(251, 253, 255) 0%, rgb(251, 253, 255) 40%, rgba(251, 253, 255, 0) 100%);
+}
+
+.stage[data-theme='light'][data-glow='snow'] .field[data-glow] .edge-right {
+	background: linear-gradient(
+		270deg,
+		rgba(246, 250, 254, 0.55) 0%,
+		rgba(246, 250, 254, 0.24) 42%,
+		rgba(246, 250, 254, 0) 100%
+	);
+	opacity: 0.55;
+}
+
+/* Light theme + flow off: re-win against the legacy animation kills. */
+.stage[data-theme='light'][data-glow='snow'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: snow-near-in-v2 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-theme='light'][data-glow='snow'][data-light-flow='off'] .field[data-glow] .prediction::after {
+	animation: snow-hero-in-v2 640ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-theme='light'][data-glow='snow'][data-light-flow='off'] .field[data-glow] .next-word::before {
+	animation: snow-scrim-in-v2 380ms ease-out both;
+}
+
+/* ---------- Waiting state: quiet snowfall at the caret ---------- */
+.field[data-state='waiting'][data-glow='snow'] {
+	--haze-width: 5em;
+	--haze-height: 2.5em;
+	--haze-size: 2.1em 2.4em;
+	--haze-bg:
+		radial-gradient(circle at 0.4em 0.5em, rgba(214, 240, 255, 0.5) 0 0.018em, transparent 0.048em),
+		radial-gradient(circle at 1.5em 1.1em, rgba(196, 228, 252, 0.42) 0 0.016em, transparent 0.044em),
+		radial-gradient(circle at 0.9em 1.9em, rgba(222, 244, 255, 0.46) 0 0.017em, transparent 0.046em),
+		radial-gradient(circle at 1.8em 2.1em, rgba(204, 234, 255, 0.38) 0 0.015em, transparent 0.042em);
+	--haze-filter: blur(0.3px);
+	--haze-opacity: 0.8;
+	--haze-mask: linear-gradient(90deg, transparent 0, black 0.4em), radial-gradient(ellipse 94% 96% at 26% 50%, black 0 40%, rgba(0, 0, 0, 0.5) 68%, transparent 96%);
+	--torch-haze-motion: snow-waiting-fall-v2 10s linear infinite;
+	--core-width: 2.6em;
+	--core-height: 1.9em;
+	--core-size: auto;
+	--core-bg:
+		radial-gradient(ellipse 1.15em 0.8em at 0.6em 50%, rgba(224, 244, 255, 0.4), rgba(150, 205, 255, 0.14) 55%, transparent 80%),
+		radial-gradient(ellipse 0.5em 0.35em at 0.45em 50%, rgba(244, 252, 255, 0.55), transparent 78%);
+	--core-filter: blur(9px);
+	--core-opacity: 0.92;
+	--core-mask: linear-gradient(90deg, transparent 0, black 0.3em), radial-gradient(ellipse 94% 96% at 26% 50%, black 0 48%, transparent 95%);
+	--torch-core-motion: snow-waiting-glimmer-v2 3.2s ease-in-out infinite;
+	--flow-width: 2.4em;
+	--flow-height: 2.6em;
+	--flow-size: 1.7em 1.5em;
+	--flow-bg:
+		radial-gradient(circle at 0.5em 0.45em, rgba(228, 246, 255, 0.75) 0 0.022em, transparent 0.055em),
+		radial-gradient(circle at 1.2em 1.1em, rgba(206, 236, 255, 0.6) 0 0.019em, transparent 0.05em);
+	--flow-filter: blur(0.2px);
+	--flow-low: 0.28;
+	--flow-high: 0.62;
+	--flow-mask: linear-gradient(90deg, transparent 0, black 0.35em), linear-gradient(180deg, transparent 0, black 20% 80%, transparent 100%);
+	--flow-motion: snow-waiting-trickle-v2 2.7s linear infinite;
+	--spark-width: 3.2em;
+	--spark-height: 2.4em;
+	--spark-size: auto;
+	--spark-bg:
+		radial-gradient(circle at 0.8em 0.75em, rgba(255, 255, 255, 0.9) 0 0.035em, transparent 0.08em),
+		radial-gradient(ellipse 0.2em 0.03em at 0.8em 0.75em, rgba(236, 248, 255, 0.6), transparent 72%),
+		radial-gradient(ellipse 0.03em 0.2em at 0.8em 0.75em, rgba(236, 248, 255, 0.6), transparent 72%),
+		radial-gradient(circle at 2.1em 1.7em, rgba(240, 250, 255, 0.78) 0 0.028em, transparent 0.066em),
+		radial-gradient(ellipse 0.15em 0.026em at 2.1em 1.7em, rgba(226, 244, 255, 0.5), transparent 72%),
+		radial-gradient(ellipse 0.026em 0.15em at 2.1em 1.7em, rgba(226, 244, 255, 0.5), transparent 72%);
+	--spark-filter: blur(0.2px) drop-shadow(0 0 4px rgba(206, 240, 255, 0.55));
+	--spark-low: 0.12;
+	--spark-high: 0.75;
+	--spark-mask: linear-gradient(90deg, transparent 0, black 0.35em), radial-gradient(ellipse 94% 94% at 30% 50%, black 0 52%, transparent 96%);
+	--spark-motion: snow-waiting-twinkle-v2 3.8s ease-in-out infinite;
+	--smoke-width: 3.2em;
+	--smoke-height: 2.2em;
+	--smoke-size: auto;
+	--smoke-bg: radial-gradient(ellipse 0.85em 0.5em at 0.8em 1.5em, rgba(212, 234, 252, 0.28), transparent 78%);
+	--smoke-filter: blur(9px);
+	--smoke-opacity: 0.42;
+	--smoke-blend: screen;
+	--smoke-mask: linear-gradient(90deg, transparent 0, black 0.3em), radial-gradient(ellipse 94% 96% at 30% 42%, black 0 44%, transparent 94%);
+	--smoke-motion: snow-waiting-breath-v2 5.4s ease-in-out infinite;
+	--aux-opacity: 0;
+}
+
+.field[data-theme='light'][data-state='waiting'][data-glow='snow'] {
+	--haze-bg:
+		radial-gradient(circle at 0.4em 0.5em, rgba(108, 144, 184, 0.4) 0 0.018em, transparent 0.048em),
+		radial-gradient(circle at 1.5em 1.1em, rgba(122, 154, 192, 0.32) 0 0.016em, transparent 0.044em),
+		radial-gradient(circle at 0.9em 1.9em, rgba(102, 138, 178, 0.36) 0 0.017em, transparent 0.046em),
+		radial-gradient(circle at 1.8em 2.1em, rgba(118, 150, 190, 0.3) 0 0.015em, transparent 0.042em);
+	--haze-opacity: 0.62;
+	--core-bg:
+		radial-gradient(ellipse 1.15em 0.8em at 0.6em 50%, rgba(152, 192, 236, 0.3), rgba(174, 206, 242, 0.12) 55%, transparent 80%),
+		radial-gradient(ellipse 0.5em 0.35em at 0.45em 50%, rgba(140, 184, 232, 0.32), transparent 78%);
+	--core-filter: blur(8px);
+	--core-opacity: 0.75;
+	--flow-bg:
+		radial-gradient(circle at 0.5em 0.45em, rgba(92, 130, 172, 0.55) 0 0.022em, transparent 0.055em),
+		radial-gradient(circle at 1.2em 1.1em, rgba(108, 144, 184, 0.45) 0 0.019em, transparent 0.05em);
+	--flow-low: 0.2;
+	--flow-high: 0.5;
+	--spark-bg:
+		radial-gradient(circle at 0.8em 0.75em, rgba(70, 110, 155, 0.6) 0 0.035em, transparent 0.08em),
+		radial-gradient(ellipse 0.2em 0.03em at 0.8em 0.75em, rgba(100, 142, 188, 0.45), transparent 72%),
+		radial-gradient(ellipse 0.03em 0.2em at 0.8em 0.75em, rgba(100, 142, 188, 0.45), transparent 72%),
+		radial-gradient(circle at 2.1em 1.7em, rgba(82, 122, 166, 0.5) 0 0.028em, transparent 0.066em),
+		radial-gradient(ellipse 0.15em 0.026em at 2.1em 1.7em, rgba(108, 148, 192, 0.38), transparent 72%),
+		radial-gradient(ellipse 0.026em 0.15em at 2.1em 1.7em, rgba(108, 148, 192, 0.38), transparent 72%);
+	--spark-filter: blur(0.2px) drop-shadow(0 0 3px rgba(120, 165, 215, 0.3));
+	--spark-high: 0.6;
+	--smoke-bg: radial-gradient(ellipse 0.85em 0.5em at 0.8em 1.5em, rgba(130, 162, 198, 0.18), transparent 78%);
+	--smoke-opacity: 0.3;
+	--smoke-blend: normal;
+}
+
+/* Waiting + flow off: still air, glimmer and snow held in place. */
+.field[data-light-flow='off'][data-state='waiting'][data-glow='snow'] {
+	--torch-haze-motion: none;
+	--torch-core-motion: none;
+	--flow-motion: none;
+	--spark-motion: none;
+	--smoke-motion: none;
+}
+
+/* ---------- Keyframes (snow-*-v2) ---------- */
+/* Seamless loops: every background-position delta is an exact
+   whole-tile multiple; mid stops add wind sway only. */
+@keyframes snow-fall-far-v2 {
+	0% {
+		background-position: 0em 0em;
+	}
+	25% {
+		background-position: 0.85em 1.5em;
+	}
+	50% {
+		background-position: 1.1em 3em;
+	}
+	75% {
+		background-position: 2.05em 4.5em;
+	}
+	100% {
+		background-position: 2.6em 6em;
+	}
+}
+
+@keyframes snow-fall-mid-v2 {
+	0% {
+		background-position: 0em 0em;
+	}
+	25% {
+		background-position: 1.15em 2.1em;
+	}
+	50% {
+		background-position: 1.6em 4.2em;
+	}
+	75% {
+		background-position: 2.95em 6.3em;
+	}
+	100% {
+		background-position: 3.7em 8.4em;
+	}
+}
+
+@keyframes snow-fall-near-v2 {
+	0% {
+		background-position: 0em 0em;
+	}
+	25% {
+		background-position: 1.75em 2.4em;
+	}
+	50% {
+		background-position: 2.2em 4.8em;
+	}
+	75% {
+		background-position: 4.3em 7.2em;
+	}
+	100% {
+		background-position: 5.2em 9.6em;
+	}
+}
+
+@keyframes snow-hero-anchor-v2 {
+	0% {
+		background-position: 0em 0em;
+		opacity: var(--hero-o, 0.92);
+	}
+	25% {
+		background-position: 0.55em 1.4em;
+		opacity: calc(var(--hero-o, 0.92) * 0.82);
+	}
+	50% {
+		background-position: -0.35em 2.8em;
+		opacity: var(--hero-o, 0.92);
+	}
+	75% {
+		background-position: 0.4em 4.2em;
+		opacity: calc(var(--hero-o, 0.92) * 0.88);
+	}
+	100% {
+		background-position: 0em 5.6em;
+		opacity: var(--hero-o, 0.92);
+	}
+}
+
+@keyframes snow-hero-flurry-v2 {
+	0% {
+		background-position: 0em 0em;
+		opacity: var(--spark-low);
+	}
+	22% {
+		background-position: 0.6em 2.2em;
+		opacity: var(--spark-high);
+	}
+	50% {
+		background-position: -0.4em 5em;
+		opacity: calc(var(--spark-high) * 0.7);
+	}
+	78% {
+		background-position: 0.5em 7.8em;
+		opacity: var(--spark-high);
+	}
+	100% {
+		background-position: 0em 10em;
+		opacity: var(--spark-low);
+	}
+}
+
+@keyframes snow-dust-drift-v2 {
+	0% {
+		background-position: 0em 0em;
+		opacity: var(--aux-opacity);
+	}
+	30% {
+		background-position: 1.7em 2.4em;
+		opacity: calc(var(--aux-opacity) * 0.72);
+	}
+	62% {
+		background-position: 2.7em 5em;
+		opacity: var(--aux-opacity);
+	}
+	100% {
+		background-position: 4.6em 8em;
+		opacity: var(--aux-opacity);
+	}
+}
+
+@keyframes snow-wind-gust-v2 {
+	0% {
+		background-position: 0em 0;
+		opacity: var(--flow-low);
+	}
+	38% {
+		opacity: var(--flow-high);
+	}
+	70% {
+		opacity: calc(var(--flow-high) * 0.5);
+	}
+	100% {
+		background-position: 9.4em 0;
+		opacity: var(--flow-low);
+	}
+}
+
+@keyframes snow-breath-fog-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-36%) translateX(-0.05em) scale(0.6);
+	}
+	30% {
+		opacity: var(--smoke-opacity);
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(-102%) translateX(1.3em) scale(1.3);
+	}
+}
+
+@keyframes snow-moon-breathe-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--core-opacity) * 0.78);
+	}
+	50% {
+		opacity: var(--core-opacity);
+	}
+}
+
+@keyframes snow-field-glisten-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--wash-o, 0.92) * 0.86);
+	}
+	50% {
+		opacity: var(--wash-o, 0.92);
+	}
+}
+
+@keyframes snow-near-in-v2 {
+	from {
+		opacity: 0;
+		transform: translateY(-50%) scaleX(0.3);
+	}
+	to {
+		opacity: var(--near-o, 0.95);
+		transform: translateY(-50%) scaleX(1);
+	}
+}
+
+@keyframes snow-hero-in-v2 {
+	from {
+		opacity: 0;
+		transform: translateY(-50%) scaleX(0.3);
+	}
+	to {
+		opacity: var(--hero-o, 0.92);
+		transform: translateY(-50%) scaleX(1);
+	}
+}
+
+@keyframes snow-scrim-in-v2 {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: var(--scrim-o, 0.82);
+	}
+}
+
+@keyframes snow-word-in-v2 {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes snow-glyph-freeze-v2 {
+	0% {
+		color: rgb(255, 255, 255);
+		opacity: 0;
+		filter: blur(0.14em) drop-shadow(0 0 0.24em rgba(226, 246, 255, 0));
+		transform: translateY(-0.32em);
+	}
+	42% {
+		opacity: 0.78;
+		filter: blur(0.05em) drop-shadow(0 0 0.28em rgba(226, 246, 255, 0.4));
+		transform: translateY(-0.09em);
+	}
+	70% {
+		color: rgb(255, 255, 255);
+		opacity: 1;
+		filter: blur(0em) drop-shadow(0 0 0.3em rgba(226, 246, 255, 0.9));
+		transform: translateY(0em);
+	}
+	100% {
+		color: var(--next-color);
+		opacity: 1;
+		filter: blur(0em) drop-shadow(0 0 0.1em rgba(190, 232, 255, 0.24));
+		transform: translateY(0em);
+	}
+}
+
+@keyframes snow-glyph-freeze-light-v2 {
+	0% {
+		color: rgb(170, 202, 232);
+		opacity: 0;
+		filter: blur(0.14em) drop-shadow(0 0 0.2em rgba(140, 190, 235, 0));
+		transform: translateY(-0.32em);
+	}
+	42% {
+		opacity: 0.8;
+		filter: blur(0.05em) drop-shadow(0 0 0.24em rgba(140, 190, 235, 0.4));
+		transform: translateY(-0.09em);
+	}
+	70% {
+		color: rgb(28, 62, 100);
+		opacity: 1;
+		filter: blur(0em) drop-shadow(0 0 0.24em rgba(150, 200, 240, 0.55));
+		transform: translateY(0em);
+	}
+	100% {
+		color: var(--next-color);
+		opacity: 1;
+		filter: blur(0em) drop-shadow(0 0 0.07em rgba(120, 170, 220, 0.22));
+		transform: translateY(0em);
+	}
+}
+
+@keyframes snow-glyph-mote-v2 {
+	0% {
+		opacity: 0.85;
+		filter: blur(0.03em);
+		transform: translateY(-0.62em) translateX(-0.08em) scale(0.7);
+	}
+	55% {
+		opacity: 0.4;
+		filter: blur(0.04em);
+		transform: translateY(-0.2em) translateX(0em) scale(0.9);
+	}
+	100% {
+		opacity: 0;
+		filter: blur(0.05em);
+		transform: translateY(0em) translateX(0.04em) scale(1);
+	}
+}
+
+@keyframes snow-waiting-fall-v2 {
+	0% {
+		background-position: 0em 0em;
+	}
+	25% {
+		background-position: 0.14em 1.2em;
+	}
+	50% {
+		background-position: -0.1em 2.4em;
+	}
+	75% {
+		background-position: 0.12em 3.6em;
+	}
+	100% {
+		background-position: 0em 4.8em;
+	}
+}
+
+@keyframes snow-waiting-trickle-v2 {
+	0% {
+		background-position: 0em 0em;
+		opacity: var(--flow-low);
+	}
+	30% {
+		opacity: var(--flow-high);
+	}
+	100% {
+		background-position: 0em 3em;
+		opacity: var(--flow-low);
+	}
+}
+
+@keyframes snow-waiting-glimmer-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--core-opacity) * 0.7);
+	}
+	50% {
+		opacity: var(--core-opacity);
+	}
+}
+
+@keyframes snow-waiting-twinkle-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--spark-high) * 0.25);
+	}
+	28% {
+		opacity: var(--spark-high);
+	}
+	52% {
+		opacity: calc(var(--spark-high) * 0.45);
+	}
+	76% {
+		opacity: var(--spark-high);
+	}
+}
+
+@keyframes snow-waiting-breath-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-40%) scale(0.65);
+	}
+	32% {
+		opacity: var(--smoke-opacity);
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(-96%) translateX(0.85em) scale(1.2);
 	}
 }
