@@ -1,0 +1,962 @@
+/* ============================================================
+   SPOILER v2 — "Спойлер: будущее скрыто пылью, раскрыто только
+   следующее слово". A Telegram spoiler laid over the not-yet-
+   said: the future sits under living particle dust and only the
+   word about to be spoken has been revealed. THE REVEAL (the
+   signature): the NEXT WORD is crisp, fully materialized — at
+   ignite each glyph plays a DUST-SCATTER (glyph::before): a
+   small cluster of silver-lilac dots bursts up-and-outward and
+   evaporates (~520ms, per-glyph var(--i) delay, fill both so
+   nothing shows before its beat) while the glyph fades in
+   beneath (materialize keyframes carry no 100% frame, so each
+   settles onto the live ink slot). The dust literally blows off
+   the words as they are said. THE VEIL (.tail::before): the
+   tail glyphs are near-invisible silhouettes buried under a
+   shimmering dot band — three dot-tile rasters at different
+   tile sizes/phases plus a faint sheen, TWINKLING via
+   steps(1, end) background-position jitter and a soft opacity
+   breathe. Density grows with distance: the horizontal mask
+   keeps the first ~1.5em semi-transparent (the first tail glyph
+   half-emerges through thinning dust), packs the band dense to
+   the right and fades it out INSIDE the box by ~10em; a
+   right-edge fade and a vertical fade intersect with it
+   (mask-composite: intersect) so the veil never reads as a
+   solid box. DISSOLVE FRINGE (.tail::after): a narrow strip at
+   the veil's left edge where sparse dots rise and evaporate in
+   a slow seamless loop (tile heights 0.48em/0.36em, loop
+   -1.44em = LCM) — the boundary where the future is currently
+   being revealed. VESSEL: quiet near-black charcoal with a
+   faint cool sheen, no grid, no panel — the veil is the show;
+   caret a clean silver needle. WAITING: a compact particle
+   SWARM at the caret — the torch-core carries a dot cluster +
+   sparse tile twinkling via steps() jitter under a gentle
+   opacity breathe, the torch-haze a faint cool lilac pool;
+   every other torch layer dead. No animated custom property is
+   consumed inside a background anywhere, so no @property and
+   nothing has to live on the torch element. LIGHT THEME —
+   gray-violet dust on paper: veil dots become multiply ink
+   specks, the revealed word deep charcoal ink, tail silhouettes
+   stay invisible under the specks, the swarm turns violet-gray
+   ink. data-light-flow='off': the reveal scatter plays once
+   (finite); veil twinkle, fringe drift and the swarm freeze
+   into a static stipple that still hides the tail. Every
+   decorated layer's masks complete INSIDE their boxes.
+   Keyframes spoiler-*-v2 and vars --sp-*-v2 only; legacy
+   spoiler-* rules in legacy.css are superseded and get deleted.
+   ============================================================ */
+
+.field[data-glow='spoiler'] {
+	--layer-radius: 999px;
+	--layer-clip: inset(0 round 999px);
+	--sp-dust-hot-v2: oklch(0.93 0.032 295 / 0.66);
+	--sp-dust-v2: oklch(0.82 0.045 292 / 0.5);
+	--sp-dust-soft-v2: oklch(0.7 0.05 290 / 0.34);
+	--sp-veil-sheen-v2: oklch(0.76 0.05 292 / 0.08);
+	--sp-veil-blend-v2: normal;
+	--sp-veil-o-v2: 0.92;
+	--sp-fringe-o-v2: 0.6;
+	--sp-silhouette-v2: oklch(0.86 0.02 295 / 0.07);
+	--sp-emerge-v2: oklch(0.88 0.028 294 / 0.34);
+	--sp-ink-v2: oklch(0.965 0.012 300 / 0.98);
+	--sp-ink-glow-v2:
+		0 0 0.26em oklch(0.92 0.03 295 / 0.28),
+		0 0 0.7em oklch(0.78 0.05 292 / 0.12);
+	--sp-pool-v2: oklch(0.72 0.055 292 / 0.16);
+	--sp-vessel-bg-v2:
+		radial-gradient(ellipse 94% 155% at 50% 54%, transparent 0 48%, rgba(5, 5, 11, 0.52) 100%),
+		linear-gradient(180deg, rgba(222, 226, 248, 0.032), transparent 34%),
+		linear-gradient(90deg, rgba(208, 214, 244, 0.02), transparent 30%);
+	--ready-border: rgba(198, 200, 224, 0.17);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.05) inset,
+		0 -34px 90px rgba(8, 8, 14, 0.6) inset,
+		0 0 52px oklch(0.5 0.03 292 / 0.1) inset,
+		0 30px 66px rgba(0, 0, 0, 0.5),
+		0 0 80px oklch(0.72 0.05 292 / 0.07);
+	--field-wash: linear-gradient(180deg, rgba(222, 226, 248, 0.02), transparent 36%);
+	--caret-gradient: linear-gradient(
+		180deg,
+		rgb(252, 252, 255) 0%,
+		rgb(228, 228, 242) 40%,
+		rgb(172, 172, 200) 75%,
+		rgb(98, 98, 126) 100%
+	);
+	--caret-shadow:
+		0 0 6px rgba(240, 240, 255, 0.7),
+		0 0 18px rgba(192, 192, 230, 0.4),
+		0 0 40px rgba(142, 142, 200, 0.18);
+	--haze-bg: none;
+	--haze-opacity: 0;
+	--haze-motion: none;
+	--torch-haze-motion: none;
+	--haze-mask: none;
+	--body-bg: none;
+	--body-opacity: 0;
+	--body-mask: none;
+	--core-bg: none;
+	--core-opacity: 0;
+	--core-motion: none;
+	--torch-core-motion: none;
+	--core-mask: none;
+	--flow-bg: none;
+	--flow-low: 0;
+	--flow-high: 0;
+	--flow-motion: none;
+	--flow-mask: none;
+	--spark-bg: none;
+	--spark-low: 0;
+	--spark-high: 0;
+	--spark-motion: none;
+	--spark-mask: none;
+	--smoke-bg: none;
+	--smoke-opacity: 0;
+	--smoke-motion: none;
+	--smoke-blend: normal;
+	--smoke-mask: none;
+	--aux-bg: none;
+	--aux-opacity: 0;
+	--aux-motion: none;
+	--aux-mask: none;
+	--next-color: var(--sp-ink-v2);
+	--next-shadow: var(--sp-ink-glow-v2);
+	--tail-color: var(--sp-silhouette-v2);
+}
+
+/* The dust lives on the pseudos: every shared beam dies. Torch layers
+   serve the waiting swarm only. */
+.stage[data-glow='spoiler'] .field[data-glow] .prediction > .beam {
+	display: none;
+}
+
+.stage[data-glow='spoiler'] .field[data-glow] .caret-origin-glow[data-mode='ready'] {
+	display: none;
+}
+
+/* Multi-layer masks (density ramp x right-edge fade x vertical falloff;
+   left fade x shaped falloff on the torch layers) need intersection, not
+   union — every fade completes inside its own box. */
+.stage[data-glow='spoiler'] .field[data-glow] .torch-beam,
+.stage[data-glow='spoiler'] .field[data-glow] .tail::before,
+.stage[data-glow='spoiler'] .field[data-glow] .tail::after {
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+}
+
+.stage[data-glow='spoiler'] .field[data-glow] .prediction {
+	isolation: isolate;
+}
+
+/* Quiet near-black charcoal vessel with a faint cool cast. */
+.stage[data-glow='spoiler'] .field[data-glow] {
+	background:
+		linear-gradient(180deg, rgba(224, 228, 250, 0.016), transparent 32%),
+		linear-gradient(90deg, rgb(15, 15, 19), rgb(17, 17, 22) 52%, rgb(16, 16, 21));
+}
+
+/* VESSEL OVERLAY: soft edge vignette + a whisper of cool sheen — utterly
+   still; the veil is the only living thing. Re-pins over the legacy
+   spoiler-field-pulse and the shared 210% background-size. */
+.stage[data-glow='spoiler'] .field[data-glow]::before {
+	background: var(--sp-vessel-bg-v2);
+	background-size: auto;
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: normal;
+	opacity: 1;
+	animation: none;
+}
+
+/* Dissolve into the field's rounded clip, not the paint box; edge
+   overlays extended into the 64px padding, painted in the vessel color
+   so the dust never steps at the content box. */
+.stage[data-glow='spoiler'] .field[data-glow] .paint {
+	overflow: visible;
+	clip-path: inset(-3.4em -6em -3.4em 0);
+}
+
+.stage[data-glow='spoiler'] .field[data-glow] .edge-left {
+	left: -64px;
+	width: 156px;
+	background: linear-gradient(90deg, rgb(15, 15, 19) 0%, rgb(15, 15, 19) 40%, rgba(15, 15, 19, 0) 100%);
+	opacity: 0;
+}
+
+.stage[data-glow='spoiler'] .field[data-glow] .viewport.scrolled .edge-left {
+	opacity: 1;
+}
+
+.stage[data-glow='spoiler'] .field[data-glow] .edge-right {
+	display: block;
+	right: -64px;
+	width: 190px;
+	background: linear-gradient(270deg, rgba(16, 16, 21, 0.9) 0%, rgba(16, 16, 21, 0.5) 36%, rgba(16, 16, 21, 0) 100%);
+	opacity: 0.8;
+}
+
+/* No prediction-level auras: the story is word + veil, nothing else.
+   (Also retires the legacy spoiler halo on this pseudo.) */
+.stage[data-glow='spoiler'] .field[data-glow] .prediction::before,
+.stage[data-glow='spoiler'] .field[data-glow] .prediction::after {
+	content: none;
+	background: none;
+	animation: none;
+}
+
+/* ---------- The word: dust blows off what is being said ---------- */
+.stage[data-glow='spoiler'] .field[data-glow] .next-word {
+	position: relative;
+	isolation: isolate;
+	z-index: 5;
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-mask-image: none;
+	mask-image: none;
+	filter: none;
+	text-shadow: none;
+	transform: none;
+	animation: spoiler-word-in-v2 160ms ease-out both;
+}
+
+.stage[data-glow='spoiler'] .field[data-glow] .next-word::before,
+.stage[data-glow='spoiler'] .field[data-glow] .next-word::after {
+	content: none;
+	background: none;
+	animation: none;
+}
+
+/* THE MATERIALIZE: each glyph fades in beneath its dust puff — blur and
+   silhouette first, a brief over-bright silver beat, then (no 100% frame)
+   it settles onto the live crisp ink slot. The nth-child group re-wins
+   legacy tint splits. */
+.stage[data-glow='spoiler'] .field[data-glow] .next-word .glyph,
+.stage[data-glow='spoiler'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-glow='spoiler'] .field[data-glow] .next-word .glyph:nth-child(3n + 2),
+.stage[data-glow='spoiler'] .field[data-glow] .next-word .glyph:nth-child(3n) {
+	display: inline-block;
+	position: relative;
+	color: var(--sp-ink-v2);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-text-fill-color: currentColor;
+	opacity: 1;
+	filter: none;
+	text-shadow: var(--sp-ink-glow-v2);
+	transform: none;
+	animation: spoiler-materialize-v2 460ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+	animation-delay: calc(90ms + var(--i, 0) * 55ms);
+}
+
+/* DUST-SCATTER (the signature): glyph::before is free per effect — a
+   small cluster of dots sitting on the glyph bursts up-and-outward and
+   evaporates in ~520ms, synced to the glyph's own materialize beat.
+   Box: left -0.16em, top -0.5em, height 1.35em => bottom at 0.85em;
+   max upward travel -0.36em keeps every painted dot well inside the
+   0.821em clearance above the line box. Fill both + 0% opacity 0 keeps
+   the puff invisible during its stagger delay and after it dies. */
+.stage[data-glow='spoiler'] .field[data-glow] .next-word .glyph::before {
+	position: absolute;
+	left: -0.16em;
+	top: -0.5em;
+	z-index: 2;
+	width: calc(100% + 0.36em);
+	height: 1.35em;
+	content: '';
+	pointer-events: none;
+	background:
+		radial-gradient(circle at 18% 74%, var(--sp-dust-hot-v2) 0 0.03em, transparent 0.056em),
+		radial-gradient(circle at 44% 60%, var(--sp-dust-v2) 0 0.026em, transparent 0.05em),
+		radial-gradient(circle at 68% 78%, var(--sp-dust-hot-v2) 0 0.028em, transparent 0.054em),
+		radial-gradient(circle at 30% 42%, var(--sp-dust-soft-v2) 0 0.034em, transparent 0.06em),
+		radial-gradient(circle at 58% 34%, var(--sp-dust-v2) 0 0.024em, transparent 0.048em),
+		radial-gradient(circle at 82% 52%, var(--sp-dust-soft-v2) 0 0.03em, transparent 0.056em);
+	background-repeat: no-repeat;
+	-webkit-mask-image: linear-gradient(90deg, transparent 0, black 0.16em, black calc(100% - 0.1em), transparent 100%);
+	mask-image: linear-gradient(90deg, transparent 0, black 0.16em, black calc(100% - 0.1em), transparent 100%);
+	opacity: 0;
+	transform-origin: 50% 82%;
+	animation: spoiler-scatter-v2 520ms ease-out both;
+	animation-delay: calc(90ms + var(--i, 0) * 55ms);
+}
+
+/* The spoiler changes cover, not letters: no scrambled alter egos. */
+.stage[data-glow='spoiler'] .field[data-glow] .next-word .glyph::after,
+.stage[data-glow='spoiler'] .field[data-glow] .tail .glyph::after {
+	opacity: 0;
+	animation: none;
+}
+
+/* ---------- Tail: the future under living dust ---------- */
+/* Near-invisible silhouettes; the container mask is the outer envelope
+   (everything gone by ~11em), the veil pseudo shapes its own density. */
+.stage[data-glow='spoiler'] .field[data-glow] .tail {
+	position: relative;
+	isolation: isolate;
+	z-index: 2;
+	color: var(--tail-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-text-fill-color: currentColor;
+	filter: none;
+	text-shadow: none;
+	-webkit-mask-image: linear-gradient(90deg, black 0 7.5em, rgba(0, 0, 0, 0.35) 9.5em, transparent 11em);
+	mask-image: linear-gradient(90deg, black 0 7.5em, rgba(0, 0, 0, 0.35) 9.5em, transparent 11em);
+	animation: spoiler-tail-in-v2 320ms ease-out 160ms both;
+}
+
+.stage[data-glow='spoiler'] .field[data-glow] .tail .glyph,
+.stage[data-glow='spoiler'] .field[data-glow] .tail .glyph:nth-child(3n + 1),
+.stage[data-glow='spoiler'] .field[data-glow] .tail .glyph:nth-child(3n + 2),
+.stage[data-glow='spoiler'] .field[data-glow] .tail .glyph:nth-child(3n) {
+	display: inline-block;
+	position: relative;
+	color: var(--sp-silhouette-v2);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-text-fill-color: currentColor;
+	opacity: 1;
+	filter: none;
+	text-shadow: none;
+	transform: none;
+	animation: none;
+}
+
+/* The first tail glyph half-emerges through the thinning dust (the tail
+   may lead with a space glyph, so cover the first two children). */
+.stage[data-glow='spoiler'] .field[data-glow] .tail .glyph:nth-child(-n + 2) {
+	color: var(--sp-emerge-v2);
+}
+
+/* THE VEIL: three dot-tile rasters (different tile sizes/phases) + a
+   faint sheen, twinkling via steps() jitter and a slow opacity breathe.
+   Box: top -0.5em, height 1.96em => bottom at 1.46em (0.46em below the
+   line box, inside the 0.821em clearance). Masks: density ramp (thin
+   first ~1.5em, dense, gone inside the box by 10em) x right-edge fade x
+   vertical falloff — intersected, so nothing reads as a solid block. */
+.stage[data-glow='spoiler'] .field[data-glow] .tail::before {
+	position: absolute;
+	left: -0.12em;
+	top: -0.5em;
+	z-index: 3;
+	width: calc(100% + 0.72em);
+	height: 1.96em;
+	content: '';
+	pointer-events: none;
+	border-radius: 0;
+	background:
+		radial-gradient(circle at 0.09em 0.11em, var(--sp-dust-hot-v2) 0 0.03em, transparent 0.056em),
+		radial-gradient(circle at 0.26em 0.29em, var(--sp-dust-v2) 0 0.036em, transparent 0.064em),
+		radial-gradient(circle at 0.07em 0.33em, var(--sp-dust-soft-v2) 0 0.042em, transparent 0.074em),
+		radial-gradient(ellipse 58% 86% at 34% 50%, var(--sp-veil-sheen-v2), transparent 80%);
+	background-size:
+		0.36em 0.31em,
+		0.47em 0.41em,
+		0.57em 0.49em,
+		100% 100%;
+	background-repeat: repeat, repeat, repeat, no-repeat;
+	filter: none;
+	-webkit-mask-image:
+		linear-gradient(
+			90deg,
+			transparent 0,
+			rgba(0, 0, 0, 0.18) 0.4em,
+			rgba(0, 0, 0, 0.45) 1.1em,
+			rgba(0, 0, 0, 0.78) 1.9em,
+			black 2.8em 6.6em,
+			rgba(0, 0, 0, 0.5) 8.4em,
+			transparent 10em
+		),
+		linear-gradient(90deg, black 0 calc(100% - 1.1em), transparent 100%),
+		linear-gradient(180deg, transparent 0, rgba(0, 0, 0, 0.7) 20%, black 38% 64%, rgba(0, 0, 0, 0.7) 82%, transparent 100%);
+	mask-image:
+		linear-gradient(
+			90deg,
+			transparent 0,
+			rgba(0, 0, 0, 0.18) 0.4em,
+			rgba(0, 0, 0, 0.45) 1.1em,
+			rgba(0, 0, 0, 0.78) 1.9em,
+			black 2.8em 6.6em,
+			rgba(0, 0, 0, 0.5) 8.4em,
+			transparent 10em
+		),
+		linear-gradient(90deg, black 0 calc(100% - 1.1em), transparent 100%),
+		linear-gradient(180deg, transparent 0, rgba(0, 0, 0, 0.7) 20%, black 38% 64%, rgba(0, 0, 0, 0.7) 82%, transparent 100%);
+	mix-blend-mode: var(--sp-veil-blend-v2);
+	opacity: var(--sp-veil-o-v2);
+	transform: none;
+	animation:
+		spoiler-dust-in-v2 360ms ease-out 120ms both,
+		spoiler-veil-twinkle-v2 1.15s steps(1, end) infinite,
+		spoiler-veil-breathe-v2 3.2s ease-in-out 480ms infinite;
+}
+
+/* DISSOLVE FRINGE: sparse dots at the veil's left edge rise and
+   evaporate in a slow seamless loop — the revealing boundary.
+   Box: top -0.72em, height 1.95em => bottom at 1.23em (0.23em below the
+   line box); tile heights 0.48em / 0.36em, loop distance -1.44em (LCM). */
+.stage[data-glow='spoiler'] .field[data-glow] .tail::after {
+	position: absolute;
+	left: -0.28em;
+	top: -0.72em;
+	z-index: 4;
+	width: 1.75em;
+	height: 1.95em;
+	content: '';
+	pointer-events: none;
+	border-radius: 0;
+	background:
+		radial-gradient(circle at 0.13em 0.19em, var(--sp-dust-hot-v2) 0 0.024em, transparent 0.048em),
+		radial-gradient(circle at 0.31em 0.05em, var(--sp-dust-soft-v2) 0 0.031em, transparent 0.058em);
+	background-size:
+		0.36em 0.48em,
+		0.44em 0.36em;
+	filter: none;
+	-webkit-mask-image:
+		linear-gradient(180deg, transparent 0, rgba(0, 0, 0, 0.35) 30%, rgba(0, 0, 0, 0.8) 55%, black 74%, rgba(0, 0, 0, 0.6) 92%, transparent 100%),
+		linear-gradient(90deg, rgba(0, 0, 0, 0.5) 0, black 28%, rgba(0, 0, 0, 0.55) 62%, transparent 100%);
+	mask-image:
+		linear-gradient(180deg, transparent 0, rgba(0, 0, 0, 0.35) 30%, rgba(0, 0, 0, 0.8) 55%, black 74%, rgba(0, 0, 0, 0.6) 92%, transparent 100%),
+		linear-gradient(90deg, rgba(0, 0, 0, 0.5) 0, black 28%, rgba(0, 0, 0, 0.55) 62%, transparent 100%);
+	mix-blend-mode: var(--sp-veil-blend-v2);
+	opacity: var(--sp-fringe-o-v2);
+	transform: none;
+	animation:
+		spoiler-dust-in-v2 420ms ease-out 180ms both,
+		spoiler-fringe-rise-v2 4s linear infinite;
+}
+
+/* ---------- Light flow off: one reveal, then a still stipple ---------- */
+/* The dust-scatter and materialize play once (finite); veil twinkle,
+   fringe drift and the breathe freeze — the static dust still hides the
+   tail. These also re-win the legacy spoiler flow-off animation kills. */
+.stage[data-glow='spoiler'][data-light-flow='off'] .field[data-glow] .tail::before {
+	animation: spoiler-dust-in-v2 360ms ease-out 120ms both;
+}
+
+.stage[data-glow='spoiler'][data-light-flow='off'] .field[data-glow] .tail::after {
+	animation: spoiler-dust-in-v2 420ms ease-out 180ms both;
+}
+
+.stage[data-glow='spoiler'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
+	animation: spoiler-materialize-v2 460ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+	animation-delay: calc(90ms + var(--i, 0) * 55ms);
+}
+
+.stage[data-glow='spoiler'][data-light-flow='off'] .field[data-glow] .next-word .glyph::before {
+	animation: spoiler-scatter-v2 520ms ease-out both;
+	animation-delay: calc(90ms + var(--i, 0) * 55ms);
+}
+
+.stage[data-glow='spoiler'][data-light-flow='off'] .field[data-glow]::before {
+	animation: none;
+}
+
+/* ---------- Light theme: gray-violet dust on paper ---------- */
+/* The same story in daylight: veil dots as multiply ink specks, the
+   revealed word deep charcoal ink, silhouettes invisible under the
+   specks, the swarm violet-gray. */
+.field[data-theme='light'][data-glow='spoiler'] {
+	--sp-dust-hot-v2: oklch(0.38 0.06 296 / 0.6);
+	--sp-dust-v2: oklch(0.47 0.055 295 / 0.46);
+	--sp-dust-soft-v2: oklch(0.56 0.05 294 / 0.3);
+	--sp-veil-sheen-v2: oklch(0.5 0.05 295 / 0.05);
+	--sp-veil-blend-v2: multiply;
+	--sp-veil-o-v2: 0.9;
+	--sp-fringe-o-v2: 0.55;
+	--sp-silhouette-v2: oklch(0.35 0.03 300 / 0.055);
+	--sp-emerge-v2: oklch(0.42 0.04 298 / 0.32);
+	--sp-ink-v2: oklch(0.24 0.025 300 / 0.96);
+	--sp-ink-glow-v2:
+		0 1px 0 rgba(255, 255, 255, 0.6),
+		0 0 0.18em oklch(0.4 0.05 298 / 0.14);
+	--sp-pool-v2: oklch(0.5 0.06 296 / 0.16);
+	--sp-vessel-bg-v2:
+		radial-gradient(ellipse 90% 160% at 70% -30%, rgba(255, 255, 255, 0.72), transparent 58%),
+		radial-gradient(ellipse 94% 155% at 50% 54%, transparent 0 55%, oklch(0.6 0.03 300 / 0.09) 100%);
+	--ready-border: rgba(112, 108, 138, 0.3);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.96) inset,
+		0 -18px 50px rgba(128, 124, 156, 0.09) inset,
+		0 18px 46px rgba(52, 48, 72, 0.13),
+		0 0 58px oklch(0.6 0.05 296 / 0.08);
+	--field-wash:
+		radial-gradient(ellipse 90% 170% at 70% -34%, rgba(255, 255, 255, 0.7), transparent 58%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.5), transparent 42%);
+	--caret-gradient: linear-gradient(180deg, rgb(38, 35, 54) 0%, rgb(74, 68, 104) 55%, rgb(126, 118, 166) 100%);
+	--caret-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.5),
+		0 0 8px rgba(96, 88, 142, 0.28),
+		0 6px 14px rgba(56, 50, 86, 0.16);
+	--haze-opacity: 0;
+	--body-opacity: 0;
+	--core-opacity: 0;
+	--flow-low: 0;
+	--flow-high: 0;
+	--spark-low: 0;
+	--spark-high: 0;
+	--smoke-opacity: 0;
+	--aux-opacity: 0;
+	--next-color: var(--sp-ink-v2);
+	--next-shadow: var(--sp-ink-glow-v2);
+	--tail-color: var(--sp-silhouette-v2);
+}
+
+/* Legacy scopes shared light vars on the stage: re-win the contested
+   ones at the same strength so the paper palette holds. */
+.stage[data-theme='light'][data-glow='spoiler'] .field[data-glow] {
+	--ready-border: rgba(112, 108, 138, 0.3);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.96) inset,
+		0 -18px 50px rgba(128, 124, 156, 0.09) inset,
+		0 18px 46px rgba(52, 48, 72, 0.13),
+		0 0 58px oklch(0.6 0.05 296 / 0.08);
+	--field-wash:
+		radial-gradient(ellipse 90% 170% at 70% -34%, rgba(255, 255, 255, 0.7), transparent 58%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.5), transparent 42%);
+	--haze-opacity: 0;
+	--body-opacity: 0;
+	--core-opacity: 0;
+	--flow-low: 0;
+	--flow-high: 0;
+	--spark-low: 0;
+	--spark-high: 0;
+	--smoke-opacity: 0;
+	--aux-opacity: 0;
+	--next-color: var(--sp-ink-v2);
+	--next-shadow: var(--sp-ink-glow-v2);
+	--tail-color: var(--sp-silhouette-v2);
+}
+
+/* Paper vessel — the same quiet pill in daylight. */
+.stage[data-theme='light'][data-glow='spoiler'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 90% 160% at 70% -30%, rgba(255, 255, 255, 0.85), transparent 56%),
+		linear-gradient(180deg, rgb(252, 252, 254), rgb(247, 247, 251) 55%, rgb(241, 241, 247));
+	box-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.96) inset,
+		0 -1px 0 rgba(128, 124, 156, 0.14) inset,
+		0 20px 50px rgba(52, 48, 72, 0.12);
+}
+
+/* Re-pin the vessel overlay against legacy light rules that multiply it. */
+.stage[data-theme='light'][data-glow='spoiler'] .field[data-glow]::before {
+	background: var(--sp-vessel-bg-v2);
+	background-size: auto;
+	mix-blend-mode: normal;
+	animation: none;
+}
+
+/* Violet ink sinks into paper — multiply, never screened away. */
+.stage[data-theme='light'][data-glow='spoiler'] .field[data-glow] .torch-beam {
+	mix-blend-mode: multiply;
+}
+
+.stage[data-theme='light'][data-glow='spoiler'] .field[data-glow] .next-word {
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: none;
+}
+
+/* Charcoal ink materialize: nth-child(n) matches the legacy light
+   specificity. */
+.stage[data-theme='light'][data-glow='spoiler'] .field[data-glow] .next-word .glyph:nth-child(n) {
+	color: var(--sp-ink-v2);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-text-fill-color: currentColor;
+	filter: none;
+	text-shadow: var(--sp-ink-glow-v2);
+	animation: spoiler-materialize-light-v2 460ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+	animation-delay: calc(90ms + var(--i, 0) * 55ms);
+}
+
+/* Ink specks sit on paper plain; the puff colors flow from the vars. */
+.stage[data-theme='light'][data-glow='spoiler'] .field[data-glow] .next-word .glyph::before {
+	mix-blend-mode: multiply;
+}
+
+.stage[data-theme='light'][data-glow='spoiler'] .field[data-glow] .tail {
+	color: var(--tail-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-text-fill-color: currentColor;
+	filter: none;
+	text-shadow: none;
+}
+
+.stage[data-theme='light'][data-glow='spoiler'] .field[data-glow] .tail .glyph:nth-child(n) {
+	color: var(--sp-silhouette-v2);
+	background: none;
+	opacity: 1;
+	filter: none;
+	text-shadow: none;
+	animation: none;
+}
+
+.stage[data-theme='light'][data-glow='spoiler'] .field[data-glow] .tail .glyph:nth-child(-n + 2) {
+	color: var(--sp-emerge-v2);
+}
+
+/* The veil and fringe keep their geometry; paint flips to multiply ink. */
+.stage[data-theme='light'][data-glow='spoiler'] .field[data-glow] .tail::before {
+	mix-blend-mode: var(--sp-veil-blend-v2);
+	opacity: var(--sp-veil-o-v2);
+}
+
+.stage[data-theme='light'][data-glow='spoiler'] .field[data-glow] .tail::after {
+	mix-blend-mode: var(--sp-veil-blend-v2);
+	opacity: var(--sp-fringe-o-v2);
+}
+
+.stage[data-theme='light'][data-glow='spoiler'] .field[data-glow] .edge-left {
+	background: linear-gradient(90deg, rgb(252, 252, 254) 0%, rgb(252, 252, 254) 40%, rgba(252, 252, 254, 0) 100%);
+}
+
+.stage[data-theme='light'][data-glow='spoiler'] .field[data-glow] .edge-right {
+	background: linear-gradient(270deg, rgba(241, 241, 247, 0.85) 0%, rgba(241, 241, 247, 0.4) 40%, rgba(241, 241, 247, 0) 100%);
+	opacity: 0.7;
+}
+
+/* Light theme + flow off: re-win the finite passes against the
+   higher-specificity light rules above. */
+.stage[data-theme='light'][data-glow='spoiler'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(n) {
+	animation: spoiler-materialize-light-v2 460ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+	animation-delay: calc(90ms + var(--i, 0) * 55ms);
+}
+
+.stage[data-theme='light'][data-glow='spoiler'][data-light-flow='off'] .field[data-glow] .next-word .glyph::before {
+	animation: spoiler-scatter-v2 520ms ease-out both;
+	animation-delay: calc(90ms + var(--i, 0) * 55ms);
+}
+
+.stage[data-theme='light'][data-glow='spoiler'][data-light-flow='off'] .field[data-glow] .tail::before {
+	animation: spoiler-dust-in-v2 360ms ease-out 120ms both;
+}
+
+.stage[data-theme='light'][data-glow='spoiler'][data-light-flow='off'] .field[data-glow] .tail::after {
+	animation: spoiler-dust-in-v2 420ms ease-out 180ms both;
+}
+
+.stage[data-theme='light'][data-glow='spoiler'][data-light-flow='off'] .field[data-glow]::before {
+	animation: none;
+}
+
+/* ---------- Waiting: the secret is being composed ---------- */
+/* A compact particle swarm at the caret: the torch-core carries a dot
+   cluster + a sparse tile twinkling via steps() jitter (plain
+   background-position keyframes — no animated custom property is
+   consumed in a background, so nothing must live on the torch element)
+   under a gentle opacity breathe; the torch-haze is a faint cool pool.
+   Every other torch layer is dead. */
+.field[data-state='waiting'][data-glow='spoiler'] {
+	--haze-width: 4.6em;
+	--haze-height: 2.3em;
+	--haze-size: 100% 100%;
+	--haze-bg: radial-gradient(ellipse 1.7em 1.05em at 0.95em 50%, var(--sp-pool-v2), transparent 80%);
+	--haze-filter: blur(9px);
+	--haze-opacity: 0.65;
+	--torch-haze-motion: spoiler-pool-breathe-v2 3.6s ease-in-out infinite;
+	--haze-mask:
+		linear-gradient(90deg, transparent 0, black 0.3em, black calc(100% - 0.35em), transparent 100%),
+		radial-gradient(ellipse 58% 60% at 24% 50%, black 0 54%, rgba(0, 0, 0, 0.5) 78%, transparent 98%);
+	--body-bg: none;
+	--body-opacity: 0;
+	--core-width: 2.9em;
+	--core-height: 2em;
+	--core-size:
+		100% 100%,
+		100% 100%,
+		100% 100%,
+		100% 100%,
+		100% 100%,
+		0.5em 0.44em;
+	--core-bg:
+		radial-gradient(circle at 0.62em 0.55em, var(--sp-dust-hot-v2) 0 0.034em, transparent 0.06em),
+		radial-gradient(circle at 1.08em 1.28em, var(--sp-dust-v2) 0 0.03em, transparent 0.056em),
+		radial-gradient(circle at 1.5em 0.72em, var(--sp-dust-hot-v2) 0 0.028em, transparent 0.054em),
+		radial-gradient(circle at 0.86em 0.92em, var(--sp-dust-soft-v2) 0 0.038em, transparent 0.066em),
+		radial-gradient(circle at 1.32em 1.05em, var(--sp-dust-v2) 0 0.026em, transparent 0.05em),
+		radial-gradient(circle at 0.18em 0.24em, var(--sp-dust-soft-v2) 0 0.028em, transparent 0.052em);
+	--core-filter: none;
+	--core-opacity: 0.95;
+	--torch-core-motion:
+		spoiler-swarm-v2 1.5s steps(1, end) infinite,
+		spoiler-swarm-breathe-v2 3.6s ease-in-out infinite;
+	--core-mask:
+		linear-gradient(90deg, transparent 0, black 0.22em, black calc(100% - 0.26em), transparent 100%),
+		radial-gradient(ellipse 46% 46% at 33% 50%, black 0 52%, rgba(0, 0, 0, 0.5) 78%, transparent 98%);
+	--flow-bg: none;
+	--flow-low: 0;
+	--flow-high: 0;
+	--flow-motion: none;
+	--spark-bg: none;
+	--spark-low: 0;
+	--spark-high: 0;
+	--spark-motion: none;
+	--smoke-bg: none;
+	--smoke-opacity: 0;
+	--smoke-motion: none;
+	--aux-bg: none;
+	--aux-opacity: 0;
+	--aux-motion: none;
+}
+
+/* Paper waiting: violet-gray ink swarm — the colors flow in through the
+   theme vars; only the strengths need a nudge. */
+.field[data-theme='light'][data-state='waiting'][data-glow='spoiler'] {
+	--haze-opacity: 0.55;
+	--core-opacity: 0.9;
+}
+
+/* Light + waiting: the stage-scoped light pass above out-specifies the
+   field-level waiting block and smothers the swarm — re-raise the torch
+   opacities over it. */
+.stage[data-theme='light'][data-glow='spoiler'] .field[data-glow][data-state='waiting'] {
+	--haze-opacity: 0.55;
+	--core-opacity: 0.9;
+}
+
+/* Waiting + flow off: the swarm freezes into a static stipple. */
+.field[data-light-flow='off'][data-state='waiting'][data-glow='spoiler'] {
+	--torch-haze-motion: none;
+	--torch-core-motion: none;
+}
+
+/* ---------- Keyframes (spoiler-*-v2) ---------- */
+/* The word row mounts under the dust. */
+@keyframes spoiler-word-in-v2 {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+/* The hidden strip settles in. */
+@keyframes spoiler-tail-in-v2 {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+/* Dust fades on — no 100% frame, each layer settles onto its live
+   opacity slot (veil and fringe share this ramp). */
+@keyframes spoiler-dust-in-v2 {
+	0% {
+		opacity: 0;
+	}
+}
+
+/* THE MATERIALIZE: silhouette -> over-bright silver beat -> (no 100%
+   frame) the glyph settles onto the live crisp ink slot. */
+@keyframes spoiler-materialize-v2 {
+	0% {
+		opacity: 0;
+		color: oklch(0.9 0.03 294 / 0);
+		transform: translateY(0.05em);
+		filter: blur(2.4px);
+		text-shadow: none;
+	}
+	38% {
+		opacity: 1;
+		color: oklch(0.9 0.025 295 / 0.55);
+		transform: translateY(0.016em);
+		filter: blur(0.8px);
+	}
+	72% {
+		color: oklch(0.99 0.01 300);
+		transform: translateY(0);
+		filter: blur(0);
+		text-shadow:
+			0 0 0.32em oklch(0.92 0.04 294 / 0.42),
+			0 0 0.8em oklch(0.8 0.06 292 / 0.2);
+	}
+}
+
+/* Paper materialize: pale silhouette, over-inked beat, live charcoal. */
+@keyframes spoiler-materialize-light-v2 {
+	0% {
+		opacity: 0;
+		color: oklch(0.6 0.03 298 / 0);
+		transform: translateY(0.05em);
+		filter: blur(2px);
+		text-shadow: none;
+	}
+	38% {
+		opacity: 1;
+		color: oklch(0.55 0.035 298 / 0.55);
+		transform: translateY(0.016em);
+		filter: blur(0.7px);
+	}
+	72% {
+		color: oklch(0.13 0.03 300);
+		transform: translateY(0);
+		filter: blur(0);
+		text-shadow:
+			0 1px 0 rgba(255, 255, 255, 0.65),
+			0 0 0.24em oklch(0.4 0.06 298 / 0.28);
+	}
+}
+
+/* DUST-SCATTER: the puff pops on, drifts up-and-outward and evaporates;
+   0% and 100% are both invisible so nothing shows before its beat or
+   lingers after (fill both). */
+@keyframes spoiler-scatter-v2 {
+	0% {
+		opacity: 0;
+		transform: translate(0, 0.06em) scale(0.5);
+		filter: blur(0.2px);
+	}
+	14% {
+		opacity: 0.95;
+		transform: translate(0.01em, 0.01em) scale(0.72);
+		filter: blur(0);
+	}
+	46% {
+		opacity: 0.7;
+		transform: translate(0.05em, -0.16em) scale(1);
+		filter: blur(0.3px);
+	}
+	100% {
+		opacity: 0;
+		transform: translate(0.1em, -0.36em) scale(1.22);
+		filter: blur(0.9px);
+	}
+}
+
+/* The veil twinkles: each tile layer jumps to a new phase (steps(1, end)
+   holds each pose, then snaps); the sheen never moves. 100% repeats 0%
+   so the loop is seamless. */
+@keyframes spoiler-veil-twinkle-v2 {
+	0%,
+	100% {
+		background-position:
+			0 0,
+			0 0,
+			0 0,
+			0 0;
+	}
+	25% {
+		background-position:
+			0.11em -0.07em,
+			-0.09em 0.12em,
+			0.13em 0.06em,
+			0 0;
+	}
+	50% {
+		background-position:
+			-0.07em 0.09em,
+			0.14em -0.05em,
+			-0.1em -0.12em,
+			0 0;
+	}
+	75% {
+		background-position:
+			0.16em 0.05em,
+			0.06em 0.15em,
+			0.08em -0.14em,
+			0 0;
+	}
+}
+
+/* ...under a slow organic flicker. */
+@keyframes spoiler-veil-breathe-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--sp-veil-o-v2, 0.92) * 0.82);
+	}
+	50% {
+		opacity: var(--sp-veil-o-v2, 0.92);
+	}
+}
+
+/* The fringe dots rise and evaporate: tile heights 0.48em and 0.36em
+   both divide 1.44em, so the loop is seamless. */
+@keyframes spoiler-fringe-rise-v2 {
+	0% {
+		background-position:
+			0 0,
+			0 0;
+	}
+	100% {
+		background-position:
+			0 -1.44em,
+			0 -1.44em;
+	}
+}
+
+/* WAITING: the swarm jitters between poses (steps holds, then snaps)... */
+@keyframes spoiler-swarm-v2 {
+	0%,
+	100% {
+		background-position:
+			0 0,
+			0 0,
+			0 0,
+			0 0,
+			0 0,
+			0 0;
+	}
+	25% {
+		background-position:
+			0.08em -0.1em,
+			-0.09em 0.06em,
+			-0.06em -0.08em,
+			0.1em 0.07em,
+			-0.04em 0.11em,
+			0.12em -0.05em;
+	}
+	50% {
+		background-position:
+			-0.07em 0.08em,
+			0.1em -0.07em,
+			0.09em 0.1em,
+			-0.08em -0.06em,
+			0.11em -0.03em,
+			-0.06em 0.1em;
+	}
+	75% {
+		background-position:
+			0.1em 0.05em,
+			0.05em 0.12em,
+			-0.1em 0.04em,
+			0.06em -0.11em,
+			-0.09em -0.07em,
+			0.04em 0.12em;
+	}
+}
+
+/* ...while the cluster gently breathes... */
+@keyframes spoiler-swarm-breathe-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--core-opacity, 0.95) * 0.72);
+	}
+	50% {
+		opacity: var(--core-opacity, 0.95);
+	}
+}
+
+/* ...over a faint pool that breathes a beat behind. */
+@keyframes spoiler-pool-breathe-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--haze-opacity, 0.65) * 0.75);
+	}
+	55% {
+		opacity: var(--haze-opacity, 0.65);
+	}
+}

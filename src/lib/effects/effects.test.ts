@@ -27,7 +27,8 @@ const PRESET_CSS_FILES = [
 	'src/lib/effects/chromabloom/index.css',
 	'src/lib/effects/infrared/index.css',
 	'src/lib/effects/staged/index.css',
-	'src/lib/effects/blueprint/index.css'
+	'src/lib/effects/blueprint/index.css',
+	'src/lib/effects/spoiler/index.css'
 ];
 
 function readPresetCss(): string {
@@ -129,7 +130,7 @@ describe('glow inventory', () => {
 		const css = readPresetCss();
 
 		expect(css).toContain(".field[data-glow='spoiler']");
-		expect(css).toContain('spoiler-noise-swim');
+		expect(css).toContain('spoiler-veil-twinkle-v2');
 		expect(css).toContain(".field[data-glow='ghosttext']");
 		expect(css).toContain('ghost-wisp-crawl');
 		expect(css).toContain(".field[data-glow='drift']");
