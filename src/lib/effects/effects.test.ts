@@ -28,7 +28,8 @@ const PRESET_CSS_FILES = [
 	'src/lib/effects/infrared/index.css',
 	'src/lib/effects/staged/index.css',
 	'src/lib/effects/blueprint/index.css',
-	'src/lib/effects/spoiler/index.css'
+	'src/lib/effects/spoiler/index.css',
+	'src/lib/effects/ghosttext/index.css'
 ];
 
 function readPresetCss(): string {
@@ -132,7 +133,7 @@ describe('glow inventory', () => {
 		expect(css).toContain(".field[data-glow='spoiler']");
 		expect(css).toContain('spoiler-veil-twinkle-v2');
 		expect(css).toContain(".field[data-glow='ghosttext']");
-		expect(css).toContain('ghost-wisp-crawl');
+		expect(css).toContain('ghost-wisp-crawl-v2');
 		expect(css).toContain(".field[data-glow='drift']");
 		expect(css).toContain('drift-smoke-sweep');
 		expect(css).toContain(".field[data-glow='art']");

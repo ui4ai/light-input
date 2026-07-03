@@ -1,0 +1,974 @@
+/* ============================================================
+   GHOST TEXT v2 — "Призрак: предсказание ещё не перешло на эту
+   сторону". A spectral apparition materializing in a dark séance
+   room. THE APPARITION (the signature): each glyph of the NEXT
+   WORD wafts in like a ghost stepping through a wall — it starts
+   as a stretched translucent wisp (blur 3.6px, scaleY 1.15,
+   rising 0.12em from below on a gentle S-curve with a tiny
+   overshoot above the baseline) and condenses into a pale cold
+   body that never fully solidifies: a double-exposure text-shadow
+   echo (one cold-cyan shadow up-left, one fainter down-right —
+   the soul not quite aligned with the flesh) and a slow SPECTRAL
+   BREATHE (opacity 0.96<->0.84 + blur 0<->0.3px, per-glyph
+   var(--i) stagger) keep the word hovering, never still.
+   ECTOPLASM WISPS (prediction::before): five tiled ellipse-chain
+   layers (tiles 6.4em / 9.6em / 4.8em) read as 2-3 wavy ribbons
+   CRAWLING rightward with vertical undulation — the signature
+   keyframe ghost-wisp-crawl-v2 moves each layer a whole multiple
+   of its tile per 8s cycle (A: 12.8em = 2x6.4, B: 9.6em = 1x9.6,
+   C: 9.6em = 2x4.8) so the loop is seamless; a 3-mask intersect
+   (caret-bright envelope x right-edge fade x vertical falloff)
+   makes them brightest just after the caret and dissolves them
+   INSIDE the box over the tail — shaped ribbons, never a fog box.
+   The band sits at z-index 3: in front of the tail souls, behind
+   the materialized word — the mist flows THROUGH the ghost.
+   TAIL: fading apparitions — per-glyph var(--i) ramps make far
+   glyphs more transparent (color alpha 0.66 -> 0.07), more
+   blurred (0.2 -> 2.4px) and more risen (translateY up to
+   -0.16em, souls departing), with a slow desynced shimmer.
+   COLD SPOT (prediction::after): a low-alpha cold-cyan radial
+   wash behind the next word — the ghost chills the room where it
+   stands. VESSEL: near-black neutral with the faintest cold
+   vignette; the caret is a sliver of cold white light whose glow
+   flickers VERY subtly like a candle in a draft — a registered
+   <number> (--gh-candle-a-v2) is animated with steps(1, end) ON
+   the .field, where --caret-shadow computes (var() in a custom
+   property substitutes where that property computes), so the
+   color-mix alpha in the first shadow actually updates. WAITING:
+   a will-o'-the-wisp at the caret — a small pale orb (torch-core)
+   bobbing up-down and drifting a breath left-right (transform
+   keyframes are safe on any element) with an occasional slow
+   steps() flicker, over a faint elongated trailing wisp
+   (torch-haze) lagging on a slower, phase-offset animation; every
+   other torch layer dead. LIGHT THEME — FADED PHOTOGRAPH:
+   apparitions on old paper — washed slate-gray ink with a pale
+   silver echo, wisps as barely-there gray breath (multiply), tail
+   dissolving into paper. data-light-flow='off': materialize,
+   wisp fade-in and cold-spot fade-in play once; breathe, crawl,
+   shimmer, bobbing and both flickers freeze — a photograph of a
+   ghost. GEOMETRY (font 56px = 1em, pill 148px, line box 56px,
+   clearance above/below the line box = (148 - 56) / 2 = 46px =
+   0.821em): wisps top -0.62em / bottom 1.62em, cold spot top
+   -0.7em / bottom 1.7em, waiting orb 1.7em tall centered on the
+   line (-0.35em..1.35em), trailing wisp 2em tall (-0.5em..1.5em)
+   — every box inside the pill, every mask fade completes INSIDE
+   its box (mask-composite: intersect where masks combine).
+   Readability floor: dark ink alpha 0.95 x breathe min 0.84 =
+   0.8; light ink alpha 0.9 x 0.84 = 0.76. Keyframes ghost-*-v2
+   and vars --gh-*-v2 only; legacy ghosttext rules in legacy.css
+   are superseded and get deleted.
+   ============================================================ */
+
+@property --gh-candle-a-v2 {
+	syntax: '<number>';
+	inherits: false;
+	initial-value: 0.62;
+}
+
+.field[data-glow='ghosttext'] {
+	--layer-radius: 999px;
+	--layer-clip: inset(0 round 999px);
+	--gh-ink-v2: oklch(0.93 0.02 205 / 0.95);
+	--gh-echo-v2:
+		-0.045em -0.05em 0.02em oklch(0.87 0.06 200 / 0.4),
+		0.05em 0.06em 0.05em oklch(0.8 0.05 220 / 0.22),
+		0 0 0.5em oklch(0.85 0.05 210 / 0.16);
+	--gh-tail-hue-v2: 0.88 0.03 210;
+	--gh-wisp-hot-v2: oklch(0.92 0.05 200 / 0.3);
+	--gh-wisp-mid-v2: oklch(0.84 0.06 215 / 0.2);
+	--gh-wisp-soft-v2: oklch(0.78 0.06 230 / 0.13);
+	--gh-wisp-blend-v2: screen;
+	--gh-wisp-o-v2: 0.85;
+	--gh-cold-v2: oklch(0.8 0.06 215 / 0.13);
+	--gh-cold-blend-v2: screen;
+	--gh-cold-o-v2: 0.8;
+	--gh-orb-core-v2: oklch(0.98 0.015 195 / 0.85);
+	--gh-orb-mid-v2: oklch(0.9 0.05 203 / 0.42);
+	--gh-orb-halo-v2: oklch(0.85 0.06 210 / 0.22);
+	--gh-orb-trail-v2: oklch(0.86 0.05 210 / 0.16);
+	--gh-orb-trail-soft-v2: oklch(0.8 0.05 220 / 0.1);
+	--gh-candle-hue-v2: oklch(0.94 0.04 200);
+	--gh-vessel-bg-v2:
+		radial-gradient(ellipse 94% 155% at 50% 54%, transparent 0 46%, rgba(4, 8, 10, 0.55) 100%),
+		linear-gradient(180deg, rgba(210, 235, 240, 0.025), transparent 30%),
+		linear-gradient(90deg, rgba(196, 228, 234, 0.016), transparent 28%);
+	--ready-border: rgba(196, 220, 226, 0.16);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.045) inset,
+		0 -34px 90px rgba(5, 8, 10, 0.6) inset,
+		0 0 52px oklch(0.55 0.04 215 / 0.1) inset,
+		0 30px 66px rgba(0, 0, 0, 0.5),
+		0 0 80px oklch(0.8 0.05 205 / 0.07);
+	--field-wash: linear-gradient(180deg, rgba(216, 240, 244, 0.018), transparent 34%);
+	--caret-gradient: linear-gradient(
+		180deg,
+		rgb(252, 255, 255) 0%,
+		rgb(224, 244, 246) 38%,
+		rgb(158, 200, 208) 72%,
+		rgb(82, 110, 122) 100%
+	);
+	--caret-shadow:
+		0 0 6px color-mix(in oklab, var(--gh-candle-hue-v2) calc(var(--gh-candle-a-v2) * 100%), transparent),
+		0 0 18px oklch(0.86 0.05 205 / 0.32),
+		0 0 40px oklch(0.75 0.06 215 / 0.14);
+	--haze-bg: none;
+	--haze-opacity: 0;
+	--haze-motion: none;
+	--torch-haze-motion: none;
+	--haze-mask: none;
+	--body-bg: none;
+	--body-opacity: 0;
+	--body-mask: none;
+	--core-bg: none;
+	--core-opacity: 0;
+	--core-motion: none;
+	--torch-core-motion: none;
+	--core-mask: none;
+	--flow-bg: none;
+	--flow-low: 0;
+	--flow-high: 0;
+	--flow-motion: none;
+	--flow-mask: none;
+	--spark-bg: none;
+	--spark-low: 0;
+	--spark-high: 0;
+	--spark-motion: none;
+	--spark-mask: none;
+	--smoke-bg: none;
+	--smoke-opacity: 0;
+	--smoke-motion: none;
+	--smoke-blend: normal;
+	--smoke-mask: none;
+	--aux-bg: none;
+	--aux-opacity: 0;
+	--aux-motion: none;
+	--aux-mask: none;
+	--next-color: var(--gh-ink-v2);
+	--next-shadow: var(--gh-echo-v2);
+	--tail-color: oklch(var(--gh-tail-hue-v2) / 0.4);
+}
+
+/* The apparition lives on the glyphs and the prediction pseudos: every
+   shared beam dies. Torch layers serve the waiting will-o'-the-wisp only. */
+.stage[data-glow='ghosttext'] .field[data-glow] .prediction > .beam {
+	display: none;
+}
+
+.stage[data-glow='ghosttext'] .field[data-glow] .caret-origin-glow[data-mode='ready'] {
+	display: none;
+}
+
+/* Multi-layer masks (caret-bright envelope x right-edge fade x vertical
+   falloff on the wisps; left fade x shaped falloff on the torch layers)
+   need intersection, not union — every fade completes inside its box. */
+.stage[data-glow='ghosttext'] .field[data-glow] .torch-beam,
+.stage[data-glow='ghosttext'] .field[data-glow] .prediction::before {
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+}
+
+.stage[data-glow='ghosttext'] .field[data-glow] .prediction {
+	isolation: isolate;
+}
+
+/* Séance room vessel: near-black neutral with the faintest cold cast.
+   The candle-in-a-draft flicker animates the registered --gh-candle-a-v2
+   ON the field — the only element where --caret-shadow computes, so the
+   color-mix alpha in the caret glow actually re-reads it each step. */
+.stage[data-glow='ghosttext'] .field[data-glow] {
+	background:
+		linear-gradient(180deg, rgba(212, 238, 242, 0.014), transparent 32%),
+		linear-gradient(90deg, rgb(13, 14, 16), rgb(15, 16, 19) 52%, rgb(14, 15, 18));
+	animation: ghost-candle-flicker-v2 6.4s steps(1, end) infinite;
+}
+
+/* VESSEL OVERLAY: cold edge vignette + a whisper of cold sheen — utterly
+   still. Re-pins over the legacy ghost-field-drift animation, the shared
+   210% background-size and the component field-flow gating. */
+.stage[data-glow='ghosttext'] .field[data-glow]::before {
+	background: var(--gh-vessel-bg-v2);
+	background-size: auto;
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: normal;
+	opacity: 1;
+	animation: none;
+}
+
+/* Dissolve into the field's rounded clip, not the paint box; edge
+   overlays extended into the 64px padding, painted in the vessel color
+   so the mist never steps at the content box. */
+.stage[data-glow='ghosttext'] .field[data-glow] .paint {
+	overflow: visible;
+	clip-path: inset(-3.4em -6em -3.4em 0);
+}
+
+.stage[data-glow='ghosttext'] .field[data-glow] .edge-left {
+	left: -64px;
+	width: 156px;
+	background: linear-gradient(90deg, rgb(13, 14, 16) 0%, rgb(13, 14, 16) 40%, rgba(13, 14, 16, 0) 100%);
+	opacity: 0;
+}
+
+.stage[data-glow='ghosttext'] .field[data-glow] .viewport.scrolled .edge-left {
+	opacity: 1;
+}
+
+/* Re-wins the legacy QA group that zeroed the ghosttext edge-right. */
+.stage[data-glow='ghosttext'] .field[data-glow] .edge-right {
+	display: block;
+	right: -64px;
+	width: 190px;
+	background: linear-gradient(270deg, rgba(14, 15, 18, 0.9) 0%, rgba(14, 15, 18, 0.5) 36%, rgba(14, 15, 18, 0) 100%);
+	opacity: 0.8;
+}
+
+/* ---------- ECTOPLASM WISPS: mist crawling through the ghost ---------- */
+/* Five tiled ellipse-chain layers = 2-3 wavy ribbons. Box: left -0.5em,
+   top -0.62em, height 2.24em => bottom at 1.62em (0.62em below the line
+   box, inside the 0.821em clearance). The horizontal envelope is
+   brightest at 0.9-3.6em after the caret and gone INSIDE the box by
+   10.8em; the right-edge fade covers short predictions; the vertical
+   falloff kills any band edge — all three intersected. z-index 3: over
+   the tail souls, under the materialized word. Re-pins every box/paint
+   property the legacy QA passes mutated (border-radius 50%, blur 52px,
+   the 24em halo box). */
+.stage[data-glow='ghosttext'] .field[data-glow] .prediction::before {
+	position: absolute;
+	left: -0.5em;
+	top: -0.62em;
+	right: auto;
+	bottom: auto;
+	z-index: 3;
+	display: block;
+	width: min(12.5em, calc(100% + 3em));
+	height: 2.24em;
+	content: '';
+	pointer-events: none;
+	border-radius: 0;
+	background:
+		radial-gradient(ellipse 30% 10% at 26% 38%, var(--gh-wisp-hot-v2), transparent 72%),
+		radial-gradient(ellipse 26% 9% at 74% 58%, var(--gh-wisp-mid-v2), transparent 74%),
+		radial-gradient(ellipse 32% 8% at 30% 62%, var(--gh-wisp-mid-v2), transparent 74%),
+		radial-gradient(ellipse 28% 7% at 72% 34%, var(--gh-wisp-soft-v2), transparent 76%),
+		radial-gradient(ellipse 34% 6% at 50% 48%, var(--gh-wisp-soft-v2), transparent 78%);
+	background-size:
+		6.4em 100%,
+		6.4em 100%,
+		9.6em 100%,
+		9.6em 100%,
+		4.8em 100%;
+	background-repeat: repeat-x;
+	filter: blur(2px);
+	-webkit-mask-image:
+		linear-gradient(
+			90deg,
+			transparent 0,
+			rgba(0, 0, 0, 0.55) 0.5em,
+			black 0.9em 3.6em,
+			rgba(0, 0, 0, 0.6) 5.8em,
+			rgba(0, 0, 0, 0.28) 8.2em,
+			transparent 10.8em
+		),
+		linear-gradient(90deg, black 0 calc(100% - 1.2em), transparent 100%),
+		linear-gradient(180deg, transparent 0, rgba(0, 0, 0, 0.75) 26%, black 42% 62%, rgba(0, 0, 0, 0.75) 78%, transparent 100%);
+	mask-image:
+		linear-gradient(
+			90deg,
+			transparent 0,
+			rgba(0, 0, 0, 0.55) 0.5em,
+			black 0.9em 3.6em,
+			rgba(0, 0, 0, 0.6) 5.8em,
+			rgba(0, 0, 0, 0.28) 8.2em,
+			transparent 10.8em
+		),
+		linear-gradient(90deg, black 0 calc(100% - 1.2em), transparent 100%),
+		linear-gradient(180deg, transparent 0, rgba(0, 0, 0, 0.75) 26%, black 42% 62%, rgba(0, 0, 0, 0.75) 78%, transparent 100%);
+	mix-blend-mode: var(--gh-wisp-blend-v2);
+	opacity: var(--gh-wisp-o-v2);
+	transform: none;
+	animation:
+		ghost-wisp-in-v2 700ms ease-out 150ms both,
+		ghost-wisp-crawl-v2 8s linear infinite;
+}
+
+/* COLD SPOT: the vessel is coldest where the ghost stands — a low-alpha
+   cold-cyan wash behind the next word. Box: left -0.9em, top -0.7em,
+   height 2.4em => bottom at 1.7em (0.7em below the line box, inside the
+   0.821em clearance). Single radial mask completes inside the box.
+   Re-wins the legacy QA display:none on this pseudo. */
+.stage[data-glow='ghosttext'] .field[data-glow] .prediction::after {
+	position: absolute;
+	left: -0.9em;
+	top: -0.7em;
+	right: auto;
+	bottom: auto;
+	z-index: -2;
+	display: block;
+	width: 7.5em;
+	height: 2.4em;
+	content: '';
+	pointer-events: none;
+	border-radius: 0;
+	background: radial-gradient(ellipse 46% 52% at 30% 50%, var(--gh-cold-v2), transparent 78%);
+	filter: blur(10px);
+	-webkit-mask-image: radial-gradient(ellipse 86% 90% at 32% 50%, black 0 52%, rgba(0, 0, 0, 0.45) 76%, transparent 96%);
+	mask-image: radial-gradient(ellipse 86% 90% at 32% 50%, black 0 52%, rgba(0, 0, 0, 0.45) 76%, transparent 96%);
+	mix-blend-mode: var(--gh-cold-blend-v2);
+	opacity: var(--gh-cold-o-v2);
+	transform: none;
+	animation:
+		ghost-cold-in-v2 600ms ease-out both,
+		ghost-cold-breathe-v2 7.4s ease-in-out 600ms infinite;
+}
+
+/* ---------- The word: a ghost stepping through the wall ---------- */
+.stage[data-glow='ghosttext'] .field[data-glow] .next-word {
+	position: relative;
+	isolation: isolate;
+	z-index: 5;
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-mask-image: none;
+	mask-image: none;
+	filter: none;
+	text-shadow: none;
+	transform: none;
+	animation: ghost-word-in-v2 180ms ease-out both;
+}
+
+/* THE MATERIALIZE + BREATHE: each glyph wafts in from 0.12em below as a
+   stretched wisp (scaleY 1.15, blur 3.6px), overshoots a hair above the
+   baseline (the S-curve), then — no 100% frame — settles onto the live
+   pale-cold slot: ink with the double-exposure echo, opacity 0.96. The
+   breathe takes over exactly at materialize end (delay = 100ms + 620ms +
+   the same 70ms stagger) starting at its 0% = 0.96, so there is no pop;
+   the stagger desyncs every glyph. The nth-child group re-wins legacy
+   tint splits. */
+.stage[data-glow='ghosttext'] .field[data-glow] .next-word .glyph,
+.stage[data-glow='ghosttext'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-glow='ghosttext'] .field[data-glow] .next-word .glyph:nth-child(3n + 2),
+.stage[data-glow='ghosttext'] .field[data-glow] .next-word .glyph:nth-child(3n) {
+	display: inline-block;
+	position: relative;
+	color: var(--gh-ink-v2);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-text-fill-color: currentColor;
+	opacity: 0.96;
+	filter: none;
+	text-shadow: var(--gh-echo-v2);
+	transform: none;
+	transform-origin: 50% 85%;
+	animation:
+		ghost-materialize-v2 620ms cubic-bezier(0.22, 0.75, 0.3, 1) both,
+		ghost-breathe-v2 5.6s ease-in-out infinite;
+	animation-delay: calc(100ms + var(--i, 0) * 70ms), calc(720ms + var(--i, 0) * 70ms);
+}
+
+/* The ghost misaligns its soul, not its letters: no scrambled alter
+   egos (kills the legacy data-soft echo and the component data-alt). */
+.stage[data-glow='ghosttext'] .field[data-glow] .next-word .glyph::after,
+.stage[data-glow='ghosttext'] .field[data-glow] .tail .glyph::after {
+	content: none;
+	opacity: 0;
+	animation: none;
+}
+
+/* ---------- Tail: fainter souls behind ---------- */
+/* Container: color/mask/animation re-pins over the component defaults
+   and the legacy blur+fade; the mask envelope is gone inside 12em. */
+.stage[data-glow='ghosttext'] .field[data-glow] .tail {
+	position: relative;
+	isolation: isolate;
+	z-index: 2;
+	color: var(--tail-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-text-fill-color: currentColor;
+	filter: none;
+	text-shadow: none;
+	-webkit-mask-image: linear-gradient(90deg, black 0 6.5em, rgba(0, 0, 0, 0.4) 9.5em, transparent 12em);
+	mask-image: linear-gradient(90deg, black 0 6.5em, rgba(0, 0, 0, 0.4) 9.5em, transparent 12em);
+	animation: ghost-tail-in-v2 320ms ease-out 140ms both;
+}
+
+/* Departing souls: var(--i) continues from the next word into the tail,
+   so the ramps are absolute — with distance each glyph gets more
+   transparent (alpha 0.66 -> 0.07), more blurred (0.2 -> 2.4px) and more
+   risen (up to -0.16em); the first tail glyphs stay mostly formed. A slow
+   staggered shimmer keeps the far tail a cold flicker. */
+.stage[data-glow='ghosttext'] .field[data-glow] .tail .glyph,
+.stage[data-glow='ghosttext'] .field[data-glow] .tail .glyph:nth-child(3n + 1),
+.stage[data-glow='ghosttext'] .field[data-glow] .tail .glyph:nth-child(3n + 2),
+.stage[data-glow='ghosttext'] .field[data-glow] .tail .glyph:nth-child(3n) {
+	display: inline-block;
+	position: relative;
+	color: oklch(var(--gh-tail-hue-v2) / clamp(0.07, calc(0.66 - var(--i, 0) * 0.052), 0.66));
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-text-fill-color: currentColor;
+	opacity: 1;
+	filter: blur(clamp(0.2px, calc(var(--i, 0) * 0.16px), 2.4px));
+	text-shadow: none;
+	transform: translateY(clamp(-0.16em, calc(var(--i, 0) * -0.011em), 0em));
+	animation:
+		ghost-soul-in-v2 480ms ease-out both,
+		ghost-soul-drift-v2 6.8s ease-in-out infinite;
+	animation-delay: calc(200ms + var(--i, 0) * 45ms), calc(680ms + var(--i, 0) * 230ms);
+}
+
+/* ---------- Light flow off: one materialization, then a photograph ---------- */
+/* Materialize, wisp fade-in, cold-spot fade-in and the soul fade-ins
+   play once (finite); breathe, crawl, shimmer and the candle flicker
+   freeze. These re-win the legacy ghosttext flow-off animation kills
+   AND this module's own infinite base animations. */
+.stage[data-glow='ghosttext'][data-light-flow='off'] .field[data-glow] {
+	animation: none;
+}
+
+.stage[data-glow='ghosttext'][data-light-flow='off'] .field[data-glow]::before {
+	animation: none;
+}
+
+.stage[data-glow='ghosttext'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: ghost-wisp-in-v2 700ms ease-out 150ms both;
+}
+
+.stage[data-glow='ghosttext'][data-light-flow='off'] .field[data-glow] .prediction::after {
+	animation: ghost-cold-in-v2 600ms ease-out both;
+}
+
+.stage[data-glow='ghosttext'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
+	animation: ghost-materialize-v2 620ms cubic-bezier(0.22, 0.75, 0.3, 1) both;
+	animation-delay: calc(100ms + var(--i, 0) * 70ms);
+}
+
+.stage[data-glow='ghosttext'][data-light-flow='off'] .field[data-glow] .tail .glyph {
+	animation: ghost-soul-in-v2 480ms ease-out both;
+	animation-delay: calc(200ms + var(--i, 0) * 45ms);
+}
+
+/* ---------- Light theme: a faded photograph on old paper ---------- */
+/* The same ghost in daylight: washed slate-gray ink with a pale silver
+   echo, wisps as barely-there gray breath sunk in with multiply, the
+   tail dissolving into the paper. */
+.field[data-theme='light'][data-glow='ghosttext'] {
+	--gh-ink-v2: oklch(0.38 0.018 240 / 0.9);
+	--gh-echo-v2:
+		-0.04em -0.045em 0.02em oklch(0.74 0.012 240 / 0.55),
+		0.045em 0.05em 0.05em oklch(0.68 0.015 240 / 0.32),
+		0 1px 0 rgba(255, 255, 255, 0.6);
+	--gh-tail-hue-v2: 0.42 0.015 240;
+	--gh-wisp-hot-v2: oklch(0.5 0.02 235 / 0.2);
+	--gh-wisp-mid-v2: oklch(0.58 0.02 235 / 0.14);
+	--gh-wisp-soft-v2: oklch(0.66 0.015 235 / 0.1);
+	--gh-wisp-blend-v2: multiply;
+	--gh-wisp-o-v2: 0.9;
+	--gh-cold-v2: oklch(0.6 0.03 230 / 0.12);
+	--gh-cold-blend-v2: multiply;
+	--gh-cold-o-v2: 0.85;
+	--gh-orb-core-v2: oklch(0.4 0.03 230 / 0.55);
+	--gh-orb-mid-v2: oklch(0.5 0.03 230 / 0.3);
+	--gh-orb-halo-v2: oklch(0.55 0.03 230 / 0.16);
+	--gh-orb-trail-v2: oklch(0.5 0.02 235 / 0.14);
+	--gh-orb-trail-soft-v2: oklch(0.58 0.02 235 / 0.09);
+	--gh-candle-hue-v2: oklch(0.45 0.04 225);
+	--gh-vessel-bg-v2:
+		radial-gradient(ellipse 90% 160% at 70% -30%, rgba(255, 255, 255, 0.72), transparent 58%),
+		radial-gradient(ellipse 94% 155% at 50% 54%, transparent 0 55%, oklch(0.62 0.02 235 / 0.09) 100%);
+	--ready-border: rgba(112, 126, 136, 0.3);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.96) inset,
+		0 -18px 50px rgba(124, 142, 152, 0.09) inset,
+		0 18px 46px rgba(48, 60, 68, 0.13),
+		0 0 58px oklch(0.6 0.03 230 / 0.08);
+	--field-wash:
+		radial-gradient(ellipse 90% 170% at 70% -34%, rgba(255, 255, 255, 0.7), transparent 58%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.5), transparent 42%);
+	--caret-gradient: linear-gradient(180deg, rgb(38, 44, 52) 0%, rgb(76, 90, 102) 55%, rgb(126, 146, 158) 100%);
+	--caret-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.5),
+		0 0 6px color-mix(in oklab, var(--gh-candle-hue-v2) calc(var(--gh-candle-a-v2) * 60%), transparent),
+		0 6px 14px rgba(48, 60, 70, 0.16);
+	--haze-opacity: 0;
+	--body-opacity: 0;
+	--core-opacity: 0;
+	--flow-low: 0;
+	--flow-high: 0;
+	--spark-low: 0;
+	--spark-high: 0;
+	--smoke-opacity: 0;
+	--aux-opacity: 0;
+	--next-color: var(--gh-ink-v2);
+	--next-shadow: var(--gh-echo-v2);
+	--tail-color: oklch(var(--gh-tail-hue-v2) / 0.36);
+}
+
+/* Legacy scopes shared light vars on the stage: re-win the contested
+   ones at the same strength so the paper palette holds. */
+.stage[data-theme='light'][data-glow='ghosttext'] .field[data-glow] {
+	--ready-border: rgba(112, 126, 136, 0.3);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.96) inset,
+		0 -18px 50px rgba(124, 142, 152, 0.09) inset,
+		0 18px 46px rgba(48, 60, 68, 0.13),
+		0 0 58px oklch(0.6 0.03 230 / 0.08);
+	--field-wash:
+		radial-gradient(ellipse 90% 170% at 70% -34%, rgba(255, 255, 255, 0.7), transparent 58%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.5), transparent 42%);
+	--haze-opacity: 0;
+	--body-opacity: 0;
+	--core-opacity: 0;
+	--flow-low: 0;
+	--flow-high: 0;
+	--spark-low: 0;
+	--spark-high: 0;
+	--smoke-opacity: 0;
+	--aux-opacity: 0;
+	--next-color: var(--gh-ink-v2);
+	--next-shadow: var(--gh-echo-v2);
+	--tail-color: oklch(var(--gh-tail-hue-v2) / 0.36);
+}
+
+/* Paper vessel — the photograph album page. */
+.stage[data-theme='light'][data-glow='ghosttext'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 90% 160% at 70% -30%, rgba(255, 255, 255, 0.85), transparent 56%),
+		linear-gradient(180deg, rgb(251, 252, 253), rgb(246, 248, 249) 55%, rgb(240, 243, 245));
+	box-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.96) inset,
+		0 -1px 0 rgba(124, 142, 152, 0.14) inset,
+		0 20px 50px rgba(48, 60, 68, 0.12);
+}
+
+/* Re-pin the vessel overlay against legacy light rules that multiply it. */
+.stage[data-theme='light'][data-glow='ghosttext'] .field[data-glow]::before {
+	background: var(--gh-vessel-bg-v2);
+	background-size: auto;
+	mix-blend-mode: normal;
+	animation: none;
+}
+
+/* Gray breath sinks into paper — multiply, never screened away. */
+.stage[data-theme='light'][data-glow='ghosttext'] .field[data-glow] .torch-beam {
+	mix-blend-mode: multiply;
+}
+
+/* Wisps and cold spot keep their geometry; paint flips through the vars. */
+.stage[data-theme='light'][data-glow='ghosttext'] .field[data-glow] .prediction::before {
+	mix-blend-mode: var(--gh-wisp-blend-v2);
+	opacity: var(--gh-wisp-o-v2);
+}
+
+.stage[data-theme='light'][data-glow='ghosttext'] .field[data-glow] .prediction::after {
+	mix-blend-mode: var(--gh-cold-blend-v2);
+	opacity: var(--gh-cold-o-v2);
+}
+
+.stage[data-theme='light'][data-glow='ghosttext'] .field[data-glow] .next-word {
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: none;
+}
+
+/* Slate ink apparition: the materialize and breathe keyframes carry no
+   color, so both themes share them; nth-child(n) matches the legacy
+   light specificity. */
+.stage[data-theme='light'][data-glow='ghosttext'] .field[data-glow] .next-word .glyph:nth-child(n) {
+	color: var(--gh-ink-v2);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-text-fill-color: currentColor;
+	opacity: 0.96;
+	filter: none;
+	text-shadow: var(--gh-echo-v2);
+	animation:
+		ghost-materialize-v2 620ms cubic-bezier(0.22, 0.75, 0.3, 1) both,
+		ghost-breathe-v2 5.6s ease-in-out infinite;
+	animation-delay: calc(100ms + var(--i, 0) * 70ms), calc(720ms + var(--i, 0) * 70ms);
+}
+
+.stage[data-theme='light'][data-glow='ghosttext'] .field[data-glow] .tail {
+	color: var(--tail-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-text-fill-color: currentColor;
+	filter: none;
+	text-shadow: none;
+}
+
+.stage[data-theme='light'][data-glow='ghosttext'] .field[data-glow] .tail .glyph:nth-child(n) {
+	color: oklch(var(--gh-tail-hue-v2) / clamp(0.06, calc(0.6 - var(--i, 0) * 0.048), 0.6));
+	background: none;
+	opacity: 1;
+	filter: blur(clamp(0.2px, calc(var(--i, 0) * 0.16px), 2.4px));
+	text-shadow: none;
+	transform: translateY(clamp(-0.16em, calc(var(--i, 0) * -0.011em), 0em));
+	animation:
+		ghost-soul-in-v2 480ms ease-out both,
+		ghost-soul-drift-v2 6.8s ease-in-out infinite;
+	animation-delay: calc(200ms + var(--i, 0) * 45ms), calc(680ms + var(--i, 0) * 230ms);
+}
+
+.stage[data-theme='light'][data-glow='ghosttext'] .field[data-glow] .edge-left {
+	background: linear-gradient(90deg, rgb(251, 252, 253) 0%, rgb(251, 252, 253) 40%, rgba(251, 252, 253, 0) 100%);
+}
+
+.stage[data-theme='light'][data-glow='ghosttext'] .field[data-glow] .edge-right {
+	background: linear-gradient(270deg, rgba(240, 243, 245, 0.85) 0%, rgba(240, 243, 245, 0.4) 40%, rgba(240, 243, 245, 0) 100%);
+	opacity: 0.7;
+}
+
+/* Light theme + flow off: re-win the finite passes against the
+   higher-specificity light rules above. */
+.stage[data-theme='light'][data-glow='ghosttext'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(n) {
+	animation: ghost-materialize-v2 620ms cubic-bezier(0.22, 0.75, 0.3, 1) both;
+	animation-delay: calc(100ms + var(--i, 0) * 70ms);
+}
+
+.stage[data-theme='light'][data-glow='ghosttext'][data-light-flow='off'] .field[data-glow] .tail .glyph:nth-child(n) {
+	animation: ghost-soul-in-v2 480ms ease-out both;
+	animation-delay: calc(200ms + var(--i, 0) * 45ms);
+}
+
+.stage[data-theme='light'][data-glow='ghosttext'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: ghost-wisp-in-v2 700ms ease-out 150ms both;
+}
+
+.stage[data-theme='light'][data-glow='ghosttext'][data-light-flow='off'] .field[data-glow] .prediction::after {
+	animation: ghost-cold-in-v2 600ms ease-out both;
+}
+
+.stage[data-theme='light'][data-glow='ghosttext'][data-light-flow='off'] .field[data-glow]::before {
+	animation: none;
+}
+
+/* ---------- Waiting: a will-o'-the-wisp deciding whether to speak ---------- */
+/* A small pale orb (torch-core) bobs gently up-down and drifts a breath
+   left-right, with an occasional slow steps() flicker; a faint elongated
+   trailing wisp (torch-haze) lags behind on a slower, phase-offset
+   animation. Both animate transform/opacity only — no animated custom
+   property is consumed in a background, so nothing must live on the
+   torch element. Explicit size lists match the layer counts. Geometry:
+   orb 1.7em tall centered on the line (-0.35em..1.35em), trail 2em tall
+   (-0.5em..1.5em) — inside the 0.821em clearance even with the ±0.06em
+   bob. Every other torch layer dead. */
+.field[data-state='waiting'][data-glow='ghosttext'] {
+	--haze-width: 4.4em;
+	--haze-height: 2em;
+	--haze-size:
+		100% 100%,
+		100% 100%;
+	--haze-bg:
+		radial-gradient(ellipse 34% 26% at 34% 56%, var(--gh-orb-trail-v2), transparent 76%),
+		radial-gradient(ellipse 26% 18% at 62% 40%, var(--gh-orb-trail-soft-v2), transparent 78%);
+	--haze-filter: blur(7px);
+	--haze-opacity: 0.8;
+	--torch-haze-motion: ghost-wisp-trail-v2 4.6s ease-in-out -1.2s infinite;
+	--haze-mask:
+		linear-gradient(90deg, transparent 0, black 0.3em, black calc(100% - 0.35em), transparent 100%),
+		radial-gradient(ellipse 60% 62% at 32% 50%, black 0 55%, rgba(0, 0, 0, 0.5) 78%, transparent 98%);
+	--body-bg: none;
+	--body-opacity: 0;
+	--core-width: 1.7em;
+	--core-height: 1.7em;
+	--core-size:
+		100% 100%,
+		100% 100%;
+	--core-bg:
+		radial-gradient(circle 0.19em at 0.6em 50%, var(--gh-orb-core-v2), var(--gh-orb-mid-v2) 62%, transparent 100%),
+		radial-gradient(circle 0.62em at 0.6em 50%, var(--gh-orb-halo-v2), transparent 100%);
+	--core-filter: blur(1.5px);
+	--core-opacity: 0.95;
+	--torch-core-motion:
+		ghost-orb-bob-v2 3.4s ease-in-out infinite,
+		ghost-orb-flicker-v2 6.2s steps(1, end) infinite;
+	--core-mask:
+		linear-gradient(90deg, transparent 0, black 0.16em, black calc(100% - 0.18em), transparent 100%),
+		radial-gradient(circle 0.85em at 0.6em 50%, black 0 62%, rgba(0, 0, 0, 0.4) 84%, transparent 100%);
+	--flow-bg: none;
+	--flow-low: 0;
+	--flow-high: 0;
+	--flow-motion: none;
+	--spark-bg: none;
+	--spark-low: 0;
+	--spark-high: 0;
+	--spark-motion: none;
+	--smoke-bg: none;
+	--smoke-opacity: 0;
+	--smoke-motion: none;
+	--aux-bg: none;
+	--aux-opacity: 0;
+	--aux-motion: none;
+}
+
+/* Paper waiting: slate-ink wisp — the colors flow in through the theme
+   vars; only the strengths need a nudge. */
+.field[data-theme='light'][data-state='waiting'][data-glow='ghosttext'] {
+	--haze-opacity: 0.7;
+	--core-opacity: 0.85;
+}
+
+/* Light + waiting: the stage-scoped light pass above out-specifies the
+   field-level waiting block and smothers the wisp — re-raise the torch
+   opacities over it. */
+.stage[data-theme='light'][data-glow='ghosttext'] .field[data-glow][data-state='waiting'] {
+	--haze-opacity: 0.7;
+	--core-opacity: 0.85;
+}
+
+/* Waiting + flow off: the spirit holds perfectly still. */
+.field[data-light-flow='off'][data-state='waiting'][data-glow='ghosttext'] {
+	--torch-haze-motion: none;
+	--torch-core-motion: none;
+}
+
+/* ---------- Keyframes (ghost-*-v2) ---------- */
+/* The word row mounts in the cold. */
+@keyframes ghost-word-in-v2 {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+/* The soul strip settles in. */
+@keyframes ghost-tail-in-v2 {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+/* THE MATERIALIZE: a stretched wisp rises from 0.12em below, condenses
+   (blur 3.6 -> 0), overshoots a hair above the baseline, and — no 100%
+   frame — settles onto the live pale-cold slot. No color in the frames,
+   so both themes share it. */
+@keyframes ghost-materialize-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(0.12em) scaleY(1.15);
+		filter: blur(3.6px);
+		text-shadow: none;
+	}
+	42% {
+		opacity: 0.5;
+		transform: translateY(0.045em) scaleY(1.07);
+		filter: blur(1.7px);
+	}
+	76% {
+		opacity: 0.88;
+		transform: translateY(-0.016em) scaleY(1);
+		filter: blur(0.5px);
+	}
+}
+
+/* SPECTRAL BREATHE: the settled word hovers, never perfectly still —
+   its 0% equals the live 0.96 slot, so the handoff from materialize is
+   seamless. Floor 0.84 keeps the ink readable in both themes. */
+@keyframes ghost-breathe-v2 {
+	0%,
+	100% {
+		opacity: 0.96;
+		filter: blur(0);
+	}
+	50% {
+		opacity: 0.84;
+		filter: blur(0.3px);
+	}
+}
+
+/* Tail souls fade up into their risen slots (no 100% frame — opacity,
+   blur and translateY settle onto the live var(--i) ramps). */
+@keyframes ghost-soul-in-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(0.08em);
+		filter: blur(3px);
+	}
+	55% {
+		opacity: 1;
+	}
+}
+
+/* The far tail is barely a cold shimmer — a slow desynced pulse. */
+@keyframes ghost-soul-drift-v2 {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.76;
+	}
+}
+
+/* The mist arrives (no 100% frame; settles onto the live opacity). */
+@keyframes ghost-wisp-in-v2 {
+	0% {
+		opacity: 0;
+	}
+}
+
+/* THE SIGNATURE CRAWL: every ribbon layer travels a whole multiple of
+   its tile per cycle (A: 2 x 6.4em, B: 1 x 9.6em, C: 2 x 4.8em), so the
+   loop is seamless; the y offsets undulate and return to their 0% pose.
+   Linear timing keeps the crawl constant while the ribbons wave. */
+@keyframes ghost-wisp-crawl-v2 {
+	0% {
+		background-position:
+			0 0,
+			0.9em 0,
+			0 0,
+			1.2em 0,
+			0 0;
+	}
+	25% {
+		background-position:
+			3.2em -0.05em,
+			4.1em 0.04em,
+			2.4em 0.05em,
+			3.6em -0.04em,
+			2.4em -0.03em;
+	}
+	50% {
+		background-position:
+			6.4em 0.04em,
+			7.3em -0.05em,
+			4.8em -0.04em,
+			6em 0.05em,
+			4.8em 0.04em;
+	}
+	75% {
+		background-position:
+			9.6em -0.03em,
+			10.5em 0.05em,
+			7.2em 0.04em,
+			8.4em -0.05em,
+			7.2em -0.04em;
+	}
+	100% {
+		background-position:
+			12.8em 0,
+			13.7em 0,
+			9.6em 0,
+			10.8em 0,
+			9.6em 0;
+	}
+}
+
+/* The cold spot blooms on (no 100% frame). */
+@keyframes ghost-cold-in-v2 {
+	0% {
+		opacity: 0;
+	}
+}
+
+/* ...then the chill slowly deepens and eases. */
+@keyframes ghost-cold-breathe-v2 {
+	0%,
+	100% {
+		opacity: var(--gh-cold-o-v2, 0.8);
+	}
+	50% {
+		opacity: calc(var(--gh-cold-o-v2, 0.8) * 0.68);
+	}
+}
+
+/* A candle in a draft: the caret glow's alpha snaps between held poses
+   — registered <number>, animated on the field where --caret-shadow
+   computes. */
+@keyframes ghost-candle-flicker-v2 {
+	0%,
+	100% {
+		--gh-candle-a-v2: 0.62;
+	}
+	9% {
+		--gh-candle-a-v2: 0.54;
+	}
+	13% {
+		--gh-candle-a-v2: 0.66;
+	}
+	38% {
+		--gh-candle-a-v2: 0.58;
+	}
+	43% {
+		--gh-candle-a-v2: 0.64;
+	}
+	71% {
+		--gh-candle-a-v2: 0.48;
+	}
+	76% {
+		--gh-candle-a-v2: 0.62;
+	}
+}
+
+/* WAITING: the orb bobs up-down and drifts a breath left-right (the
+   translateY(-50%) keeps the torch layer's own centering)... */
+@keyframes ghost-orb-bob-v2 {
+	0%,
+	100% {
+		transform: translate(0em, calc(-50% + 0.02em));
+	}
+	30% {
+		transform: translate(0.05em, calc(-50% - 0.06em));
+	}
+	55% {
+		transform: translate(0.015em, calc(-50% + 0.045em));
+	}
+	80% {
+		transform: translate(-0.035em, calc(-50% - 0.03em));
+	}
+}
+
+/* ...with an occasional slow flicker (held poses, then snaps)... */
+@keyframes ghost-orb-flicker-v2 {
+	0%,
+	57%,
+	100% {
+		opacity: var(--core-opacity, 0.95);
+	}
+	61% {
+		opacity: calc(var(--core-opacity, 0.95) * 0.66);
+	}
+	65% {
+		opacity: var(--core-opacity, 0.95);
+	}
+	83% {
+		opacity: calc(var(--core-opacity, 0.95) * 0.8);
+	}
+	87% {
+		opacity: var(--core-opacity, 0.95);
+	}
+}
+
+/* ...while the trailing wisp lags behind on a slower, offset beat. */
+@keyframes ghost-wisp-trail-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--haze-opacity, 0.8) * 0.75);
+		transform: translate(0.04em, calc(-50% + 0.05em));
+	}
+	45% {
+		opacity: var(--haze-opacity, 0.8);
+		transform: translate(0.12em, calc(-50% - 0.05em));
+	}
+	75% {
+		opacity: calc(var(--haze-opacity, 0.8) * 0.85);
+		transform: translate(0.02em, calc(-50% + 0.02em));
+	}
+}
