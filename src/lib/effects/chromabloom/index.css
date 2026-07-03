@@ -1,0 +1,933 @@
+/* ============================================================
+   CHROMA BLOOM v2 — "Цветение цвета: серый мир расцветает".
+   Color itself is the subject: a near-monochrome charcoal
+   vessel where hue arrives only when the prediction resolves.
+   THE SIGNATURE — LIVING RAINBOW TEXT: settled next-word glyphs
+   are colored oklch(L C calc(var(--i) * 36deg + var(--cb-hue-v2)))
+   — a smooth rainbow across the glyphs whose hues slowly travel,
+   because --cb-hue-v2 is a registered inherited <angle> rotated
+   0->360deg over 14s on .prediction (one clock feeds the word,
+   the tail whisper and the flower petals alike). HUE WAVE
+   REVEAL: glyphs mount GRAYSCALE and 2px-blurred; a color wave
+   passes left->right (per-glyph var(--i) delays): each glyph
+   sweeps in from ~90deg below its slot while gaining chroma and
+   sharpening, then locks into the living rainbow (fill-forwards
+   keyframes keep referencing --cb-hue-v2, so the settled color
+   stays alive). THE BLOOM (prediction::before): a chromatic
+   flower at the caret — six oklch petals (radial-gradient
+   ellipses around a center, low-alpha bodies with brighter
+   rims) plus a golden-white pistil — unfurling from a closed
+   bud (scale 0.2, rotate -40deg) at ignite, then breathing
+   gently while its petal hues drift with the same --cb-hue-v2.
+   RING WAVE (prediction::after): one finite ~900ms expanding
+   thin conic-rainbow annulus — the colorization wave made
+   visible. POLLEN (.beam-spark, the only shared beam left
+   alive): five tiny hue dots drifting up from the flower,
+   cycling hue, rare and soft. DESATURATED TAIL: tail glyphs
+   stay GRAY ink — the future is uncolored; only the first two
+   get a whisper of chroma (clamp over var(--i)); the strip
+   fades inside its own masked box. FIELD: charcoal vessel; at
+   ignite a faint hue vignette blooms at the field edges
+   (one-shot on ::before, settling to a resting tint); caret = a
+   thin rainbow needle. WAITING: a closed BUD at the caret — a
+   small dark drop with a thin conic hue rim spun by a second
+   registered angle (--cb-bud-spin-v2), breathing slowly over a
+   gray pool. Waiting to bloom. LIGHT THEME: watercolor garden —
+   petals become translucent multiply washes that darken the
+   paper, the word settles into saturated ink hues (oklch 0.55
+   lightness), the tail is gray ink. data-light-flow='off':
+   bloom, hue wave and ring still play ONCE (finite); the hue
+   drift, pollen and breathing freeze — a rainbow standing
+   still. No muddy clouds: petal and ring silhouettes stay
+   precise; every decorated layer's masks complete their fades
+   INSIDE their boxes (mask-composite: intersect). Keyframes:
+   chromabloom-*-v2 only; legacy chromabloom-* keyframes and
+   --chroma-* vars in legacy.css stay untouched and unused.
+   ============================================================ */
+
+@property --cb-hue-v2 {
+	syntax: '<angle>';
+	inherits: true;
+	initial-value: 0deg;
+}
+
+@property --cb-bud-spin-v2 {
+	syntax: '<angle>';
+	inherits: false;
+	initial-value: 0deg;
+}
+
+.field[data-glow='chromabloom'] {
+	--layer-radius: 999px;
+	--layer-clip: inset(0 round 999px);
+	--cb-l-v2: 0.85;
+	--cb-c-v2: 0.13;
+	--cb-gray-v2: oklch(0.64 0.008 265 / 0.9);
+	--cb-glyph-shadow-v2: 0 1px 1px rgba(6, 7, 10, 0.5);
+	--cb-tail-l-v2: 0.72;
+	--cb-tail-a-v2: 0.48;
+	--cb-petal-l-v2: 0.75;
+	--cb-petal-c-v2: 0.15;
+	--cb-petal-a-v2: 0.44;
+	--cb-rim-a-v2: 0.74;
+	--cb-flower-o-v2: 0.96;
+	--cb-flower-bg-v2:
+		radial-gradient(circle 0.16em at 50% 50%, oklch(0.98 0.07 95 / 0.96) 0 42%, oklch(0.9 0.13 88 / 0.55) 68%, transparent 100%),
+		radial-gradient(ellipse 0.5em 0.92em at 50% 24%, oklch(var(--cb-petal-l-v2) var(--cb-petal-c-v2) calc(0deg + var(--cb-hue-v2)) / var(--cb-petal-a-v2)) 0 44%, oklch(calc(var(--cb-petal-l-v2) + 0.07) calc(var(--cb-petal-c-v2) + 0.05) calc(0deg + var(--cb-hue-v2)) / var(--cb-rim-a-v2)) 62% 76%, transparent 92%),
+		radial-gradient(ellipse 0.84em 0.62em at 73% 37%, oklch(var(--cb-petal-l-v2) var(--cb-petal-c-v2) calc(60deg + var(--cb-hue-v2)) / var(--cb-petal-a-v2)) 0 44%, oklch(calc(var(--cb-petal-l-v2) + 0.07) calc(var(--cb-petal-c-v2) + 0.05) calc(60deg + var(--cb-hue-v2)) / var(--cb-rim-a-v2)) 62% 76%, transparent 92%),
+		radial-gradient(ellipse 0.84em 0.62em at 73% 63%, oklch(var(--cb-petal-l-v2) var(--cb-petal-c-v2) calc(120deg + var(--cb-hue-v2)) / var(--cb-petal-a-v2)) 0 44%, oklch(calc(var(--cb-petal-l-v2) + 0.07) calc(var(--cb-petal-c-v2) + 0.05) calc(120deg + var(--cb-hue-v2)) / var(--cb-rim-a-v2)) 62% 76%, transparent 92%),
+		radial-gradient(ellipse 0.5em 0.92em at 50% 76%, oklch(var(--cb-petal-l-v2) var(--cb-petal-c-v2) calc(180deg + var(--cb-hue-v2)) / var(--cb-petal-a-v2)) 0 44%, oklch(calc(var(--cb-petal-l-v2) + 0.07) calc(var(--cb-petal-c-v2) + 0.05) calc(180deg + var(--cb-hue-v2)) / var(--cb-rim-a-v2)) 62% 76%, transparent 92%),
+		radial-gradient(ellipse 0.84em 0.62em at 27% 63%, oklch(var(--cb-petal-l-v2) var(--cb-petal-c-v2) calc(240deg + var(--cb-hue-v2)) / var(--cb-petal-a-v2)) 0 44%, oklch(calc(var(--cb-petal-l-v2) + 0.07) calc(var(--cb-petal-c-v2) + 0.05) calc(240deg + var(--cb-hue-v2)) / var(--cb-rim-a-v2)) 62% 76%, transparent 92%),
+		radial-gradient(ellipse 0.84em 0.62em at 27% 37%, oklch(var(--cb-petal-l-v2) var(--cb-petal-c-v2) calc(300deg + var(--cb-hue-v2)) / var(--cb-petal-a-v2)) 0 44%, oklch(calc(var(--cb-petal-l-v2) + 0.07) calc(var(--cb-petal-c-v2) + 0.05) calc(300deg + var(--cb-hue-v2)) / var(--cb-rim-a-v2)) 62% 76%, transparent 92%);
+	--cb-ring-l-v2: 0.82;
+	--cb-ring-c-v2: 0.17;
+	--cb-ring-a-v2: 0.85;
+	--cb-ring-bg-v2: conic-gradient(
+		from -90deg at 50% 50%,
+		oklch(var(--cb-ring-l-v2) var(--cb-ring-c-v2) 0deg / var(--cb-ring-a-v2)),
+		oklch(var(--cb-ring-l-v2) var(--cb-ring-c-v2) 60deg / var(--cb-ring-a-v2)),
+		oklch(var(--cb-ring-l-v2) var(--cb-ring-c-v2) 120deg / var(--cb-ring-a-v2)),
+		oklch(var(--cb-ring-l-v2) var(--cb-ring-c-v2) 180deg / var(--cb-ring-a-v2)),
+		oklch(var(--cb-ring-l-v2) var(--cb-ring-c-v2) 240deg / var(--cb-ring-a-v2)),
+		oklch(var(--cb-ring-l-v2) var(--cb-ring-c-v2) 300deg / var(--cb-ring-a-v2)),
+		oklch(var(--cb-ring-l-v2) var(--cb-ring-c-v2) 360deg / var(--cb-ring-a-v2))
+	);
+	--cb-pollen-l-v2: 0.85;
+	--cb-pollen-a-v2: 0.85;
+	--cb-bud-l-v2: 0.78;
+	--cb-bud-c-v2: 0.14;
+	--cb-bud-a-v2: 0.85;
+	--cb-bud-body-v2: oklch(0.22 0.012 290 / 0.96);
+	--cb-bud-pool-v2: oklch(0.82 0.015 300 / 0.14);
+	--ready-border: rgba(214, 212, 222, 0.16);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.05) inset,
+		0 -34px 88px rgba(9, 9, 12, 0.5) inset,
+		0 0 46px oklch(0.72 0.12 350 / 0.05) inset,
+		0 0 84px oklch(0.75 0.12 220 / 0.04) inset,
+		0 30px 66px rgba(0, 0, 0, 0.48),
+		0 0 80px oklch(0.7 0.12 320 / 0.05);
+	--field-wash:
+		radial-gradient(ellipse 40% 150% at 4% 50%, oklch(0.75 0.11 350 / 0.055), transparent 58%),
+		radial-gradient(ellipse 40% 150% at 96% 50%, oklch(0.78 0.1 220 / 0.05), transparent 58%),
+		radial-gradient(ellipse 70% 120% at 50% -40%, oklch(0.85 0.07 110 / 0.035), transparent 62%),
+		linear-gradient(180deg, rgba(246, 247, 252, 0.02), transparent 40%);
+	--caret-gradient: linear-gradient(
+		180deg,
+		oklch(0.88 0.16 25) 0%,
+		oklch(0.9 0.16 95) 22%,
+		oklch(0.87 0.16 150) 42%,
+		oklch(0.85 0.14 220) 62%,
+		oklch(0.8 0.16 290) 82%,
+		oklch(0.82 0.18 340) 100%
+	);
+	--caret-shadow:
+		0 0 6px oklch(0.9 0.1 90 / 0.4),
+		0 8px 18px oklch(0.8 0.16 320 / 0.3),
+		0 0 30px oklch(0.8 0.14 220 / 0.18);
+	--haze-bg: none;
+	--haze-opacity: 0;
+	--haze-motion: none;
+	--torch-haze-motion: none;
+	--haze-mask: none;
+	--body-bg: none;
+	--body-opacity: 0;
+	--body-mask: none;
+	--core-bg: none;
+	--core-opacity: 0;
+	--core-motion: none;
+	--torch-core-motion: none;
+	--core-mask: none;
+	--flow-bg: none;
+	--flow-low: 0;
+	--flow-high: 0;
+	--flow-motion: none;
+	--flow-mask: none;
+	--spark-width: 3em;
+	--spark-height: 2.6em;
+	--spark-bg:
+		radial-gradient(circle at 0.34em 0.62em, oklch(var(--cb-pollen-l-v2) 0.16 20 / var(--cb-pollen-a-v2)) 0 0.034em, transparent 0.09em),
+		radial-gradient(circle at 0.92em 1.04em, oklch(var(--cb-pollen-l-v2) 0.16 95 / var(--cb-pollen-a-v2)) 0 0.03em, transparent 0.085em),
+		radial-gradient(circle at 0.18em 1.58em, oklch(var(--cb-pollen-l-v2) 0.15 150 / var(--cb-pollen-a-v2)) 0 0.028em, transparent 0.08em),
+		radial-gradient(circle at 0.72em 1.94em, oklch(var(--cb-pollen-l-v2) 0.14 230 / var(--cb-pollen-a-v2)) 0 0.03em, transparent 0.082em),
+		radial-gradient(circle at 1.26em 1.5em, oklch(var(--cb-pollen-l-v2) 0.16 310 / var(--cb-pollen-a-v2)) 0 0.026em, transparent 0.078em);
+	--spark-filter: blur(0.3px) saturate(1.15);
+	--spark-low: 0;
+	--spark-high: 0.8;
+	--spark-motion: chromabloom-pollen-v2 6.4s ease-in-out 1.1s infinite;
+	--spark-mask: radial-gradient(ellipse 72% 74% at 32% 50%, black 0 52%, rgba(0, 0, 0, 0.5) 76%, transparent 96%);
+	--smoke-bg: none;
+	--smoke-opacity: 0;
+	--smoke-motion: none;
+	--smoke-blend: normal;
+	--smoke-mask: none;
+	--aux-bg: none;
+	--aux-opacity: 0;
+	--aux-motion: none;
+	--aux-mask: none;
+	--next-color: rgba(240, 240, 246, 0.97);
+	--next-shadow: var(--cb-glyph-shadow-v2);
+	--tail-color: rgba(200, 202, 210, 0.4);
+}
+
+/* The bloom owns its layers: every shared beam dies except the spark
+   layer, which carries the pollen. Torch layers serve waiting only. */
+.stage[data-glow='chromabloom'] .field[data-glow] .prediction > .beam:not(.beam-spark) {
+	display: none;
+}
+
+/* The legacy pass killed ALL chromabloom beams — bring the pollen layer
+   back... */
+.stage[data-glow='chromabloom'] .field[data-glow] .prediction > .beam-spark {
+	display: block;
+}
+
+/* ...but never past the component's flow-off spark hide. */
+.stage[data-glow='chromabloom'][data-light-flow='off'] .field[data-glow] .prediction > .beam-spark {
+	display: none;
+}
+
+.stage[data-glow='chromabloom'] .field[data-glow] .caret-origin-glow[data-mode='ready'] {
+	display: none;
+}
+
+/* Two-layer masks (left fade x radial falloff / annulus) need
+   intersection, not union — waiting torch layers and both prediction
+   pseudos alike, so every fade completes inside its own box. */
+.stage[data-glow='chromabloom'] .field[data-glow] .torch-beam,
+.stage[data-glow='chromabloom'] .field[data-glow] .prediction::before,
+.stage[data-glow='chromabloom'] .field[data-glow] .prediction::after {
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+}
+
+/* THE HUE CLOCK: one registered <angle> rotates 0->360deg over 14s on
+   .prediction and inherits into petals, word glyphs and tail whisper —
+   the whole bloom shares a single traveling rainbow. */
+.stage[data-glow='chromabloom'] .field[data-glow] .prediction {
+	isolation: isolate;
+	animation: chromabloom-hue-v2 14s linear infinite;
+}
+
+/* Near-monochrome charcoal vessel — a gray world before the bloom. */
+.stage[data-glow='chromabloom'] .field[data-glow] {
+	background:
+		linear-gradient(180deg, rgba(246, 247, 252, 0.02), transparent 36%),
+		linear-gradient(90deg, rgb(19, 19, 23), rgb(22, 22, 26) 52%, rgb(26, 26, 31));
+}
+
+/* The hue vignette sleeps until ignite; then it blooms once at the field
+   edges and settles to a resting tint (finite — survives flow-off). */
+.stage[data-glow='chromabloom'] .field[data-glow]::before {
+	background: var(--field-wash);
+	background-size: 100% 100%;
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: normal;
+	opacity: 0;
+	animation: none;
+}
+
+.stage[data-glow='chromabloom'] .field[data-glow][data-state='ready']::before {
+	animation: chromabloom-vignette-v2 1.4s ease-out both;
+}
+
+.stage[data-glow='chromabloom'] .field[data-glow][data-state='waiting'][data-loading-glow='field']::before {
+	opacity: 0.45;
+}
+
+/* Dissolve into the field's rounded clip, not the paint box; edge
+   overlays extended into the 64px padding so the vessel never steps at
+   the content box (legacy zeroed both edges for chromabloom). */
+.stage[data-glow='chromabloom'] .field[data-glow] .paint {
+	overflow: visible;
+	clip-path: inset(-3.4em -6em -3.4em 0);
+}
+
+.stage[data-glow='chromabloom'] .field[data-glow] .edge-left {
+	left: -64px;
+	width: 156px;
+	background: linear-gradient(90deg, rgb(19, 19, 23) 0%, rgb(19, 19, 23) 40%, rgba(19, 19, 23, 0) 100%);
+	opacity: 0;
+}
+
+.stage[data-glow='chromabloom'] .field[data-glow] .viewport.scrolled .edge-left {
+	opacity: 1;
+}
+
+.stage[data-glow='chromabloom'] .field[data-glow] .edge-right {
+	right: -64px;
+	width: 224px;
+	background: linear-gradient(
+		270deg,
+		rgba(26, 26, 31, 0.92) 0%,
+		rgba(26, 26, 31, 0.56) 30%,
+		rgba(26, 26, 31, 0.16) 68%,
+		rgba(26, 26, 31, 0) 100%
+	);
+	opacity: 0.85;
+}
+
+/* ---------- THE BLOOM: a chromatic flower unfurls at the caret ---------- */
+/* Six oklch petals around a golden-white pistil, opening from a closed
+   bud (scale 0.2, rotate -40deg), then breathing; petal hues ride the
+   shared --cb-hue-v2 clock. Precise silhouettes — barely any blur. */
+.stage[data-glow='chromabloom'] .field[data-glow] .prediction::before {
+	position: absolute;
+	left: -1.45em;
+	top: 50%;
+	z-index: -2;
+	width: 3.3em;
+	height: 3em;
+	content: '';
+	pointer-events: none;
+	border: 0;
+	border-radius: 0;
+	clip-path: none;
+	box-shadow: none;
+	backdrop-filter: none;
+	-webkit-backdrop-filter: none;
+	background: var(--cb-flower-bg-v2);
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	filter: blur(0.4px) saturate(1.12);
+	-webkit-mask-image:
+		radial-gradient(ellipse 60% 62% at 50% 50%, black 0 60%, rgba(0, 0, 0, 0.55) 80%, transparent 97%),
+		linear-gradient(90deg, transparent 0, rgba(0, 0, 0, 0.3) 0.85em, black 1.45em, black calc(100% - 0.35em), transparent 100%);
+	mask-image:
+		radial-gradient(ellipse 60% 62% at 50% 50%, black 0 60%, rgba(0, 0, 0, 0.55) 80%, transparent 97%),
+		linear-gradient(90deg, transparent 0, rgba(0, 0, 0, 0.3) 0.85em, black 1.45em, black calc(100% - 0.35em), transparent 100%);
+	mix-blend-mode: normal;
+	opacity: var(--cb-flower-o-v2);
+	transform: translateY(-50%);
+	transform-origin: 50% 50%;
+	animation:
+		chromabloom-bloom-in-v2 940ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		chromabloom-flower-breathe-v2 5.8s ease-in-out 940ms infinite;
+}
+
+/* ---------- RING WAVE: the colorization wave made visible ---------- */
+/* One finite thin conic-rainbow annulus rippling outward from the
+   flower at ignite (~900ms), then gone. */
+.stage[data-glow='chromabloom'] .field[data-glow] .prediction::after {
+	position: absolute;
+	left: -1.3em;
+	top: 50%;
+	z-index: -1;
+	width: 3em;
+	height: 2.9em;
+	content: '';
+	pointer-events: none;
+	border: 0;
+	border-radius: 0;
+	clip-path: none;
+	box-shadow: none;
+	backdrop-filter: none;
+	-webkit-backdrop-filter: none;
+	background: var(--cb-ring-bg-v2);
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	filter: blur(0.5px) saturate(1.2);
+	-webkit-mask-image:
+		radial-gradient(ellipse 50% 47% at 50% 50%, transparent 0 82%, black 88% 93%, transparent 98%),
+		linear-gradient(90deg, transparent 0, black 0.35em, black calc(100% - 0.3em), transparent 100%);
+	mask-image:
+		radial-gradient(ellipse 50% 47% at 50% 50%, transparent 0 82%, black 88% 93%, transparent 98%),
+		linear-gradient(90deg, transparent 0, black 0.35em, black calc(100% - 0.3em), transparent 100%);
+	mix-blend-mode: normal;
+	opacity: 0;
+	transform: translateY(-50%) scale(0.16);
+	transform-origin: 50% 50%;
+	animation: chromabloom-ring-v2 900ms cubic-bezier(0.22, 0.9, 0.3, 1) 140ms both;
+}
+
+/* ---------- The word: gray -> hue wave -> living rainbow ---------- */
+.stage[data-glow='chromabloom'] .field[data-glow] .next-word {
+	position: relative;
+	isolation: isolate;
+	z-index: 5;
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: var(--cb-glyph-shadow-v2);
+	transform: none;
+	animation: chromabloom-word-in-v2 220ms ease-out both;
+}
+
+/* Legacy's muddy word aura has no place in the garden. */
+.stage[data-glow='chromabloom'] .field[data-glow] .next-word::before {
+	content: none;
+	background: none;
+	animation: none;
+}
+
+/* HUE WAVE: every glyph mounts grayscale and 2px-blurred, then a color
+   wave passes l->r (per-glyph delay): a fast ~90deg hue sweep with
+   rising chroma, sharpening into the glyph's rainbow slot. The
+   fill-forwards frame keeps reading --cb-hue-v2, so settled hues never
+   stop traveling. The nth-child group re-wins the legacy tint split. */
+.stage[data-glow='chromabloom'] .field[data-glow] .next-word .glyph,
+.stage[data-glow='chromabloom'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-glow='chromabloom'] .field[data-glow] .next-word .glyph:nth-child(3n + 2),
+.stage[data-glow='chromabloom'] .field[data-glow] .next-word .glyph:nth-child(3n) {
+	display: inline-block;
+	position: relative;
+	color: oklch(var(--cb-l-v2) var(--cb-c-v2) calc(var(--i, 0) * 36deg + var(--cb-hue-v2)));
+	background: none;
+	opacity: 1;
+	filter: none;
+	text-shadow: var(--cb-glyph-shadow-v2);
+	transform: none;
+	animation: chromabloom-glyph-bloom-v2 620ms cubic-bezier(0.3, 0.8, 0.3, 1) both;
+	animation-delay: calc(160ms + var(--i, 0) * 64ms);
+}
+
+/* No scrambled alter egos here — the bloom changes color, not letters. */
+.stage[data-glow='chromabloom'] .field[data-glow] .next-word .glyph::after,
+.stage[data-glow='chromabloom'] .field[data-glow] .tail .glyph::after {
+	opacity: 0;
+	animation: none;
+}
+
+/* ---------- Tail: the future is uncolored ---------- */
+/* Gray ink glyphs; the masked fade completes inside the box. */
+.stage[data-glow='chromabloom'] .field[data-glow] .tail {
+	position: relative;
+	isolation: isolate;
+	z-index: 2;
+	color: var(--tail-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-text-fill-color: currentColor;
+	filter: none;
+	text-shadow: none;
+	-webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.85) 0, rgba(0, 0, 0, 0.5) 3em, rgba(0, 0, 0, 0.16) 6.4em, transparent 9.6em);
+	mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.85) 0, rgba(0, 0, 0, 0.5) 3em, rgba(0, 0, 0, 0.16) 6.4em, transparent 9.6em);
+	animation: chromabloom-tail-in-v2 380ms ease-out 220ms both;
+}
+
+/* Only the first couple of tail glyphs get a whisper of chroma
+   (clamp over var(--i)); everything further is plain gray. */
+.stage[data-glow='chromabloom'] .field[data-glow] .tail .glyph,
+.stage[data-glow='chromabloom'] .field[data-glow] .tail .glyph:nth-child(3n + 1),
+.stage[data-glow='chromabloom'] .field[data-glow] .tail .glyph:nth-child(3n + 2),
+.stage[data-glow='chromabloom'] .field[data-glow] .tail .glyph:nth-child(3n) {
+	display: inline-block;
+	position: relative;
+	color: oklch(var(--cb-tail-l-v2) clamp(0, calc(0.055 - var(--i, 9) * 0.022), 0.055) calc(var(--i, 0) * 36deg + var(--cb-hue-v2)) / var(--cb-tail-a-v2));
+	background: none;
+	opacity: clamp(0.34, calc(0.6 - var(--i, 0) * 0.014), 0.6);
+	filter: none;
+	text-shadow: none;
+	transform: none;
+	animation: none;
+}
+
+/* ---------- Light flow off: one full bloom, then a still rainbow ---------- */
+/* Bloom, ring and hue wave still play once (finite); the hue clock stops
+   at 0deg so the rainbow freezes in place; pollen dies with the shared
+   spark layer; the flower holds its open pose without breathing. */
+.stage[data-glow='chromabloom'][data-light-flow='off'] .field[data-glow] .prediction {
+	animation: none;
+}
+
+.stage[data-glow='chromabloom'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: chromabloom-bloom-in-v2 940ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='chromabloom'][data-light-flow='off'] .field[data-glow] .prediction::after {
+	animation: chromabloom-ring-v2 900ms cubic-bezier(0.22, 0.9, 0.3, 1) 140ms both;
+}
+
+.stage[data-glow='chromabloom'][data-light-flow='off'] .field[data-glow] .next-word {
+	animation: chromabloom-word-in-v2 220ms ease-out both;
+}
+
+.stage[data-glow='chromabloom'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
+	animation: chromabloom-glyph-bloom-v2 620ms cubic-bezier(0.3, 0.8, 0.3, 1) both;
+	animation-delay: calc(160ms + var(--i, 0) * 64ms);
+}
+
+.stage[data-glow='chromabloom'][data-light-flow='off'] .field[data-glow] .tail {
+	animation: chromabloom-tail-in-v2 380ms ease-out 220ms both;
+}
+
+.stage[data-glow='chromabloom'][data-light-flow='off'] .field[data-glow][data-state='ready']::before {
+	animation: chromabloom-vignette-v2 1.4s ease-out both;
+}
+
+/* ---------- Light theme: watercolor garden on paper ---------- */
+/* Petals become translucent multiply washes that darken the sheet, the
+   word settles into saturated ink hues (0.55 lightness for contrast on
+   white), the tail is gray ink, the pollen dries into pigment dots. */
+.field[data-theme='light'][data-glow='chromabloom'] {
+	--cb-l-v2: 0.55;
+	--cb-c-v2: 0.17;
+	--cb-gray-v2: oklch(0.52 0.008 280 / 0.9);
+	--cb-glyph-shadow-v2: 0 1px 0 rgba(255, 255, 255, 0.55);
+	--cb-tail-l-v2: 0.42;
+	--cb-tail-a-v2: 0.62;
+	--cb-petal-l-v2: 0.66;
+	--cb-petal-c-v2: 0.15;
+	--cb-petal-a-v2: 0.42;
+	--cb-rim-a-v2: 0.62;
+	--cb-flower-o-v2: 0.8;
+	--cb-ring-l-v2: 0.6;
+	--cb-ring-c-v2: 0.19;
+	--cb-ring-a-v2: 0.75;
+	--cb-pollen-l-v2: 0.55;
+	--cb-pollen-a-v2: 0.7;
+	--cb-bud-l-v2: 0.55;
+	--cb-bud-c-v2: 0.16;
+	--cb-bud-a-v2: 0.9;
+	--cb-bud-body-v2: oklch(0.32 0.02 300 / 0.9);
+	--cb-bud-pool-v2: oklch(0.45 0.02 300 / 0.1);
+	--ready-border: rgba(150, 144, 160, 0.36);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.96) inset,
+		0 -18px 50px rgba(146, 140, 164, 0.1) inset,
+		0 0 42px oklch(0.6 0.12 350 / 0.05) inset,
+		0 0 70px oklch(0.62 0.11 220 / 0.045) inset,
+		0 18px 46px rgba(58, 56, 76, 0.13),
+		0 0 60px oklch(0.6 0.13 320 / 0.06);
+	--field-wash:
+		radial-gradient(ellipse 40% 150% at 4% 50%, oklch(0.6 0.13 350 / 0.05), transparent 58%),
+		radial-gradient(ellipse 40% 150% at 96% 50%, oklch(0.62 0.12 220 / 0.045), transparent 58%),
+		radial-gradient(ellipse 90% 170% at 74% -34%, rgba(255, 255, 255, 0.7), transparent 58%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.5), transparent 42%);
+	--caret-gradient: linear-gradient(
+		180deg,
+		oklch(0.55 0.19 25) 0%,
+		oklch(0.6 0.15 95) 22%,
+		oklch(0.55 0.15 150) 42%,
+		oklch(0.52 0.13 230) 62%,
+		oklch(0.5 0.17 300) 82%,
+		oklch(0.55 0.19 350) 100%
+	);
+	--caret-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.6),
+		0 0 6px oklch(0.55 0.17 330 / 0.3),
+		0 6px 14px oklch(0.5 0.15 230 / 0.22);
+	--next-color: rgba(30, 29, 40, 0.95);
+	--next-shadow: var(--cb-glyph-shadow-v2);
+	--tail-color: rgba(70, 70, 84, 0.5);
+}
+
+/* The legacy pass scopes chromabloom light vars on the stage and zeroes
+   the spark layer there: re-win the contested ones at the same strength
+   so the module palette (and the pollen) holds. */
+.stage[data-theme='light'][data-glow='chromabloom'] .field[data-glow] {
+	--ready-border: rgba(150, 144, 160, 0.36);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.96) inset,
+		0 -18px 50px rgba(146, 140, 164, 0.1) inset,
+		0 0 42px oklch(0.6 0.12 350 / 0.05) inset,
+		0 0 70px oklch(0.62 0.11 220 / 0.045) inset,
+		0 18px 46px rgba(58, 56, 76, 0.13),
+		0 0 60px oklch(0.6 0.13 320 / 0.06);
+	--field-wash:
+		radial-gradient(ellipse 40% 150% at 4% 50%, oklch(0.6 0.13 350 / 0.05), transparent 58%),
+		radial-gradient(ellipse 40% 150% at 96% 50%, oklch(0.62 0.12 220 / 0.045), transparent 58%),
+		radial-gradient(ellipse 90% 170% at 74% -34%, rgba(255, 255, 255, 0.7), transparent 58%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.5), transparent 42%);
+	--haze-opacity: 0;
+	--body-opacity: 0;
+	--core-opacity: 0;
+	--flow-low: 0;
+	--flow-high: 0;
+	--spark-low: 0;
+	--spark-high: 0.7;
+	--smoke-opacity: 0;
+	--aux-opacity: 0;
+	--next-color: rgba(30, 29, 40, 0.95);
+	--next-shadow: var(--cb-glyph-shadow-v2);
+	--tail-color: rgba(70, 70, 84, 0.5);
+}
+
+/* Warm paper sheet — the same gray world in daylight. */
+.stage[data-theme='light'][data-glow='chromabloom'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 90% 160% at 74% -30%, rgba(255, 255, 255, 0.85), transparent 56%),
+		linear-gradient(180deg, rgb(252, 251, 249), rgb(248, 246, 243) 55%, rgb(242, 240, 236));
+	box-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.96) inset,
+		0 -1px 0 rgba(146, 140, 164, 0.12) inset,
+		0 20px 50px rgba(58, 56, 76, 0.12);
+}
+
+/* Re-pin the vignette against legacy light rules that leave it drifting. */
+.stage[data-theme='light'][data-glow='chromabloom'] .field[data-glow]::before {
+	mix-blend-mode: normal;
+	opacity: 0;
+	animation: none;
+}
+
+.stage[data-theme='light'][data-glow='chromabloom'] .field[data-glow][data-state='ready']::before {
+	animation: chromabloom-vignette-v2 1.4s ease-out both;
+}
+
+.stage[data-theme='light'][data-glow='chromabloom'] .field[data-glow][data-state='waiting'][data-loading-glow='field']::before {
+	opacity: 0.4;
+}
+
+/* Pigment sits on paper — never screened away. */
+.stage[data-theme='light'][data-glow='chromabloom'] .field[data-glow] .torch-beam,
+.stage[data-theme='light'][data-glow='chromabloom'] .field[data-glow] .prediction > .beam-spark {
+	mix-blend-mode: normal;
+}
+
+/* Watercolor petals darken the sheet; same geometry, multiply paint. */
+.stage[data-theme='light'][data-glow='chromabloom'] .field[data-glow] .prediction::before {
+	background: var(--cb-flower-bg-v2);
+	filter: blur(0.4px) saturate(1.05);
+	mix-blend-mode: multiply;
+	opacity: var(--cb-flower-o-v2);
+}
+
+.stage[data-theme='light'][data-glow='chromabloom'] .field[data-glow] .prediction::after {
+	background: var(--cb-ring-bg-v2);
+	filter: blur(0.5px) saturate(1.05);
+	mix-blend-mode: multiply;
+}
+
+.stage[data-theme='light'][data-glow='chromabloom'] .field[data-glow] .next-word {
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: var(--cb-glyph-shadow-v2);
+}
+
+/* nth-child(n) matches the legacy light specificity so the ink hues and
+   paper shadow win; the animation still owns the color track. */
+.stage[data-theme='light'][data-glow='chromabloom'] .field[data-glow] .next-word .glyph:nth-child(n) {
+	color: oklch(var(--cb-l-v2) var(--cb-c-v2) calc(var(--i, 0) * 36deg + var(--cb-hue-v2)));
+	background: none;
+	filter: none;
+	text-shadow: var(--cb-glyph-shadow-v2);
+	animation: chromabloom-glyph-bloom-v2 620ms cubic-bezier(0.3, 0.8, 0.3, 1) both;
+	animation-delay: calc(160ms + var(--i, 0) * 64ms);
+}
+
+.stage[data-theme='light'][data-glow='chromabloom'] .field[data-glow] .tail {
+	color: var(--tail-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-text-fill-color: currentColor;
+	filter: none;
+	text-shadow: none;
+}
+
+.stage[data-theme='light'][data-glow='chromabloom'] .field[data-glow] .tail .glyph:nth-child(n) {
+	color: oklch(var(--cb-tail-l-v2) clamp(0, calc(0.055 - var(--i, 9) * 0.022), 0.055) calc(var(--i, 0) * 36deg + var(--cb-hue-v2)) / var(--cb-tail-a-v2));
+	background: none;
+	filter: none;
+	text-shadow: none;
+}
+
+.stage[data-theme='light'][data-glow='chromabloom'] .field[data-glow] .edge-left {
+	background: linear-gradient(90deg, rgb(252, 251, 249) 0%, rgb(252, 251, 249) 40%, rgba(252, 251, 249, 0) 100%);
+}
+
+.stage[data-theme='light'][data-glow='chromabloom'] .field[data-glow] .edge-right {
+	background: linear-gradient(
+		270deg,
+		rgba(242, 240, 236, 0.5) 0%,
+		rgba(242, 240, 236, 0.22) 42%,
+		rgba(242, 240, 236, 0) 100%
+	);
+	opacity: 0.55;
+}
+
+/* Light theme + flow off: re-win the finite passes against the
+   higher-specificity light rules above. */
+.stage[data-theme='light'][data-glow='chromabloom'][data-light-flow='off'] .field[data-glow] .prediction {
+	animation: none;
+}
+
+.stage[data-theme='light'][data-glow='chromabloom'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: chromabloom-bloom-in-v2 940ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-theme='light'][data-glow='chromabloom'][data-light-flow='off'] .field[data-glow] .prediction::after {
+	animation: chromabloom-ring-v2 900ms cubic-bezier(0.22, 0.9, 0.3, 1) 140ms both;
+}
+
+.stage[data-theme='light'][data-glow='chromabloom'][data-light-flow='off'] .field[data-glow] .next-word {
+	animation: chromabloom-word-in-v2 220ms ease-out both;
+}
+
+.stage[data-theme='light'][data-glow='chromabloom'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
+	animation: chromabloom-glyph-bloom-v2 620ms cubic-bezier(0.3, 0.8, 0.3, 1) both;
+	animation-delay: calc(160ms + var(--i, 0) * 64ms);
+}
+
+.stage[data-theme='light'][data-glow='chromabloom'][data-light-flow='off'] .field[data-glow] .tail {
+	animation: chromabloom-tail-in-v2 380ms ease-out 220ms both;
+}
+
+.stage[data-theme='light'][data-glow='chromabloom'][data-light-flow='off'] .field[data-glow][data-state='ready']::before {
+	animation: chromabloom-vignette-v2 1.4s ease-out both;
+}
+
+/* ---------- Waiting state: a closed bud, waiting to bloom ---------- */
+/* A small dark drop at the caret wearing a thin conic hue rim — the only
+   color in the gray world — spun slowly by its own registered angle,
+   breathing over a quiet gray pool with a soft floor shade. */
+.field[data-state='waiting'][data-glow='chromabloom'] {
+	--haze-width: 4.6em;
+	--haze-height: 2.6em;
+	--haze-size: 100% 100%;
+	--haze-bg: radial-gradient(ellipse 1.6em 1em at 0.85em 50%, var(--cb-bud-pool-v2), transparent 78%);
+	--haze-filter: blur(9px) saturate(1.02);
+	--haze-opacity: 0.55;
+	--torch-haze-motion: chromabloom-bud-breathe-v2 4.8s ease-in-out infinite;
+	--haze-mask: linear-gradient(90deg, transparent 0, black 0.3em), radial-gradient(ellipse 52% 54% at 32% 50%, black 0 48%, rgba(0, 0, 0, 0.5) 72%, transparent 96%);
+	--body-bg: none;
+	--body-opacity: 0;
+	--core-width: 2.4em;
+	--core-height: 2.5em;
+	--core-size: 100% 100%;
+	--core-bg:
+		radial-gradient(ellipse 0.3em 0.38em at 0.85em 50%, var(--cb-bud-body-v2) 0 86%, transparent 100%),
+		conic-gradient(
+			from var(--cb-bud-spin-v2) at 0.85em 50%,
+			oklch(var(--cb-bud-l-v2) var(--cb-bud-c-v2) 0deg / var(--cb-bud-a-v2)),
+			oklch(var(--cb-bud-l-v2) var(--cb-bud-c-v2) 60deg / var(--cb-bud-a-v2)),
+			oklch(var(--cb-bud-l-v2) var(--cb-bud-c-v2) 120deg / var(--cb-bud-a-v2)),
+			oklch(var(--cb-bud-l-v2) var(--cb-bud-c-v2) 180deg / var(--cb-bud-a-v2)),
+			oklch(var(--cb-bud-l-v2) var(--cb-bud-c-v2) 240deg / var(--cb-bud-a-v2)),
+			oklch(var(--cb-bud-l-v2) var(--cb-bud-c-v2) 300deg / var(--cb-bud-a-v2)),
+			oklch(var(--cb-bud-l-v2) var(--cb-bud-c-v2) 360deg / var(--cb-bud-a-v2))
+		);
+	--core-filter: blur(0.3px) saturate(1.08);
+	--core-opacity: 0.95;
+	--torch-core-motion:
+		chromabloom-bud-spin-v2 7.5s linear infinite,
+		chromabloom-bud-pulse-v2 4.8s ease-in-out infinite;
+	--core-mask: radial-gradient(ellipse 0.39em 0.48em at 0.85em 50%, black 0 88%, rgba(0, 0, 0, 0.5) 94%, transparent 100%);
+	--flow-bg: none;
+	--flow-low: 0;
+	--flow-high: 0;
+	--flow-motion: none;
+	--spark-bg: none;
+	--spark-low: 0;
+	--spark-high: 0;
+	--spark-motion: none;
+	--smoke-width: 3.4em;
+	--smoke-height: 2.6em;
+	--smoke-size: auto;
+	--smoke-bg: radial-gradient(ellipse 1.1em 0.28em at 0.85em 1.9em, rgba(3, 4, 7, 0.4), transparent 80%);
+	--smoke-filter: blur(5px);
+	--smoke-opacity: 0.5;
+	--smoke-blend: normal;
+	--smoke-motion: none;
+	--smoke-mask: linear-gradient(90deg, transparent 0, black 0.24em), radial-gradient(ellipse 52% 52% at 34% 58%, black 0 48%, transparent 94%);
+	--aux-bg: none;
+	--aux-opacity: 0;
+	--aux-motion: none;
+}
+
+/* Paper waiting: the same bud in ink; only the quiet parts re-tune
+   against the generic light dimming pass. */
+.field[data-theme='light'][data-state='waiting'][data-glow='chromabloom'] {
+	--haze-opacity: 0.5;
+	--core-opacity: 0.95;
+	--smoke-bg: radial-gradient(ellipse 1.1em 0.28em at 0.85em 1.9em, rgba(96, 94, 116, 0.2), transparent 80%);
+	--smoke-opacity: 0.4;
+}
+
+/* Light + waiting: the stage-scoped light pass above out-specifies the
+   field-level waiting block and smothers the bud — re-raise the torch
+   opacities over it. */
+.stage[data-theme='light'][data-glow='chromabloom'] .field[data-glow][data-state='waiting'] {
+	--haze-opacity: 0.5;
+	--core-opacity: 0.95;
+	--smoke-opacity: 0.4;
+}
+
+/* Waiting + flow off: the bud holds perfectly still. */
+.field[data-light-flow='off'][data-state='waiting'][data-glow='chromabloom'] {
+	--torch-haze-motion: none;
+	--torch-core-motion: none;
+}
+
+/* ---------- Keyframes (chromabloom-*-v2) ---------- */
+/* The living rainbow: one shared angle travels the full hue circle. */
+@keyframes chromabloom-hue-v2 {
+	0% {
+		--cb-hue-v2: 0deg;
+	}
+	100% {
+		--cb-hue-v2: 360deg;
+	}
+}
+
+/* The flower unfurls from a closed bud, overshoots, settles open. */
+@keyframes chromabloom-bloom-in-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-50%) scale(0.2) rotate(-40deg);
+		filter: blur(6px) saturate(1.3);
+	}
+	62% {
+		opacity: var(--cb-flower-o-v2, 0.94);
+		transform: translateY(-50%) scale(1.07) rotate(5deg);
+		filter: blur(1px) saturate(1.2);
+	}
+	100% {
+		opacity: var(--cb-flower-o-v2, 0.94);
+		transform: translateY(-50%) scale(1) rotate(0deg);
+		filter: blur(0.4px) saturate(1.12);
+	}
+}
+
+/* ...then breathes gently, petals riding the hue clock. */
+@keyframes chromabloom-flower-breathe-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--cb-flower-o-v2, 0.94) * 0.94);
+		transform: translateY(-50%) scale(1);
+	}
+	50% {
+		opacity: var(--cb-flower-o-v2, 0.94);
+		transform: translateY(-50%) scale(1.04);
+	}
+}
+
+/* RING WAVE: a thin rainbow annulus ripples outward once and is gone. */
+@keyframes chromabloom-ring-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-50%) scale(0.16);
+	}
+	12% {
+		opacity: 0.95;
+	}
+	70% {
+		opacity: 0.5;
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(-50%) scale(1);
+	}
+}
+
+/* The word row mounts under the bloom. */
+@keyframes chromabloom-word-in-v2 {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+/* HUE WAVE, per glyph: gray and blurred -> a fast sweep from ~90deg
+   below the slot with extra chroma -> locked into the living rainbow.
+   The 100% frame keeps referencing --cb-hue-v2: settled color drifts. */
+@keyframes chromabloom-glyph-bloom-v2 {
+	0% {
+		color: var(--cb-gray-v2, oklch(0.64 0.008 265 / 0.9));
+		filter: blur(2px);
+	}
+	18% {
+		color: var(--cb-gray-v2, oklch(0.64 0.008 265 / 0.9));
+		filter: blur(1.7px);
+	}
+	52% {
+		color: oklch(calc(var(--cb-l-v2, 0.85) + 0.05) calc(var(--cb-c-v2, 0.13) + 0.06) calc(var(--i, 0) * 36deg + var(--cb-hue-v2) - 90deg));
+		filter: blur(1px);
+	}
+	78% {
+		color: oklch(calc(var(--cb-l-v2, 0.85) + 0.02) calc(var(--cb-c-v2, 0.13) + 0.03) calc(var(--i, 0) * 36deg + var(--cb-hue-v2) - 22deg));
+		filter: blur(0.3px);
+	}
+	100% {
+		color: oklch(var(--cb-l-v2, 0.85) var(--cb-c-v2, 0.13) calc(var(--i, 0) * 36deg + var(--cb-hue-v2)));
+		filter: blur(0);
+	}
+}
+
+/* The uncolored future settles in. */
+@keyframes chromabloom-tail-in-v2 {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+/* POLLEN: tiny hue dots drift up from the flower, cycling hue. */
+@keyframes chromabloom-pollen-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(calc(-50% + 0.55em));
+		filter: blur(0.3px) saturate(1.15) hue-rotate(0deg);
+	}
+	16% {
+		opacity: var(--spark-high, 0.8);
+	}
+	55% {
+		opacity: calc(var(--spark-high, 0.8) * 0.6);
+		filter: blur(0.3px) saturate(1.15) hue-rotate(160deg);
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(calc(-50% - 0.95em));
+		filter: blur(0.3px) saturate(1.15) hue-rotate(300deg);
+	}
+}
+
+/* The field-edge hue vignette blooms once, then rests tinted. */
+@keyframes chromabloom-vignette-v2 {
+	0% {
+		opacity: 0;
+	}
+	40% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0.82;
+	}
+}
+
+/* Waiting: the bud's thin hue rim cycles around... */
+@keyframes chromabloom-bud-spin-v2 {
+	0% {
+		--cb-bud-spin-v2: 0deg;
+	}
+	100% {
+		--cb-bud-spin-v2: 360deg;
+	}
+}
+
+/* ...while the drop swells and eases — slow breathing. */
+@keyframes chromabloom-bud-pulse-v2 {
+	0%,
+	100% {
+		transform: translateY(-50%) scale(0.97);
+	}
+	50% {
+		transform: translateY(-50%) scale(1.03);
+	}
+}
+
+/* ...over a gray pool that barely stirs. */
+@keyframes chromabloom-bud-breathe-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--haze-opacity, 0.55) * 0.7);
+		transform: translateY(-50%) scale(0.96);
+	}
+	50% {
+		opacity: var(--haze-opacity, 0.55);
+		transform: translateY(-50%) scale(1.05);
+	}
+}
