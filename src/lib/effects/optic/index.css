@@ -1,0 +1,1061 @@
+/* ============================================================
+   OPTIC v2 — "Autofocus lock at the caret"
+   Typography-first camera optics: no colored glow, the luxury is
+   precision. The next word arrives heavily DEFOCUSED with
+   chromatic aberration — per glyph via var(--i): big blur, double
+   text-shadow fringes (magenta-red shifted left, cyan shifted
+   right ~0.045em), scale 1.06 — then racks INTO focus: blur -> 0,
+   fringes converge, a brief over-sharp flash (brightness/contrast
+   bump + crisp white edge) at lock, settling to clean near-white.
+   Locks land staggered ~40ms like an AF motor stepping. THE
+   signature still-frame element is the AF BRACKET around the next
+   word: next-word::before draws 4 thin viewfinder corners (8
+   no-repeat gradient bars) that tighten in and rest barely
+   visible; next-word::after is a green-white copy that blinks
+   twice at lock and dies (finite). The tail zone is bokeh:
+   prediction::after (survives flow-off) carries 5 ring-rimmed
+   pale discs growing with depth, drifting very slowly; beam-spark
+   and beam-aux add near/far bokeh parallax. beam-flow is ONE
+   anamorphic cyan streak sweeping the suggestion zone once at
+   ignite (600ms, both, then gone). beam-body is a faint
+   rangefinder distance scale (hairline + ticks) under the word;
+   beam-veil a soft neutral pool breathing focus; beam-smoke a
+   normal-blend counter-shade; prediction::before the charcoal
+   studio bed. The whole prediction breathes focus (+/-0.2px blur,
+   slow) while ready. Tail glyphs go progressively blurrier with
+   faint double-vision (glyph ::after data-alt at low static
+   opacity, offset, via var(--i) clamps). Field = neutral charcoal
+   vessel with a soft vignette, gray-blue hairline border; caret =
+   thin white rangefinder line with tiny top/bottom serif marks
+   baked into the gradient. Waiting = an IRIS at the caret: an
+   aperture ring on a registered <length> radius that dilates and
+   contracts with two micro left-right focus-hunt shifts, over a
+   quiet monochrome pool. Light theme = the same story on paper:
+   warm-gray defocused glyphs racking to near-black ink, graphite
+   brackets, pale gray bokeh that darkens at normal blend. No
+   capsule anywhere: layer-radius 0, every layer dissolves through
+   intersected left-fade x radial masks whose fades complete
+   INSIDE their boxes. Chrome-only tech intentional. Keyframes:
+   optic-*-v2 only (legacy optic-* stay untouched for consumers).
+   ============================================================ */
+
+@property --optic-iris-r-v2 {
+	syntax: '<length>';
+	inherits: false;
+	initial-value: 15px;
+}
+
+.field[data-glow='optic'] {
+	--layer-radius: 0;
+	--layer-clip: none;
+	--optic-bed-o: 0.8;
+	--optic-bokeh-o: 0.85;
+	--optic-bracket-o: 0.3;
+	--ready-border: rgba(158, 172, 190, 0.24);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.045) inset,
+		0 -36px 90px rgba(8, 9, 12, 0.6) inset,
+		0 30px 66px rgba(0, 0, 0, 0.5);
+	--field-wash:
+		radial-gradient(ellipse 120% 150% at 42% 50%, transparent 0 58%, rgba(3, 4, 6, 0.5) 100%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 38%);
+	--caret-gradient: linear-gradient(
+		180deg,
+		rgb(255, 255, 255) 0%,
+		rgb(255, 255, 255) 7%,
+		rgba(226, 234, 242, 0.85) 12%,
+		rgba(204, 214, 226, 0.6) 34%,
+		rgba(204, 214, 226, 0.6) 66%,
+		rgba(226, 234, 242, 0.85) 88%,
+		rgb(255, 255, 255) 93%,
+		rgb(255, 255, 255) 100%
+	);
+	--caret-shadow:
+		0 0 4px rgba(238, 244, 250, 0.5),
+		0 0 12px rgba(196, 210, 226, 0.18);
+	--haze-width: 10em;
+	--haze-height: 2.6em;
+	--haze-bg:
+		radial-gradient(ellipse 4.2em 1.4em at 2.2em 50%, rgba(190, 202, 216, 0.1), rgba(150, 162, 178, 0.04) 58%, transparent 82%),
+		radial-gradient(ellipse 2em 1em at 0.8em 50%, rgba(216, 226, 238, 0.08), transparent 74%);
+	--haze-filter: blur(18px) saturate(1.02);
+	--haze-opacity: 0.6;
+	--haze-motion: optic-veil-breathe-v2 7.2s ease-in-out 900ms infinite;
+	--torch-haze-motion: optic-wait-pool-v2 3.6s ease-in-out infinite;
+	--haze-mask: linear-gradient(90deg, transparent 0, black 0.9em), radial-gradient(ellipse 50% 48% at 34% 50%, black 0 44%, rgba(0, 0, 0, 0.5) 70%, transparent 96%);
+	--body-width: 8.5em;
+	--body-height: 2.5em;
+	--body-bg:
+		linear-gradient(90deg, rgba(196, 208, 222, 0), rgba(196, 208, 222, 0.34) 12%, rgba(196, 208, 222, 0.16) 60%, transparent 88%) 0 76% no-repeat,
+		repeating-linear-gradient(90deg, transparent 0 0.56em, rgba(202, 214, 228, 0.4) 0.56em calc(0.56em + 1.5px), transparent calc(0.56em + 1.5px) 1.12em) 0 70% no-repeat;
+	--body-size: 100% 1.5px, 100% 0.14em;
+	--body-filter: blur(0.2px);
+	--body-opacity: 0.16;
+	--body-mask: linear-gradient(90deg, transparent 0, black 0.7em), radial-gradient(ellipse 50% 50% at 38% 50%, black 0 48%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	--core-width: 2.2em;
+	--core-height: 1.2em;
+	--core-bg: radial-gradient(ellipse 60% 46% at 14% 50%, rgba(240, 246, 252, 0.5), rgba(200, 212, 226, 0.16) 48%, transparent 78%);
+	--core-filter: blur(7px);
+	--core-opacity: 0.5;
+	--core-motion: optic-hold-focus-v2 6.6s ease-in-out 900ms infinite;
+	--torch-core-motion: optic-iris-breathe-v2 3.8s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+	--core-mask: linear-gradient(90deg, transparent 0, black 0.3em), radial-gradient(ellipse 52% 50% at 34% 50%, black 0 46%, rgba(0, 0, 0, 0.5) 72%, transparent 94%);
+	--flow-width: 10.5em;
+	--flow-height: 1.8em;
+	--flow-size: 100% 100%;
+	--flow-bg:
+		linear-gradient(180deg, transparent 42%, rgba(110, 216, 255, 0.12) 47%, rgba(174, 238, 255, 0.5) 49.5% 50.5%, rgba(110, 216, 255, 0.12) 53%, transparent 58%),
+		radial-gradient(ellipse 1.7em 0.24em at 26% 50%, rgba(232, 250, 255, 0.4), transparent 72%);
+	--flow-filter: blur(4px) saturate(1.15);
+	--flow-low: 0;
+	--flow-high: 0.55;
+	--flow-motion: optic-flare-sweep-v2 600ms cubic-bezier(0.3, 0.55, 0.3, 1) 140ms both;
+	--flow-mask: linear-gradient(90deg, transparent 0, black 0.8em), radial-gradient(ellipse 50% 48% at 40% 50%, black 0 46%, rgba(0, 0, 0, 0.5) 72%, transparent 96%);
+	--spark-width: 7em;
+	--spark-height: 2.6em;
+	--spark-bg:
+		radial-gradient(circle at 3.2em 0.72em, rgba(206, 218, 232, 0.09) 0 0.115em, rgba(228, 238, 248, 0.28) 0.125em 0.15em, transparent 0.185em),
+		radial-gradient(circle at 5.3em 1.9em, rgba(206, 218, 232, 0.07) 0 0.09em, rgba(228, 238, 248, 0.22) 0.1em 0.12em, transparent 0.15em);
+	--spark-filter: blur(0.5px);
+	--spark-low: 0.4;
+	--spark-high: 0.8;
+	--spark-motion: optic-glint-drift-v2 11s ease-in-out 1.1s infinite;
+	--spark-mask: linear-gradient(90deg, transparent 0, black 0.9em), radial-gradient(ellipse 50% 50% at 46% 50%, black 0 52%, rgba(0, 0, 0, 0.5) 76%, transparent 96%);
+	--smoke-width: 5.4em;
+	--smoke-height: 2.6em;
+	--smoke-bg: radial-gradient(ellipse 2.6em 1.1em at 1.7em 50%, rgba(5, 6, 9, 0.5), transparent 78%);
+	--smoke-filter: blur(13px);
+	--smoke-opacity: 0.5;
+	--smoke-blend: normal;
+	--smoke-motion: none;
+	--smoke-mask: linear-gradient(90deg, transparent 0, black 0.5em), radial-gradient(ellipse 50% 50% at 38% 50%, black 0 48%, transparent 94%);
+	--aux-width: 9.5em;
+	--aux-height: 2.7em;
+	--aux-bg:
+		radial-gradient(circle at 6.4em 0.85em, rgba(196, 208, 224, 0.06) 0 0.2em, rgba(214, 226, 240, 0.16) 0.215em 0.25em, transparent 0.3em),
+		radial-gradient(circle at 8.1em 1.85em, rgba(196, 208, 224, 0.05) 0 0.15em, rgba(214, 226, 240, 0.13) 0.165em 0.19em, transparent 0.235em);
+	--aux-filter: blur(1px);
+	--aux-opacity: 0.55;
+	--aux-blend: screen;
+	--aux-motion: optic-bokeh-far-v2 13s ease-in-out 1.4s infinite;
+	--aux-mask: linear-gradient(90deg, transparent 0, black 1em), radial-gradient(ellipse 50% 50% at 52% 50%, black 0 52%, rgba(0, 0, 0, 0.5) 76%, transparent 96%);
+	--next-color: rgba(244, 248, 252, 0.97);
+	--next-shadow:
+		0 0 1px rgba(255, 255, 255, 0.22),
+		0 1px 2px rgba(4, 5, 8, 0.5);
+	--tail-color: rgba(176, 188, 204, 0.42);
+}
+
+/* Beams carry the camera again: undo the legacy opacity zeroing pass and
+   re-anchor. Bokeh decks live in the tail zone, right of the locked word. */
+.stage[data-glow='optic'] .field[data-glow] .prediction > .beam {
+	display: block;
+	left: -0.03em;
+	transform-origin: left center;
+}
+
+.stage[data-glow='optic'] .field[data-glow] .prediction > .beam-spark,
+.stage[data-glow='optic'] .field[data-glow] .prediction > .beam-aux {
+	left: 1.9em;
+}
+
+/* Two-layer masks (left fade x radial falloff) need intersection, not union. */
+.stage[data-glow='optic'] .field[data-glow] .prediction > .beam,
+.stage[data-glow='optic'] .field[data-glow] .torch-beam,
+.stage[data-glow='optic'] .field[data-glow] .prediction::before,
+.stage[data-glow='optic'] .field[data-glow] .prediction::after {
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+}
+
+/* Torch layers serve the waiting iris only; never double-print in ready. */
+.stage[data-glow='optic'] .field[data-glow] .caret-origin-glow[data-mode='ready'] {
+	display: none;
+}
+
+/* Focus breathing: the lens holds focus on the whole prediction. */
+.stage[data-glow='optic'] .field[data-glow] .prediction {
+	isolation: isolate;
+	animation: optic-breathe-v2 7.5s ease-in-out 1.8s infinite;
+}
+
+/* Neutral charcoal studio vessel: no colored wash anywhere. */
+.stage[data-glow='optic'] .field[data-glow] {
+	background:
+		linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 40%),
+		linear-gradient(90deg, rgb(13, 14, 16), rgb(15, 16, 19) 52%, rgb(17, 18, 21));
+}
+
+.stage[data-glow='optic'] .field[data-glow]::before {
+	background: var(--field-wash);
+	background-size: 100% 100%;
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: normal;
+	opacity: 0.9;
+	animation: none;
+}
+
+/* Dissolve into the field's rounded clip, not the paint box; edge overlays
+   extended into the 64px padding so brightness never steps at the content box. */
+.stage[data-glow='optic'] .field[data-glow] .paint {
+	overflow: visible;
+	clip-path: inset(-3.4em -5em -3.4em 0);
+}
+
+.stage[data-glow='optic'] .field[data-glow] .edge-left {
+	left: -64px;
+	width: 156px;
+	background: linear-gradient(90deg, rgb(13, 14, 16) 0%, rgb(13, 14, 16) 40%, rgba(13, 14, 16, 0) 100%);
+	opacity: 0;
+}
+
+.stage[data-glow='optic'] .field[data-glow] .viewport.scrolled .edge-left {
+	opacity: 1;
+}
+
+.stage[data-glow='optic'] .field[data-glow] .edge-right {
+	right: -64px;
+	width: 224px;
+	background: linear-gradient(
+		270deg,
+		rgba(16, 17, 20, 0.9) 0%,
+		rgba(16, 17, 20, 0.55) 30%,
+		rgba(16, 17, 20, 0.16) 68%,
+		rgba(16, 17, 20, 0) 100%
+	);
+	opacity: 0.85;
+}
+
+/* Studio bed: a normal-blend charcoal depression under the suggestion —
+   the contrast floor for the bracket and the bokeh. */
+.stage[data-glow='optic'] .field[data-glow] .prediction::before {
+	position: absolute;
+	left: -1.3em;
+	top: 50%;
+	z-index: -2;
+	width: min(12.5em, calc(100% + 4.6em));
+	height: 2.6em;
+	content: '';
+	pointer-events: none;
+	border-radius: 0;
+	clip-path: none;
+	background:
+		radial-gradient(ellipse 3.4em 1.2em at 2em 52%, rgba(4, 5, 8, 0.5), rgba(7, 8, 11, 0.24) 56%, transparent 80%),
+		radial-gradient(ellipse 6em 1.4em at 3em 50%, rgba(170, 184, 200, 0.05), transparent 80%);
+	filter: blur(13px);
+	-webkit-mask-image: linear-gradient(90deg, transparent 0, black 1.2em), radial-gradient(ellipse 50% 50% at 30% 50%, black 0 42%, rgba(0, 0, 0, 0.5) 70%, transparent 96%);
+	mask-image: linear-gradient(90deg, transparent 0, black 1.2em), radial-gradient(ellipse 50% 50% at 30% 50%, black 0 42%, rgba(0, 0, 0, 0.5) 70%, transparent 96%);
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+	mix-blend-mode: normal;
+	opacity: var(--optic-bed-o);
+	transform: translateY(-50%);
+	transform-origin: 1.3em center;
+	animation: optic-bed-in-v2 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* BOKEH FIELD: out-of-focus highlights in the tail zone — pale discs with
+   crisp-ish brighter rims, growing with depth, drifting very slowly.
+   Survives flow-off as a frozen still. */
+.stage[data-glow='optic'] .field[data-glow] .prediction::after {
+	position: absolute;
+	left: 3em;
+	top: 50%;
+	z-index: -1;
+	width: 10.5em;
+	height: 2.6em;
+	content: '';
+	pointer-events: none;
+	border-radius: 0;
+	clip-path: none;
+	background:
+		radial-gradient(circle at 2.2em 0.62em, rgba(208, 220, 234, 0.09) 0 0.085em, rgba(232, 240, 250, 0.28) 0.095em 0.115em, transparent 0.145em),
+		radial-gradient(circle at 4.05em 1.98em, rgba(208, 220, 234, 0.08) 0 0.12em, rgba(232, 240, 250, 0.26) 0.13em 0.155em, transparent 0.19em),
+		radial-gradient(circle at 5.6em 0.95em, rgba(234, 228, 214, 0.08) 0 0.15em, rgba(246, 240, 226, 0.22) 0.16em 0.185em, transparent 0.225em),
+		radial-gradient(circle at 7.2em 1.7em, rgba(208, 220, 234, 0.07) 0 0.185em, rgba(232, 240, 250, 0.2) 0.2em 0.23em, transparent 0.275em),
+		radial-gradient(circle at 8.7em 0.75em, rgba(208, 220, 234, 0.06) 0 0.225em, rgba(232, 240, 250, 0.17) 0.24em 0.275em, transparent 0.325em);
+	filter: blur(0.4px);
+	-webkit-mask-image: linear-gradient(90deg, transparent 0, black 1.1em), radial-gradient(ellipse 50% 50% at 46% 50%, black 0 50%, rgba(0, 0, 0, 0.5) 75%, transparent 97%);
+	mask-image: linear-gradient(90deg, transparent 0, black 1.1em), radial-gradient(ellipse 50% 50% at 46% 50%, black 0 50%, rgba(0, 0, 0, 0.5) 75%, transparent 97%);
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+	mix-blend-mode: normal;
+	opacity: var(--optic-bokeh-o);
+	transform: translateY(-50%);
+	transform-origin: 30% 50%;
+	animation:
+		optic-bokeh-in-v2 700ms cubic-bezier(0.16, 1, 0.3, 1) 200ms both,
+		optic-bokeh-drift-v2 13s ease-in-out 1.2s infinite;
+}
+
+/* ---------- Text is sacred: the focus rack ---------- */
+.stage[data-glow='optic'] .field[data-glow] .next-word {
+	position: relative;
+	isolation: isolate;
+	z-index: 2;
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: var(--next-shadow);
+	animation: optic-word-in-v2 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* AF BRACKET, resting: 4 thin viewfinder corners (8 no-repeat bars) that
+   tighten onto the word and stay barely visible — the signature still. */
+.stage[data-glow='optic'] .field[data-glow] .next-word::before {
+	position: absolute;
+	inset: -0.16em -0.34em -0.12em -0.34em;
+	z-index: -1;
+	content: '';
+	pointer-events: none;
+	border-radius: 0;
+	clip-path: none;
+	background:
+		linear-gradient(rgba(190, 204, 220, 0.9), rgba(190, 204, 220, 0.9)) left top / 0.32em 0.035em no-repeat,
+		linear-gradient(rgba(190, 204, 220, 0.9), rgba(190, 204, 220, 0.9)) left top / 0.035em 0.32em no-repeat,
+		linear-gradient(rgba(190, 204, 220, 0.9), rgba(190, 204, 220, 0.9)) right top / 0.32em 0.035em no-repeat,
+		linear-gradient(rgba(190, 204, 220, 0.9), rgba(190, 204, 220, 0.9)) right top / 0.035em 0.32em no-repeat,
+		linear-gradient(rgba(190, 204, 220, 0.9), rgba(190, 204, 220, 0.9)) left bottom / 0.32em 0.035em no-repeat,
+		linear-gradient(rgba(190, 204, 220, 0.9), rgba(190, 204, 220, 0.9)) left bottom / 0.035em 0.32em no-repeat,
+		linear-gradient(rgba(190, 204, 220, 0.9), rgba(190, 204, 220, 0.9)) right bottom / 0.32em 0.035em no-repeat,
+		linear-gradient(rgba(190, 204, 220, 0.9), rgba(190, 204, 220, 0.9)) right bottom / 0.035em 0.32em no-repeat;
+	filter: none;
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: normal;
+	opacity: 0;
+	transform: none;
+	animation: optic-bracket-rest-v2 700ms cubic-bezier(0.16, 1, 0.3, 1) 320ms both;
+}
+
+/* AF confirm: the green-white bracket copy blinks twice at lock, then dies.
+   Finite by design — it still plays with light flow off. */
+.stage[data-glow='optic'] .field[data-glow] .next-word::after {
+	position: absolute;
+	inset: -0.16em -0.34em -0.12em -0.34em;
+	z-index: 3;
+	content: '';
+	pointer-events: none;
+	background:
+		linear-gradient(rgba(158, 255, 202, 0.95), rgba(158, 255, 202, 0.95)) left top / 0.32em 0.035em no-repeat,
+		linear-gradient(rgba(158, 255, 202, 0.95), rgba(158, 255, 202, 0.95)) left top / 0.035em 0.32em no-repeat,
+		linear-gradient(rgba(158, 255, 202, 0.95), rgba(158, 255, 202, 0.95)) right top / 0.32em 0.035em no-repeat,
+		linear-gradient(rgba(158, 255, 202, 0.95), rgba(158, 255, 202, 0.95)) right top / 0.035em 0.32em no-repeat,
+		linear-gradient(rgba(158, 255, 202, 0.95), rgba(158, 255, 202, 0.95)) left bottom / 0.32em 0.035em no-repeat,
+		linear-gradient(rgba(158, 255, 202, 0.95), rgba(158, 255, 202, 0.95)) left bottom / 0.035em 0.32em no-repeat,
+		linear-gradient(rgba(158, 255, 202, 0.95), rgba(158, 255, 202, 0.95)) right bottom / 0.32em 0.035em no-repeat,
+		linear-gradient(rgba(158, 255, 202, 0.95), rgba(158, 255, 202, 0.95)) right bottom / 0.035em 0.32em no-repeat;
+	filter: drop-shadow(0 0 3px rgba(140, 255, 196, 0.4));
+	opacity: 0;
+	animation: optic-bracket-blink-v2 720ms cubic-bezier(0.3, 0, 0.5, 1) 440ms both;
+}
+
+/* Per-glyph focus rack: defocused + chromatic fringes in, AF lock flash,
+   settle clean. Parity flips the arrival drift via --optic-drift. */
+.stage[data-glow='optic'] .field[data-glow] .next-word .glyph,
+.stage[data-glow='optic'] .field[data-glow] .next-word .glyph:nth-child(even) {
+	--optic-drift: 1;
+	color: var(--next-color);
+	background: none;
+	opacity: 1;
+	filter: none;
+	text-shadow: var(--next-shadow);
+	transform-origin: 50% 55%;
+	animation: optic-glyph-rack-v2 620ms cubic-bezier(0.3, 0.7, 0.2, 1) both;
+	animation-delay: calc(140ms + var(--i) * 40ms);
+}
+
+.stage[data-glow='optic'] .field[data-glow] .next-word .glyph:nth-child(even) {
+	--optic-drift: -1;
+}
+
+/* The data-alt ghost is the second image of the double-vision: it converges
+   into the glyph and vanishes at lock. */
+.stage[data-glow='optic'] .field[data-glow] .next-word .glyph::after {
+	z-index: 2;
+	content: attr(data-alt);
+	color: rgba(198, 212, 228, 0.8);
+	opacity: 0;
+	filter: none;
+	text-shadow: none;
+	transform: none;
+	animation: optic-alt-converge-v2 480ms cubic-bezier(0.4, 0.1, 0.5, 1) both;
+	animation-delay: calc(140ms + var(--i) * 40ms);
+}
+
+/* Tail: out of the focal plane — progressively blurrier, dimmer, with a
+   faint static double-vision on far glyphs. Masked fade. */
+.stage[data-glow='optic'] .field[data-glow] .tail {
+	position: relative;
+	z-index: 2;
+	color: var(--tail-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: none;
+	-webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0, rgba(0, 0, 0, 0.62) 3em, rgba(0, 0, 0, 0.3) 8em, transparent 12.5em);
+	mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0, rgba(0, 0, 0, 0.62) 3em, rgba(0, 0, 0, 0.3) 8em, transparent 12.5em);
+	animation: optic-tail-in-v2 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='optic'] .field[data-glow] .tail .glyph {
+	color: inherit;
+	background: none;
+	filter: blur(clamp(0.3px, calc(0.24px + var(--i) * 0.1px), 2.8px));
+	opacity: clamp(0.3, calc(0.62 - var(--i) * 0.014), 0.62);
+	text-shadow: none;
+	transform: none;
+	animation: none;
+}
+
+.stage[data-glow='optic'] .field[data-glow] .tail .glyph::after {
+	content: attr(data-alt);
+	color: rgba(186, 198, 214, 0.5);
+	opacity: clamp(0, calc((var(--i) - 4) * 0.018), 0.14);
+	filter: blur(clamp(0.4px, calc(var(--i) * 0.12px), 2.2px));
+	text-shadow: none;
+	transform: translateX(clamp(0.01em, calc(var(--i) * 0.004em), 0.05em));
+	animation: none;
+}
+
+/* Light flow off: no breathing, no bokeh drift, no flare — but the focus
+   rack entrance and the bracket blink are finite and still play. */
+.stage[data-glow='optic'][data-light-flow='off'] .field[data-glow] .prediction {
+	animation: none;
+}
+
+.stage[data-glow='optic'][data-light-flow='off'] .field[data-glow] .prediction::after {
+	animation: optic-bokeh-in-v2 700ms cubic-bezier(0.16, 1, 0.3, 1) 200ms both;
+}
+
+.stage[data-glow='optic'][data-light-flow='off'] .field[data-glow] .beam-veil {
+	animation: beam-open 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='optic'][data-light-flow='off'] .field[data-glow] .beam-hot {
+	animation: beam-hot 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='optic'][data-light-flow='off'] .field[data-glow] .next-word {
+	animation: optic-word-in-v2 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ---------- Light theme: the same story on paper ---------- */
+.field[data-theme='light'][data-glow='optic'] {
+	--optic-bed-o: 0.7;
+	--optic-bokeh-o: 0.8;
+	--optic-bracket-o: 0.34;
+	--ready-border: rgba(96, 108, 126, 0.34);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.98) inset,
+		0 -18px 50px rgba(96, 106, 122, 0.08) inset,
+		0 18px 46px rgba(38, 44, 54, 0.12);
+	--field-wash:
+		radial-gradient(ellipse 120% 150% at 42% 50%, transparent 0 60%, rgba(70, 76, 86, 0.1) 100%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.5), transparent 40%);
+	--caret-gradient: linear-gradient(
+		180deg,
+		rgb(20, 24, 30) 0%,
+		rgb(20, 24, 30) 7%,
+		rgba(44, 52, 62, 0.8) 12%,
+		rgba(58, 66, 78, 0.55) 34%,
+		rgba(58, 66, 78, 0.55) 66%,
+		rgba(44, 52, 62, 0.8) 88%,
+		rgb(20, 24, 30) 93%,
+		rgb(20, 24, 30) 100%
+	);
+	--caret-shadow:
+		0 0 4px rgba(28, 34, 42, 0.24),
+		0 0 10px rgba(58, 68, 80, 0.12);
+	--haze-bg:
+		radial-gradient(ellipse 4.2em 1.4em at 2.2em 50%, rgba(96, 106, 120, 0.09), rgba(110, 120, 134, 0.03) 58%, transparent 82%),
+		radial-gradient(ellipse 2em 1em at 0.8em 50%, rgba(84, 94, 108, 0.07), transparent 74%);
+	--haze-filter: blur(16px) saturate(1);
+	--haze-opacity: 0.5;
+	--body-bg:
+		linear-gradient(90deg, rgba(84, 94, 108, 0), rgba(84, 94, 108, 0.42) 12%, rgba(84, 94, 108, 0.2) 60%, transparent 88%) 0 76% no-repeat,
+		repeating-linear-gradient(90deg, transparent 0 0.56em, rgba(74, 84, 98, 0.45) 0.56em calc(0.56em + 1.5px), transparent calc(0.56em + 1.5px) 1.12em) 0 70% no-repeat;
+	--body-opacity: 0.3;
+	--core-bg: radial-gradient(ellipse 60% 46% at 14% 50%, rgba(70, 80, 94, 0.28), rgba(90, 100, 114, 0.1) 48%, transparent 78%);
+	--core-filter: blur(6px);
+	--core-opacity: 0.45;
+	--flow-bg:
+		linear-gradient(180deg, transparent 42%, rgba(52, 108, 148, 0.16) 47%, rgba(28, 88, 128, 0.45) 49.5% 50.5%, rgba(52, 108, 148, 0.16) 53%, transparent 58%),
+		radial-gradient(ellipse 1.7em 0.24em at 26% 50%, rgba(40, 98, 138, 0.3), transparent 72%);
+	--flow-filter: blur(4px) saturate(1);
+	--flow-high: 0.4;
+	--spark-bg:
+		radial-gradient(circle at 3.2em 0.72em, rgba(118, 128, 142, 0.1) 0 0.115em, rgba(90, 100, 114, 0.28) 0.125em 0.15em, transparent 0.185em),
+		radial-gradient(circle at 5.3em 1.9em, rgba(118, 128, 142, 0.08) 0 0.09em, rgba(90, 100, 114, 0.22) 0.1em 0.12em, transparent 0.15em);
+	--spark-low: 0.35;
+	--spark-high: 0.7;
+	--smoke-bg: radial-gradient(ellipse 2.6em 1.1em at 1.7em 50%, rgba(120, 126, 138, 0.16), transparent 78%);
+	--smoke-filter: blur(12px);
+	--smoke-opacity: 0.4;
+	--aux-bg:
+		radial-gradient(circle at 6.4em 0.85em, rgba(126, 136, 150, 0.07) 0 0.2em, rgba(98, 108, 122, 0.2) 0.215em 0.25em, transparent 0.3em),
+		radial-gradient(circle at 8.1em 1.85em, rgba(126, 136, 150, 0.06) 0 0.15em, rgba(98, 108, 122, 0.16) 0.165em 0.19em, transparent 0.235em);
+	--aux-opacity: 0.5;
+	--aux-blend: normal;
+	--next-color: rgba(22, 26, 32, 0.96);
+	--next-shadow:
+		0 0 1px rgba(255, 255, 255, 0.6),
+		0 1px 1px rgba(255, 255, 255, 0.35);
+	--tail-color: rgba(108, 116, 128, 0.5);
+}
+
+.stage[data-theme='light'][data-glow='optic'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 90% 170% at 74% -34%, rgba(190, 198, 210, 0.12), transparent 56%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.97), rgba(248, 249, 251, 0.85) 48%, rgba(243, 244, 247, 0.85)),
+		linear-gradient(90deg, rgba(254, 254, 255, 0.98), rgba(247, 248, 250, 0.92));
+}
+
+.stage[data-theme='light'][data-glow='optic'] .field[data-glow]::before {
+	mix-blend-mode: normal;
+	opacity: 0.7;
+	animation: none;
+}
+
+/* Graphite must darken the paper, never screen into it. */
+.stage[data-theme='light'][data-glow='optic'] .field[data-glow] .prediction > .beam,
+.stage[data-theme='light'][data-glow='optic'] .field[data-glow] .torch-beam {
+	mix-blend-mode: normal;
+}
+
+.stage[data-theme='light'][data-glow='optic'] .field[data-glow] .prediction::before {
+	background:
+		radial-gradient(ellipse 3.4em 1.2em at 2em 52%, rgba(126, 132, 144, 0.14), rgba(140, 146, 158, 0.06) 56%, transparent 80%),
+		radial-gradient(ellipse 6em 1.4em at 3em 50%, rgba(110, 118, 130, 0.05), transparent 80%);
+	filter: blur(12px);
+	mix-blend-mode: normal;
+}
+
+/* Paper bokeh: pale gray discs with darker rims — they darken slightly. */
+.stage[data-theme='light'][data-glow='optic'] .field[data-glow] .prediction::after {
+	background:
+		radial-gradient(circle at 2.2em 0.62em, rgba(118, 128, 142, 0.09) 0 0.085em, rgba(88, 98, 112, 0.26) 0.095em 0.115em, transparent 0.145em),
+		radial-gradient(circle at 4.05em 1.98em, rgba(118, 128, 142, 0.08) 0 0.12em, rgba(88, 98, 112, 0.24) 0.13em 0.155em, transparent 0.19em),
+		radial-gradient(circle at 5.6em 0.95em, rgba(130, 122, 104, 0.09) 0 0.15em, rgba(106, 96, 80, 0.22) 0.16em 0.185em, transparent 0.225em),
+		radial-gradient(circle at 7.2em 1.7em, rgba(118, 128, 142, 0.07) 0 0.185em, rgba(88, 98, 112, 0.19) 0.2em 0.23em, transparent 0.275em),
+		radial-gradient(circle at 8.7em 0.75em, rgba(118, 128, 142, 0.06) 0 0.225em, rgba(88, 98, 112, 0.16) 0.24em 0.275em, transparent 0.325em);
+	filter: blur(0.4px);
+	mix-blend-mode: normal;
+}
+
+.stage[data-theme='light'][data-glow='optic'] .field[data-glow] .next-word {
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: var(--next-shadow);
+	animation: optic-word-in-v2 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Graphite bracket on paper. */
+.stage[data-theme='light'][data-glow='optic'] .field[data-glow] .next-word::before {
+	background:
+		linear-gradient(rgba(66, 74, 86, 0.9), rgba(66, 74, 86, 0.9)) left top / 0.32em 0.035em no-repeat,
+		linear-gradient(rgba(66, 74, 86, 0.9), rgba(66, 74, 86, 0.9)) left top / 0.035em 0.32em no-repeat,
+		linear-gradient(rgba(66, 74, 86, 0.9), rgba(66, 74, 86, 0.9)) right top / 0.32em 0.035em no-repeat,
+		linear-gradient(rgba(66, 74, 86, 0.9), rgba(66, 74, 86, 0.9)) right top / 0.035em 0.32em no-repeat,
+		linear-gradient(rgba(66, 74, 86, 0.9), rgba(66, 74, 86, 0.9)) left bottom / 0.32em 0.035em no-repeat,
+		linear-gradient(rgba(66, 74, 86, 0.9), rgba(66, 74, 86, 0.9)) left bottom / 0.035em 0.32em no-repeat,
+		linear-gradient(rgba(66, 74, 86, 0.9), rgba(66, 74, 86, 0.9)) right bottom / 0.32em 0.035em no-repeat,
+		linear-gradient(rgba(66, 74, 86, 0.9), rgba(66, 74, 86, 0.9)) right bottom / 0.035em 0.32em no-repeat;
+}
+
+.stage[data-theme='light'][data-glow='optic'] .field[data-glow] .next-word::after {
+	background:
+		linear-gradient(rgba(26, 138, 88, 0.9), rgba(26, 138, 88, 0.9)) left top / 0.32em 0.035em no-repeat,
+		linear-gradient(rgba(26, 138, 88, 0.9), rgba(26, 138, 88, 0.9)) left top / 0.035em 0.32em no-repeat,
+		linear-gradient(rgba(26, 138, 88, 0.9), rgba(26, 138, 88, 0.9)) right top / 0.32em 0.035em no-repeat,
+		linear-gradient(rgba(26, 138, 88, 0.9), rgba(26, 138, 88, 0.9)) right top / 0.035em 0.32em no-repeat,
+		linear-gradient(rgba(26, 138, 88, 0.9), rgba(26, 138, 88, 0.9)) left bottom / 0.32em 0.035em no-repeat,
+		linear-gradient(rgba(26, 138, 88, 0.9), rgba(26, 138, 88, 0.9)) left bottom / 0.035em 0.32em no-repeat,
+		linear-gradient(rgba(26, 138, 88, 0.9), rgba(26, 138, 88, 0.9)) right bottom / 0.32em 0.035em no-repeat,
+		linear-gradient(rgba(26, 138, 88, 0.9), rgba(26, 138, 88, 0.9)) right bottom / 0.035em 0.32em no-repeat;
+	filter: drop-shadow(0 0 2px rgba(26, 138, 88, 0.3));
+}
+
+.stage[data-theme='light'][data-glow='optic'] .field[data-glow] .next-word .glyph,
+.stage[data-theme='light'][data-glow='optic'] .field[data-glow] .next-word .glyph:nth-child(even) {
+	color: var(--next-color);
+	text-shadow: var(--next-shadow);
+	animation-name: optic-glyph-rack-light-v2;
+}
+
+.stage[data-theme='light'][data-glow='optic'] .field[data-glow] .next-word .glyph::after {
+	color: rgba(70, 84, 100, 0.7);
+}
+
+.stage[data-theme='light'][data-glow='optic'] .field[data-glow] .tail,
+.stage[data-theme='light'][data-glow='optic'] .field[data-glow] .tail .glyph {
+	color: var(--tail-color);
+	text-shadow: none;
+}
+
+.stage[data-theme='light'][data-glow='optic'] .field[data-glow] .tail .glyph::after {
+	color: rgba(90, 100, 114, 0.45);
+}
+
+.stage[data-theme='light'][data-glow='optic'] .field[data-glow] .edge-left {
+	background: linear-gradient(90deg, rgb(254, 254, 255) 0%, rgb(254, 254, 255) 40%, rgba(254, 254, 255, 0) 100%);
+}
+
+.stage[data-theme='light'][data-glow='optic'] .field[data-glow] .edge-right {
+	background: linear-gradient(
+		270deg,
+		rgba(247, 248, 250, 0.5) 0%,
+		rgba(247, 248, 250, 0.22) 42%,
+		rgba(247, 248, 250, 0) 100%
+	);
+	opacity: 0.55;
+}
+
+/* Light theme + flow off: re-win against the animation kills above. */
+.stage[data-theme='light'][data-glow='optic'][data-light-flow='off'] .field[data-glow] .prediction::after {
+	animation: optic-bokeh-in-v2 700ms cubic-bezier(0.16, 1, 0.3, 1) 200ms both;
+}
+
+.stage[data-theme='light'][data-glow='optic'][data-light-flow='off'] .field[data-glow] .next-word {
+	animation: optic-word-in-v2 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ---------- Waiting state: an iris breathing at the caret ---------- */
+.field[data-state='waiting'][data-glow='optic'] {
+	--haze-width: 5em;
+	--haze-height: 2.3em;
+	--haze-bg: radial-gradient(ellipse 1.9em 1.1em at 0.85em 50%, rgba(186, 198, 212, 0.16), rgba(150, 162, 178, 0.06) 58%, transparent 82%);
+	--haze-filter: blur(14px);
+	--haze-opacity: 0.75;
+	--haze-mask: linear-gradient(90deg, transparent 0, black 0.3em), radial-gradient(ellipse 50% 50% at 32% 50%, black 0 46%, rgba(0, 0, 0, 0.5) 72%, transparent 96%);
+	--core-width: 2.6em;
+	--core-height: 2.2em;
+	--core-bg:
+		radial-gradient(circle at 0.85em 50%, rgba(240, 246, 252, 0.85) 0 1.4px, rgba(240, 246, 252, 0.2) 2.6px, transparent 4px),
+		radial-gradient(circle at 0.85em 50%, transparent 0 var(--optic-iris-r-v2), rgba(228, 238, 248, 0.72) calc(var(--optic-iris-r-v2) + 1px) calc(var(--optic-iris-r-v2) + 2.6px), rgba(190, 204, 220, 0.22) calc(var(--optic-iris-r-v2) + 5px), transparent calc(var(--optic-iris-r-v2) + 9px)),
+		radial-gradient(circle at 0.85em 50%, transparent 0 calc(var(--optic-iris-r-v2) + 7px), rgba(206, 218, 232, 0.14) calc(var(--optic-iris-r-v2) + 8px) calc(var(--optic-iris-r-v2) + 9px), transparent calc(var(--optic-iris-r-v2) + 11px)),
+		conic-gradient(
+			from 22deg at 0.85em 50%,
+			rgba(232, 240, 248, 0.16) 0deg 3deg,
+			transparent 3deg 60deg,
+			rgba(232, 240, 248, 0.16) 60deg 63deg,
+			transparent 63deg 120deg,
+			rgba(232, 240, 248, 0.16) 120deg 123deg,
+			transparent 123deg 180deg,
+			rgba(232, 240, 248, 0.16) 180deg 183deg,
+			transparent 183deg 240deg,
+			rgba(232, 240, 248, 0.16) 240deg 243deg,
+			transparent 243deg 300deg,
+			rgba(232, 240, 248, 0.16) 300deg 303deg,
+			transparent 303deg 360deg
+		);
+	--core-filter: blur(0.4px) drop-shadow(0 0 6px rgba(200, 214, 230, 0.28));
+	--core-opacity: 0.95;
+	--core-mask: linear-gradient(90deg, transparent 0, black 0.2em), radial-gradient(ellipse 1.5em 1.15em at 0.85em 50%, black 0 58%, rgba(0, 0, 0, 0.4) 80%, transparent 98%);
+	--flow-low: 0;
+	--flow-high: 0;
+	--flow-motion: none;
+	--spark-width: 2.8em;
+	--spark-height: 2.2em;
+	--spark-bg:
+		radial-gradient(circle at 1.9em 0.6em, rgba(214, 226, 240, 0.06) 0 0.055em, rgba(230, 240, 250, 0.3) 0.062em 0.078em, transparent 0.1em),
+		radial-gradient(circle at 0.5em 1.66em, rgba(214, 226, 240, 0.05) 0 0.042em, rgba(230, 240, 250, 0.24) 0.048em 0.06em, transparent 0.08em);
+	--spark-filter: blur(0.4px);
+	--spark-low: 0.2;
+	--spark-high: 0.6;
+	--spark-motion: optic-wait-glint-v2 5.6s ease-in-out infinite;
+	--spark-mask: linear-gradient(90deg, transparent 0, black 0.2em), radial-gradient(ellipse 50% 52% at 40% 50%, black 0 54%, transparent 94%);
+	--smoke-width: 3.2em;
+	--smoke-height: 2.3em;
+	--smoke-bg: radial-gradient(ellipse 1.2em 0.75em at 0.85em 50%, rgba(4, 5, 8, 0.42), transparent 80%);
+	--smoke-filter: blur(11px);
+	--smoke-opacity: 0.45;
+	--smoke-blend: normal;
+	--smoke-motion: none;
+	--smoke-mask: linear-gradient(90deg, transparent 0, black 0.2em), radial-gradient(ellipse 50% 50% at 34% 50%, black 0 48%, transparent 94%);
+	--aux-opacity: 0;
+}
+
+.field[data-theme='light'][data-state='waiting'][data-glow='optic'] {
+	--haze-bg: radial-gradient(ellipse 1.9em 1.1em at 0.85em 50%, rgba(110, 120, 134, 0.12), transparent 80%);
+	--haze-opacity: 0.5;
+	--core-bg:
+		radial-gradient(circle at 0.85em 50%, rgba(34, 42, 52, 0.85) 0 1.4px, rgba(34, 42, 52, 0.2) 2.6px, transparent 4px),
+		radial-gradient(circle at 0.85em 50%, transparent 0 var(--optic-iris-r-v2), rgba(48, 56, 68, 0.72) calc(var(--optic-iris-r-v2) + 1px) calc(var(--optic-iris-r-v2) + 2.6px), rgba(70, 80, 94, 0.22) calc(var(--optic-iris-r-v2) + 5px), transparent calc(var(--optic-iris-r-v2) + 9px)),
+		radial-gradient(circle at 0.85em 50%, transparent 0 calc(var(--optic-iris-r-v2) + 7px), rgba(60, 70, 84, 0.14) calc(var(--optic-iris-r-v2) + 8px) calc(var(--optic-iris-r-v2) + 9px), transparent calc(var(--optic-iris-r-v2) + 11px)),
+		conic-gradient(
+			from 22deg at 0.85em 50%,
+			rgba(52, 62, 74, 0.16) 0deg 3deg,
+			transparent 3deg 60deg,
+			rgba(52, 62, 74, 0.16) 60deg 63deg,
+			transparent 63deg 120deg,
+			rgba(52, 62, 74, 0.16) 120deg 123deg,
+			transparent 123deg 180deg,
+			rgba(52, 62, 74, 0.16) 180deg 183deg,
+			transparent 183deg 240deg,
+			rgba(52, 62, 74, 0.16) 240deg 243deg,
+			transparent 243deg 300deg,
+			rgba(52, 62, 74, 0.16) 300deg 303deg,
+			transparent 303deg 360deg
+		);
+	--core-filter: blur(0.4px) drop-shadow(0 0 4px rgba(60, 72, 86, 0.2));
+	--core-opacity: 0.9;
+	--spark-bg:
+		radial-gradient(circle at 1.9em 0.6em, rgba(118, 128, 142, 0.08) 0 0.055em, rgba(80, 90, 104, 0.3) 0.062em 0.078em, transparent 0.1em),
+		radial-gradient(circle at 0.5em 1.66em, rgba(118, 128, 142, 0.06) 0 0.042em, rgba(80, 90, 104, 0.24) 0.048em 0.06em, transparent 0.08em);
+	--spark-high: 0.5;
+	--smoke-bg: radial-gradient(ellipse 1.2em 0.75em at 0.85em 50%, rgba(120, 128, 140, 0.12), transparent 80%);
+	--smoke-opacity: 0.32;
+}
+
+/* Waiting + flow off: the iris hangs mid-breath, glints parked. */
+.field[data-light-flow='off'][data-state='waiting'][data-glow='optic'] {
+	--torch-haze-motion: none;
+	--torch-core-motion: none;
+	--flow-motion: none;
+	--spark-motion: none;
+	--smoke-motion: none;
+}
+
+/* ---------- Keyframes (optic-*-v2) ---------- */
+@keyframes optic-bed-in-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-50%) scaleX(0.7) scaleY(0.86);
+	}
+	100% {
+		opacity: var(--optic-bed-o, 0.8);
+		transform: translateY(-50%) scaleX(1) scaleY(1);
+	}
+}
+
+@keyframes optic-bokeh-in-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-50%) scale(0.96);
+	}
+	100% {
+		opacity: var(--optic-bokeh-o, 0.85);
+		transform: translateY(-50%) scale(1);
+	}
+}
+
+@keyframes optic-bokeh-drift-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--optic-bokeh-o, 0.85) * 0.82);
+		transform: translateY(-50%) translateX(0) scale(1);
+	}
+	33% {
+		opacity: var(--optic-bokeh-o, 0.85);
+		transform: translateY(-51.5%) translateX(0.06em) scale(1.012);
+	}
+	66% {
+		opacity: calc(var(--optic-bokeh-o, 0.85) * 0.9);
+		transform: translateY(-49%) translateX(0.12em) scale(0.995);
+	}
+}
+
+@keyframes optic-bokeh-far-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--aux-opacity, 0.55) * 0.75);
+		transform: translateY(-50%) translateX(0);
+	}
+	50% {
+		opacity: var(--aux-opacity, 0.55);
+		transform: translateY(-48.5%) translateX(-0.12em);
+	}
+}
+
+@keyframes optic-glint-drift-v2 {
+	0%,
+	100% {
+		opacity: var(--spark-low, 0.4);
+		transform: translateY(-50%) translateX(0) scale(1);
+	}
+	40% {
+		opacity: var(--spark-high, 0.8);
+		transform: translateY(-51%) translateX(0.08em) scale(1.015);
+	}
+	70% {
+		opacity: calc(var(--spark-high, 0.8) * 0.7);
+		transform: translateY(-49.5%) translateX(0.14em) scale(0.99);
+	}
+}
+
+/* ONE anamorphic streak, once, at ignite — then gone for good. */
+@keyframes optic-flare-sweep-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-50%) translateX(-0.4em) scaleX(0.3) scaleY(0.85);
+	}
+	26% {
+		opacity: var(--flow-high, 0.55);
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(-50%) translateX(3em) scaleX(1.2) scaleY(1);
+	}
+}
+
+@keyframes optic-veil-breathe-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--haze-opacity, 0.6) * 0.8);
+		transform: translateY(-50%) scaleX(0.985) scaleY(0.97);
+	}
+	50% {
+		opacity: var(--haze-opacity, 0.6);
+		transform: translateY(-50%) scaleX(1.015) scaleY(1.03);
+	}
+}
+
+@keyframes optic-hold-focus-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--core-opacity, 0.5) * 0.8);
+	}
+	50% {
+		opacity: var(--core-opacity, 0.5);
+	}
+}
+
+/* Focus breathing on the whole prediction: a lens holding focus. */
+@keyframes optic-breathe-v2 {
+	0%,
+	100% {
+		filter: blur(0px);
+	}
+	50% {
+		filter: blur(0.2px);
+	}
+}
+
+@keyframes optic-word-in-v2 {
+	0% {
+		opacity: 0;
+		transform: translateX(-0.06em);
+	}
+	100% {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+@keyframes optic-tail-in-v2 {
+	0% {
+		opacity: 0;
+		transform: translateX(-0.03em);
+	}
+	100% {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+/* The focus rack: defocused arrival with chromatic fringes, convergence,
+   over-sharp lock flash with a crisp white edge, clean settle. */
+@keyframes optic-glyph-rack-v2 {
+	0% {
+		opacity: 0.28;
+		color: rgba(214, 224, 236, 0.75);
+		transform: translateY(calc(var(--optic-drift, 1) * 0.028em)) scale(1.06);
+		filter: blur(7px);
+		text-shadow:
+			-0.045em 0 rgba(255, 76, 128, 0.42),
+			0.045em 0 rgba(88, 216, 255, 0.42);
+	}
+	45% {
+		opacity: 0.8;
+		transform: translateY(calc(var(--optic-drift, 1) * 0.01em)) scale(1.02);
+		filter: blur(2.2px);
+		text-shadow:
+			-0.02em 0 rgba(255, 76, 128, 0.3),
+			0.02em 0 rgba(88, 216, 255, 0.3);
+	}
+	72% {
+		opacity: 1;
+		transform: translateY(0) scale(1.005);
+		filter: blur(0px) brightness(1.32) contrast(1.22);
+		text-shadow:
+			0 0 1px rgba(255, 255, 255, 0.85),
+			-0.004em 0 rgba(255, 120, 160, 0.12),
+			0.004em 0 rgba(120, 226, 255, 0.12);
+	}
+	82% {
+		filter: blur(0px) brightness(1.1) contrast(1.08);
+	}
+	100% {
+		opacity: 1;
+		color: var(--next-color);
+		transform: translateY(0) scale(1);
+		filter: blur(0px) brightness(1) contrast(1);
+		text-shadow: var(--next-shadow);
+	}
+}
+
+@keyframes optic-glyph-rack-light-v2 {
+	0% {
+		opacity: 0.3;
+		color: rgba(150, 158, 170, 0.7);
+		transform: translateY(calc(var(--optic-drift, 1) * 0.028em)) scale(1.06);
+		filter: blur(6px);
+		text-shadow:
+			-0.045em 0 rgba(196, 44, 96, 0.32),
+			0.045em 0 rgba(20, 140, 190, 0.32);
+	}
+	45% {
+		opacity: 0.82;
+		transform: translateY(calc(var(--optic-drift, 1) * 0.01em)) scale(1.02);
+		filter: blur(1.8px);
+		text-shadow:
+			-0.02em 0 rgba(196, 44, 96, 0.24),
+			0.02em 0 rgba(20, 140, 190, 0.24);
+	}
+	72% {
+		opacity: 1;
+		transform: translateY(0) scale(1.005);
+		filter: blur(0px) contrast(1.4);
+		text-shadow:
+			0 0 1px rgba(255, 255, 255, 0.9),
+			-0.004em 0 rgba(196, 60, 108, 0.1),
+			0.004em 0 rgba(30, 130, 176, 0.1);
+	}
+	82% {
+		filter: blur(0px) contrast(1.12);
+	}
+	100% {
+		opacity: 1;
+		color: var(--next-color);
+		transform: translateY(0) scale(1);
+		filter: blur(0px) contrast(1);
+		text-shadow: var(--next-shadow);
+	}
+}
+
+/* The second image of the double-vision converges and vanishes at lock. */
+@keyframes optic-alt-converge-v2 {
+	0% {
+		opacity: 0.45;
+		transform: translateX(0.085em);
+		filter: blur(0.04em);
+	}
+	60% {
+		opacity: 0.18;
+		transform: translateX(0.03em);
+		filter: blur(0.02em);
+	}
+	100% {
+		opacity: 0;
+		transform: translateX(0);
+		filter: blur(0);
+	}
+}
+
+/* Resting bracket tightens onto the word and stays barely visible. */
+@keyframes optic-bracket-rest-v2 {
+	0% {
+		opacity: 0;
+		transform: scale(1.12);
+	}
+	55% {
+		opacity: calc(var(--optic-bracket-o, 0.3) * 0.6);
+	}
+	100% {
+		opacity: var(--optic-bracket-o, 0.3);
+		transform: scale(1);
+	}
+}
+
+/* AF confirm: two quick blinks, then the green dies for good. */
+@keyframes optic-bracket-blink-v2 {
+	0% {
+		opacity: 0;
+		transform: scale(1.05);
+	}
+	10% {
+		opacity: 1;
+		transform: scale(1);
+	}
+	22% {
+		opacity: 0.06;
+	}
+	34% {
+		opacity: 1;
+	}
+	56% {
+		opacity: 0.7;
+	}
+	100% {
+		opacity: 0;
+		transform: scale(1);
+	}
+}
+
+/* Iris: dilate, contract, two micro focus-hunt shifts left-right. */
+@keyframes optic-iris-breathe-v2 {
+	0%,
+	100% {
+		--optic-iris-r-v2: 13px;
+		opacity: calc(var(--core-opacity, 0.95) * 0.78);
+		transform: translateY(-50%);
+	}
+	36% {
+		--optic-iris-r-v2: 17.5px;
+		opacity: var(--core-opacity, 0.95);
+		transform: translateY(-50%);
+	}
+	50% {
+		--optic-iris-r-v2: 15px;
+		transform: translateY(-50%) translateX(-0.05em);
+	}
+	58% {
+		--optic-iris-r-v2: 15.5px;
+		transform: translateY(-50%) translateX(0.055em);
+	}
+	66% {
+		--optic-iris-r-v2: 14.5px;
+		transform: translateY(-50%) translateX(-0.015em);
+	}
+	80% {
+		--optic-iris-r-v2: 16px;
+		opacity: calc(var(--core-opacity, 0.95) * 0.92);
+		transform: translateY(-50%);
+	}
+}
+
+@keyframes optic-wait-pool-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--haze-opacity, 0.75) * 0.72);
+		transform: translateY(-50%) scale(0.96);
+	}
+	50% {
+		opacity: var(--haze-opacity, 0.75);
+		transform: translateY(-50%) scale(1.04);
+	}
+}
+
+@keyframes optic-wait-glint-v2 {
+	0%,
+	100% {
+		opacity: var(--spark-low, 0.2);
+		transform: translateY(-50%) translateX(0);
+	}
+	44% {
+		opacity: var(--spark-high, 0.6);
+		transform: translateY(-51%) translateX(0.03em);
+	}
+	72% {
+		opacity: calc(var(--spark-high, 0.6) * 0.6);
+		transform: translateY(-49.5%) translateX(-0.02em);
+	}
+}

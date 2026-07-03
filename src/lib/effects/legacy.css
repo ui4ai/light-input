@@ -587,81 +587,6 @@
 /* Refined hero glows: each keeps the shared beam anatomy, but pushes
    texture, movement, and color language further than the base presets. */
 
-.field[data-glow='optic'] {
-	--ready-border: rgba(190, 213, 255, 0.22);
-	--ready-shadow:
-		0 1px 0 rgba(255, 255, 255, 0.08) inset,
-		0 -40px 94px rgba(5, 10, 28, 0.58) inset,
-		0 36px 74px rgba(0, 0, 0, 0.48);
-	--field-wash: linear-gradient(90deg, transparent, transparent);
-	--caret-gradient: linear-gradient(180deg, rgb(255, 255, 255), rgb(220, 246, 255) 28%, rgb(126, 154, 255) 62%, rgb(52, 70, 180));
-	--caret-shadow:
-		0 0 7px rgba(255, 255, 255, 0.72),
-		0 0 18px rgba(188, 218, 255, 0.38),
-		0 0 32px rgba(84, 112, 255, 0.14);
-	--haze-width: 6.4em;
-	--haze-height: 3.2em;
-	--haze-bg:
-		radial-gradient(ellipse 26% 58% at 4% 50%, rgba(255, 255, 255, 0.18), transparent 70%),
-		radial-gradient(ellipse 58% 86% at 32% 50%, rgba(150, 185, 255, 0.05), transparent 78%),
-		radial-gradient(ellipse 76% 94% at 78% 50%, rgba(62, 82, 170, 0.02), transparent 84%);
-	--haze-filter: blur(34px) saturate(1.02);
-	--haze-opacity: 0.13;
-	--haze-motion: optic-defocus-breathe 6.8s ease-in-out infinite;
-	--torch-haze-motion: optic-defocus-breathe 5.4s ease-in-out infinite;
-	--body-width: 5.8em;
-	--body-height: 1.5em;
-	--body-bg:
-		linear-gradient(90deg, rgba(255, 255, 255, 0.08), rgba(205, 232, 255, 0.04) 34%, rgba(82, 108, 220, 0.025) 68%, transparent 90%),
-		linear-gradient(90deg, rgba(255, 70, 108, 0.025), transparent 24%, rgba(80, 228, 255, 0.025) 48%, transparent 82%);
-	--body-filter: blur(24px) saturate(1.02);
-	--body-opacity: 0.06;
-	--core-width: 1.9em;
-	--core-height: 0.72em;
-	--core-bg:
-		linear-gradient(90deg, rgba(255, 255, 255, 0.16), rgba(228, 248, 255, 0.07) 38%, rgba(100, 126, 255, 0.025) 70%, transparent),
-		linear-gradient(90deg, rgba(255, 76, 120, 0.05), transparent 35%, rgba(84, 230, 255, 0.05) 52%, transparent 78%);
-	--core-filter: blur(11px) saturate(1.02);
-	--core-opacity: 0.04;
-	--core-motion: optic-aperture-snap 3.8s ease-in-out infinite;
-	--torch-core-motion: optic-aperture-snap 3.1s ease-in-out infinite;
-	--flow-width: 6.4em;
-	--flow-height: 1.4em;
-	--flow-bg:
-		radial-gradient(ellipse 20% 52% at 8% 50%, rgba(255, 255, 255, 0.05), transparent 70%),
-		linear-gradient(90deg, transparent, rgba(218, 242, 255, 0.035), rgba(104, 130, 240, 0.025), transparent 90%);
-	--flow-filter: blur(28px);
-	--flow-low: 0.015;
-	--flow-high: 0.045;
-	--flow-motion: optic-defocus-breathe 6.2s ease-in-out infinite;
-	--spark-width: 6.8em;
-	--spark-height: 1.8em;
-	--spark-bg:
-		radial-gradient(circle at 10% 50%, rgba(255, 255, 255, 0.12), transparent 4%),
-		radial-gradient(circle at 34% 40%, rgba(205, 236, 255, 0.055), transparent 8%),
-		radial-gradient(circle at 62% 62%, rgba(130, 154, 255, 0.04), transparent 10%),
-		radial-gradient(circle at 86% 44%, rgba(80, 220, 255, 0.035), transparent 9%);
-	--spark-filter: blur(8px);
-	--spark-low: 0;
-	--spark-high: 0.025;
-	--spark-motion: optic-bokeh-drift 7.2s ease-in-out infinite;
-	--aux-width: 8.8em;
-	--aux-height: 3.1em;
-	--aux-bg:
-		repeating-radial-gradient(ellipse 54% 72% at 9% 50%, rgba(255, 255, 255, 0.055) 0 1px, transparent 2px 12px),
-		linear-gradient(90deg, rgba(255, 74, 120, 0.04), transparent 24%, rgba(62, 225, 255, 0.04) 48%, transparent 76%),
-		radial-gradient(ellipse 28% 52% at 18% 50%, rgba(232, 246, 255, 0.045), transparent 76%),
-		radial-gradient(ellipse 58% 72% at 66% 50%, rgba(90, 112, 220, 0.03), transparent 80%);
-	--aux-filter: blur(16px) saturate(1.02);
-	--aux-opacity: 0.045;
-	--aux-motion: optic-aperture-drift 7.4s ease-in-out infinite;
-	--next-color: rgba(238, 250, 255, 0.96);
-	--next-shadow:
-		0 0 2px rgba(240, 248, 255, 0.12),
-		0 0 7px rgba(105, 134, 255, 0.03);
-	--tail-color: rgba(205, 218, 235, 0.18);
-}
-
 .field[data-glow='biolume'] {
 	--ready-border: rgba(75, 255, 222, 0.48);
 	--ready-shadow:
@@ -722,19 +647,6 @@
 }
 
 /* Final hero-effect pass: richer concepts, soft masks, no visible layer edges. */
-
-.field[data-glow='optic'] {
-	--ready-border: rgba(188, 220, 255, 0.22);
-	--haze-mask: radial-gradient(ellipse 86% 82% at 18% 50%, rgba(0, 0, 0, 0.72) 0 28%, rgba(0, 0, 0, 0.28) 58%, transparent 76%);
-	--body-mask: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.58) 10%, rgba(0, 0, 0, 0.32) 42%, transparent 76%);
-	--flow-mask: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.46) 10%, rgba(0, 0, 0, 0.24) 40%, transparent 74%);
-	--aux-mask: radial-gradient(ellipse 84% 80% at 22% 50%, rgba(0, 0, 0, 0.5) 0 34%, rgba(0, 0, 0, 0.22) 60%, transparent 78%);
-	--next-color: rgba(238, 248, 255, 0.98);
-	--next-shadow:
-		0 0 2px rgba(210, 232, 255, 0.12),
-		0 0 7px rgba(118, 150, 255, 0.03);
-	--tail-color: rgba(188, 214, 245, 0.18);
-}
 
 .field[data-glow='biolume'] {
 	--haze-mask: radial-gradient(ellipse 86% 82% at 25% 50%, black 0 47%, rgba(0, 0, 0, 0.62) 68%, transparent 100%);
@@ -965,7 +877,6 @@
 
 /* Edge polish for high-energy variants: dissolve light before layer bounds. */
 .field[data-glow='blackhole'],
-.field[data-glow='optic'],
 .field[data-glow='biolume'],
 .field[data-glow='ocean'],
 .field[data-glow='horror'],
@@ -1261,23 +1172,6 @@
 		0 0 9px rgba(74, 203, 230, 0.22),
 		0 0 24px rgba(203, 74, 184, 0.09);
 	--smoke-opacity: 0.08;
-}
-
-.field[data-theme='light'][data-glow='optic'] {
-	--ready-border: rgba(86, 116, 175, 0.24);
-	--haze-opacity: 0.08;
-	--body-opacity: 0.035;
-	--core-opacity: 0.025;
-	--flow-low: 0.01;
-	--flow-high: 0.03;
-	--spark-low: 0;
-	--spark-high: 0.015;
-	--smoke-opacity: 0;
-	--aux-opacity: 0.025;
-	--next-color: rgba(48, 65, 112, 0.86);
-	--next-shadow:
-		0 0 2px rgba(130, 165, 230, 0.1),
-		0 0 7px rgba(90, 115, 220, 0.03);
 }
 
 .field[data-theme='light'][data-glow='biolume'] {
@@ -2008,19 +1902,6 @@
 
 /* Waiting indicators: these only affect loading states for Caret and Field modes. */
 
-.field[data-state='waiting'][data-glow='optic'] {
-	--haze-opacity: 0.44;
-	--body-opacity: 0.28;
-	--core-opacity: 0.26;
-	--flow-low: 0.12;
-	--flow-high: 0.36;
-	--spark-low: 0.08;
-	--spark-high: 0.28;
-	--aux-opacity: 0.22;
-	--haze-filter: blur(30px) saturate(1.06);
-	--core-filter: blur(9px) saturate(1.08);
-}
-
 .field[data-state='waiting'][data-glow='biolume'] {
 	--haze-opacity: 1;
 	--body-opacity: 0.96;
@@ -2125,62 +2006,6 @@
 
 .stage[data-glow] .field[data-glow] .tail {
 	color: var(--tail-color);
-}
-
-.stage[data-glow='optic'] .field[data-glow] .next-word {
-	color: transparent;
-	background:
-		linear-gradient(90deg, rgba(252, 254, 255, 0.94), rgba(218, 230, 248, 0.58) 72%, rgba(168, 188, 220, 0.22)),
-		linear-gradient(90deg, rgba(255, 255, 255, 0.08), transparent 42%, rgba(128, 170, 240, 0.06) 70%, transparent);
-	-webkit-background-clip: text;
-	background-clip: text;
-	filter: blur(0.18px) contrast(1.02);
-	text-shadow:
-		0.012em 0 rgba(196, 224, 255, 0.1),
-		-0.01em 0 rgba(255, 255, 255, 0.08);
-	animation: optic-next-reveal 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.stage[data-glow='optic'] .field[data-glow] .tail {
-	color: transparent;
-	background:
-		linear-gradient(90deg, rgba(218, 236, 255, 0.48), rgba(190, 212, 244, 0.32) 34%, rgba(150, 174, 224, 0.2) 72%, rgba(126, 148, 204, 0.1)),
-		linear-gradient(90deg, rgba(255, 255, 255, 0.1), transparent 36%, rgba(116, 158, 230, 0.08) 62%, transparent 88%);
-	-webkit-background-clip: text;
-	background-clip: text;
-	filter: blur(0.95px) contrast(1.02);
-	text-shadow:
-		0.034em 0 rgba(72, 228, 255, 0.09),
-		-0.03em 0 rgba(255, 68, 116, 0.06);
-	-webkit-mask-image: linear-gradient(90deg, black 0, rgba(0, 0, 0, 0.92) 3em, rgba(0, 0, 0, 0.72) 7.2em, rgba(0, 0, 0, 0.38) 12em, transparent 15.5em);
-	mask-image: linear-gradient(90deg, black 0, rgba(0, 0, 0, 0.92) 3em, rgba(0, 0, 0, 0.72) 7.2em, rgba(0, 0, 0, 0.38) 12em, transparent 15.5em);
-	animation: optic-tail-defocus 860ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.stage[data-glow='optic'] .field[data-glow] .edge-right {
-	opacity: 0.18;
-}
-
-.stage[data-theme='light'][data-glow='optic'] .field[data-glow] .next-word {
-	background:
-		linear-gradient(90deg, rgba(34, 42, 70, 0.9), rgba(70, 88, 128, 0.52) 72%, rgba(88, 104, 140, 0.2)),
-		linear-gradient(90deg, rgba(255, 255, 255, 0.12), transparent 38%, rgba(60, 96, 160, 0.07) 64%, transparent);
-	-webkit-background-clip: text;
-	background-clip: text;
-	text-shadow:
-		0.012em 0 rgba(80, 116, 170, 0.08),
-		-0.01em 0 rgba(255, 255, 255, 0.08);
-}
-
-.stage[data-theme='light'][data-glow='optic'] .field[data-glow] .tail {
-	background:
-		linear-gradient(90deg, rgba(36, 54, 96, 0.48), rgba(54, 76, 126, 0.34) 42%, rgba(70, 88, 132, 0.18) 78%, rgba(74, 88, 124, 0.07)),
-		linear-gradient(90deg, rgba(255, 255, 255, 0.1), transparent 34%, rgba(60, 96, 160, 0.055) 60%, transparent);
-	-webkit-background-clip: text;
-	background-clip: text;
-	text-shadow:
-		0.032em 0 rgba(20, 142, 190, 0.06),
-		-0.028em 0 rgba(210, 42, 82, 0.045);
 }
 
 .stage[data-glow='liquidglass'] .field[data-glow] .next-word {
@@ -2386,122 +2211,6 @@
 }
 
 /* Character-level final pass for the nonstandard presets. */
-.field[data-glow='optic'] {
-	--haze-opacity: 0;
-	--body-opacity: 0;
-	--core-opacity: 0;
-	--flow-low: 0;
-	--flow-high: 0;
-	--spark-low: 0;
-	--spark-high: 0;
-	--aux-opacity: 0;
-	--ready-shadow:
-		0 1px 0 rgba(255, 255, 255, 0.035) inset,
-		0 -34px 86px rgba(14, 13, 18, 0.46) inset,
-		0 32px 68px rgba(0, 0, 0, 0.42);
-}
-
-.stage[data-glow='optic'] .field[data-glow] .next-word .glyph {
-	color: rgba(238, 248, 255, 0.86);
-	filter: blur(clamp(0.18px, calc((var(--i) + 1) * 0.36px), 2.4px));
-	opacity: clamp(0.46, calc(0.98 - var(--i) * 0.07), 0.98);
-	text-shadow:
-		0.02em 0 rgba(220, 238, 255, 0.14),
-		-0.018em 0 rgba(255, 255, 255, 0.1);
-}
-
-.stage[data-theme='light'][data-glow='optic'] .field[data-glow] .next-word .glyph {
-	color: rgba(34, 42, 70, 0.78);
-	text-shadow:
-		0.018em 0 rgba(80, 116, 170, 0.08),
-		-0.016em 0 rgba(255, 255, 255, 0.1);
-}
-
-.stage[data-glow='optic'] .field[data-glow] .next-word .glyph::after {
-	color: rgba(238, 248, 255, 0.18);
-	filter: blur(calc(0.8px + var(--i) * 0.16px));
-	opacity: clamp(0.1, calc(var(--i) * 0.035), 0.3);
-	transform: translateX(0.045em);
-}
-
-.stage[data-glow='optic'] .field[data-glow] .tail .glyph {
-	color: rgba(196, 218, 246, 0.5);
-	filter: blur(clamp(0.58px, calc(0.32px + var(--i) * 0.058px), 1.85px));
-	opacity: clamp(0.24, calc(0.58 - var(--i) * 0.009), 0.5);
-	text-shadow:
-		0.026em 0 rgba(72, 228, 255, 0.08),
-		-0.024em 0 rgba(255, 68, 116, 0.05);
-}
-
-.stage[data-theme='light'][data-glow='optic'] .field[data-glow] .tail .glyph {
-	color: rgba(46, 64, 108, 0.52);
-	text-shadow:
-		0.024em 0 rgba(20, 142, 190, 0.055),
-		-0.022em 0 rgba(210, 42, 82, 0.04);
-}
-
-/* Optic final: readable defocus falloff without reintroducing an explicit glow. */
-.stage[data-glow='optic'] .field[data-glow] .next-word {
-	filter: blur(0.1px) contrast(1.03);
-}
-
-.stage[data-glow='optic'] .field[data-glow] .next-word .glyph {
-	color: rgba(238, 248, 255, 0.9);
-	filter: blur(clamp(0.14px, calc((var(--i) + 1) * 0.24px), 1.1px));
-	opacity: clamp(0.68, calc(0.98 - var(--i) * 0.045), 0.98);
-	text-shadow:
-		0.018em 0 rgba(220, 238, 255, 0.12),
-		-0.016em 0 rgba(255, 255, 255, 0.08);
-}
-
-.stage[data-glow='optic'] .field[data-glow] .tail {
-	background:
-		linear-gradient(90deg, rgba(222, 238, 255, 0.56), rgba(200, 220, 248, 0.44) 40%, rgba(172, 194, 232, 0.34) 74%, rgba(152, 174, 216, 0.24)),
-		linear-gradient(90deg, rgba(255, 255, 255, 0.08), transparent 38%, rgba(116, 158, 230, 0.055) 68%, transparent);
-	-webkit-background-clip: text;
-	background-clip: text;
-	filter: blur(0.52px) contrast(1.04);
-	text-shadow:
-		0.024em 0 rgba(72, 228, 255, 0.06),
-		-0.022em 0 rgba(255, 68, 116, 0.04);
-	-webkit-mask-image: linear-gradient(90deg, black 0, rgba(0, 0, 0, 0.98) 4em, rgba(0, 0, 0, 0.84) 9.5em, rgba(0, 0, 0, 0.58) 15em, rgba(0, 0, 0, 0.3) 22em);
-	mask-image: linear-gradient(90deg, black 0, rgba(0, 0, 0, 0.98) 4em, rgba(0, 0, 0, 0.84) 9.5em, rgba(0, 0, 0, 0.58) 15em, rgba(0, 0, 0, 0.3) 22em);
-	animation: optic-tail-readable-final 860ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.stage[data-glow='optic'] .field[data-glow] .tail .glyph {
-	color: rgba(202, 224, 250, 0.62);
-	filter: blur(clamp(0.34px, calc(0.22px + var(--i) * 0.038px), 1.15px));
-	opacity: clamp(0.42, calc(0.66 - var(--i) * 0.006), 0.62);
-	text-shadow:
-		0.022em 0 rgba(72, 228, 255, 0.06),
-		-0.02em 0 rgba(255, 68, 116, 0.04);
-}
-
-.stage[data-theme='light'][data-glow='optic'] .field[data-glow] .next-word .glyph {
-	color: rgba(30, 40, 70, 0.86);
-	text-shadow:
-		0.016em 0 rgba(80, 116, 170, 0.065),
-		-0.014em 0 rgba(255, 255, 255, 0.12);
-}
-
-.stage[data-theme='light'][data-glow='optic'] .field[data-glow] .tail {
-	background:
-		linear-gradient(90deg, rgba(34, 52, 94, 0.58), rgba(48, 70, 118, 0.48) 42%, rgba(64, 84, 132, 0.38) 78%, rgba(74, 88, 124, 0.26)),
-		linear-gradient(90deg, rgba(255, 255, 255, 0.08), transparent 36%, rgba(60, 96, 160, 0.052) 64%, transparent);
-	-webkit-background-clip: text;
-	background-clip: text;
-	text-shadow:
-		0.022em 0 rgba(20, 142, 190, 0.048),
-		-0.02em 0 rgba(210, 42, 82, 0.036);
-}
-
-.stage[data-theme='light'][data-glow='optic'] .field[data-glow] .tail .glyph {
-	color: rgba(42, 60, 104, 0.62);
-	text-shadow:
-		0.02em 0 rgba(20, 142, 190, 0.045),
-		-0.018em 0 rgba(210, 42, 82, 0.035);
-}
 
 .field[data-glow='heart'] {
 	--spark-width: 8.8em;
@@ -5329,78 +5038,6 @@
 	}
 }
 
-@keyframes optic-defocus-breathe {
-	0%,
-	100% {
-		opacity: calc(var(--haze-opacity) * 0.7);
-		background-position: 0% 50%;
-		transform: translateY(-50%) translateX(-0.08em) scaleX(0.96);
-	}
-	48% {
-		opacity: var(--haze-opacity);
-		background-position: 100% 50%;
-		transform: translateY(-50%) translateX(0.24em) scaleX(1.05);
-	}
-	74% {
-		opacity: calc(var(--haze-opacity) * 0.78);
-		transform: translateY(-50%) translateX(0.08em) scaleX(0.98);
-	}
-}
-
-@keyframes optic-aperture-snap {
-	0%,
-	100% {
-		opacity: calc(var(--core-opacity) * 0.6);
-		transform: translateY(-50%) translateX(-0.04em) scaleX(0.9);
-	}
-	50% {
-		opacity: var(--core-opacity);
-		transform: translateY(-50%) translateX(0.1em) scaleX(1.06);
-	}
-}
-
-@keyframes optic-bokeh-drift {
-	0%,
-	100% {
-		opacity: var(--spark-low);
-		transform: translateY(-48%) translateX(-0.1em) scale(0.88);
-	}
-	48% {
-		opacity: var(--spark-high);
-		transform: translateY(-51%) translateX(0.34em) scale(1.08);
-	}
-	76% {
-		opacity: calc(var(--spark-high) * 0.54);
-		transform: translateY(-49%) translateX(0.72em) scale(0.94);
-	}
-}
-
-@keyframes optic-aperture-drift {
-	0%,
-	100% {
-		opacity: calc(var(--aux-opacity) * 0.62);
-		background-position:
-			0% 50%,
-			0% 50%,
-			0% 50%,
-			0% 50%;
-		transform: translateY(-50%) translateX(-0.1em) scaleX(0.94);
-	}
-	46% {
-		opacity: var(--aux-opacity);
-		background-position:
-			12% 50%,
-			100% 50%,
-			38% 50%,
-			80% 50%;
-		transform: translateY(-50%) translateX(0.24em) scaleX(1.05);
-	}
-	74% {
-		opacity: calc(var(--aux-opacity) * 0.72);
-		transform: translateY(-50%) translateX(0.1em) scaleX(0.98);
-	}
-}
-
 @keyframes biolume-pulse {
 	0%,
 	100% {
@@ -5448,43 +5085,6 @@
 	74% {
 		opacity: calc(var(--aux-opacity, var(--spark-high)) * 0.68);
 		transform: translateY(-42%) translateX(0.76em) scale(0.96);
-	}
-}
-
-@keyframes optic-next-reveal {
-	from {
-		opacity: 0.2;
-		filter: blur(2.2px) contrast(0.98);
-	}
-	to {
-		opacity: 1;
-		filter: blur(0.05px) contrast(1.04);
-	}
-}
-
-@keyframes optic-tail-defocus {
-	from {
-		opacity: 0;
-		filter: blur(3.8px) contrast(0.94);
-		transform: translateX(-0.04em) scaleX(0.98);
-	}
-	to {
-		opacity: 1;
-		filter: blur(0.95px) contrast(1.02);
-		transform: translateX(0) scaleX(1);
-	}
-}
-
-@keyframes optic-tail-readable-final {
-	from {
-		opacity: 0;
-		filter: blur(2.2px) contrast(0.98);
-		transform: translateX(-0.03em) scaleX(0.99);
-	}
-	to {
-		opacity: 1;
-		filter: blur(0.52px) contrast(1.04);
-		transform: translateX(0) scaleX(1);
 	}
 }
 
