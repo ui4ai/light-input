@@ -1,0 +1,918 @@
+/* ============================================================
+   FLAME v2 — "Gas burner jet from the caret"
+   Blue premix nozzle (prediction::after, survives
+   data-light-flow='off') + buoyant plume that bends upward via
+   a rising spine of offset radials. Tongues live on
+   prediction::before (set A) and beam-aux (set B) at different
+   tempos; embers on beam-spark; gray smoke on beam-smoke
+   (normal blend). No capsule silhouette: layer-radius 0,
+   layer-clip none, every layer dissolves through 2D masks.
+   Text protected by a dark scrim under .next-word and a hot
+   spine kept below the text midline near the caret.
+   ============================================================ */
+
+.field[data-glow='flame'] {
+	--layer-radius: 0;
+	--layer-clip: none;
+	--ready-border: rgba(255, 122, 48, 0.36);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.05) inset,
+		0 -34px 90px rgba(20, 6, 2, 0.62) inset,
+		0 30px 70px rgba(0, 0, 0, 0.52),
+		0 0 90px rgba(255, 96, 22, 0.17),
+		0 0 150px rgba(255, 150, 50, 0.07);
+	--field-wash:
+		radial-gradient(ellipse 30% 105% at 21% 60%, rgba(255, 116, 30, 0.16), transparent 70%),
+		radial-gradient(ellipse 18% 72% at 19% 55%, rgba(255, 180, 70, 0.09), transparent 66%),
+		radial-gradient(ellipse 13% 52% at 17% 52%, rgba(96, 136, 255, 0.05), transparent 62%);
+	--caret-gradient: linear-gradient(180deg, rgb(255, 255, 255), rgb(224, 240, 255) 26%, rgb(150, 194, 255) 55%, rgb(84, 120, 255) 82%, rgb(52, 74, 210));
+	--caret-shadow:
+		0 0 5px rgba(240, 248, 255, 0.9),
+		0 0 14px rgba(140, 180, 255, 0.55),
+		0 0 30px rgba(90, 120, 255, 0.35);
+	--haze-width: 11em;
+	--haze-height: 2.6em;
+	--haze-size: auto;
+	--haze-bg:
+		radial-gradient(ellipse 5.2em 1.5em at 1.4em 58%, rgba(255, 138, 40, 0.3), rgba(210, 70, 12, 0.14) 55%, transparent 80%),
+		radial-gradient(ellipse 7.5em 1.1em at 4.6em 44%, rgba(255, 96, 18, 0.12), transparent 75%),
+		radial-gradient(ellipse 3em 1.7em at 0.7em 50%, rgba(120, 160, 255, 0.1), transparent 70%);
+	--haze-filter: blur(22px) saturate(1.25);
+	--haze-opacity: 0.85;
+	--haze-motion: flame-haze-breathe-v2 3.6s ease-in-out 760ms infinite;
+	--torch-haze-motion: flame-pilot-halo-v2 2.8s ease-in-out infinite;
+	--haze-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 95% 92% at 26% 54%, black 0 38%, rgba(0, 0, 0, 0.5) 66%, transparent 96%);
+	--body-width: 9.8em;
+	--body-height: 2.6em;
+	--body-size: auto;
+	--body-bg:
+		radial-gradient(ellipse 1.5em 0.55em at 1.15em 62%, rgba(255, 252, 232, 0.85), rgba(255, 214, 92, 0.45) 55%, transparent 82%),
+		radial-gradient(ellipse 2.3em 0.62em at 2.6em 58%, rgba(255, 196, 64, 0.62), rgba(255, 130, 26, 0.34) 60%, transparent 85%),
+		radial-gradient(ellipse 2.6em 0.6em at 4.3em 52%, rgba(255, 142, 30, 0.5), rgba(230, 84, 12, 0.26) 62%, transparent 86%),
+		radial-gradient(ellipse 2.8em 0.55em at 6em 46%, rgba(248, 100, 16, 0.38), rgba(196, 54, 8, 0.18) 64%, transparent 88%),
+		radial-gradient(ellipse 2.9em 0.5em at 7.6em 40%, rgba(216, 66, 10, 0.26), transparent 86%),
+		radial-gradient(ellipse 0.9em 0.75em at 2.1em 36%, rgba(255, 170, 40, 0.3), transparent 78%),
+		radial-gradient(ellipse 0.8em 0.9em at 3.5em 30%, rgba(255, 120, 22, 0.24), transparent 80%),
+		radial-gradient(ellipse 0.7em 0.7em at 5.1em 30%, rgba(240, 92, 14, 0.18), transparent 80%);
+	--body-filter: blur(7px) saturate(1.3) contrast(1.04);
+	--body-opacity: 0.95;
+	--body-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 100% 92% at 22% 58%, black 0 42%, rgba(0, 0, 0, 0.55) 68%, transparent 96%);
+	--core-width: 3.4em;
+	--core-height: 1.4em;
+	--core-size: auto;
+	--core-bg:
+		radial-gradient(ellipse 0.85em 0.3em at 0.75em 60%, rgba(255, 255, 248, 0.95), rgba(255, 240, 180, 0.55) 55%, transparent 85%),
+		radial-gradient(ellipse 1.9em 0.34em at 1.7em 57%, rgba(255, 232, 140, 0.6), rgba(255, 170, 50, 0.25) 65%, transparent 90%),
+		radial-gradient(ellipse 0.5em 0.22em at 0.42em 60%, rgba(150, 190, 255, 0.5), transparent 80%);
+	--core-filter: blur(3px) saturate(1.25);
+	--core-opacity: 1;
+	--core-motion: flame-core-flicker-v2 1.15s ease-in-out 560ms infinite;
+	--torch-core-motion: flame-pilot-v2 1.7s ease-in-out infinite;
+	--core-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 96% 92% at 26% 58%, black 0 45%, rgba(0, 0, 0, 0.5) 72%, transparent 95%);
+	--flow-width: 10em;
+	--flow-height: 2.2em;
+	--flow-size: 230% 100%;
+	--flow-bg:
+		linear-gradient(93deg, transparent 0%, rgba(255, 236, 170, 0.2) 12%, rgba(255, 128, 30, 0.18) 30%, transparent 48%, rgba(255, 150, 40, 0.12) 62%, transparent 82%),
+		radial-gradient(ellipse 6em 0.5em at 4.5em 22%, rgba(255, 200, 120, 0.1), transparent 75%);
+	--flow-filter: blur(12px) saturate(1.2);
+	--flow-low: 0.16;
+	--flow-high: 0.5;
+	--flow-motion: flame-flow-v2 2.7s ease-in-out 900ms infinite;
+	--flow-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 94% 88% at 28% 52%, black 0 40%, rgba(0, 0, 0, 0.5) 68%, transparent 96%);
+	--spark-width: 6.5em;
+	--spark-height: 2.6em;
+	--spark-size: auto;
+	--spark-bg:
+		radial-gradient(circle at 1.5em 1.35em, rgba(255, 252, 232, 0.95) 0 0.045em, transparent 0.11em),
+		radial-gradient(circle at 2.6em 1em, rgba(255, 216, 90, 0.9) 0 0.038em, transparent 0.1em),
+		radial-gradient(circle at 3.8em 0.75em, rgba(255, 150, 38, 0.8) 0 0.034em, transparent 0.09em),
+		radial-gradient(circle at 5em 0.55em, rgba(248, 104, 18, 0.65) 0 0.03em, transparent 0.085em),
+		radial-gradient(circle at 3.1em 1.6em, rgba(255, 176, 60, 0.6) 0 0.028em, transparent 0.08em),
+		radial-gradient(circle at 4.4em 1.25em, rgba(150, 52, 20, 0.55) 0 0.026em, transparent 0.075em);
+	--spark-filter: blur(0.3px) drop-shadow(0 0 6px rgba(255, 150, 40, 0.7));
+	--spark-low: 0;
+	--spark-high: 0.95;
+	--spark-motion: flame-embers-v2 2.3s cubic-bezier(0.3, 0.1, 0.55, 1) 880ms infinite;
+	--spark-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 94% 92% at 35% 55%, black 0 55%, transparent 96%);
+	--smoke-width: 9em;
+	--smoke-height: 2.6em;
+	--smoke-size: auto;
+	--smoke-bg:
+		radial-gradient(ellipse 2.6em 0.8em at 6.6em 26%, rgba(64, 58, 60, 0.34), transparent 78%),
+		radial-gradient(ellipse 1.8em 0.6em at 7.8em 16%, rgba(52, 48, 52, 0.22), transparent 80%),
+		radial-gradient(ellipse 3.4em 1em at 5.4em 40%, rgba(32, 24, 22, 0.2), transparent 82%);
+	--smoke-filter: blur(13px);
+	--smoke-opacity: 0.6;
+	--smoke-blend: normal;
+	--smoke-motion: flame-smoke-v2 6s ease-in-out 1.2s infinite;
+	--smoke-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 94% 92% at 62% 34%, black 0 40%, rgba(0, 0, 0, 0.5) 68%, transparent 94%);
+	--aux-width: 6.8em;
+	--aux-height: 2.6em;
+	--aux-size: auto;
+	--aux-bg:
+		radial-gradient(ellipse 0.34em 0.85em at 2.35em 0.95em, rgba(255, 208, 70, 0.55), rgba(255, 120, 24, 0.28) 55%, transparent 80%),
+		radial-gradient(ellipse 0.28em 0.7em at 3.7em 0.8em, rgba(255, 158, 38, 0.45), rgba(230, 84, 12, 0.2) 58%, transparent 82%),
+		radial-gradient(ellipse 0.24em 0.6em at 4.9em 0.72em, rgba(255, 120, 24, 0.32), transparent 78%);
+	--aux-filter: blur(2.5px) saturate(1.3);
+	--aux-opacity: 0.9;
+	--aux-blend: screen;
+	--aux-motion: flame-tongue-dance-v2 1.05s ease-in-out 780ms infinite;
+	--aux-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 92% 96% at 45% 34%, black 0 45%, rgba(0, 0, 0, 0.5) 72%, transparent 94%);
+	--next-color: rgba(255, 240, 215, 0.96);
+	--next-shadow:
+		0 0 6px rgba(255, 236, 200, 0.4),
+		0 0 16px rgba(255, 150, 50, 0.24),
+		0 0 34px rgba(255, 70, 16, 0.16);
+	--tail-color: rgba(255, 170, 110, 0.3);
+}
+
+/* Beams are the instrument again: undo the legacy passes that hid them. */
+.stage[data-glow='flame'] .field[data-glow] .prediction > .beam {
+	display: block;
+	left: -0.03em;
+	transform-origin: left center;
+}
+
+/* Two-layer masks (left fade x radial falloff) need intersection, not union. */
+.stage[data-glow='flame'] .field[data-glow] .prediction > .beam,
+.stage[data-glow='flame'] .field[data-glow] .torch-beam {
+	mask-composite: intersect;
+}
+
+/* Torch layers serve the waiting state only; never double-print in ready. */
+.stage[data-glow='flame'] .field[data-glow] .caret-origin-glow[data-mode='ready'] {
+	display: none;
+}
+
+.stage[data-glow='flame'] .field[data-glow] .prediction {
+	isolation: isolate;
+}
+
+/* Dark charcoal vessel; warmth lives only in the hearth zone near the caret. */
+.stage[data-glow='flame'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 44% 150% at 20% 64%, rgba(70, 24, 6, 0.34), transparent 66%),
+		radial-gradient(ellipse 120% 180% at 78% -36%, rgba(26, 14, 18, 0.5), transparent 66%),
+		linear-gradient(90deg, rgb(16, 10, 8), rgb(13, 9, 10) 52%, rgb(10, 8, 12));
+}
+
+.stage[data-glow='flame'] .field[data-glow]::before {
+	background: var(--field-wash);
+	background-size: 100% 100%;
+	-webkit-mask-image: radial-gradient(ellipse 100% 96% at 30% 55%, black 0 44%, rgba(0, 0, 0, 0.5) 72%, transparent 100%);
+	mask-image: radial-gradient(ellipse 100% 96% at 30% 55%, black 0 44%, rgba(0, 0, 0, 0.5) 72%, transparent 100%);
+	mix-blend-mode: screen;
+	opacity: 0.88;
+	animation: flame-wash-v2 6.8s ease-in-out infinite;
+}
+
+/* Dissolve into the field's rounded clip, not the paint box; edge overlays
+   extended into the 64px padding so brightness never steps at the content box. */
+.stage[data-glow='flame'] .field[data-glow] .paint {
+	overflow: visible;
+	clip-path: inset(-3.4em -5em -3.4em 0);
+}
+
+.stage[data-glow='flame'] .field[data-glow] .edge-left {
+	left: -64px;
+	width: 156px;
+	background: linear-gradient(90deg, rgb(15, 9, 8) 0%, rgb(15, 9, 8) 40%, rgba(15, 9, 8, 0) 100%);
+}
+
+.stage[data-glow='flame'] .field[data-glow] .edge-right {
+	right: -64px;
+	width: 224px;
+	background: linear-gradient(
+		270deg,
+		rgba(13, 8, 9, 0.9) 0%,
+		rgba(13, 8, 9, 0.55) 30%,
+		rgba(13, 8, 9, 0.16) 68%,
+		rgba(13, 8, 9, 0) 100%
+	);
+	opacity: 0.9;
+}
+
+/* Tongue set A: licks off the plume top, swaying from a low pivot. */
+.stage[data-glow='flame'] .field[data-glow] .prediction::before {
+	position: absolute;
+	left: -0.15em;
+	top: 50%;
+	z-index: -2;
+	width: 8.5em;
+	height: 2.6em;
+	content: '';
+	pointer-events: none;
+	border-radius: 0;
+	clip-path: none;
+	background:
+		radial-gradient(ellipse 0.4em 1em at 1.35em 0.9em, rgba(255, 232, 120, 0.6), rgba(255, 150, 34, 0.3) 55%, transparent 80%),
+		radial-gradient(ellipse 0.3em 0.8em at 2.75em 0.75em, rgba(255, 176, 44, 0.5), rgba(240, 100, 16, 0.24) 58%, transparent 82%),
+		radial-gradient(ellipse 0.26em 0.66em at 4.35em 0.68em, rgba(255, 130, 26, 0.36), transparent 80%),
+		radial-gradient(ellipse 3.6em 0.5em at 2.6em 1.28em, rgba(255, 150, 40, 0.22), transparent 80%);
+	filter: blur(3.5px) saturate(1.35);
+	-webkit-mask-image: radial-gradient(ellipse 96% 100% at 30% 42%, black 0 46%, rgba(0, 0, 0, 0.5) 72%, transparent 98%);
+	mask-image: radial-gradient(ellipse 96% 100% at 30% 42%, black 0 46%, rgba(0, 0, 0, 0.5) 72%, transparent 98%);
+	mix-blend-mode: screen;
+	opacity: 0.95;
+	transform: translateY(-50%);
+	transform-origin: 16% 74%;
+	animation:
+		flame-layer-in-v2 480ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		flame-tongue-sway-v2 1.5s ease-in-out 620ms infinite;
+}
+
+/* The nozzle: blue premix cone with a white-hot throat, crisp, above the
+   beams and below the text; alive with or without light flow. */
+.stage[data-glow='flame'] .field[data-glow] .prediction::after {
+	position: absolute;
+	left: -0.3em;
+	top: 50%;
+	z-index: -1;
+	width: 2.6em;
+	height: 1.8em;
+	content: '';
+	pointer-events: none;
+	border-radius: 0;
+	clip-path: none;
+	background:
+		radial-gradient(circle at 0.62em 1em, rgba(255, 255, 252, 0.98) 0 0.075em, rgba(255, 244, 214, 0.5) 0.14em, transparent 0.24em),
+		radial-gradient(ellipse 0.5em 0.24em at 0.5em 1.02em, rgba(210, 232, 255, 0.85), rgba(150, 190, 255, 0.4) 60%, transparent 85%),
+		radial-gradient(ellipse 0.95em 0.34em at 0.72em 1.03em, rgba(92, 140, 255, 0.6), rgba(70, 105, 245, 0.24) 62%, transparent 88%),
+		radial-gradient(ellipse 1.35em 0.46em at 1.05em 1.02em, rgba(66, 96, 235, 0.32), rgba(110, 80, 245, 0.12) 66%, transparent 90%),
+		radial-gradient(ellipse 0.5em 0.52em at 0.35em 1.05em, rgba(140, 100, 255, 0.28), transparent 80%);
+	filter: blur(0.8px) saturate(1.35) drop-shadow(0 0 10px rgba(96, 140, 255, 0.45)) drop-shadow(0 0 22px rgba(255, 140, 40, 0.3));
+	-webkit-mask-image: radial-gradient(ellipse 96% 96% at 34% 56%, black 0 55%, transparent 96%);
+	mask-image: radial-gradient(ellipse 96% 96% at 34% 56%, black 0 55%, transparent 96%);
+	mix-blend-mode: screen;
+	opacity: 1;
+	transform: translateY(-50%);
+	transform-origin: left center;
+	animation:
+		flame-nozzle-in-v2 520ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		flame-nozzle-flicker-v2 1.3s ease-in-out 520ms infinite;
+}
+
+/* Plume buoyancy: a slow waver layered after the shared entrance. */
+.stage[data-glow='flame'] .field[data-glow] .beam-body {
+	animation:
+		beam-open 650ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		flame-plume-live-v2 2.9s ease-in-out 700ms infinite;
+}
+
+/* ---------- Text is sacred ---------- */
+.stage[data-glow='flame'] .field[data-glow] .next-word {
+	position: relative;
+	z-index: 2;
+	color: var(--next-color);
+	background: none;
+	filter: none;
+	text-shadow: var(--next-shadow);
+	animation:
+		flame-word-settle-v2 320ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		flame-word-simmer-v2 4.8s ease-in-out 1.2s infinite;
+}
+
+/* Dark scrim between the flame body and the glyphs: contrast insurance. */
+.stage[data-glow='flame'] .field[data-glow] .next-word::before {
+	position: absolute;
+	inset: -0.1em -0.4em -0.16em -0.28em;
+	z-index: -1;
+	display: block;
+	content: '';
+	pointer-events: none;
+	border-radius: 0.7em;
+	clip-path: none;
+	background: radial-gradient(ellipse 74% 88% at 32% 58%, rgba(16, 6, 2, 0.5), rgba(16, 6, 2, 0.22) 58%, transparent 86%);
+	filter: blur(5px);
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: normal;
+	opacity: 0.85;
+	transform: none;
+	animation: flame-scrim-in-v2 420ms ease-out both;
+}
+
+/* Per-glyph ignition; nth-child variants grouped to outrank legacy tints. */
+.stage[data-glow='flame'] .field[data-glow] .next-word .glyph,
+.stage[data-glow='flame'] .field[data-glow] .next-word .glyph:nth-child(2n),
+.stage[data-glow='flame'] .field[data-glow] .next-word .glyph:nth-child(3n),
+.stage[data-glow='flame'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-glow='flame'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
+	color: var(--next-color);
+	transform-origin: 55% 85%;
+	animation: flame-glyph-ignite-v2 560ms cubic-bezier(0.2, 0.85, 0.3, 1.05) both;
+	animation-delay: calc(120ms + var(--i) * 58ms);
+}
+
+/* Tail = smolder: dim amber, ember-glow shadow, masked fade. */
+.stage[data-glow='flame'] .field[data-glow] .tail {
+	color: var(--tail-color);
+	filter: none;
+	text-shadow:
+		0 0 10px rgba(255, 110, 30, 0.16),
+		0 0 22px rgba(140, 36, 8, 0.2);
+	-webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0, rgba(0, 0, 0, 0.5) 2.6em, transparent 8em);
+	mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0, rgba(0, 0, 0, 0.5) 2.6em, transparent 8em);
+}
+
+.stage[data-glow='flame'] .field[data-glow] .tail .glyph {
+	color: color-mix(in oklab, rgba(255, 150, 70, 0.62) clamp(0%, calc(34% - var(--i) * 3%), 34%), rgba(214, 150, 112, 0.32));
+	filter: blur(clamp(0.1px, calc(0.6px - var(--i) * 0.04px), 0.6px)) saturate(1.1);
+	opacity: clamp(0.42, calc(0.68 - var(--i) * 0.02), 0.68);
+	text-shadow: none;
+	-webkit-mask-image: none;
+	mask-image: none;
+	animation: none;
+}
+
+/* Light flow off: nozzle, plume, tongue shapes and glyph ignition stay;
+   only the infinite ambience is stilled. */
+.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow]::before {
+	animation: none;
+}
+
+.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: flame-layer-in-v2 480ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .prediction::after {
+	animation: flame-nozzle-in-v2 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .beam-veil {
+	animation: beam-open 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .beam-body {
+	animation: beam-open 650ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .beam-hot {
+	animation: beam-hot 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .next-word {
+	animation: flame-word-settle-v2 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .next-word::before {
+	animation: flame-scrim-in-v2 420ms ease-out both;
+}
+
+.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .next-word .glyph,
+.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(2n),
+.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(3n),
+.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
+	animation: flame-glyph-ignite-v2 560ms cubic-bezier(0.2, 0.85, 0.3, 1.05) both;
+	animation-delay: calc(120ms + var(--i) * 58ms);
+}
+
+/* ---------- Light theme: fire on clean paper ---------- */
+.field[data-theme='light'][data-glow='flame'] {
+	--ready-border: rgba(226, 106, 26, 0.4);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.98) inset,
+		0 -16px 44px rgba(240, 130, 40, 0.07) inset,
+		0 18px 44px rgba(150, 60, 10, 0.15),
+		0 0 70px rgba(255, 140, 40, 0.13);
+	--field-wash:
+		radial-gradient(ellipse 26% 90% at 20% 58%, rgba(250, 130, 30, 0.1), transparent 68%),
+		radial-gradient(ellipse 12% 48% at 17% 52%, rgba(80, 120, 245, 0.06), transparent 62%);
+	--caret-gradient: linear-gradient(180deg, rgb(24, 44, 130), rgb(52, 92, 235) 45%, rgb(120, 168, 255) 80%, rgb(200, 224, 255));
+	--caret-shadow:
+		0 0 6px rgba(120, 165, 255, 0.5),
+		0 0 16px rgba(70, 105, 245, 0.28);
+	--haze-bg:
+		radial-gradient(ellipse 5em 1.4em at 1.4em 58%, rgba(244, 120, 26, 0.2), rgba(212, 84, 12, 0.08) 55%, transparent 80%),
+		radial-gradient(ellipse 7em 1em at 4.4em 44%, rgba(235, 100, 18, 0.08), transparent 75%),
+		radial-gradient(ellipse 2.6em 1.5em at 0.7em 50%, rgba(80, 125, 245, 0.08), transparent 70%);
+	--haze-opacity: 0.42;
+	--body-bg:
+		radial-gradient(ellipse 1.5em 0.55em at 1.15em 62%, rgba(255, 196, 48, 0.95), rgba(248, 140, 18, 0.62) 55%, transparent 82%),
+		radial-gradient(ellipse 2.3em 0.62em at 2.6em 58%, rgba(246, 118, 12, 0.76), rgba(228, 86, 8, 0.42) 60%, transparent 85%),
+		radial-gradient(ellipse 2.6em 0.6em at 4.3em 52%, rgba(232, 88, 8, 0.6), rgba(202, 58, 6, 0.3) 62%, transparent 86%),
+		radial-gradient(ellipse 2.8em 0.55em at 6em 46%, rgba(210, 66, 8, 0.44), transparent 86%),
+		radial-gradient(ellipse 2.9em 0.5em at 7.6em 40%, rgba(182, 48, 6, 0.3), transparent 86%),
+		radial-gradient(ellipse 0.9em 0.75em at 2.1em 36%, rgba(244, 112, 14, 0.36), transparent 78%),
+		radial-gradient(ellipse 0.8em 0.9em at 3.5em 30%, rgba(228, 86, 8, 0.28), transparent 80%);
+	--body-filter: blur(5px) saturate(1.45) drop-shadow(0 0.22em 0.55em rgba(190, 80, 10, 0.26));
+	--body-opacity: 0.96;
+	--core-bg:
+		radial-gradient(ellipse 0.85em 0.3em at 0.75em 60%, rgba(255, 214, 100, 0.95), rgba(250, 160, 30, 0.55) 55%, transparent 85%),
+		radial-gradient(ellipse 1.9em 0.34em at 1.7em 57%, rgba(246, 150, 30, 0.6), rgba(230, 100, 14, 0.26) 65%, transparent 90%),
+		radial-gradient(ellipse 0.5em 0.22em at 0.42em 60%, rgba(80, 125, 250, 0.5), transparent 80%);
+	--flow-bg:
+		linear-gradient(93deg, transparent 0%, rgba(248, 160, 40, 0.16) 12%, rgba(235, 100, 18, 0.14) 30%, transparent 48%, rgba(240, 120, 26, 0.1) 62%, transparent 82%),
+		radial-gradient(ellipse 6em 0.5em at 4.5em 22%, rgba(240, 140, 50, 0.08), transparent 75%);
+	--flow-low: 0.1;
+	--flow-high: 0.32;
+	--spark-bg:
+		radial-gradient(circle at 1.5em 1.35em, rgba(250, 150, 30, 0.95) 0 0.045em, transparent 0.11em),
+		radial-gradient(circle at 2.6em 1em, rgba(238, 116, 16, 0.9) 0 0.038em, transparent 0.1em),
+		radial-gradient(circle at 3.8em 0.75em, rgba(222, 88, 10, 0.8) 0 0.034em, transparent 0.09em),
+		radial-gradient(circle at 5em 0.55em, rgba(196, 62, 8, 0.6) 0 0.03em, transparent 0.085em),
+		radial-gradient(circle at 3.1em 1.6em, rgba(240, 130, 24, 0.6) 0 0.028em, transparent 0.08em),
+		radial-gradient(circle at 4.4em 1.25em, rgba(96, 48, 28, 0.55) 0 0.026em, transparent 0.075em);
+	--spark-filter: blur(0.3px) drop-shadow(0 0 5px rgba(235, 110, 20, 0.55));
+	--spark-high: 0.75;
+	--smoke-bg:
+		radial-gradient(ellipse 2.6em 0.8em at 6.6em 26%, rgba(96, 86, 84, 0.26), transparent 78%),
+		radial-gradient(ellipse 1.8em 0.6em at 7.8em 16%, rgba(110, 100, 100, 0.16), transparent 80%);
+	--smoke-opacity: 0.4;
+	--aux-bg:
+		radial-gradient(ellipse 0.34em 0.85em at 2.35em 0.95em, rgba(246, 142, 26, 0.5), rgba(226, 92, 12, 0.24) 55%, transparent 80%),
+		radial-gradient(ellipse 0.28em 0.7em at 3.7em 0.8em, rgba(236, 110, 16, 0.4), transparent 82%),
+		radial-gradient(ellipse 0.24em 0.6em at 4.9em 0.72em, rgba(220, 86, 10, 0.28), transparent 78%);
+	--aux-blend: normal;
+	--aux-opacity: 0.8;
+	--next-color: rgba(44, 26, 16, 0.95);
+	--next-shadow:
+		0 0 1px rgba(255, 255, 255, 0.75),
+		0 0 10px rgba(244, 140, 40, 0.24),
+		0 0 22px rgba(226, 92, 14, 0.12);
+	--tail-color: rgba(150, 96, 62, 0.4);
+}
+
+.stage[data-theme='light'][data-glow='flame'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 60% 140% at 22% 66%, rgba(252, 232, 214, 0.55), transparent 62%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(253, 250, 246, 0.9) 50%, rgba(250, 244, 238, 0.9)),
+		linear-gradient(90deg, rgb(255, 254, 252), rgb(252, 249, 246));
+}
+
+.stage[data-theme='light'][data-glow='flame'] .field[data-glow]::before {
+	mix-blend-mode: normal;
+	opacity: 0.7;
+}
+
+.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .prediction::before {
+	background:
+		radial-gradient(ellipse 0.4em 1em at 1.35em 0.9em, rgba(248, 152, 24, 0.72), rgba(232, 94, 10, 0.36) 55%, transparent 80%),
+		radial-gradient(ellipse 0.3em 0.8em at 2.75em 0.75em, rgba(240, 114, 12, 0.6), rgba(214, 74, 8, 0.28) 58%, transparent 82%),
+		radial-gradient(ellipse 0.26em 0.66em at 4.35em 0.68em, rgba(228, 88, 10, 0.44), transparent 80%),
+		radial-gradient(ellipse 3.6em 0.5em at 2.6em 1.28em, rgba(240, 110, 18, 0.24), transparent 80%);
+	filter: blur(2.6px) saturate(1.4) drop-shadow(0 0.14em 0.4em rgba(200, 90, 14, 0.22));
+	mix-blend-mode: normal;
+	opacity: 0.92;
+}
+
+.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .prediction::after {
+	background:
+		radial-gradient(circle at 0.62em 1em, rgba(255, 252, 240, 0.98) 0 0.06em, rgba(255, 226, 160, 0.5) 0.12em, transparent 0.22em),
+		radial-gradient(ellipse 0.5em 0.24em at 0.5em 1.02em, rgba(140, 180, 255, 0.9), rgba(90, 135, 250, 0.45) 60%, transparent 85%),
+		radial-gradient(ellipse 0.95em 0.34em at 0.72em 1.03em, rgba(60, 100, 240, 0.62), rgba(48, 80, 225, 0.26) 62%, transparent 88%),
+		radial-gradient(ellipse 1.35em 0.46em at 1.05em 1.02em, rgba(48, 76, 220, 0.3), rgba(96, 66, 230, 0.12) 66%, transparent 90%),
+		radial-gradient(ellipse 0.5em 0.52em at 0.35em 1.05em, rgba(120, 84, 240, 0.24), transparent 80%);
+	filter: blur(0.7px) saturate(1.3) drop-shadow(0 0 8px rgba(80, 120, 250, 0.4)) drop-shadow(0 0.1em 0.4em rgba(220, 110, 20, 0.24));
+	mix-blend-mode: normal;
+}
+
+.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .next-word::before {
+	background: radial-gradient(ellipse 74% 88% at 32% 58%, rgba(255, 253, 248, 0.78), rgba(255, 253, 248, 0.4) 58%, transparent 86%);
+	filter: blur(5px);
+	opacity: 0.9;
+}
+
+.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .next-word {
+	animation:
+		flame-word-settle-v2 320ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		flame-word-simmer-light-v2 4.8s ease-in-out 1.2s infinite;
+}
+
+.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .next-word .glyph,
+.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .next-word .glyph:nth-child(2n),
+.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .next-word .glyph:nth-child(3n),
+.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
+	color: var(--next-color);
+	animation: flame-glyph-ignite-light-v2 560ms cubic-bezier(0.2, 0.85, 0.3, 1.05) both;
+	animation-delay: calc(120ms + var(--i) * 58ms);
+}
+
+.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .tail .glyph {
+	color: color-mix(in oklab, rgba(216, 100, 20, 0.6) clamp(0%, calc(32% - var(--i) * 3%), 32%), rgba(140, 96, 66, 0.42));
+	filter: blur(clamp(0.08px, calc(0.5px - var(--i) * 0.035px), 0.5px));
+	opacity: clamp(0.46, calc(0.7 - var(--i) * 0.018), 0.7);
+}
+
+.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .edge-left {
+	background: linear-gradient(90deg, rgba(255, 254, 252, 0.94), rgba(255, 254, 252, 0));
+}
+
+.stage[data-theme='light'][data-glow='flame'] .field[data-glow] .edge-right {
+	background: linear-gradient(
+		270deg,
+		rgba(252, 248, 244, 0.45) 0%,
+		rgba(252, 248, 244, 0.2) 42%,
+		rgba(252, 248, 244, 0) 100%
+	);
+	opacity: 0.5;
+}
+
+/* ---------- Waiting state: blue pilot light at the caret ---------- */
+.field[data-state='waiting'][data-glow='flame'] {
+	--haze-width: 4.8em;
+	--haze-height: 2.1em;
+	--haze-bg:
+		radial-gradient(ellipse 1.7em 0.95em at 0.6em 55%, rgba(255, 158, 66, 0.22), transparent 78%),
+		radial-gradient(ellipse 0.9em 0.7em at 0.45em 58%, rgba(110, 150, 255, 0.14), transparent 76%);
+	--haze-filter: blur(14px) saturate(1.15);
+	--haze-opacity: 0.85;
+	--haze-mask: linear-gradient(90deg, transparent 0, black 0.35em), radial-gradient(ellipse 92% 92% at 28% 55%, black 0 44%, rgba(0, 0, 0, 0.5) 70%, transparent 96%);
+	--core-width: 2.2em;
+	--core-height: 1.5em;
+	--core-bg:
+		radial-gradient(ellipse 0.14em 0.3em at 0.42em 0.86em, rgba(255, 255, 255, 0.95), rgba(214, 232, 255, 0.55) 55%, transparent 84%),
+		radial-gradient(ellipse 0.22em 0.5em at 0.42em 0.74em, rgba(120, 160, 255, 0.8), rgba(84, 112, 248, 0.34) 60%, transparent 86%),
+		radial-gradient(ellipse 0.3em 0.66em at 0.42em 0.66em, rgba(84, 104, 245, 0.32), rgba(122, 92, 250, 0.12) 66%, transparent 90%);
+	--core-filter: blur(0.8px) drop-shadow(0 0 8px rgba(104, 144, 255, 0.55));
+	--core-opacity: 0.95;
+	--core-mask: linear-gradient(90deg, transparent 0, black 0.35em), radial-gradient(ellipse 92% 94% at 26% 58%, black 0 55%, transparent 95%);
+	--flow-width: 3.4em;
+	--flow-height: 1.3em;
+	--flow-bg: linear-gradient(93deg, transparent 0%, rgba(255, 200, 130, 0.14) 18%, rgba(130, 160, 255, 0.08) 46%, transparent 76%);
+	--flow-filter: blur(10px) saturate(1.1);
+	--flow-low: 0.05;
+	--flow-high: 0.16;
+	--flow-motion: flame-flow-v2 6s ease-in-out infinite;
+	--flow-mask: linear-gradient(90deg, transparent 0, black 0.35em), radial-gradient(ellipse 92% 88% at 28% 52%, black 0 44%, transparent 96%);
+	--spark-width: 2.4em;
+	--spark-height: 1.7em;
+	--spark-bg:
+		radial-gradient(circle at 0.8em 0.9em, rgba(255, 240, 200, 0.85) 0 0.03em, transparent 0.08em),
+		radial-gradient(circle at 1.4em 0.55em, rgba(255, 176, 70, 0.7) 0 0.026em, transparent 0.075em);
+	--spark-filter: blur(0.3px) drop-shadow(0 0 5px rgba(255, 170, 60, 0.5));
+	--spark-low: 0;
+	--spark-high: 0.4;
+	--spark-motion: flame-embers-v2 3.8s cubic-bezier(0.3, 0.1, 0.55, 1) infinite;
+	--spark-mask: linear-gradient(90deg, transparent 0, black 0.35em), radial-gradient(ellipse 92% 90% at 32% 55%, black 0 55%, transparent 96%);
+	--smoke-width: 3.6em;
+	--smoke-height: 2em;
+	--smoke-bg: radial-gradient(ellipse 1.3em 0.55em at 1.6em 0.45em, rgba(58, 52, 54, 0.24), transparent 80%);
+	--smoke-filter: blur(10px);
+	--smoke-opacity: 0.3;
+	--smoke-mask: linear-gradient(90deg, transparent 0, black 0.35em), radial-gradient(ellipse 92% 90% at 40% 34%, black 0 46%, transparent 94%);
+	--aux-width: 2.6em;
+	--aux-height: 1.9em;
+	--aux-bg: radial-gradient(ellipse 0.2em 0.5em at 0.45em 0.55em, rgba(255, 178, 66, 0.32), rgba(255, 120, 26, 0.14) 58%, transparent 82%);
+	--aux-filter: blur(2px) saturate(1.2);
+	--aux-opacity: 0.55;
+	--aux-motion: flame-tongue-dance-v2 2.1s ease-in-out infinite;
+	--aux-mask: linear-gradient(90deg, transparent 0, black 0.35em), radial-gradient(ellipse 90% 94% at 34% 38%, black 0 48%, transparent 94%);
+}
+
+.field[data-theme='light'][data-state='waiting'][data-glow='flame'] {
+	--haze-opacity: 0.5;
+	--core-opacity: 0.9;
+	--core-bg:
+		radial-gradient(ellipse 0.14em 0.28em at 0.42em 0.86em, rgba(230, 242, 255, 0.95), rgba(150, 190, 255, 0.5) 55%, transparent 84%),
+		radial-gradient(ellipse 0.22em 0.48em at 0.42em 0.74em, rgba(70, 110, 245, 0.75), rgba(52, 82, 230, 0.3) 60%, transparent 86%),
+		radial-gradient(ellipse 0.3em 0.62em at 0.42em 0.66em, rgba(52, 76, 225, 0.28), transparent 88%);
+	--spark-high: 0.3;
+	--smoke-opacity: 0.18;
+	--aux-opacity: 0.4;
+}
+
+/* ---------- Keyframes (flame-*-v2) ---------- */
+@keyframes flame-haze-breathe-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--haze-opacity) * 0.78);
+		transform: translateY(-50%) scaleX(0.98) scaleY(0.95);
+	}
+	50% {
+		opacity: var(--haze-opacity);
+		transform: translateY(-50%) scaleX(1.02) scaleY(1.05);
+	}
+}
+
+@keyframes flame-plume-live-v2 {
+	0%,
+	100% {
+		transform: translateY(-50%) scaleY(0.965) skewX(-0.5deg);
+	}
+	34% {
+		transform: translateY(-51.5%) scaleY(1.03) skewX(0.8deg);
+	}
+	68% {
+		transform: translateY(-49%) scaleY(0.99) skewX(-0.3deg);
+	}
+}
+
+@keyframes flame-core-flicker-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--core-opacity) * 0.82);
+		transform: translateY(-50%) scaleX(0.97);
+	}
+	22% {
+		opacity: var(--core-opacity);
+		transform: translateY(-52%) scaleX(1.04);
+	}
+	55% {
+		opacity: calc(var(--core-opacity) * 0.9);
+		transform: translateY(-49%) scaleX(1);
+	}
+	78% {
+		opacity: var(--core-opacity);
+		transform: translateY(-51%) scaleX(1.02);
+	}
+}
+
+@keyframes flame-flow-v2 {
+	0% {
+		opacity: var(--flow-low);
+		background-position: 0% 50%;
+	}
+	20% {
+		opacity: var(--flow-high);
+	}
+	58% {
+		opacity: calc(var(--flow-high) * 0.62);
+	}
+	100% {
+		opacity: var(--flow-low);
+		background-position: 200% 44%;
+	}
+}
+
+@keyframes flame-embers-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-46%) translateX(-0.1em) scale(0.9);
+	}
+	14% {
+		opacity: var(--spark-high);
+	}
+	55% {
+		opacity: calc(var(--spark-high) * 0.7);
+		transform: translateY(-64%) translateX(0.34em) scale(1);
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(-86%) translateX(0.78em) scale(0.55);
+	}
+}
+
+@keyframes flame-smoke-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--smoke-opacity) * 0.7);
+		transform: translateY(-52%) translateX(0) scaleY(0.96);
+	}
+	45% {
+		opacity: var(--smoke-opacity);
+		transform: translateY(-57%) translateX(0.22em) scaleY(1.06) skewX(-2deg);
+	}
+	75% {
+		opacity: calc(var(--smoke-opacity) * 0.85);
+		transform: translateY(-60%) translateX(0.34em) scaleY(1.02) skewX(1.5deg);
+	}
+}
+
+@keyframes flame-tongue-sway-v2 {
+	0%,
+	100% {
+		opacity: 0.85;
+		transform: translateY(-50%) skewX(-2.5deg) scaleY(0.94);
+	}
+	28% {
+		opacity: 1;
+		transform: translateY(-51%) skewX(1.8deg) scaleY(1.06);
+	}
+	54% {
+		opacity: 0.92;
+		transform: translateY(-49.5%) skewX(-1deg) scaleY(0.99);
+	}
+	76% {
+		opacity: 0.97;
+		transform: translateY(-51.5%) skewX(2.6deg) scaleY(1.04);
+	}
+}
+
+@keyframes flame-tongue-dance-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--aux-opacity) * 0.7);
+		transform: translateY(-50%) skewX(2deg) scaleY(0.92);
+	}
+	24% {
+		opacity: var(--aux-opacity);
+		transform: translateY(-51.4%) skewX(-2.2deg) scaleY(1.08);
+	}
+	52% {
+		opacity: calc(var(--aux-opacity) * 0.84);
+		transform: translateY(-49.4%) skewX(1.2deg) scaleY(0.98);
+	}
+	78% {
+		opacity: var(--aux-opacity);
+		transform: translateY(-51%) skewX(-1.4deg) scaleY(1.05);
+	}
+}
+
+@keyframes flame-nozzle-in-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-50%) scaleX(0.2) scaleY(0.55);
+	}
+	60% {
+		opacity: 1;
+		transform: translateY(-50%) scaleX(1.08) scaleY(1.04);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(-50%) scale(1);
+	}
+}
+
+@keyframes flame-nozzle-flicker-v2 {
+	0%,
+	100% {
+		opacity: 0.94;
+		transform: translateY(-50%) scaleY(0.97);
+	}
+	18% {
+		opacity: 1;
+		transform: translateY(-50.8%) scaleY(1.05);
+	}
+	41% {
+		opacity: 0.9;
+		transform: translateY(-49.4%) scaleY(0.95);
+	}
+	63% {
+		opacity: 1;
+		transform: translateY(-50.4%) scaleY(1.03);
+	}
+	82% {
+		opacity: 0.95;
+		transform: translateY(-50%) scaleY(1);
+	}
+}
+
+@keyframes flame-layer-in-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-50%) scaleY(0.7);
+	}
+	100% {
+		opacity: 0.95;
+		transform: translateY(-50%) scaleY(1);
+	}
+}
+
+@keyframes flame-scrim-in-v2 {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 0.85;
+	}
+}
+
+@keyframes flame-wash-v2 {
+	0%,
+	100% {
+		opacity: 0.78;
+	}
+	42% {
+		opacity: 0.95;
+	}
+	68% {
+		opacity: 0.86;
+	}
+}
+
+@keyframes flame-glyph-ignite-v2 {
+	0% {
+		opacity: 0;
+		color: rgb(255, 255, 250);
+		transform: translateY(0.12em) scaleY(0.6);
+		filter: blur(5px) brightness(2.2) saturate(1.5) drop-shadow(0 0 0.16em rgba(255, 255, 240, 0.9));
+	}
+	38% {
+		opacity: 1;
+		color: rgb(255, 244, 214);
+		transform: translateY(-0.02em) scaleY(1.05);
+		filter: blur(0.6px) brightness(1.55) saturate(1.2) drop-shadow(0 0 0.12em rgba(255, 240, 200, 0.7));
+	}
+	70% {
+		color: rgb(255, 242, 216);
+		filter: blur(0) brightness(1.15) saturate(1.06) drop-shadow(0 0 0.06em rgba(255, 210, 150, 0.4));
+	}
+	100% {
+		opacity: 1;
+		color: var(--next-color);
+		transform: translateY(0) scaleY(1);
+		filter: blur(0) brightness(1) saturate(1) drop-shadow(0 0 0 rgba(255, 210, 150, 0));
+	}
+}
+
+@keyframes flame-glyph-ignite-light-v2 {
+	0% {
+		opacity: 0;
+		color: rgb(250, 150, 30);
+		transform: translateY(0.12em) scaleY(0.6);
+		filter: blur(4px) saturate(1.6) drop-shadow(0 0 0.14em rgba(250, 140, 30, 0.8));
+	}
+	38% {
+		opacity: 1;
+		color: rgb(216, 96, 16);
+		transform: translateY(-0.02em) scaleY(1.05);
+		filter: blur(0.5px) saturate(1.3) drop-shadow(0 0 0.1em rgba(240, 120, 24, 0.55));
+	}
+	70% {
+		color: rgb(120, 62, 30);
+		filter: blur(0) saturate(1.1) drop-shadow(0 0 0.05em rgba(230, 110, 22, 0.3));
+	}
+	100% {
+		opacity: 1;
+		color: var(--next-color);
+		transform: translateY(0) scaleY(1);
+		filter: blur(0) saturate(1) drop-shadow(0 0 0 rgba(230, 110, 22, 0));
+	}
+}
+
+@keyframes flame-word-settle-v2 {
+	0% {
+		opacity: 0;
+		transform: translateX(-0.1em);
+	}
+	100% {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+@keyframes flame-word-simmer-v2 {
+	0%,
+	100% {
+		text-shadow:
+			0 0 6px rgba(255, 236, 200, 0.4),
+			0 0 16px rgba(255, 150, 50, 0.24),
+			0 0 34px rgba(255, 70, 16, 0.16);
+	}
+	26% {
+		text-shadow:
+			0 0 7px rgba(255, 240, 208, 0.5),
+			0 0 18px rgba(255, 160, 56, 0.3),
+			0 0 38px rgba(255, 84, 20, 0.2);
+	}
+	50% {
+		text-shadow:
+			0 0 6px rgba(255, 232, 194, 0.36),
+			0 0 15px rgba(255, 144, 46, 0.22),
+			0 0 32px rgba(255, 66, 14, 0.14);
+	}
+	74% {
+		text-shadow:
+			0 0 8px rgba(255, 242, 212, 0.52),
+			0 0 20px rgba(255, 166, 60, 0.32),
+			0 0 40px rgba(255, 90, 22, 0.22);
+	}
+}
+
+@keyframes flame-word-simmer-light-v2 {
+	0%,
+	100% {
+		text-shadow:
+			0 0 1px rgba(255, 255, 255, 0.75),
+			0 0 10px rgba(244, 140, 40, 0.2),
+			0 0 22px rgba(226, 92, 14, 0.1);
+	}
+	50% {
+		text-shadow:
+			0 0 1px rgba(255, 255, 255, 0.75),
+			0 0 12px rgba(244, 140, 40, 0.3),
+			0 0 26px rgba(226, 92, 14, 0.16);
+	}
+}
+
+@keyframes flame-pilot-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--core-opacity) * 0.85);
+		transform: translateY(-50%) scaleY(0.94) skewX(-1deg);
+	}
+	30% {
+		opacity: var(--core-opacity);
+		transform: translateY(-52%) scaleY(1.08) skewX(1.2deg);
+	}
+	62% {
+		opacity: calc(var(--core-opacity) * 0.92);
+		transform: translateY(-50.6%) scaleY(1) skewX(-0.6deg);
+	}
+}
+
+@keyframes flame-pilot-halo-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--haze-opacity) * 0.72);
+		transform: translateY(-50%) scale(0.96);
+	}
+	50% {
+		opacity: var(--haze-opacity);
+		transform: translateY(-50%) scale(1.04);
+	}
+}

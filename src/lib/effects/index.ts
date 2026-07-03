@@ -34,9 +34,27 @@ import VenetianMask from '@lucide/svelte/icons/venetian-mask';
 import Waves from '@lucide/svelte/icons/waves';
 import Wind from '@lucide/svelte/icons/wind';
 import Zap from '@lucide/svelte/icons/zap';
+import type { Component } from 'svelte';
 import type { GlowVariant } from '$lib/autocomplete';
+import Kaleidoscope from './kaleidoscope/Kaleidoscope.svelte';
+import MatrixRain from './matrix/MatrixRain.svelte';
+import './index.css';
 
-export const glowOptions = [
+/** Props every effect layer component receives from GhostInput. */
+export interface GlowLayerProps {
+	suggestion: string;
+	lightFlow: boolean;
+}
+
+export interface GlowEffect {
+	value: GlowVariant;
+	label: string;
+	icon: typeof Flashlight;
+	/** Optional extra DOM layer rendered inside the prediction while a suggestion is live. */
+	layer?: Component<GlowLayerProps>;
+}
+
+export const glowOptions: readonly GlowEffect[] = [
 	{ value: 'torch', label: 'Torch', icon: Flashlight },
 	{ value: 'candle', label: 'Candle', icon: Flame },
 	{ value: 'lightning', label: 'Bolt', icon: Zap },
@@ -51,7 +69,7 @@ export const glowOptions = [
 	{ value: 'holo', label: 'Holo', icon: Gem },
 	{ value: 'blackhole', label: 'Blackhole', icon: Eclipse },
 	{ value: 'flame', label: 'Flame', icon: FlameKindling },
-	{ value: 'matrix', label: 'Matrix', icon: Binary },
+	{ value: 'matrix', label: 'Matrix', icon: Binary, layer: MatrixRain },
 	{ value: 'snow', label: 'Snow', icon: Snowflake },
 	{ value: 'toxic', label: 'Toxic', icon: Radiation },
 	{ value: 'vortex', label: 'Vortex', icon: Tornado },
@@ -75,11 +93,11 @@ export const glowOptions = [
 	{ value: 'drift', label: 'Drift', icon: Wind },
 	{ value: 'art', label: 'Art', icon: Palette },
 	{ value: 'scratch', label: 'Scratch', icon: Eraser },
-	{ value: 'kaleidoscope', label: 'Kaleidoscope', icon: Shapes }
-] as const satisfies ReadonlyArray<{
-	value: GlowVariant;
-	label: string;
-	icon: typeof Flashlight;
-}>;
+	{ value: 'kaleidoscope', label: 'Kaleidoscope', icon: Shapes, layer: Kaleidoscope }
+];
 
-export type GlowOption = (typeof glowOptions)[number];
+export type GlowOption = GlowEffect;
+
+export function glowLayer(glow: GlowVariant): Component<GlowLayerProps> | undefined {
+	return glowOptions.find((option) => option.value === glow)?.layer;
+}

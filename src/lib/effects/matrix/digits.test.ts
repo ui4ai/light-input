@@ -4,7 +4,7 @@ import {
 	MATRIX_GLYPHS,
 	createMatrixColumns,
 	flipMatrixColumns
-} from './matrix-digits';
+} from './digits';
 
 describe('matrix rain columns', () => {
 	it('creates a deterministic column-major rain layout', () => {

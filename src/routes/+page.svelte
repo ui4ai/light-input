@@ -19,7 +19,7 @@
 		type DemoSettings
 	} from '$lib/demo-settings';
 	import GhostInput from '$lib/GhostInput.svelte';
-	import { glowOptions } from '$lib/glows';
+	import { glowOptions } from '$lib/effects';
 
 	const DEMO_ONLY = env.PUBLIC_LIGHT_INPUT_DEMO_ONLY === 'true';
 
@@ -344,7 +344,7 @@
 	</section>
 
 	<section class="demo" aria-label="Autocomplete demo">
-		<GhostInput {glow} {loadingGlow} {lightFlow} {theme} {completionMode} />
+		<GhostInput {glow} layer={selectedGlow.layer} {loadingGlow} {lightFlow} {theme} {completionMode} />
 	</section>
 </main>
 

@@ -54,6 +54,7 @@ sends `mode: "demo"` to `/api/complete` and returns the fixed
 | Piece | File |
 | --- | --- |
 | The component (transparent input + painted ghost layer + glow) | [`src/lib/GhostInput.svelte`](src/lib/GhostInput.svelte) |
+| Effect modules: core anatomy, per-effect CSS, optional DOM layers, registry | [`src/lib/effects/`](src/lib/effects) |
 | Shared autocomplete types, limits, and display helpers | [`src/lib/autocomplete.ts`](src/lib/autocomplete.ts) |
 | Server proxy + prompt to OpenRouter | [`src/lib/server/complete.ts`](src/lib/server/complete.ts) · [`src/lib/server/completion-request.ts`](src/lib/server/completion-request.ts) · [`src/lib/server/completion-protocol.ts`](src/lib/server/completion-protocol.ts) · [`src/lib/server/rate-limit.ts`](src/lib/server/rate-limit.ts) · [`src/routes/api/complete/+server.ts`](src/routes/api/complete/+server.ts) |
 | Demo page | [`src/routes/+page.svelte`](src/routes/+page.svelte) |

@@ -1,8 +1,21 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { GLOW_VARIANTS } from './autocomplete';
-import { glowOptions } from './glows';
+import { GLOW_VARIANTS } from '../autocomplete';
+import { glowOptions, glowLayer } from './index';
+
+const PRESET_CSS_FILES = [
+	'src/lib/effects/core.css',
+	'src/lib/effects/legacy.css',
+	'src/lib/effects/blackhole/index.css',
+	'src/lib/effects/flame/index.css',
+	'src/lib/effects/matrix/index.css',
+	'src/lib/effects/snow/index.css'
+];
+
+function readPresetCss(): string {
+	return PRESET_CSS_FILES.map((file) => readFileSync(join(process.cwd(), file), 'utf8')).join('\n');
+}
 
 describe('glow inventory', () => {
 	const beforeBlackholeVariants = GLOW_VARIANTS.slice(0, GLOW_VARIANTS.indexOf('blackhole'));
@@ -50,7 +63,7 @@ describe('glow inventory', () => {
 	});
 
 	it('keeps legacy presets out of clipped special-effect layer rules', () => {
-		const css = readFileSync(join(process.cwd(), 'src/lib/glow-presets.css'), 'utf8');
+		const css = readPresetCss();
 		const edgePolishBlock = css.match(/\/\* Edge polish[\s\S]*?\n\}/u)?.[0] ?? '';
 
 		expect(edgePolishBlock).toContain(".field[data-glow='blackhole']");
@@ -87,16 +100,16 @@ describe('glow inventory', () => {
 	});
 
 	it('keeps Matrix binary code in one live DOM layer instead of CSS image tiles', () => {
-		const css = readFileSync(join(process.cwd(), 'src/lib/glow-presets.css'), 'utf8');
-		const component = readFileSync(join(process.cwd(), 'src/lib/GhostInput.svelte'), 'utf8');
+		const css = readPresetCss();
+		const rain = readFileSync(join(process.cwd(), 'src/lib/effects/matrix/MatrixRain.svelte'), 'utf8');
 
 		expect(css).not.toContain('matrix-code-tile');
 		expect(css).not.toContain('matrix-head-tile');
-		expect(component).toContain('data-testid="matrix-code-layer"');
+		expect(rain).toContain('data-testid="matrix-code-layer"');
 	});
 
 	it('ships custom layers for the newest cinematic effects', () => {
-		const css = readFileSync(join(process.cwd(), 'src/lib/glow-presets.css'), 'utf8');
+		const css = readPresetCss();
 
 		expect(css).toContain(".field[data-glow='spoiler']");
 		expect(css).toContain('spoiler-noise-swim');
@@ -113,15 +126,19 @@ describe('glow inventory', () => {
 	});
 
 	it('ships a dedicated DOM layer for the kaleidoscope effect', () => {
-		const component = readFileSync(join(process.cwd(), 'src/lib/GhostInput.svelte'), 'utf8');
+		const shards = readFileSync(
+			join(process.cwd(), 'src/lib/effects/kaleidoscope/Kaleidoscope.svelte'),
+			'utf8'
+		);
 
-		expect(component).toContain("glow === 'kaleidoscope'");
-		expect(component).toContain('data-testid="kaleidoscope-layer"');
-		expect(component).toContain('class="kaleidoscope-shard"');
+		expect(glowLayer('kaleidoscope')).toBeDefined();
+		expect(glowLayer('matrix')).toBeDefined();
+		expect(shards).toContain('data-testid="kaleidoscope-layer"');
+		expect(shards).toContain('class="kaleidoscope-shard"');
 	});
 
 	it('keeps custom thinking indicators available for cinematic variants', () => {
-		const css = readFileSync(join(process.cwd(), 'src/lib/glow-presets.css'), 'utf8');
+		const css = readPresetCss();
 		const variants = [
 			'blackhole',
 			'matrix',

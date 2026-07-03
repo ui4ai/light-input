@@ -1,0 +1,769 @@
+/* ============================================================
+   MATRIX v2 — "Digital rain at the caret"
+   True falling code: 20 glyph columns (span.matrix-col >
+   span.matrix-cell, column-major DOM). One shared keyframe
+   (opacity + color only) plays per cell with a negative delay
+   of row * (fall / rows) - fall - phase, so a white-green head
+   sweeps DOWN each column leaving a dimming phosphor trail;
+   speeds and phases differ per column and loop seamlessly.
+   Three depth tiers (static opacity/size/blur) fake parallax.
+   JS .flash appends a 320ms burst WITHOUT restarting the fall
+   clock (fall stays first in the animation-name list). Rain
+   dissolves through an intersected radial x left-fade mask -
+   no hard patch boundary. Beams stay hidden in ready; torch
+   layers become a blinking block cursor + glyph trickle while
+   waiting. data-light-flow='off' bakes a static mid-column
+   head per column via abs()/color-mix (Chrome latest only).
+   ============================================================ */
+
+.field[data-glow='matrix'] {
+	--layer-radius: 0;
+	--layer-clip: none;
+	--ready-border: rgba(64, 250, 122, 0.4);
+	--ready-shadow:
+		0 1px 0 rgba(150, 255, 176, 0.06) inset,
+		0 -34px 96px rgba(0, 14, 5, 0.66) inset,
+		0 32px 70px rgba(0, 0, 0, 0.52),
+		0 0 100px rgba(24, 250, 96, 0.16),
+		0 0 160px rgba(24, 250, 96, 0.05);
+	--field-wash:
+		repeating-linear-gradient(180deg, rgba(140, 255, 172, 0.045) 0 1px, transparent 1px 4px),
+		radial-gradient(ellipse 44% 130% at 24% 52%, rgba(20, 220, 92, 0.13), transparent 70%),
+		linear-gradient(90deg, rgba(6, 60, 26, 0.2), rgba(2, 26, 11, 0.08) 52%, transparent 84%);
+	--caret-gradient: linear-gradient(180deg, rgb(240, 255, 244), rgb(150, 255, 178) 30%, rgb(44, 240, 108) 66%, rgb(4, 130, 52));
+	--caret-shadow:
+		0 0 6px rgba(220, 255, 230, 0.8),
+		0 0 18px rgba(64, 255, 124, 0.6),
+		0 0 42px rgba(24, 255, 96, 0.3);
+	--crt-o: 0.92;
+	--bloom-o: 0.85;
+	--scrim-o: 0.88;
+	--next-color: rgba(236, 255, 242, 0.98);
+	--next-shadow:
+		0 1px 1px rgba(0, 0, 0, 0.9),
+		0 0 4px rgba(0, 10, 4, 0.8),
+		0 0 8px rgba(190, 255, 206, 0.5),
+		0 0 24px rgba(50, 255, 112, 0.4),
+		0 0 44px rgba(0, 150, 54, 0.28);
+	--tail-color: rgba(148, 238, 172, 0.42);
+}
+
+/* The rain layer is the instrument; every shared beam stays dark in ready. */
+.stage[data-glow='matrix'] .field[data-glow] .caret-origin-glow[data-mode='ready'],
+.stage[data-glow='matrix'] .field[data-glow] .prediction > .beam {
+	display: none;
+}
+
+/* Deep phosphor vessel: near-black green CRT glass. */
+.stage[data-glow='matrix'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 46% 140% at 24% 56%, rgba(0, 66, 26, 0.32), transparent 68%),
+		linear-gradient(180deg, rgba(130, 255, 165, 0.025), transparent 42%),
+		linear-gradient(90deg, rgb(1, 9, 4), rgb(2, 12, 6) 52%, rgb(1, 8, 4));
+}
+
+/* Scanlines + green cast, alive with a faint CRT hum. */
+.stage[data-glow='matrix'] .field[data-glow]::before {
+	background: var(--field-wash);
+	background-size: 100% 100%;
+	-webkit-mask-image: radial-gradient(ellipse 100% 96% at 32% 52%, black 0 46%, rgba(0, 0, 0, 0.5) 74%, transparent 100%);
+	mask-image: radial-gradient(ellipse 100% 96% at 32% 52%, black 0 46%, rgba(0, 0, 0, 0.5) 74%, transparent 100%);
+	mix-blend-mode: screen;
+	opacity: 0.92;
+	animation: matrix-crt-hum-v2 5.4s linear infinite;
+}
+
+/* Dissolve into the field's rounded clip, not the paint box; edge overlays
+   extended into the 64px padding so brightness never steps at the content box. */
+.stage[data-glow='matrix'] .field[data-glow] .paint {
+	overflow: visible;
+	clip-path: inset(-3.4em -5em -3.4em 0);
+}
+
+.stage[data-glow='matrix'] .field[data-glow] .edge-left {
+	left: -64px;
+	width: 156px;
+	background: linear-gradient(90deg, rgb(1, 10, 4) 0%, rgb(1, 10, 4) 40%, rgba(1, 10, 4, 0) 100%);
+	opacity: 0;
+}
+
+.stage[data-glow='matrix'] .field[data-glow] .viewport.scrolled .edge-left {
+	opacity: 1;
+}
+
+.stage[data-glow='matrix'] .field[data-glow] .edge-right {
+	right: -64px;
+	width: 224px;
+	background: linear-gradient(
+		270deg,
+		rgba(2, 12, 5, 0.9) 0%,
+		rgba(2, 12, 5, 0.55) 30%,
+		rgba(2, 12, 5, 0.16) 68%,
+		rgba(2, 12, 5, 0) 100%
+	);
+	opacity: 0.88;
+}
+
+/* Terminal block cursor. */
+.stage[data-glow='matrix'] .field[data-glow] .caret {
+	width: 8px;
+	border-radius: 2px;
+}
+
+.stage[data-glow='matrix'] .field[data-glow] .prediction {
+	isolation: isolate;
+}
+
+/* Soft green bloom under the rain zone, below the code layer. */
+.stage[data-glow='matrix'] .field[data-glow] .prediction::before {
+	position: absolute;
+	left: -1.3em;
+	top: 50%;
+	z-index: 0;
+	width: min(13em, calc(100% + 5.5em));
+	height: 3.1em;
+	content: '';
+	overflow: visible;
+	pointer-events: none;
+	border-radius: 999px;
+	background:
+		radial-gradient(ellipse 4.6em 1.4em at 2em 50%, rgba(40, 255, 110, 0.22), rgba(0, 150, 55, 0.1) 55%, transparent 80%),
+		radial-gradient(ellipse 8.5em 1.1em at 4.6em 50%, rgba(20, 220, 90, 0.1), transparent 74%);
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	background-position: 0 0;
+	filter: blur(14px) saturate(1.3);
+	-webkit-mask-image: linear-gradient(90deg, transparent 0, black 1em, black 70%, transparent 98%);
+	mask-image: linear-gradient(90deg, transparent 0, black 1em, black 70%, transparent 98%);
+	mix-blend-mode: screen;
+	opacity: var(--bloom-o);
+	transform: translateY(-50%);
+	transform-origin: 1.4em center;
+	animation:
+		matrix-bloom-in-v2 520ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		matrix-bloom-breathe-v2 4.6s ease-in-out 520ms infinite;
+}
+
+.stage[data-glow='matrix'] .field[data-glow] .prediction::after {
+	display: none;
+}
+
+/* ---------- The rain ---------- */
+.stage[data-glow='matrix'] .field[data-glow] .matrix-code-layer {
+	position: absolute;
+	left: -1.1em;
+	top: 50%;
+	z-index: 1;
+	display: flex;
+	align-items: flex-start;
+	gap: 0 0.3em;
+	width: min(30em, calc(100% + 13em));
+	height: 7.3em;
+	overflow: hidden;
+	color: rgb(34, 160, 80);
+	font-family: 'SF Mono', Menlo, Osaka, 'MS Gothic', ui-monospace, monospace;
+	font-size: 0.36em;
+	font-weight: 700;
+	line-height: 1;
+	letter-spacing: 0;
+	pointer-events: none;
+	text-shadow: none;
+	-webkit-mask-image:
+		radial-gradient(ellipse 17em 4.4em at 5em 50%, black 0 30%, rgba(0, 0, 0, 0.6) 60%, transparent 98%),
+		linear-gradient(90deg, transparent 0, black 1.45em);
+	mask-image:
+		radial-gradient(ellipse 17em 4.4em at 5em 50%, black 0 30%, rgba(0, 0, 0, 0.6) 60%, transparent 98%),
+		linear-gradient(90deg, transparent 0, black 1.45em);
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+	mix-blend-mode: screen;
+	transform: translateY(-50%) translateZ(0);
+	animation: matrix-rain-boot-v2 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='matrix'] .field[data-glow] .matrix-col {
+	display: flex;
+	flex: none;
+	flex-direction: column;
+	margin-top: var(--drift, 0em);
+	text-shadow: 0 0 0.24em, 0 0 0.62em;
+}
+
+/* Depth tiers: static opacity base, size and glow - parallax without transforms. */
+.stage[data-glow='matrix'] .field[data-glow] .matrix-col[data-depth='0'] {
+	--cell-base: 0.62;
+	font-size: 1.08em;
+	text-shadow: 0 0 0.26em, 0 0 0.7em, 0 0 1.3em;
+}
+
+.stage[data-glow='matrix'] .field[data-glow] .matrix-col[data-depth='1'] {
+	--cell-base: 0.44;
+	font-size: 0.96em;
+}
+
+.stage[data-glow='matrix'] .field[data-glow] .matrix-col[data-depth='2'] {
+	--cell-base: 0.3;
+	font-size: 0.84em;
+	filter: blur(0.45px);
+	text-shadow: 0 0 0.2em;
+}
+
+/* One shared keyframe; the head position comes from the per-cell delay. */
+.stage[data-glow='matrix'] .field[data-glow] .matrix-cell {
+	display: block;
+	width: 0.68em;
+	height: 0.84em;
+	overflow: visible;
+	color: rgb(30, 148, 72);
+	text-align: center;
+	opacity: calc(var(--cell-base, 0.45) * 0.6);
+	animation: matrix-rain-fall-v2 var(--fall, 2400ms) linear infinite;
+	animation-delay: calc(var(--row, 0) * (var(--fall, 2400ms) / var(--rows, 10)) - var(--fall, 2400ms) - var(--phase, 0ms));
+}
+
+/* JS churn: the flash burst is APPENDED so the fall clock never restarts. */
+.stage[data-glow='matrix'] .field[data-glow] .matrix-cell.flash {
+	text-shadow: 0 0 0.3em, 0 0 0.8em;
+	animation-name: matrix-rain-fall-v2, matrix-cell-flash-v2;
+	animation-duration: var(--fall, 2400ms), 320ms;
+	animation-timing-function: linear, ease-out;
+	animation-delay: calc(var(--row, 0) * (var(--fall, 2400ms) / var(--rows, 10)) - var(--fall, 2400ms) - var(--phase, 0ms)), 0ms;
+	animation-iteration-count: infinite, 1;
+	animation-fill-mode: none, both;
+}
+
+/* Light flow off: frozen rain still reads as matrix - a static head sits
+   mid-column with a baked brightness gradient above and below it. */
+.stage[data-glow='matrix'][data-light-flow='off'] .field[data-glow] .matrix-cell {
+	color: color-mix(
+		in srgb,
+		rgb(242, 255, 247) clamp(0%, calc((0.74 - abs(var(--row, 0) - var(--rows, 10) * 0.42) * 0.34) * 100%), 74%),
+		rgb(56, 212, 108)
+	);
+	opacity: clamp(0.12, calc(var(--cell-base, 0.45) * (1.55 - abs(var(--row, 0) - var(--rows, 10) * 0.42) * 0.3)), 1);
+	animation: none;
+}
+
+.stage[data-glow='matrix'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: matrix-bloom-in-v2 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='matrix'][data-light-flow='off'] .field[data-glow] .next-word::before {
+	animation: matrix-scrim-in-v2 380ms ease-out both;
+}
+
+/* ---------- Text is sacred: terminal decode ---------- */
+.stage[data-glow='matrix'] .field[data-glow] .next-word {
+	position: relative;
+	isolation: isolate;
+	z-index: 2;
+	color: var(--next-color);
+	background: none;
+	border-radius: 0;
+	filter: none;
+	text-shadow: var(--next-shadow);
+	animation: matrix-word-boot-v2 340ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Dark scrim between the rain and the glyphs: contrast insurance. */
+.stage[data-glow='matrix'] .field[data-glow] .next-word::before {
+	position: absolute;
+	inset: -0.34em -0.9em -0.34em -0.3em;
+	z-index: -1;
+	content: '';
+	overflow: hidden;
+	pointer-events: none;
+	border-radius: 0.7em;
+	background: radial-gradient(ellipse 80% 100% at 34% 52%, rgba(1, 14, 6, 0.72), rgba(1, 14, 6, 0.34) 60%, transparent 88%);
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	background-position: 0 0;
+	filter: blur(6px);
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: normal;
+	opacity: var(--scrim-o);
+	transform: none;
+	animation: matrix-scrim-in-v2 380ms ease-out both;
+}
+
+/* Per-glyph decode; nth-child variants grouped to outrank legacy tints. */
+.stage[data-glow='matrix'] .field[data-glow] .next-word .glyph,
+.stage[data-glow='matrix'] .field[data-glow] .next-word .glyph:nth-child(2n),
+.stage[data-glow='matrix'] .field[data-glow] .next-word .glyph:nth-child(3n),
+.stage[data-glow='matrix'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-glow='matrix'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
+	color: var(--next-color);
+	animation: matrix-glyph-decode-v2 460ms steps(2, end) both;
+	animation-delay: calc(40ms + var(--i) * 46ms);
+}
+
+/* Cipher pass: the raw glyph flickers in green before the real one lands. */
+.stage[data-glow='matrix'] .field[data-glow] .next-word .glyph::after {
+	z-index: 2;
+	content: attr(data-alt);
+	color: rgba(120, 255, 162, 0.9);
+	opacity: 0;
+	filter: none;
+	text-shadow: 0 0 0.5em rgba(60, 255, 130, 0.55);
+	transform: none;
+	animation: matrix-glyph-cipher-v2 460ms steps(3, end) both;
+	animation-delay: calc(40ms + var(--i) * 46ms);
+}
+
+/* Tail: dim phosphor, masked fade. */
+.stage[data-glow='matrix'] .field[data-glow] .tail {
+	position: relative;
+	z-index: 2;
+	color: var(--tail-color);
+	filter: none;
+	text-shadow: 0 0 0.16em rgba(40, 220, 100, 0.18);
+	-webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0, rgba(0, 0, 0, 0.5) 2.6em, transparent 8em);
+	mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0, rgba(0, 0, 0, 0.5) 2.6em, transparent 8em);
+}
+
+.stage[data-glow='matrix'] .field[data-glow] .tail .glyph {
+	color: inherit;
+	filter: none;
+	text-shadow: none;
+	animation: none;
+}
+
+/* ---------- Light theme: terminal on e-ink ---------- */
+.field[data-theme='light'][data-glow='matrix'] {
+	--ready-border: rgba(24, 122, 62, 0.38);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.98) inset,
+		0 -16px 44px rgba(60, 140, 92, 0.07) inset,
+		0 18px 44px rgba(48, 66, 54, 0.14),
+		0 0 70px rgba(44, 170, 92, 0.1);
+	--field-wash:
+		repeating-linear-gradient(180deg, rgba(24, 92, 52, 0.05) 0 1px, transparent 1px 4px),
+		radial-gradient(ellipse 44% 120% at 24% 52%, rgba(52, 160, 92, 0.1), transparent 68%);
+	--caret-gradient: linear-gradient(180deg, rgb(10, 58, 30), rgb(20, 112, 56) 45%, rgb(56, 168, 96) 80%, rgb(150, 208, 172));
+	--caret-shadow:
+		0 0 6px rgba(56, 170, 100, 0.4),
+		0 0 14px rgba(24, 130, 66, 0.22);
+	--crt-o: 0.6;
+	--bloom-o: 0.7;
+	--scrim-o: 0.92;
+	--next-color: rgba(8, 52, 26, 0.96);
+	--next-shadow:
+		0 0 1px rgba(255, 255, 255, 0.8),
+		0 0 10px rgba(60, 180, 100, 0.2);
+	--tail-color: rgba(52, 100, 70, 0.44);
+}
+
+.stage[data-theme='light'][data-glow='matrix'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 50% 130% at 22% 55%, rgba(214, 232, 220, 0.5), transparent 66%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(249, 247, 241, 0.92) 50%, rgba(244, 241, 233, 0.94)),
+		linear-gradient(90deg, rgb(250, 249, 245), rgb(247, 245, 240));
+}
+
+.stage[data-theme='light'][data-glow='matrix'] .field[data-glow]::before {
+	mix-blend-mode: normal;
+	opacity: 0.6;
+}
+
+.stage[data-theme='light'][data-glow='matrix'] .field[data-glow] .prediction::before {
+	background:
+		radial-gradient(ellipse 4.6em 1.4em at 2em 50%, rgba(56, 176, 96, 0.16), rgba(30, 130, 66, 0.07) 55%, transparent 80%),
+		radial-gradient(ellipse 8.5em 1.1em at 4.6em 50%, rgba(40, 150, 80, 0.07), transparent 74%);
+	filter: blur(12px) saturate(1.1);
+	mix-blend-mode: normal;
+	opacity: var(--bloom-o);
+	animation:
+		matrix-bloom-in-v2 520ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		matrix-bloom-breathe-v2 4.6s ease-in-out 520ms infinite;
+}
+
+/* Ink rain: crisp, no glow, normal paint. */
+.stage[data-theme='light'][data-glow='matrix'] .field[data-glow] .matrix-code-layer {
+	color: rgb(74, 128, 98);
+	mix-blend-mode: normal;
+	text-shadow: none;
+}
+
+.stage[data-theme='light'][data-glow='matrix'] .field[data-glow] .matrix-col {
+	filter: none;
+	text-shadow: none;
+}
+
+.stage[data-theme='light'][data-glow='matrix'] .field[data-glow] .matrix-cell {
+	color: rgb(96, 146, 116);
+	text-shadow: none;
+	animation-name: matrix-rain-fall-light-v2;
+}
+
+.stage[data-theme='light'][data-glow='matrix'] .field[data-glow] .matrix-cell.flash {
+	text-shadow: none;
+	animation-name: matrix-rain-fall-light-v2, matrix-cell-flash-light-v2;
+}
+
+.stage[data-theme='light'][data-glow='matrix'][data-light-flow='off'] .field[data-glow] .matrix-cell {
+	color: color-mix(
+		in srgb,
+		rgb(4, 40, 20) clamp(0%, calc((0.74 - abs(var(--row, 0) - var(--rows, 10) * 0.42) * 0.34) * 100%), 74%),
+		rgb(118, 158, 134)
+	);
+}
+
+.stage[data-theme='light'][data-glow='matrix'] .field[data-glow] .next-word {
+	color: var(--next-color);
+	background: none;
+	text-shadow: var(--next-shadow);
+}
+
+.stage[data-theme='light'][data-glow='matrix'] .field[data-glow] .next-word::before {
+	background: radial-gradient(ellipse 80% 100% at 34% 52%, rgba(252, 251, 246, 0.85), rgba(252, 251, 246, 0.45) 60%, transparent 88%);
+	filter: blur(5px);
+	opacity: var(--scrim-o);
+	animation: matrix-scrim-in-v2 380ms ease-out both;
+}
+
+.stage[data-theme='light'][data-glow='matrix'] .field[data-glow] .next-word .glyph,
+.stage[data-theme='light'][data-glow='matrix'] .field[data-glow] .next-word .glyph:nth-child(2n),
+.stage[data-theme='light'][data-glow='matrix'] .field[data-glow] .next-word .glyph:nth-child(3n),
+.stage[data-theme='light'][data-glow='matrix'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-theme='light'][data-glow='matrix'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
+	color: var(--next-color);
+	animation-name: matrix-glyph-decode-light-v2;
+}
+
+.stage[data-theme='light'][data-glow='matrix'] .field[data-glow] .next-word .glyph::after {
+	color: rgba(20, 118, 60, 0.9);
+	text-shadow: none;
+}
+
+.stage[data-theme='light'][data-glow='matrix'] .field[data-glow] .tail {
+	color: var(--tail-color);
+	filter: none;
+	text-shadow: none;
+}
+
+.stage[data-theme='light'][data-glow='matrix'] .field[data-glow] .edge-left {
+	background: linear-gradient(90deg, rgba(250, 249, 245, 0.95), rgba(250, 249, 245, 0));
+}
+
+.stage[data-theme='light'][data-glow='matrix'] .field[data-glow] .edge-right {
+	background: linear-gradient(
+		270deg,
+		rgba(247, 245, 240, 0.5) 0%,
+		rgba(247, 245, 240, 0.22) 42%,
+		rgba(247, 245, 240, 0) 100%
+	);
+	opacity: 0.55;
+}
+
+/* ---------- Waiting state: one quiet column at the cursor ---------- */
+.field[data-state='waiting'][data-glow='matrix'] {
+	--haze-width: 3.4em;
+	--haze-height: 2.5em;
+	--haze-size: auto;
+	--haze-bg: radial-gradient(ellipse 1.6em 1.2em at 0.55em 50%, rgba(44, 255, 116, 0.22), rgba(0, 130, 48, 0.09) 58%, transparent 84%);
+	--haze-filter: blur(13px) saturate(1.25);
+	--haze-opacity: 0.92;
+	--haze-mask: radial-gradient(ellipse 96% 96% at 22% 50%, black 0 46%, rgba(0, 0, 0, 0.5) 72%, transparent 98%);
+	--torch-haze-motion: matrix-pool-breathe-v2 2.7s ease-in-out infinite;
+	--core-width: 0.85em;
+	--core-height: 1.06em;
+	--core-size: auto;
+	--core-bg: linear-gradient(90deg, rgba(226, 255, 236, 0.95) 0 0.3em, rgba(226, 255, 236, 0) 0.3em);
+	--core-filter: blur(0.5px) drop-shadow(0 0 9px rgba(70, 255, 130, 0.65));
+	--core-opacity: 0.95;
+	--core-mask: linear-gradient(180deg, transparent 0, black 14% 86%, transparent 100%);
+	--torch-core-motion: matrix-cursor-blink-v2 1.12s steps(1, end) infinite;
+	--flow-width: 0.52em;
+	--flow-height: 2.6em;
+	--flow-size: auto;
+	--flow-bg: repeating-linear-gradient(180deg, rgba(140, 255, 172, 0.85) 0 0.15em, rgba(140, 255, 172, 0) 0.15em 0.44em);
+	--flow-filter: blur(0.4px) drop-shadow(0 0 7px rgba(46, 255, 112, 0.5));
+	--flow-low: 0.22;
+	--flow-high: 0.62;
+	--flow-mask: linear-gradient(180deg, transparent 0, black 20% 78%, transparent 100%);
+	--flow-motion: matrix-trickle-v2 1.25s linear infinite;
+	--spark-width: 0.8em;
+	--spark-height: 2.6em;
+	--spark-size: auto;
+	--spark-bg:
+		radial-gradient(circle at 0.26em 0.5em, rgba(222, 255, 233, 0.95) 0 0.035em, transparent 0.09em),
+		radial-gradient(circle at 0.34em 1.42em, rgba(150, 255, 182, 0.8) 0 0.03em, transparent 0.08em),
+		radial-gradient(circle at 0.22em 2.08em, rgba(92, 255, 142, 0.7) 0 0.028em, transparent 0.075em);
+	--spark-filter: blur(0.3px) drop-shadow(0 0 5px rgba(60, 255, 122, 0.55));
+	--spark-low: 0;
+	--spark-high: 0.8;
+	--spark-mask: linear-gradient(180deg, transparent 0, black 18% 82%, transparent 100%);
+	--spark-motion: matrix-spark-blink-v2 1.9s steps(2, end) infinite;
+	--smoke-opacity: 0;
+	--aux-opacity: 0;
+}
+
+.field[data-theme='light'][data-state='waiting'][data-glow='matrix'] {
+	--haze-bg: radial-gradient(ellipse 1.5em 1.1em at 0.5em 50%, rgba(60, 170, 100, 0.18), transparent 80%);
+	--haze-opacity: 0.55;
+	--core-bg: linear-gradient(90deg, rgba(16, 92, 48, 0.9) 0 0.3em, rgba(16, 92, 48, 0) 0.3em);
+	--core-filter: blur(0.4px) drop-shadow(0 0 6px rgba(40, 150, 84, 0.4));
+	--flow-bg: repeating-linear-gradient(180deg, rgba(24, 118, 62, 0.7) 0 0.15em, rgba(24, 118, 62, 0) 0.15em 0.44em);
+	--flow-filter: blur(0.3px);
+	--flow-low: 0.16;
+	--flow-high: 0.44;
+	--spark-high: 0.4;
+}
+
+/* ---------- Keyframes (matrix-*-v2) ---------- */
+@keyframes matrix-rain-fall-v2 {
+	0% {
+		color: rgb(24, 132, 64);
+		opacity: calc(var(--cell-base, 0.45) * 0.5);
+	}
+	2.4% {
+		color: rgb(246, 255, 250);
+		opacity: 1;
+	}
+	7% {
+		color: rgb(160, 255, 190);
+		opacity: calc(var(--cell-base, 0.45) + 0.34);
+	}
+	18% {
+		color: rgb(84, 244, 134);
+		opacity: calc(var(--cell-base, 0.45) * 0.95);
+	}
+	46% {
+		color: rgb(42, 196, 96);
+		opacity: calc(var(--cell-base, 0.45) * 0.58);
+	}
+	100% {
+		color: rgb(22, 124, 60);
+		opacity: calc(var(--cell-base, 0.45) * 0.32);
+	}
+}
+
+@keyframes matrix-rain-fall-light-v2 {
+	0% {
+		color: rgb(112, 152, 128);
+		opacity: calc(var(--cell-base, 0.45) * 0.5);
+	}
+	2.4% {
+		color: rgb(3, 32, 15);
+		opacity: 1;
+	}
+	7% {
+		color: rgb(10, 72, 36);
+		opacity: calc(var(--cell-base, 0.45) + 0.34);
+	}
+	18% {
+		color: rgb(24, 104, 54);
+		opacity: calc(var(--cell-base, 0.45) * 0.95);
+	}
+	46% {
+		color: rgb(62, 128, 90);
+		opacity: calc(var(--cell-base, 0.45) * 0.6);
+	}
+	100% {
+		color: rgb(108, 148, 124);
+		opacity: calc(var(--cell-base, 0.45) * 0.36);
+	}
+}
+
+@keyframes matrix-cell-flash-v2 {
+	0% {
+		color: rgb(255, 255, 255);
+		opacity: 1;
+	}
+	55% {
+		color: rgb(198, 255, 216);
+		opacity: 0.98;
+	}
+	100% {
+		color: rgb(126, 250, 164);
+		opacity: calc(var(--cell-base, 0.45) + 0.22);
+	}
+}
+
+@keyframes matrix-cell-flash-light-v2 {
+	0% {
+		color: rgb(2, 24, 11);
+		opacity: 1;
+	}
+	55% {
+		color: rgb(8, 56, 28);
+		opacity: 0.96;
+	}
+	100% {
+		color: rgb(26, 98, 52);
+		opacity: calc(var(--cell-base, 0.45) + 0.2);
+	}
+}
+
+@keyframes matrix-rain-boot-v2 {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes matrix-bloom-in-v2 {
+	from {
+		opacity: 0;
+		transform: translateY(-50%) scaleX(0.28);
+	}
+	to {
+		opacity: var(--bloom-o, 0.85);
+		transform: translateY(-50%) scaleX(1);
+	}
+}
+
+@keyframes matrix-bloom-breathe-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--bloom-o, 0.85) * 0.84);
+	}
+	50% {
+		opacity: var(--bloom-o, 0.85);
+	}
+}
+
+@keyframes matrix-crt-hum-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--crt-o, 0.92) * 0.94);
+	}
+	18% {
+		opacity: var(--crt-o, 0.92);
+	}
+	19% {
+		opacity: calc(var(--crt-o, 0.92) * 0.86);
+	}
+	20% {
+		opacity: var(--crt-o, 0.92);
+	}
+	62% {
+		opacity: calc(var(--crt-o, 0.92) * 0.9);
+	}
+}
+
+@keyframes matrix-word-boot-v2 {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes matrix-scrim-in-v2 {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: var(--scrim-o, 0.88);
+	}
+}
+
+@keyframes matrix-glyph-decode-v2 {
+	0%,
+	54% {
+		opacity: 0;
+		color: rgb(190, 255, 210);
+	}
+	56% {
+		opacity: 1;
+		color: rgb(255, 255, 255);
+	}
+	78% {
+		color: rgb(214, 255, 228);
+	}
+	100% {
+		opacity: 1;
+		color: var(--next-color);
+	}
+}
+
+@keyframes matrix-glyph-decode-light-v2 {
+	0%,
+	54% {
+		opacity: 0;
+		color: rgb(28, 118, 62);
+	}
+	56% {
+		opacity: 1;
+		color: rgb(2, 30, 14);
+	}
+	78% {
+		color: rgb(10, 64, 32);
+	}
+	100% {
+		opacity: 1;
+		color: var(--next-color);
+	}
+}
+
+@keyframes matrix-glyph-cipher-v2 {
+	0% {
+		opacity: 0.9;
+	}
+	30% {
+		opacity: 0.55;
+	}
+	52% {
+		opacity: 0.95;
+	}
+	56%,
+	100% {
+		opacity: 0;
+	}
+}
+
+@keyframes matrix-pool-breathe-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--haze-opacity) * 0.78);
+	}
+	50% {
+		opacity: var(--haze-opacity);
+	}
+}
+
+@keyframes matrix-cursor-blink-v2 {
+	0%,
+	58% {
+		opacity: var(--core-opacity);
+	}
+	59%,
+	100% {
+		opacity: 0.24;
+	}
+}
+
+@keyframes matrix-trickle-v2 {
+	0% {
+		opacity: var(--flow-low);
+		background-position: 0 -0.88em;
+	}
+	45% {
+		opacity: var(--flow-high);
+	}
+	100% {
+		opacity: var(--flow-low);
+		background-position: 0 0.88em;
+	}
+}
+
+@keyframes matrix-spark-blink-v2 {
+	0%,
+	100% {
+		opacity: var(--spark-low);
+	}
+	30% {
+		opacity: var(--spark-high);
+	}
+	55% {
+		opacity: calc(var(--spark-high) * 0.35);
+	}
+	75% {
+		opacity: var(--spark-high);
+	}
+}
