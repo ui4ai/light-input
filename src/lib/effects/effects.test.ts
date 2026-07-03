@@ -12,7 +12,8 @@ const PRESET_CSS_FILES = [
 	'src/lib/effects/matrix/index.css',
 	'src/lib/effects/snow/index.css',
 	'src/lib/effects/toxic/index.css',
-	'src/lib/effects/vortex/index.css'
+	'src/lib/effects/vortex/index.css',
+	'src/lib/effects/bubblegum/index.css'
 ];
 
 function readPresetCss(): string {
