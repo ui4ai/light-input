@@ -693,18 +693,6 @@
 	--core-width: 2.4em;
 	--core-height: 2.5em;
 	--core-size: 100% 100%;
-	--core-bg:
-		radial-gradient(ellipse 0.3em 0.38em at 0.85em 50%, var(--cb-bud-body-v2) 0 86%, transparent 100%),
-		conic-gradient(
-			from var(--cb-bud-spin-v2) at 0.85em 50%,
-			oklch(var(--cb-bud-l-v2) var(--cb-bud-c-v2) 0deg / var(--cb-bud-a-v2)),
-			oklch(var(--cb-bud-l-v2) var(--cb-bud-c-v2) 60deg / var(--cb-bud-a-v2)),
-			oklch(var(--cb-bud-l-v2) var(--cb-bud-c-v2) 120deg / var(--cb-bud-a-v2)),
-			oklch(var(--cb-bud-l-v2) var(--cb-bud-c-v2) 180deg / var(--cb-bud-a-v2)),
-			oklch(var(--cb-bud-l-v2) var(--cb-bud-c-v2) 240deg / var(--cb-bud-a-v2)),
-			oklch(var(--cb-bud-l-v2) var(--cb-bud-c-v2) 300deg / var(--cb-bud-a-v2)),
-			oklch(var(--cb-bud-l-v2) var(--cb-bud-c-v2) 360deg / var(--cb-bud-a-v2))
-		);
 	--core-filter: blur(0.3px) saturate(1.08);
 	--core-opacity: 0.95;
 	--torch-core-motion:
@@ -731,6 +719,25 @@
 	--aux-bg: none;
 	--aux-opacity: 0;
 	--aux-motion: none;
+}
+
+/* The bud itself: --core-bg is declared ON the torch-core (not the
+   field) because var() inside a custom property substitutes where that
+   property computes — only here does the conic re-read the ANIMATED
+   --cb-bud-spin-v2 each frame, so the hue rim actually spins. */
+.stage[data-glow='chromabloom'] .field[data-glow][data-state='waiting'] .torch-core {
+	--core-bg:
+		radial-gradient(ellipse 0.3em 0.38em at 0.85em 50%, var(--cb-bud-body-v2) 0 86%, transparent 100%),
+		conic-gradient(
+			from var(--cb-bud-spin-v2) at 0.85em 50%,
+			oklch(var(--cb-bud-l-v2) var(--cb-bud-c-v2) 0deg / var(--cb-bud-a-v2)),
+			oklch(var(--cb-bud-l-v2) var(--cb-bud-c-v2) 60deg / var(--cb-bud-a-v2)),
+			oklch(var(--cb-bud-l-v2) var(--cb-bud-c-v2) 120deg / var(--cb-bud-a-v2)),
+			oklch(var(--cb-bud-l-v2) var(--cb-bud-c-v2) 180deg / var(--cb-bud-a-v2)),
+			oklch(var(--cb-bud-l-v2) var(--cb-bud-c-v2) 240deg / var(--cb-bud-a-v2)),
+			oklch(var(--cb-bud-l-v2) var(--cb-bud-c-v2) 300deg / var(--cb-bud-a-v2)),
+			oklch(var(--cb-bud-l-v2) var(--cb-bud-c-v2) 360deg / var(--cb-bud-a-v2))
+		);
 }
 
 /* Paper waiting: the same bud in ink; only the quiet parts re-tune
