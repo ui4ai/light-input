@@ -1,0 +1,1563 @@
+/* ============================================================
+   HORROR v2 — "Что-то в темноте: the thing in the dark"
+   Dread through ABSENCE of light. The field is a starved,
+   near-black vessel with a cold gray-green cast and NO red
+   welcome mat. On ignite DARKNESS FALLS: the field::before
+   vignette closes in three hard steps(1) over 500ms — ambient
+   light drains around the suggestion zone — then keeps a subtle
+   double-thump HEARTBEAT (~1.4s: thump-thump...pause). The
+   reveal zone is a POOL of deeper black (beam-body, normal
+   blend) with a faint cold red under-glow at its floor
+   (beam-hot) and a broad DEEP SHADE above and below (beam-smoke,
+   normal blend, slow uneasy drift). FILM GRAIN flickers over the
+   pool: two tiny-dot tiles (beam-veil far, beam-spark near)
+   snapping between whole-tile offsets on steps(1) jitter at very
+   low alpha. THE SIGNATURE — FLUORESCENT FLICKER TEXT: the next
+   word ignites like a dying fluorescent tube, per glyph via
+   var(--i) but with irregular steps(1) double-strikes
+   (flash-off-flash-on), harsh cold white with a green-cyan cast,
+   buzzing translateX microshifts at the flicker beats, then
+   holds with a faint red rim text-shadow while the whole word
+   keeps a slow uneasy shimmer — rare 40ms opacity dips on a long
+   steps() period. beam-flow is the tube's STRIKE SHEET (finite
+   double-flash, then a rare ambient buzz); next-word::after is
+   the TUBE GHOST, a thin cold sliver stuttering above the word
+   at ignite and dying (finite). During the off-gaps of each
+   strike the data-alt ghost (glyph::after) is briefly MISREAD in
+   the letter's place. CLAW SCRATCHES (prediction::before,
+   finite, survives flow-off): three thin diagonal slashes draw
+   across the reveal zone in quick ~130ms succession — animated
+   per-layer background-size widths — sharp light-gray cuts with
+   a red inner line that fade to faint scars and REMAIN; beam-aux
+   passes a rare glint over the scars. THE EYES
+   (prediction::after): in the darkest part of the tail zone two
+   small amber-red eyes OPEN slowly (~2s) — keyframed
+   background-size y-radii with counter-shifted positions so the
+   lids part from center — hold, BLINK once, close and vanish;
+   period 9s so the glimpse feels rare. BLOOD HINT: one thin
+   dark-red trickle (glyph:nth-child(3)::before) grows slowly to
+   ~0.5em beneath a glyph and stays. Tail = near-invisible dark
+   gray; ONE tail glyph rarely dips while its data-alt char
+   blinks in — a creepy misread on synced steps() loops. Caret =
+   cold pale sliver with uneven steps() flicker (its off-window
+   doubles as the blink). Waiting = quiet dread: two dim
+   half-open eyes at the caret watching on a slow blink loop
+   (torch-core, keyframed background-size), the faintest
+   breathing dark pool (torch-smoke, normal blend), a cold gloom
+   (torch-haze) and one rare flicker blip (torch-flow). Light
+   theme = "morgue daylight": pale gray-green paper, ink-black
+   flickering text, scratches as graphite cuts with a red
+   hairline, eyes as barely-there shadows under the surface, the
+   drip as thin red ink, the tube flash inverted into brief
+   darkening. data-light-flow='off': the darkness step, the claw
+   scratches and the glyph flicker entrance still play (finite);
+   eyes stay closed, grain and heartbeat hold static. No capsule
+   anywhere: layer-radius 0, every layer and pseudo dissolves
+   through intersected left-fade x radial masks whose fades
+   complete INSIDE their boxes. Keyframes: horror-*-v2 only
+   (legacy horror-* keyframes stay untouched for legacy
+   consumers). ============================================================ */
+
+.field[data-glow='horror'] {
+	--layer-radius: 0;
+	--layer-clip: none;
+	--horror-vig-o: 1;
+	--horror-scar-o: 0.42;
+	--horror-eyes-o: 0.92;
+	--horror-scrim-o: 0.85;
+	--horror-drip-o: 0.85;
+	--ready-border: rgba(148, 36, 46, 0.22);
+	--ready-shadow:
+		0 1px 0 rgba(208, 218, 210, 0.03) inset,
+		0 -44px 110px rgba(0, 0, 0, 0.82) inset,
+		0 34px 74px rgba(0, 0, 0, 0.6),
+		0 0 80px rgba(118, 8, 18, 0.09),
+		0 0 140px rgba(0, 0, 0, 0.5);
+	--field-wash:
+		radial-gradient(ellipse 130% 190% at 50% 50%, transparent 0 34%, rgba(0, 0, 0, 0.5) 66%, rgba(0, 0, 0, 0.82) 100%),
+		radial-gradient(ellipse 44% 100% at 32% 56%, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.22) 58%, transparent 82%),
+		radial-gradient(ellipse 26% 34% at 30% 92%, rgba(122, 10, 18, 0.09), transparent 72%);
+	--caret-gradient: linear-gradient(
+		180deg,
+		rgb(242, 248, 244) 0%,
+		rgb(220, 230, 222) 30%,
+		rgb(172, 186, 176) 58%,
+		rgb(104, 118, 108) 84%,
+		rgb(52, 60, 54) 100%
+	);
+	--caret-shadow:
+		0 0 5px rgba(226, 240, 230, 0.55),
+		0 0 14px rgba(168, 198, 178, 0.22),
+		0 8px 20px rgba(0, 0, 0, 0.6);
+	--haze-width: 12em;
+	--haze-height: 2.6em;
+	--haze-size: 1.7em 1.4em;
+	--haze-bg:
+		radial-gradient(circle at 0.35em 0.4em, rgba(214, 222, 214, 0.1) 0 0.016em, transparent 0.05em),
+		radial-gradient(circle at 1.15em 1.05em, rgba(198, 210, 200, 0.08) 0 0.014em, transparent 0.045em),
+		radial-gradient(circle at 0.7em 1.25em, rgba(206, 218, 208, 0.09) 0 0.012em, transparent 0.04em);
+	--haze-filter: blur(0.3px) contrast(1.05);
+	--haze-opacity: 0.55;
+	--haze-motion: horror-grain-far-v2 0.9s steps(1, end) 600ms infinite;
+	--torch-haze-motion: horror-wait-gloom-v2 6.8s ease-in-out infinite;
+	--haze-mask: linear-gradient(90deg, transparent 0, black 0.9em), radial-gradient(ellipse 52% 52% at 38% 52%, black 0 44%, rgba(0, 0, 0, 0.5) 72%, transparent 96%);
+	--body-width: 11em;
+	--body-height: 2.6em;
+	--body-size: 100% 100%;
+	--body-bg:
+		radial-gradient(ellipse 58% 92% at 36% 54%, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.5) 52%, transparent 80%),
+		radial-gradient(ellipse 3.6em 0.5em at 2.4em 2.26em, rgba(126, 8, 16, 0.2), rgba(80, 2, 10, 0.08) 58%, transparent 80%);
+	--body-filter: blur(7px);
+	--body-opacity: 0.95;
+	--body-mask: linear-gradient(90deg, transparent 0, black 0.85em), radial-gradient(ellipse 52% 54% at 38% 54%, black 0 46%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	--core-width: 4.2em;
+	--core-height: 2.6em;
+	--core-size: auto;
+	--core-bg:
+		radial-gradient(ellipse 2.4em 0.4em at 1.3em 2.18em, rgba(150, 12, 22, 0.32), rgba(96, 4, 12, 0.12) 56%, transparent 80%),
+		radial-gradient(ellipse 0.8em 0.24em at 0.7em 2.1em, rgba(210, 44, 46, 0.16), transparent 76%);
+	--core-filter: blur(4px) saturate(1.1);
+	--core-opacity: 0.85;
+	--core-motion: horror-underglow-v2 6s steps(1, end) 1.4s infinite;
+	--torch-core-motion: horror-wait-eyes-v2 7.5s ease-in-out infinite;
+	--core-mask: linear-gradient(90deg, transparent 0, black 0.4em), radial-gradient(ellipse 52% 52% at 34% 58%, black 0 48%, rgba(0, 0, 0, 0.5) 74%, transparent 94%);
+	--flow-width: 9.5em;
+	--flow-height: 2.6em;
+	--flow-size: 100% 100%;
+	--flow-bg:
+		linear-gradient(180deg, transparent 0 16%, rgba(224, 240, 228, 0.32) 30% 46%, rgba(180, 205, 190, 0.1) 60%, transparent 76%),
+		linear-gradient(90deg, transparent 0 4%, rgba(228, 242, 232, 0.18) 18% 70%, transparent 92%);
+	--flow-filter: blur(7px) saturate(0.9);
+	--flow-low: 0.05;
+	--flow-high: 0.7;
+	--flow-motion:
+		horror-tube-strike-v2 700ms steps(1, end) 120ms both,
+		horror-buzz-v2 7s steps(1, end) 2.1s infinite;
+	--flow-mask: linear-gradient(90deg, transparent 0, black 0.8em), radial-gradient(ellipse 50% 52% at 40% 52%, black 0 46%, rgba(0, 0, 0, 0.5) 72%, transparent 96%);
+	--spark-width: 8.5em;
+	--spark-height: 2.6em;
+	--spark-size: 1.25em 1.1em;
+	--spark-bg:
+		radial-gradient(circle at 0.28em 0.3em, rgba(222, 230, 222, 0.13) 0 0.015em, transparent 0.045em),
+		radial-gradient(circle at 0.9em 0.75em, rgba(206, 216, 206, 0.1) 0 0.013em, transparent 0.04em);
+	--spark-filter: blur(0.3px);
+	--spark-low: 0.5;
+	--spark-high: 0.85;
+	--spark-motion: horror-grain-near-v2 0.72s steps(1, end) 500ms infinite;
+	--spark-mask: linear-gradient(90deg, transparent 0, black 0.6em), radial-gradient(ellipse 52% 52% at 42% 54%, black 0 50%, rgba(0, 0, 0, 0.5) 76%, transparent 96%);
+	--smoke-width: 12em;
+	--smoke-height: 2.6em;
+	--smoke-size: 100% 100%;
+	--smoke-bg:
+		linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0 10%, transparent 34% 62%, rgba(0, 0, 0, 0.44) 90% 100%),
+		radial-gradient(ellipse 46% 70% at 62% 46%, rgba(0, 0, 0, 0.3), transparent 78%);
+	--smoke-filter: blur(9px);
+	--smoke-opacity: 0.6;
+	--smoke-blend: normal;
+	--smoke-motion: horror-shade-drift-v2 11s ease-in-out 1.5s infinite;
+	--smoke-mask: linear-gradient(90deg, transparent 0, black 0.9em), radial-gradient(ellipse 52% 54% at 40% 52%, black 0 48%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	--aux-width: 6em;
+	--aux-height: 2.6em;
+	--aux-size: 100% 100%;
+	--aux-bg:
+		linear-gradient(116deg, transparent 0 30%, rgba(216, 224, 216, 0.14) 32% 33%, transparent 35%),
+		linear-gradient(111deg, transparent 0 52%, rgba(210, 220, 212, 0.1) 54% 55%, transparent 57%),
+		linear-gradient(122deg, transparent 0 72%, rgba(214, 222, 214, 0.12) 74% 75%, transparent 77%);
+	--aux-filter: blur(0.4px);
+	--aux-opacity: 0.5;
+	--aux-blend: screen;
+	--aux-motion: horror-scar-glint-v2 9s steps(1, end) 3.4s infinite;
+	--aux-mask: linear-gradient(90deg, transparent 0, black 0.5em), radial-gradient(ellipse 52% 52% at 44% 50%, black 0 50%, rgba(0, 0, 0, 0.5) 76%, transparent 96%);
+	--next-color: rgba(225, 235, 225, 0.97);
+	--next-shadow:
+		0 1px 2px rgba(0, 0, 0, 0.75),
+		0 0 1px rgba(236, 246, 238, 0.5),
+		0 0 12px rgba(188, 215, 196, 0.18),
+		0 0 2px rgba(255, 56, 56, 0.22);
+	--tail-color: rgba(118, 122, 120, 0.24);
+}
+
+/* The dark rides the shared beams: undo the legacy zeroing pass and anchor
+   each layer. Grain hugs the pool, the strike sheet covers the word zone,
+   the scar glint sits over the scratch field. */
+.stage[data-glow='horror'] .field[data-glow] .prediction > .beam {
+	display: block;
+	left: -0.03em;
+	transform-origin: left center;
+}
+
+.stage[data-glow='horror'] .field[data-glow] .prediction > .beam-veil {
+	left: -0.2em;
+}
+
+.stage[data-glow='horror'] .field[data-glow] .prediction > .beam-body {
+	left: -0.5em;
+	mix-blend-mode: normal;
+}
+
+.stage[data-glow='horror'] .field[data-glow] .prediction > .beam-hot {
+	left: -0.1em;
+}
+
+.stage[data-glow='horror'] .field[data-glow] .prediction > .beam-flow {
+	left: -0.3em;
+}
+
+.stage[data-glow='horror'] .field[data-glow] .prediction > .beam-spark {
+	left: 0.15em;
+}
+
+.stage[data-glow='horror'] .field[data-glow] .prediction > .beam-smoke {
+	left: -0.6em;
+}
+
+.stage[data-glow='horror'] .field[data-glow] .prediction > .beam-aux {
+	left: 0.6em;
+}
+
+/* Two-layer masks (left fade x radial falloff) need intersection, not
+   union — on the pseudo layers too. */
+.stage[data-glow='horror'] .field[data-glow] .prediction > .beam,
+.stage[data-glow='horror'] .field[data-glow] .torch-beam,
+.stage[data-glow='horror'] .field[data-glow] .prediction::before,
+.stage[data-glow='horror'] .field[data-glow] .prediction::after {
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+}
+
+/* Torch layers serve the waiting watcher only; never double-print in ready. */
+.stage[data-glow='horror'] .field[data-glow] .caret-origin-glow[data-mode='ready'] {
+	display: none;
+}
+
+.stage[data-glow='horror'] .field[data-glow] .prediction {
+	isolation: isolate;
+}
+
+/* Starved vessel: near-black, gray-green cast, no red welcome mat. */
+.stage[data-glow='horror'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 120% 170% at 70% -50%, rgba(46, 54, 50, 0.14), transparent 55%),
+		linear-gradient(180deg, rgba(120, 132, 124, 0.02), transparent 30%),
+		linear-gradient(90deg, rgb(6, 5, 6), rgb(7, 6, 7) 52%, rgb(9, 7, 8));
+}
+
+/* DARKNESS FALLS: the vignette wash darkens, never glows. It only wakes in
+   ready — three hard steps shut the light, then the heartbeat starts. */
+.stage[data-glow='horror'] .field[data-glow]::before {
+	background: var(--field-wash);
+	background-size: 100% 100%;
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: normal;
+}
+
+.stage[data-glow='horror'] .field[data-glow][data-state='ready']::before {
+	opacity: calc(var(--horror-vig-o, 1) * 0.94);
+	animation:
+		horror-darkness-fall-v2 500ms steps(1, end) both,
+		horror-heartbeat-v2 1.4s cubic-bezier(0.45, 0.05, 0.55, 0.95) 700ms infinite;
+}
+
+/* Dissolve into the field's rounded clip, not the paint box; edge overlays
+   extended into the 64px padding so the dark never steps at the content box. */
+.stage[data-glow='horror'] .field[data-glow] .paint {
+	overflow: visible;
+	clip-path: inset(-3.4em -5em -3.4em 0);
+}
+
+.stage[data-glow='horror'] .field[data-glow] .edge-left {
+	left: -64px;
+	width: 156px;
+	background: linear-gradient(90deg, rgb(6, 5, 6) 0%, rgb(6, 5, 6) 40%, rgba(6, 5, 6, 0) 100%);
+	opacity: 0;
+}
+
+.stage[data-glow='horror'] .field[data-glow] .viewport.scrolled .edge-left {
+	opacity: 1;
+}
+
+.stage[data-glow='horror'] .field[data-glow] .edge-right {
+	right: -64px;
+	width: 224px;
+	background: linear-gradient(
+		270deg,
+		rgba(9, 7, 8, 0.92) 0%,
+		rgba(9, 7, 8, 0.58) 30%,
+		rgba(9, 7, 8, 0.18) 68%,
+		rgba(9, 7, 8, 0) 100%
+	);
+	opacity: 0.9;
+}
+
+/* Caret: a cold pale sliver with an uneven steps() flicker — its long
+   off-window doubles as the blink. */
+.stage[data-glow='horror'] .field[data-glow] .caret.active {
+	animation: horror-caret-flicker-v2 1.6s steps(1, end) infinite;
+}
+
+/* CLAW SCRATCHES: three thin diagonal slashes draw across the reveal zone
+   ~130ms apart (per-layer background-size widths grow left -> right) —
+   light-gray cuts with a red inner line — then fade to faint scars that
+   remain. Finite; survives flow-off. */
+.stage[data-glow='horror'] .field[data-glow] .prediction::before {
+	position: absolute;
+	left: -0.15em;
+	top: 50%;
+	z-index: 1;
+	width: 6.4em;
+	height: 2.6em;
+	content: '';
+	pointer-events: none;
+	border-radius: 0;
+	clip-path: none;
+	background-image:
+		linear-gradient(116deg, transparent 0 42%, rgba(208, 216, 208, 0.85) 45% 47%, rgba(206, 28, 40, 0.9) 48.5% 50.2%, rgba(196, 206, 198, 0.6) 51.8% 54%, transparent 58%),
+		linear-gradient(111deg, transparent 0 40%, rgba(212, 220, 212, 0.8) 43% 45%, rgba(198, 24, 36, 0.85) 46.5% 48.2%, rgba(190, 200, 192, 0.55) 49.8% 52%, transparent 56%),
+		linear-gradient(122deg, transparent 0 44%, rgba(204, 212, 204, 0.75) 47% 49%, rgba(190, 20, 32, 0.8) 50.5% 52%, rgba(186, 196, 188, 0.5) 53.5% 56%, transparent 60%);
+	background-position:
+		0.95em 0.26em,
+		2.4em 0.2em,
+		3.8em 0.34em;
+	background-size:
+		1.15em 2.05em,
+		1.25em 2.15em,
+		1.05em 1.9em;
+	background-repeat: no-repeat;
+	filter: blur(0.3px) drop-shadow(0 0 3px rgba(0, 0, 0, 0.6));
+	-webkit-mask-image: linear-gradient(90deg, transparent 0, black 0.7em), radial-gradient(ellipse 52% 52% at 42% 50%, black 0 48%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	mask-image: linear-gradient(90deg, transparent 0, black 0.7em), radial-gradient(ellipse 52% 52% at 42% 50%, black 0 48%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+	mix-blend-mode: normal;
+	opacity: var(--horror-scar-o);
+	transform: translateY(-50%);
+	animation: horror-scratch-in-v2 760ms cubic-bezier(0.2, 0.8, 0.3, 1) 260ms both;
+}
+
+/* THE EYES: two small amber-red eyes in the darkest part of the tail zone.
+   The lids part from center (background-size y grows while the position
+   shifts up by half), hold, blink once, close and vanish — a ~9s cycle so
+   each glimpse feels rare. Closed (invisible) by default, so flow-off keeps
+   them shut. */
+.stage[data-glow='horror'] .field[data-glow] .prediction::after {
+	position: absolute;
+	left: 4.4em;
+	top: 50%;
+	z-index: 1;
+	width: 3.4em;
+	height: 2.6em;
+	content: '';
+	pointer-events: none;
+	border-radius: 0;
+	clip-path: none;
+	background-image:
+		radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255, 196, 122, 0.95) 0 16%, rgba(226, 92, 40, 0.85) 30%, rgba(150, 22, 16, 0.4) 58%, transparent 78%),
+		radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255, 190, 116, 0.92) 0 16%, rgba(220, 86, 36, 0.8) 30%, rgba(144, 20, 14, 0.36) 58%, transparent 78%),
+		radial-gradient(ellipse 50% 50% at 50% 50%, rgba(140, 24, 20, 0.16), rgba(90, 10, 10, 0.06) 58%, transparent 82%);
+	background-position:
+		0.85em 1.02em,
+		1.95em 0.98em,
+		0.4em 0.35em;
+	background-size:
+		0.42em 0.03em,
+		0.4em 0.026em,
+		2.6em 1.9em;
+	background-repeat: no-repeat;
+	filter: blur(0.4px) drop-shadow(0 0 6px rgba(180, 40, 20, 0.35));
+	-webkit-mask-image: linear-gradient(90deg, transparent 0, black 0.6em), radial-gradient(ellipse 52% 52% at 46% 50%, black 0 48%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	mask-image: linear-gradient(90deg, transparent 0, black 0.6em), radial-gradient(ellipse 52% 52% at 46% 50%, black 0 48%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+	mix-blend-mode: screen;
+	opacity: 0;
+	transform: translateY(-50%);
+	animation: horror-eyes-cycle-v2 9s ease-in-out 1.6s infinite;
+}
+
+/* ---------- Text is sacred: the tube strikes, the word holds ---------- */
+.stage[data-glow='horror'] .field[data-glow] .next-word {
+	position: relative;
+	isolation: isolate;
+	z-index: 2;
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: var(--next-shadow);
+	animation:
+		horror-word-in-v2 240ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		horror-word-unease-v2 8s steps(1, end) 2.4s infinite;
+}
+
+/* Deeper-black scrim under the glyphs: the pool floor the letters burn over. */
+.stage[data-glow='horror'] .field[data-glow] .next-word::before {
+	position: absolute;
+	inset: -0.22em -0.6em -0.26em -0.35em;
+	z-index: -2;
+	content: '';
+	pointer-events: none;
+	border-radius: 0.75em;
+	clip-path: none;
+	background: radial-gradient(ellipse 84% 96% at 38% 52%, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.3) 58%, transparent 88%);
+	filter: blur(6px);
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: normal;
+	opacity: var(--horror-scrim-o);
+	transform: none;
+	animation: horror-scrim-in-v2 420ms ease-out both;
+}
+
+/* TUBE GHOST: a thin cold sliver above the word stutters with the strike
+   and dies. Finite by design — it still plays with light flow off. */
+.stage[data-glow='horror'] .field[data-glow] .next-word::after {
+	position: absolute;
+	left: -0.25em;
+	right: -0.4em;
+	top: -0.48em;
+	height: 0.2em;
+	content: '';
+	pointer-events: none;
+	background:
+		linear-gradient(90deg, transparent 0 3%, rgba(226, 242, 230, 0.55) 12% 86%, transparent 97%),
+		linear-gradient(180deg, rgba(240, 250, 242, 0.5), transparent 70%);
+	filter: blur(1.5px);
+	mix-blend-mode: screen;
+	opacity: 0;
+	transform: none;
+	animation: horror-tube-ghost-v2 620ms steps(1, end) 140ms both;
+}
+
+/* Per-glyph fluorescent strike: dark filament -> flash -> off -> flash ->
+   hold. Irregular steps(1) beats with buzzing microshifts; parity flips the
+   jitter via --horror-jit. The nth-child variants outrank legacy loops. */
+.stage[data-glow='horror'] .field[data-glow] .next-word .glyph,
+.stage[data-glow='horror'] .field[data-glow] .next-word .glyph:nth-child(even),
+.stage[data-glow='horror'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-glow='horror'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
+	--horror-jit: 1;
+	color: var(--next-color);
+	background: none;
+	opacity: 1;
+	filter: none;
+	text-shadow: var(--next-shadow);
+	transform-origin: 50% 50%;
+	animation: horror-glyph-flicker-v2 640ms steps(1, end) both;
+	animation-delay: calc(220ms + var(--i) * 70ms);
+}
+
+.stage[data-glow='horror'] .field[data-glow] .next-word .glyph:nth-child(even) {
+	--horror-jit: -1;
+}
+
+/* MISREAD: in the strike's off-gaps the data-alt ghost sits in the letter's
+   place for a beat — the tube shows you the wrong word first. */
+.stage[data-glow='horror'] .field[data-glow] .next-word .glyph::after {
+	z-index: 2;
+	content: attr(data-alt);
+	color: rgba(214, 226, 216, 0.85);
+	opacity: 0;
+	filter: none;
+	text-shadow: 0 0 0.25em rgba(170, 210, 185, 0.4);
+	transform: none;
+	animation: horror-alt-misread-v2 640ms steps(1, end) both;
+	animation-delay: calc(220ms + var(--i) * 70ms);
+}
+
+/* BLOOD HINT: one thin dark trickle grows beneath the third glyph, stops at
+   ~0.5em and stays. Finite; survives flow-off. */
+.stage[data-glow='horror'] .field[data-glow] .next-word .glyph:nth-child(3)::before {
+	position: absolute;
+	left: 48%;
+	top: 0.74em;
+	z-index: 1;
+	width: 0.032em;
+	height: 0.52em;
+	content: '';
+	pointer-events: none;
+	background: linear-gradient(180deg, rgba(140, 10, 18, 0.85), rgba(96, 4, 12, 0.8) 55%, rgba(60, 0, 8, 0.7) 86%, rgba(46, 0, 6, 0.4));
+	border-radius: 0 0 999px 999px;
+	filter: blur(0.2px);
+	opacity: 0;
+	transform: scaleY(0);
+	transform-origin: 50% 0;
+	animation: horror-drip-v2 2.8s cubic-bezier(0.3, 0.6, 0.35, 1) 2.1s both;
+}
+
+/* Tail: near-invisible dark gray, masked fade — the words the dark has
+   already taken. */
+.stage[data-glow='horror'] .field[data-glow] .tail {
+	position: relative;
+	z-index: 2;
+	color: var(--tail-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: none;
+	-webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.8) 0, rgba(0, 0, 0, 0.42) 2.6em, transparent 8.4em);
+	mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.8) 0, rgba(0, 0, 0, 0.42) 2.6em, transparent 8.4em);
+}
+
+.stage[data-glow='horror'] .field[data-glow] .tail .glyph {
+	color: inherit;
+	background: none;
+	filter: none;
+	opacity: clamp(0.3, calc(0.55 - var(--i) * 0.012), 0.55);
+	text-shadow: none;
+	transform: none;
+	animation: none;
+}
+
+/* One tail glyph is occasionally misread: the letter dips while its
+   data-alt char blinks in — synced steps() loops, rare. */
+.stage[data-glow='horror'] .field[data-glow] .tail .glyph:nth-child(5) {
+	animation: horror-tail-dip-v2 12s steps(1, end) 5s infinite;
+}
+
+.stage[data-glow='horror'] .field[data-glow] .tail .glyph:nth-child(5)::after {
+	content: attr(data-alt);
+	color: rgba(168, 152, 148, 0.6);
+	opacity: 0;
+	filter: none;
+	text-shadow: none;
+	transform: none;
+	animation: horror-tail-alt-v2 12s steps(1, end) 5s infinite;
+}
+
+/* Light flow off: the darkness step, the scratches and the flicker
+   entrance still play once (finite); eyes stay closed, grain and heartbeat
+   hold static. (Strike sheet, near grain, shade and scar glint ride
+   beam-flow/spark/smoke/aux, which the shared flow-off rules hide.) */
+.stage[data-glow='horror'][data-light-flow='off'] .field[data-glow][data-state='ready']::before {
+	animation: horror-darkness-fall-v2 500ms steps(1, end) both;
+}
+
+.stage[data-glow='horror'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: horror-scratch-in-v2 760ms cubic-bezier(0.2, 0.8, 0.3, 1) 260ms both;
+}
+
+.stage[data-glow='horror'][data-light-flow='off'] .field[data-glow] .prediction::after {
+	animation: none;
+}
+
+.stage[data-glow='horror'][data-light-flow='off'] .field[data-glow] .beam-hot {
+	animation: beam-hot 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='horror'][data-light-flow='off'] .field[data-glow] .next-word {
+	animation: horror-word-in-v2 240ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='horror'][data-light-flow='off'] .field[data-glow] .next-word::before {
+	animation: horror-scrim-in-v2 420ms ease-out both;
+}
+
+.stage[data-glow='horror'][data-light-flow='off'] .field[data-glow] .next-word::after {
+	animation: horror-tube-ghost-v2 620ms steps(1, end) 140ms both;
+}
+
+.stage[data-glow='horror'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
+	animation: horror-glyph-flicker-v2 640ms steps(1, end) both;
+	animation-delay: calc(220ms + var(--i) * 70ms);
+}
+
+.stage[data-glow='horror'][data-light-flow='off'] .field[data-glow] .next-word .glyph::after {
+	animation: horror-alt-misread-v2 640ms steps(1, end) both;
+	animation-delay: calc(220ms + var(--i) * 70ms);
+}
+
+.stage[data-glow='horror'][data-light-flow='off'] .field[data-glow] .tail .glyph:nth-child(5),
+.stage[data-glow='horror'][data-light-flow='off'] .field[data-glow] .tail .glyph:nth-child(5)::after {
+	animation: none;
+}
+
+.stage[data-glow='horror'][data-light-flow='off'] .field[data-glow] .caret.active {
+	animation: none;
+	opacity: 1;
+}
+
+/* ---------- Light theme: morgue daylight ---------- */
+.field[data-theme='light'][data-glow='horror'] {
+	--horror-vig-o: 0.85;
+	--horror-scar-o: 0.52;
+	--horror-eyes-o: 0.46;
+	--horror-scrim-o: 0.9;
+	--horror-drip-o: 0.7;
+	--ready-border: rgba(96, 110, 100, 0.4);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.95) inset,
+		0 -18px 50px rgba(120, 134, 122, 0.12) inset,
+		0 18px 46px rgba(40, 48, 42, 0.16),
+		0 0 60px rgba(130, 30, 30, 0.05);
+	--field-wash:
+		radial-gradient(ellipse 130% 190% at 50% 50%, transparent 0 40%, rgba(88, 100, 92, 0.14) 74%, rgba(70, 82, 74, 0.24) 100%),
+		radial-gradient(ellipse 44% 100% at 32% 56%, rgba(96, 108, 100, 0.14), rgba(96, 108, 100, 0.06) 58%, transparent 82%),
+		radial-gradient(ellipse 26% 34% at 30% 92%, rgba(150, 30, 30, 0.05), transparent 72%);
+	--caret-gradient: linear-gradient(
+		180deg,
+		rgb(12, 16, 14) 0%,
+		rgb(40, 48, 44) 32%,
+		rgb(88, 100, 92) 64%,
+		rgb(150, 162, 152) 88%,
+		rgb(210, 220, 212) 100%
+	);
+	--caret-shadow:
+		0 0 4px rgba(60, 72, 64, 0.35),
+		0 0 10px rgba(40, 52, 44, 0.18);
+	--haze-bg:
+		radial-gradient(circle at 0.35em 0.4em, rgba(74, 84, 76, 0.14) 0 0.016em, transparent 0.05em),
+		radial-gradient(circle at 1.15em 1.05em, rgba(86, 96, 88, 0.11) 0 0.014em, transparent 0.045em),
+		radial-gradient(circle at 0.7em 1.25em, rgba(80, 90, 82, 0.12) 0 0.012em, transparent 0.04em);
+	--haze-opacity: 0.5;
+	--body-bg:
+		radial-gradient(ellipse 58% 92% at 36% 54%, rgba(96, 110, 100, 0.3), rgba(108, 122, 110, 0.14) 52%, transparent 80%),
+		radial-gradient(ellipse 3.6em 0.5em at 2.4em 2.26em, rgba(150, 26, 30, 0.08), rgba(130, 20, 24, 0.03) 58%, transparent 80%);
+	--body-filter: blur(7px) saturate(0.9);
+	--body-opacity: 0.85;
+	--core-bg:
+		radial-gradient(ellipse 2.4em 0.4em at 1.3em 2.18em, rgba(150, 26, 30, 0.14), rgba(130, 20, 24, 0.05) 56%, transparent 80%),
+		radial-gradient(ellipse 0.8em 0.24em at 0.7em 2.1em, rgba(170, 40, 40, 0.08), transparent 76%);
+	--core-filter: blur(4px) saturate(0.95);
+	--core-opacity: 0.75;
+	--flow-bg:
+		linear-gradient(180deg, transparent 0 16%, rgba(70, 82, 72, 0.22) 30% 46%, rgba(80, 92, 82, 0.08) 60%, transparent 76%),
+		linear-gradient(90deg, transparent 0 4%, rgba(74, 86, 76, 0.13) 18% 70%, transparent 92%);
+	--flow-filter: blur(7px) saturate(0.9);
+	--flow-high: 0.55;
+	--spark-bg:
+		radial-gradient(circle at 0.28em 0.3em, rgba(70, 80, 72, 0.16) 0 0.015em, transparent 0.045em),
+		radial-gradient(circle at 0.9em 0.75em, rgba(82, 92, 84, 0.12) 0 0.013em, transparent 0.04em);
+	--spark-low: 0.45;
+	--spark-high: 0.8;
+	--smoke-bg:
+		linear-gradient(180deg, rgba(90, 104, 94, 0.14) 0 10%, transparent 34% 62%, rgba(90, 104, 94, 0.16) 90% 100%),
+		radial-gradient(ellipse 46% 70% at 62% 46%, rgba(96, 110, 100, 0.1), transparent 78%);
+	--smoke-opacity: 0.5;
+	--smoke-blend: normal;
+	--aux-bg:
+		linear-gradient(116deg, transparent 0 30%, rgba(74, 84, 76, 0.2) 32% 33%, transparent 35%),
+		linear-gradient(111deg, transparent 0 52%, rgba(80, 90, 82, 0.14) 54% 55%, transparent 57%),
+		linear-gradient(122deg, transparent 0 72%, rgba(76, 86, 78, 0.16) 74% 75%, transparent 77%);
+	--aux-opacity: 0.45;
+	--aux-blend: normal;
+	--next-color: rgba(14, 18, 15, 0.95);
+	--next-shadow:
+		0 0 1px rgba(255, 255, 255, 0.85),
+		0 0 8px rgba(90, 104, 94, 0.2),
+		0 0 1px rgba(150, 26, 30, 0.22);
+	--tail-color: rgba(74, 82, 76, 0.42);
+}
+
+/* Pale gray-green paper under a cold institutional light. */
+.stage[data-theme='light'][data-glow='horror'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 90% 160% at 50% -30%, rgba(250, 252, 250, 0.9), transparent 60%),
+		linear-gradient(180deg, rgb(242, 246, 242), rgb(234, 240, 235) 50%, rgb(226, 233, 228)),
+		linear-gradient(90deg, rgb(240, 244, 240), rgb(232, 238, 233));
+}
+
+.stage[data-theme='light'][data-glow='horror'] .field[data-glow]::before {
+	mix-blend-mode: normal;
+}
+
+/* Everything must darken the paper, never screen into it. */
+.stage[data-theme='light'][data-glow='horror'] .field[data-glow] .prediction > .beam,
+.stage[data-theme='light'][data-glow='horror'] .field[data-glow] .torch-beam {
+	mix-blend-mode: normal;
+}
+
+/* Graphite cuts with a red hairline. */
+.stage[data-theme='light'][data-glow='horror'] .field[data-glow] .prediction::before {
+	background-image:
+		linear-gradient(116deg, transparent 0 42%, rgba(70, 76, 70, 0.6) 45% 47%, rgba(150, 20, 26, 0.7) 48.5% 50.2%, rgba(90, 96, 90, 0.42) 51.8% 54%, transparent 58%),
+		linear-gradient(111deg, transparent 0 40%, rgba(76, 82, 76, 0.55) 43% 45%, rgba(144, 18, 24, 0.62) 46.5% 48.2%, rgba(96, 102, 96, 0.38) 49.8% 52%, transparent 56%),
+		linear-gradient(122deg, transparent 0 44%, rgba(72, 78, 72, 0.5) 47% 49%, rgba(138, 16, 22, 0.56) 50.5% 52%, rgba(92, 98, 92, 0.34) 53.5% 56%, transparent 60%);
+	filter: blur(0.3px) drop-shadow(0 0.02em 0.1em rgba(60, 68, 62, 0.2));
+	mix-blend-mode: normal;
+}
+
+/* Eyes as barely-there shadows under the paper's surface. */
+.stage[data-theme='light'][data-glow='horror'] .field[data-glow] .prediction::after {
+	background-image:
+		radial-gradient(ellipse 50% 50% at 50% 50%, rgba(70, 58, 52, 0.5) 0 18%, rgba(120, 34, 26, 0.42) 34%, rgba(90, 74, 66, 0.18) 60%, transparent 78%),
+		radial-gradient(ellipse 50% 50% at 50% 50%, rgba(66, 56, 50, 0.46) 0 18%, rgba(114, 30, 24, 0.38) 34%, rgba(86, 70, 62, 0.16) 60%, transparent 78%),
+		radial-gradient(ellipse 50% 50% at 50% 50%, rgba(90, 80, 74, 0.1), rgba(90, 80, 74, 0.04) 58%, transparent 82%);
+	filter: blur(0.6px);
+	mix-blend-mode: normal;
+}
+
+.stage[data-theme='light'][data-glow='horror'] .field[data-glow] .next-word {
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: var(--next-shadow);
+	animation:
+		horror-word-in-v2 240ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		horror-word-unease-v2 8s steps(1, end) 2.4s infinite;
+}
+
+/* Paper scrim keeps the ink legible over the washes. */
+.stage[data-theme='light'][data-glow='horror'] .field[data-glow] .next-word::before {
+	background: radial-gradient(ellipse 84% 96% at 38% 52%, rgba(244, 248, 244, 0.92), rgba(244, 248, 244, 0.45) 58%, transparent 88%);
+	filter: blur(5px);
+	mix-blend-mode: normal;
+	opacity: var(--horror-scrim-o);
+	animation: horror-scrim-in-v2 420ms ease-out both;
+}
+
+/* The daylight stutters instead of a tube striking: a darkening sliver. */
+.stage[data-theme='light'][data-glow='horror'] .field[data-glow] .next-word::after {
+	background:
+		linear-gradient(90deg, transparent 0 3%, rgba(70, 82, 72, 0.32) 12% 86%, transparent 97%),
+		linear-gradient(180deg, rgba(60, 72, 64, 0.28), transparent 70%);
+	filter: blur(1.5px);
+	mix-blend-mode: normal;
+	animation: horror-tube-ghost-v2 620ms steps(1, end) 140ms both;
+}
+
+.stage[data-theme='light'][data-glow='horror'] .field[data-glow] .next-word .glyph,
+.stage[data-theme='light'][data-glow='horror'] .field[data-glow] .next-word .glyph:nth-child(even),
+.stage[data-theme='light'][data-glow='horror'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-theme='light'][data-glow='horror'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
+	color: var(--next-color);
+	text-shadow: var(--next-shadow);
+	animation-name: horror-glyph-flicker-light-v2;
+}
+
+.stage[data-theme='light'][data-glow='horror'] .field[data-glow] .next-word .glyph::after {
+	color: rgba(58, 68, 60, 0.7);
+	text-shadow: none;
+}
+
+/* Thin red ink instead of blood. */
+.stage[data-theme='light'][data-glow='horror'] .field[data-glow] .next-word .glyph:nth-child(3)::before {
+	background: linear-gradient(180deg, rgba(150, 16, 24, 0.6), rgba(126, 10, 18, 0.55) 55%, rgba(100, 6, 14, 0.45) 86%, rgba(88, 4, 12, 0.25));
+}
+
+.stage[data-theme='light'][data-glow='horror'] .field[data-glow] .tail,
+.stage[data-theme='light'][data-glow='horror'] .field[data-glow] .tail .glyph {
+	color: var(--tail-color);
+	text-shadow: none;
+}
+
+.stage[data-theme='light'][data-glow='horror'] .field[data-glow] .tail .glyph:nth-child(5)::after {
+	color: rgba(110, 96, 92, 0.55);
+}
+
+.stage[data-theme='light'][data-glow='horror'] .field[data-glow] .edge-left {
+	background: linear-gradient(90deg, rgb(240, 244, 240) 0%, rgb(240, 244, 240) 40%, rgba(240, 244, 240, 0) 100%);
+}
+
+.stage[data-theme='light'][data-glow='horror'] .field[data-glow] .edge-right {
+	background: linear-gradient(
+		270deg,
+		rgba(232, 238, 233, 0.5) 0%,
+		rgba(232, 238, 233, 0.22) 42%,
+		rgba(232, 238, 233, 0) 100%
+	);
+	opacity: 0.55;
+}
+
+/* Light theme + flow off: re-win against the higher-specificity kills. */
+.stage[data-theme='light'][data-glow='horror'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: horror-scratch-in-v2 760ms cubic-bezier(0.2, 0.8, 0.3, 1) 260ms both;
+}
+
+.stage[data-theme='light'][data-glow='horror'][data-light-flow='off'] .field[data-glow] .prediction::after {
+	animation: none;
+}
+
+.stage[data-theme='light'][data-glow='horror'][data-light-flow='off'] .field[data-glow] .next-word {
+	animation: horror-word-in-v2 240ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-theme='light'][data-glow='horror'][data-light-flow='off'] .field[data-glow] .next-word::before {
+	animation: horror-scrim-in-v2 420ms ease-out both;
+}
+
+.stage[data-theme='light'][data-glow='horror'][data-light-flow='off'] .field[data-glow] .next-word::after {
+	animation: horror-tube-ghost-v2 620ms steps(1, end) 140ms both;
+}
+
+.stage[data-theme='light'][data-glow='horror'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
+	animation: horror-glyph-flicker-light-v2 640ms steps(1, end) both;
+	animation-delay: calc(220ms + var(--i) * 70ms);
+}
+
+/* ---------- Waiting state: something at the caret, watching ---------- */
+.field[data-state='waiting'][data-glow='horror'] {
+	--haze-width: 4.6em;
+	--haze-height: 2.4em;
+	--haze-size: auto;
+	--haze-bg: radial-gradient(ellipse 1.7em 0.85em at 0.85em 50%, rgba(158, 178, 166, 0.1), rgba(120, 140, 128, 0.04) 58%, transparent 80%);
+	--haze-filter: blur(12px) saturate(0.9);
+	--haze-opacity: 0.7;
+	--haze-mask: linear-gradient(90deg, transparent 0, black 0.3em), radial-gradient(ellipse 50% 50% at 34% 50%, black 0 46%, rgba(0, 0, 0, 0.5) 72%, transparent 96%);
+	--core-width: 2.4em;
+	--core-height: 2.2em;
+	--core-size:
+		0.34em 0.12em,
+		0.32em 0.11em,
+		1.9em 1.6em;
+	--core-bg:
+		radial-gradient(ellipse 50% 50% at 50% 50%, rgba(228, 158, 96, 0.7) 0 18%, rgba(184, 72, 32, 0.55) 34%, rgba(112, 18, 12, 0.24) 60%, transparent 78%) 0.45em 0.95em no-repeat,
+		radial-gradient(ellipse 50% 50% at 50% 50%, rgba(222, 152, 92, 0.66) 0 18%, rgba(178, 68, 30, 0.5) 34%, rgba(108, 16, 12, 0.22) 60%, transparent 78%) 1.25em 0.92em no-repeat,
+		radial-gradient(ellipse 50% 50% at 50% 50%, rgba(130, 22, 18, 0.12), rgba(84, 8, 8, 0.05) 58%, transparent 82%) 0.1em 0.3em no-repeat;
+	--core-filter: blur(0.4px) drop-shadow(0 0 5px rgba(170, 40, 20, 0.3));
+	--core-opacity: 0.9;
+	--core-mask: linear-gradient(90deg, transparent 0, black 0.22em), radial-gradient(ellipse 52% 52% at 36% 50%, black 0 50%, rgba(0, 0, 0, 0.5) 76%, transparent 94%);
+	--flow-width: 2.2em;
+	--flow-height: 2.2em;
+	--flow-size: 100% 100%;
+	--flow-bg: linear-gradient(180deg, transparent 0 30%, rgba(224, 240, 228, 0.32) 42% 56%, transparent 70%);
+	--flow-filter: blur(4px) saturate(0.9);
+	--flow-low: 0;
+	--flow-high: 0.5;
+	--flow-motion: horror-wait-flicker-v2 9s steps(1, end) 2s infinite;
+	--flow-mask: linear-gradient(90deg, transparent 0, black 0.24em), radial-gradient(ellipse 52% 52% at 38% 50%, black 0 50%, rgba(0, 0, 0, 0.5) 74%, transparent 94%);
+	--spark-width: 2.4em;
+	--spark-height: 2.2em;
+	--spark-size: auto;
+	--spark-bg: none;
+	--spark-low: 0;
+	--spark-high: 0;
+	--spark-motion: none;
+	--smoke-width: 3.6em;
+	--smoke-height: 2.4em;
+	--smoke-size: auto;
+	--smoke-bg: radial-gradient(ellipse 1.6em 0.9em at 0.9em 50%, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.28) 56%, transparent 82%);
+	--smoke-filter: blur(10px);
+	--smoke-opacity: 0.55;
+	--smoke-blend: normal;
+	--smoke-motion: horror-wait-breath-v2 6.4s ease-in-out infinite;
+	--smoke-mask: linear-gradient(90deg, transparent 0, black 0.22em), radial-gradient(ellipse 50% 50% at 34% 50%, black 0 48%, transparent 94%);
+	--aux-opacity: 0;
+	--aux-motion: none;
+}
+
+.field[data-theme='light'][data-state='waiting'][data-glow='horror'] {
+	--haze-bg: radial-gradient(ellipse 1.7em 0.85em at 0.85em 50%, rgba(96, 110, 100, 0.12), rgba(108, 122, 110, 0.05) 58%, transparent 80%);
+	--haze-opacity: 0.55;
+	--core-bg:
+		radial-gradient(ellipse 50% 50% at 50% 50%, rgba(70, 58, 52, 0.44) 0 18%, rgba(120, 34, 26, 0.36) 34%, rgba(90, 74, 66, 0.16) 60%, transparent 78%) 0.45em 0.95em no-repeat,
+		radial-gradient(ellipse 50% 50% at 50% 50%, rgba(66, 56, 50, 0.4) 0 18%, rgba(114, 30, 24, 0.32) 34%, rgba(86, 70, 62, 0.14) 60%, transparent 78%) 1.25em 0.92em no-repeat,
+		radial-gradient(ellipse 50% 50% at 50% 50%, rgba(90, 80, 74, 0.08), rgba(90, 80, 74, 0.03) 58%, transparent 82%) 0.1em 0.3em no-repeat;
+	--core-filter: blur(0.6px);
+	--core-opacity: 0.8;
+	--flow-bg: linear-gradient(180deg, transparent 0 30%, rgba(70, 82, 72, 0.26) 42% 56%, transparent 70%);
+	--flow-high: 0.4;
+	--smoke-bg: radial-gradient(ellipse 1.6em 0.9em at 0.9em 50%, rgba(96, 110, 100, 0.2), rgba(96, 110, 100, 0.09) 56%, transparent 82%);
+	--smoke-opacity: 0.5;
+}
+
+/* Waiting + flow off: the watcher holds its breath. */
+.field[data-light-flow='off'][data-state='waiting'][data-glow='horror'] {
+	--torch-haze-motion: none;
+	--torch-core-motion: none;
+	--flow-motion: none;
+	--spark-motion: none;
+	--smoke-motion: none;
+}
+
+/* ---------- Keyframes (horror-*-v2) ---------- */
+/* The vignette shuts in three hard steps — light drains, not fades. */
+@keyframes horror-darkness-fall-v2 {
+	0% {
+		opacity: calc(var(--horror-vig-o, 1) * 0.25);
+	}
+	34% {
+		opacity: calc(var(--horror-vig-o, 1) * 0.6);
+	}
+	67% {
+		opacity: calc(var(--horror-vig-o, 1) * 0.84);
+	}
+	100% {
+		opacity: calc(var(--horror-vig-o, 1) * 0.94);
+	}
+}
+
+/* Double-thump: the dark squeezes twice, then a long still. */
+@keyframes horror-heartbeat-v2 {
+	0%,
+	30%,
+	100% {
+		opacity: calc(var(--horror-vig-o, 1) * 0.94);
+	}
+	7% {
+		opacity: var(--horror-vig-o, 1);
+	}
+	13% {
+		opacity: calc(var(--horror-vig-o, 1) * 0.95);
+	}
+	20% {
+		opacity: var(--horror-vig-o, 1);
+	}
+}
+
+/* Film grain: whole-tile position snaps (tile 1.7em x 1.4em) so the loop
+   closes seamlessly; opacity jitters on the same steps. */
+@keyframes horror-grain-far-v2 {
+	0% {
+		opacity: calc(var(--haze-opacity, 0.55) * 0.7);
+		background-position: 0em 0em;
+	}
+	20% {
+		opacity: var(--haze-opacity, 0.55);
+		background-position: 0.85em 0.5em;
+	}
+	40% {
+		opacity: calc(var(--haze-opacity, 0.55) * 0.55);
+		background-position: 0.3em 1.05em;
+	}
+	60% {
+		opacity: calc(var(--haze-opacity, 0.55) * 0.9);
+		background-position: 1.2em 0.25em;
+	}
+	80% {
+		opacity: calc(var(--haze-opacity, 0.55) * 0.65);
+		background-position: 0.55em 0.8em;
+	}
+	100% {
+		opacity: calc(var(--haze-opacity, 0.55) * 0.7);
+		background-position: 1.7em 1.4em;
+	}
+}
+
+/* Near grain tile (1.25em x 1.1em), faster snap. */
+@keyframes horror-grain-near-v2 {
+	0% {
+		opacity: calc(var(--spark-high, 0.85) * 0.6);
+		background-position: 0em 0em;
+	}
+	25% {
+		opacity: var(--spark-high, 0.85);
+		background-position: 0.6em 0.35em;
+	}
+	50% {
+		opacity: var(--spark-low, 0.5);
+		background-position: 0.2em 0.8em;
+	}
+	75% {
+		opacity: calc(var(--spark-high, 0.85) * 0.8);
+		background-position: 0.95em 0.15em;
+	}
+	100% {
+		opacity: calc(var(--spark-high, 0.85) * 0.6);
+		background-position: 1.25em 1.1em;
+	}
+}
+
+/* The deep shade never sits quite still. */
+@keyframes horror-shade-drift-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--smoke-opacity, 0.6) * 0.85);
+	}
+	42% {
+		opacity: var(--smoke-opacity, 0.6);
+	}
+	68% {
+		opacity: calc(var(--smoke-opacity, 0.6) * 0.9);
+	}
+}
+
+/* The red at the pool floor shifts uneasily — never a friendly pulse. */
+@keyframes horror-underglow-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--core-opacity, 0.85) * 0.7);
+	}
+	22% {
+		opacity: calc(var(--core-opacity, 0.85) * 0.95);
+	}
+	30% {
+		opacity: calc(var(--core-opacity, 0.85) * 0.72);
+	}
+	58% {
+		opacity: var(--core-opacity, 0.85);
+	}
+	66% {
+		opacity: calc(var(--core-opacity, 0.85) * 0.78);
+	}
+}
+
+/* Tube strike sheet: flash - off - flash - hold - die to ambient. */
+@keyframes horror-tube-strike-v2 {
+	0% {
+		opacity: 0;
+	}
+	10% {
+		opacity: var(--flow-high, 0.7);
+	}
+	22% {
+		opacity: 0.04;
+	}
+	36% {
+		opacity: calc(var(--flow-high, 0.7) * 0.75);
+	}
+	48% {
+		opacity: 0.08;
+	}
+	62% {
+		opacity: var(--flow-high, 0.7);
+	}
+	82% {
+		opacity: calc(var(--flow-high, 0.7) * 0.3);
+	}
+	100% {
+		opacity: var(--flow-low, 0.05);
+	}
+}
+
+/* ...then the ballast buzzes: two rare micro-flashes per long cycle. */
+@keyframes horror-buzz-v2 {
+	0%,
+	36%,
+	40%,
+	72%,
+	75%,
+	100% {
+		opacity: var(--flow-low, 0.05);
+	}
+	37.5% {
+		opacity: calc(var(--flow-high, 0.7) * 0.35);
+	}
+	73% {
+		opacity: calc(var(--flow-high, 0.7) * 0.22);
+	}
+}
+
+/* Three slashes draw left -> right ~130ms apart (per-layer background-size
+   widths), flare, then settle to faint scars that remain. */
+@keyframes horror-scratch-in-v2 {
+	0% {
+		opacity: 0;
+		background-size:
+			0em 2.05em,
+			0em 2.15em,
+			0em 1.9em;
+	}
+	4% {
+		opacity: 1;
+		background-size:
+			0.06em 2.05em,
+			0em 2.15em,
+			0em 1.9em;
+	}
+	18% {
+		opacity: 1;
+		background-size:
+			1.15em 2.05em,
+			0em 2.15em,
+			0em 1.9em;
+	}
+	22% {
+		background-size:
+			1.15em 2.05em,
+			0.08em 2.15em,
+			0em 1.9em;
+	}
+	36% {
+		background-size:
+			1.15em 2.05em,
+			1.25em 2.15em,
+			0em 1.9em;
+	}
+	40% {
+		background-size:
+			1.15em 2.05em,
+			1.25em 2.15em,
+			0.07em 1.9em;
+	}
+	52% {
+		opacity: 1;
+		background-size:
+			1.15em 2.05em,
+			1.25em 2.15em,
+			1.05em 1.9em;
+	}
+	74% {
+		opacity: calc(var(--horror-scar-o, 0.42) * 1.6);
+		background-size:
+			1.15em 2.05em,
+			1.25em 2.15em,
+			1.05em 1.9em;
+	}
+	100% {
+		opacity: var(--horror-scar-o, 0.42);
+		background-size:
+			1.15em 2.05em,
+			1.25em 2.15em,
+			1.05em 1.9em;
+	}
+}
+
+/* A rare glint slides over the scars and is gone. */
+@keyframes horror-scar-glint-v2 {
+	0%,
+	40%,
+	44%,
+	100% {
+		opacity: calc(var(--aux-opacity, 0.5) * 0.25);
+	}
+	41.5% {
+		opacity: var(--aux-opacity, 0.5);
+	}
+	76% {
+		opacity: calc(var(--aux-opacity, 0.5) * 0.3);
+	}
+	77.5% {
+		opacity: calc(var(--aux-opacity, 0.5) * 0.8);
+	}
+	79% {
+		opacity: calc(var(--aux-opacity, 0.5) * 0.25);
+	}
+}
+
+/* The eyes: open slowly from center (~2s), hold, one blink, close, vanish;
+   a long dark pause makes each glimpse rare. Positions shift up by half of
+   each size delta so the lids part from the middle. */
+@keyframes horror-eyes-cycle-v2 {
+	0% {
+		opacity: 0;
+		background-size:
+			0.42em 0.03em,
+			0.4em 0.026em,
+			2.6em 1.9em;
+		background-position:
+			0.85em 1.02em,
+			1.95em 0.98em,
+			0.4em 0.35em;
+	}
+	10% {
+		opacity: calc(var(--horror-eyes-o, 0.92) * 0.14);
+		background-size:
+			0.42em 0.03em,
+			0.4em 0.026em,
+			2.6em 1.9em;
+		background-position:
+			0.85em 1.02em,
+			1.95em 0.98em,
+			0.4em 0.35em;
+	}
+	32% {
+		opacity: var(--horror-eyes-o, 0.92);
+		background-size:
+			0.42em 0.3em,
+			0.4em 0.27em,
+			2.6em 1.9em;
+		background-position:
+			0.85em 0.885em,
+			1.95em 0.858em,
+			0.4em 0.35em;
+	}
+	52% {
+		opacity: var(--horror-eyes-o, 0.92);
+		background-size:
+			0.42em 0.3em,
+			0.4em 0.27em,
+			2.6em 1.9em;
+		background-position:
+			0.85em 0.885em,
+			1.95em 0.858em,
+			0.4em 0.35em;
+	}
+	54% {
+		opacity: calc(var(--horror-eyes-o, 0.92) * 0.5);
+		background-size:
+			0.42em 0.025em,
+			0.4em 0.022em,
+			2.6em 1.9em;
+		background-position:
+			0.85em 1.02em,
+			1.95em 0.98em,
+			0.4em 0.35em;
+	}
+	56% {
+		opacity: var(--horror-eyes-o, 0.92);
+		background-size:
+			0.42em 0.3em,
+			0.4em 0.27em,
+			2.6em 1.9em;
+		background-position:
+			0.85em 0.885em,
+			1.95em 0.858em,
+			0.4em 0.35em;
+	}
+	65% {
+		opacity: var(--horror-eyes-o, 0.92);
+		background-size:
+			0.42em 0.3em,
+			0.4em 0.27em,
+			2.6em 1.9em;
+		background-position:
+			0.85em 0.885em,
+			1.95em 0.858em,
+			0.4em 0.35em;
+	}
+	72%,
+	100% {
+		opacity: 0;
+		background-size:
+			0.42em 0.03em,
+			0.4em 0.026em,
+			2.6em 1.9em;
+		background-position:
+			0.85em 1.02em,
+			1.95em 0.98em,
+			0.4em 0.35em;
+	}
+}
+
+@keyframes horror-word-in-v2 {
+	0% {
+		opacity: 0;
+		transform: translateX(-0.04em);
+	}
+	100% {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+/* Slow uneasy shimmer on the settled word: rare ~40ms dips, steps-held. */
+@keyframes horror-word-unease-v2 {
+	0%,
+	47%,
+	48%,
+	76%,
+	76.8%,
+	100% {
+		opacity: 1;
+	}
+	47.5% {
+		opacity: 0.86;
+	}
+	76.4% {
+		opacity: 0.9;
+	}
+}
+
+@keyframes horror-scrim-in-v2 {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: var(--horror-scrim-o, 0.85);
+	}
+}
+
+/* The tube ghost stutters above the word and dies. */
+@keyframes horror-tube-ghost-v2 {
+	0% {
+		opacity: 0;
+	}
+	10% {
+		opacity: 0.7;
+	}
+	20% {
+		opacity: 0.08;
+	}
+	32% {
+		opacity: 0.5;
+	}
+	44% {
+		opacity: 0.1;
+	}
+	58% {
+		opacity: 0.65;
+	}
+	78% {
+		opacity: 0.3;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+
+/* The signature: a dying-tube double strike per glyph — flash, off, flash,
+   off, hold — with buzzing microshifts at the beats. Steps-held. */
+@keyframes horror-glyph-flicker-v2 {
+	0% {
+		opacity: 0.04;
+		color: rgb(58, 60, 58);
+		transform: translateX(0em);
+		text-shadow: none;
+	}
+	12% {
+		opacity: 1;
+		color: rgb(240, 250, 242);
+		transform: translateX(calc(var(--horror-jit, 1) * 0.004em));
+		text-shadow:
+			0 0 2px rgba(255, 255, 255, 0.9),
+			0 0 14px rgba(206, 230, 212, 0.6),
+			0 0 30px rgba(150, 200, 170, 0.3);
+	}
+	20% {
+		opacity: 0.07;
+		color: rgb(70, 74, 70);
+		transform: translateX(calc(var(--horror-jit, 1) * -0.004em));
+		text-shadow: none;
+	}
+	32% {
+		opacity: 0.85;
+		color: rgb(224, 236, 226);
+		transform: translateX(calc(var(--horror-jit, 1) * 0.004em));
+		text-shadow:
+			0 0 2px rgba(255, 255, 255, 0.7),
+			0 0 10px rgba(196, 222, 204, 0.4);
+	}
+	42% {
+		opacity: 0.12;
+		color: rgb(78, 82, 78);
+		transform: translateX(0em);
+		text-shadow: none;
+	}
+	54% {
+		opacity: 1;
+		color: rgb(238, 248, 240);
+		transform: translateX(calc(var(--horror-jit, 1) * -0.004em));
+		text-shadow:
+			0 0 2px rgba(255, 255, 255, 0.85),
+			0 0 14px rgba(206, 230, 212, 0.55),
+			0 0 30px rgba(150, 200, 170, 0.26);
+	}
+	72% {
+		opacity: 0.94;
+		color: rgb(230, 240, 230);
+		transform: translateX(0em);
+		text-shadow:
+			0 0 1px rgba(244, 252, 246, 0.6),
+			0 0 12px rgba(196, 222, 204, 0.3);
+	}
+	100% {
+		opacity: 1;
+		color: var(--next-color);
+		transform: translateX(0em);
+		text-shadow: var(--next-shadow);
+	}
+}
+
+/* Morgue daylight: the ink strikes in and out on the paper instead. */
+@keyframes horror-glyph-flicker-light-v2 {
+	0% {
+		opacity: 0.05;
+		color: rgb(152, 160, 154);
+		transform: translateX(0em);
+		text-shadow: none;
+	}
+	12% {
+		opacity: 1;
+		color: rgb(8, 12, 10);
+		transform: translateX(calc(var(--horror-jit, 1) * 0.004em));
+		text-shadow: 0 0 1px rgba(255, 255, 255, 0.9);
+	}
+	20% {
+		opacity: 0.08;
+		color: rgb(140, 148, 142);
+		transform: translateX(calc(var(--horror-jit, 1) * -0.004em));
+		text-shadow: none;
+	}
+	32% {
+		opacity: 0.85;
+		color: rgb(26, 32, 28);
+		transform: translateX(calc(var(--horror-jit, 1) * 0.004em));
+		text-shadow: 0 0 1px rgba(255, 255, 255, 0.7);
+	}
+	42% {
+		opacity: 0.12;
+		color: rgb(132, 140, 134);
+		transform: translateX(0em);
+		text-shadow: none;
+	}
+	54% {
+		opacity: 1;
+		color: rgb(10, 14, 12);
+		transform: translateX(calc(var(--horror-jit, 1) * -0.004em));
+		text-shadow: 0 0 1px rgba(255, 255, 255, 0.85);
+	}
+	72% {
+		opacity: 0.94;
+		color: rgb(18, 24, 20);
+		transform: translateX(0em);
+		text-shadow: 0 0 1px rgba(255, 255, 255, 0.75);
+	}
+	100% {
+		opacity: 1;
+		color: var(--next-color);
+		transform: translateX(0em);
+		text-shadow: var(--next-shadow);
+	}
+}
+
+/* The wrong letter shows in the strike's off-gaps, then never again. */
+@keyframes horror-alt-misread-v2 {
+	0%,
+	20%,
+	30%,
+	42%,
+	52%,
+	100% {
+		opacity: 0;
+	}
+	22% {
+		opacity: 0.5;
+	}
+	44% {
+		opacity: 0.38;
+	}
+}
+
+/* The trickle: grows slowly, stops at ~0.5em, stays. */
+@keyframes horror-drip-v2 {
+	0% {
+		opacity: 0;
+		transform: scaleY(0);
+	}
+	10% {
+		opacity: var(--horror-drip-o, 0.85);
+		transform: scaleY(0.12);
+	}
+	100% {
+		opacity: var(--horror-drip-o, 0.85);
+		transform: scaleY(1);
+	}
+}
+
+/* One tail glyph dips... */
+@keyframes horror-tail-dip-v2 {
+	0%,
+	56%,
+	57.8%,
+	100% {
+		opacity: 0.42;
+	}
+	56.4% {
+		opacity: 0.1;
+	}
+}
+
+/* ...and its data-alt char answers in the same beat. */
+@keyframes horror-tail-alt-v2 {
+	0%,
+	56%,
+	57.8%,
+	100% {
+		opacity: 0;
+	}
+	56.4% {
+		opacity: 0.5;
+	}
+}
+
+/* Uneven caret flicker; the 55-76% off-window doubles as the blink. */
+@keyframes horror-caret-flicker-v2 {
+	0%,
+	8%,
+	12%,
+	30%,
+	35%,
+	52%,
+	78%,
+	90%,
+	94%,
+	100% {
+		opacity: 1;
+	}
+	10% {
+		opacity: 0.4;
+	}
+	33% {
+		opacity: 0.55;
+	}
+	55%,
+	76% {
+		opacity: 0;
+	}
+	92% {
+		opacity: 0.5;
+	}
+}
+
+/* Waiting: the gloom breathes... */
+@keyframes horror-wait-gloom-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--haze-opacity, 0.7) * 0.7);
+	}
+	50% {
+		opacity: var(--haze-opacity, 0.7);
+	}
+}
+
+/* ...the pool breathes with it... */
+@keyframes horror-wait-breath-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--smoke-opacity, 0.55) * 0.75);
+	}
+	50% {
+		opacity: var(--smoke-opacity, 0.55);
+	}
+}
+
+/* ...the half-open eyes watch, blink once, widen a touch. */
+@keyframes horror-wait-eyes-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--core-opacity, 0.9) * 0.75);
+		background-size:
+			0.34em 0.12em,
+			0.32em 0.11em,
+			1.9em 1.6em;
+	}
+	36% {
+		opacity: calc(var(--core-opacity, 0.9) * 0.9);
+		background-size:
+			0.34em 0.12em,
+			0.32em 0.11em,
+			1.9em 1.6em;
+	}
+	44% {
+		opacity: calc(var(--core-opacity, 0.9) * 0.45);
+		background-size:
+			0.34em 0.02em,
+			0.32em 0.018em,
+			1.9em 1.6em;
+	}
+	48% {
+		opacity: calc(var(--core-opacity, 0.9) * 0.8);
+		background-size:
+			0.34em 0.12em,
+			0.32em 0.11em,
+			1.9em 1.6em;
+	}
+	74% {
+		opacity: calc(var(--core-opacity, 0.9) * 0.9);
+		background-size:
+			0.34em 0.16em,
+			0.32em 0.15em,
+			1.9em 1.6em;
+	}
+}
+
+/* A rare cold blip at the caret: the light almost comes on. */
+@keyframes horror-wait-flicker-v2 {
+	0%,
+	58%,
+	62%,
+	100% {
+		opacity: 0;
+	}
+	59% {
+		opacity: var(--flow-high, 0.5);
+	}
+	60.5% {
+		opacity: calc(var(--flow-high, 0.5) * 0.2);
+	}
+}

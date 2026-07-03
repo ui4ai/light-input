@@ -589,86 +589,6 @@
 
 /* Final hero-effect pass: richer concepts, soft masks, no visible layer edges. */
 
-.field[data-glow='horror'] {
-	--ready-border: rgba(255, 52, 72, 0.36);
-	--ready-shadow:
-		0 1px 0 rgba(255, 255, 255, 0.035) inset,
-		0 -34px 94px rgba(8, 0, 3, 0.72) inset,
-		0 34px 70px rgba(0, 0, 0, 0.5),
-		0 0 96px rgba(255, 20, 44, 0.12);
-	--field-wash:
-		radial-gradient(ellipse 18% 82% at 20% 50%, rgba(255, 33, 55, 0.14), transparent 68%),
-		linear-gradient(90deg, rgba(40, 0, 7, 0.35), rgba(147, 0, 18, 0.08) 58%, transparent 88%);
-	--caret-gradient: linear-gradient(180deg, rgb(255, 239, 238), rgb(255, 72, 88) 35%, rgb(122, 0, 17) 74%, rgb(8, 0, 3));
-	--caret-shadow:
-		0 0 7px rgba(255, 191, 190, 0.5),
-		0 0 20px rgba(255, 28, 52, 0.48),
-		0 0 48px rgba(8, 0, 3, 0.72);
-	--haze-width: 9.6em;
-	--haze-height: 2.45em;
-	--haze-bg:
-		linear-gradient(90deg, rgba(255, 185, 185, 0.18), rgba(255, 32, 56, 0.25) 26%, rgba(67, 0, 11, 0.24) 66%, transparent 94%),
-		repeating-linear-gradient(104deg, transparent 0 34px, rgba(255, 78, 93, 0.1) 35px 37px, transparent 39px 54px);
-	--haze-filter: blur(20px) saturate(1.32) contrast(1.08);
-	--haze-opacity: 0.76;
-	--haze-motion: horror-flicker 3.2s steps(5, end) infinite;
-	--torch-haze-motion: horror-flicker 2.6s steps(5, end) infinite;
-	--body-width: 7.2em;
-	--body-height: 1.42em;
-	--body-bg: linear-gradient(90deg, rgba(255, 202, 202, 0.34), rgba(255, 36, 59, 0.34) 34%, rgba(74, 0, 13, 0.22) 76%, transparent);
-	--body-filter: blur(11px) contrast(1.15);
-	--body-opacity: 0.74;
-	--core-width: 2.8em;
-	--core-height: 0.9em;
-	--core-bg: radial-gradient(ellipse 72% 56% at 0% 50%, rgba(255, 232, 230, 0.86), rgba(255, 39, 59, 0.6) 42%, rgba(92, 0, 13, 0) 86%);
-	--core-filter: blur(5px);
-	--core-motion: horror-pulse 2.4s steps(4, end) infinite;
-	--flow-width: 9em;
-	--flow-height: 1.8em;
-	--flow-bg:
-		linear-gradient(90deg, transparent, rgba(255, 192, 192, 0.18) 14%, rgba(255, 29, 54, 0.27) 40%, rgba(43, 0, 9, 0.2) 72%, transparent 94%),
-		repeating-linear-gradient(104deg, transparent 0 28px, rgba(255, 80, 95, 0.18) 29px 31px, transparent 33px 46px);
-	--flow-filter: blur(13px);
-	--flow-low: 0.1;
-	--flow-high: 0.48;
-	--flow-motion: horror-flicker 3.5s steps(5, end) infinite;
-	--spark-width: 8.2em;
-	--spark-height: 2em;
-	--spark-bg:
-		radial-gradient(circle at 9% 48%, rgba(255, 212, 210, 0.72), transparent 2.4%),
-		radial-gradient(circle at 22% 34%, rgba(255, 41, 62, 0.64), transparent 2.3%),
-		radial-gradient(circle at 44% 66%, rgba(185, 0, 25, 0.48), transparent 2.1%),
-		radial-gradient(circle at 68% 38%, rgba(255, 76, 92, 0.34), transparent 2%);
-	--spark-filter: blur(0.5px) drop-shadow(0 0 12px rgba(255, 23, 48, 0.62));
-	--spark-low: 0.06;
-	--spark-high: 0.42;
-	--spark-motion: horror-sparks 3.2s steps(4, end) infinite;
-	--smoke-width: 9.4em;
-	--smoke-height: 2.9em;
-	--smoke-bg:
-		radial-gradient(ellipse 42% 84% at 18% 50%, rgba(0, 0, 0, 0.52), transparent 76%),
-		radial-gradient(ellipse 52% 88% at 48% 48%, rgba(74, 0, 13, 0.26), transparent 78%);
-	--smoke-filter: blur(24px);
-	--smoke-opacity: 0.42;
-	--smoke-blend: normal;
-	--aux-width: 8.4em;
-	--aux-height: 2.32em;
-	--aux-bg:
-		linear-gradient(105deg, transparent 0 10%, rgba(255, 94, 106, 0.32) 12%, transparent 17%),
-		linear-gradient(80deg, transparent 0 33%, rgba(255, 32, 54, 0.22) 36%, transparent 41%),
-		linear-gradient(95deg, transparent 0 60%, rgba(120, 0, 18, 0.24) 64%, transparent 70%),
-		radial-gradient(ellipse 42% 76% at 18% 50%, rgba(255, 28, 52, 0.2), transparent 74%);
-	--aux-filter: blur(0.9px) contrast(1.2) drop-shadow(0 0 15px rgba(255, 30, 54, 0.48));
-	--aux-opacity: 0.72;
-	--aux-motion: horror-streaks 3.7s steps(5, end) infinite;
-	--aux-mask: radial-gradient(ellipse 86% 82% at 25% 50%, black 0 44%, rgba(0, 0, 0, 0.58) 65%, transparent 100%);
-	--next-color: rgba(255, 219, 216, 0.96);
-	--next-shadow:
-		0 0 8px rgba(255, 138, 140, 0.36),
-		0 0 24px rgba(255, 21, 48, 0.28);
-	--tail-color: rgba(218, 126, 132, 0.3);
-}
-
 .field[data-glow='heart'] {
 	--ready-border: rgba(255, 92, 144, 0.38);
 	--ready-shadow:
@@ -732,7 +652,6 @@
 
 /* Edge polish for high-energy variants: dissolve light before layer bounds. */
 .field[data-glow='blackhole'],
-.field[data-glow='horror'],
 .field[data-glow='heart'],
 .field[data-glow='liquidglass'],
 .field[data-glow='android'],
@@ -747,7 +666,6 @@
 	--layer-clip: inset(0 round 999px);
 }
 
-.field[data-glow='horror'],
 .field[data-glow='heart'],
 .field[data-glow='liquidglass'],
 .field[data-glow='android'],
@@ -766,45 +684,6 @@
 }
 
 /* Deep polish pass: custom looks for the special variants only. */
-
-.field[data-glow='horror'] {
-	--ready-border: rgba(255, 44, 68, 0.38);
-	--ready-shadow:
-		0 1px 0 rgba(255, 220, 218, 0.035) inset,
-		0 -38px 100px rgba(8, 0, 3, 0.78) inset,
-		0 36px 74px rgba(0, 0, 0, 0.54),
-		0 0 90px rgba(255, 8, 35, 0.13);
-	--field-wash:
-		radial-gradient(ellipse 14% 78% at 20% 50%, rgba(255, 26, 48, 0.14), transparent 66%),
-		linear-gradient(90deg, rgba(12, 0, 3, 0.45), rgba(126, 0, 18, 0.1) 56%, transparent 84%);
-	--haze-bg:
-		radial-gradient(ellipse 18% 54% at 7% 52%, rgba(255, 216, 210, 0.16), rgba(255, 24, 50, 0.16) 48%, transparent 72%),
-		radial-gradient(ellipse 56% 78% at 34% 50%, rgba(255, 24, 50, 0.16), rgba(20, 0, 6, 0.32) 62%, transparent 86%),
-		linear-gradient(90deg, rgba(18, 0, 5, 0.34), rgba(130, 0, 18, 0.1) 44%, transparent 86%);
-	--haze-filter: blur(18px) saturate(1.3) contrast(1.18);
-	--haze-opacity: 0.76;
-	--haze-motion: horror-lantern-deep 4.8s ease-in-out infinite;
-	--body-bg: linear-gradient(90deg, rgba(255, 202, 198, 0.28), rgba(255, 28, 52, 0.32) 32%, rgba(44, 0, 10, 0.24) 74%, transparent);
-	--core-bg: radial-gradient(ellipse 72% 56% at 0% 50%, rgba(255, 230, 226, 0.84), rgba(255, 31, 54, 0.62) 42%, rgba(92, 0, 13, 0) 86%);
-	--flow-bg:
-		linear-gradient(90deg, transparent, rgba(255, 190, 186, 0.12) 12%, rgba(255, 24, 49, 0.2) 36%, rgba(24, 0, 7, 0.26) 70%, transparent 88%),
-		radial-gradient(ellipse 18% 42% at 24% 48%, rgba(255, 62, 76, 0.16), transparent 70%),
-		radial-gradient(ellipse 24% 52% at 58% 52%, rgba(70, 0, 14, 0.2), transparent 76%);
-	--flow-size: 220% 100%, 100% 100%, 100% 100%;
-	--flow-motion: horror-lantern-deep 5.2s ease-in-out infinite;
-	--spark-motion: horror-static-deep 4.4s ease-in-out infinite;
-	--smoke-bg:
-		radial-gradient(ellipse 44% 86% at 16% 50%, rgba(0, 0, 0, 0.72), transparent 74%),
-		radial-gradient(ellipse 62% 90% at 52% 48%, rgba(42, 0, 10, 0.44), transparent 82%);
-	--smoke-opacity: 0.62;
-	--aux-bg:
-		url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20360%20110%22%3E%3Cdefs%3E%3Cfilter%20id%3D%22b%22%3E%3CfeGaussianBlur%20stdDeviation%3D%22.55%22%2F%3E%3C%2Ffilter%3E%3C%2Fdefs%3E%3Cg%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20filter%3D%22url(%23b)%22%3E%3Cpath%20d%3D%22M18%208C38%2027%2030%2044%2062%2094%22%20stroke%3D%22%23fff0ed%22%20stroke-opacity%3D%22.34%22%20stroke-width%3D%222.4%22%2F%3E%3Cpath%20d%3D%22M22%2010C42%2030%2036%2048%2066%2096%22%20stroke%3D%22%23ff2b4e%22%20stroke-opacity%3D%22.78%22%20stroke-width%3D%221.25%22%2F%3E%3Cpath%20d%3D%22M94%204C116%2022%20106%2043%20132%2072C142%2084%20146%2096%20154%20106%22%20stroke%3D%22%23ff4058%22%20stroke-opacity%3D%22.58%22%20stroke-width%3D%221.2%22%2F%3E%3Cpath%20d%3D%22M178%2018C190%2034%20184%2048%20206%2067C222%2081%20220%2094%20236%20106%22%20stroke%3D%22%238c0018%22%20stroke-opacity%3D%22.68%22%20stroke-width%3D%222%22%2F%3E%3Cpath%20d%3D%22M254%206C268%2030%20254%2044%20282%2066C302%2082%20294%2096%20318%20106%22%20stroke%3D%22%23ff284a%22%20stroke-opacity%3D%22.5%22%20stroke-width%3D%221.4%22%2F%3E%3Cpath%20d%3D%22M4%2078C48%2064%2082%2072%20116%2063C152%2054%20190%2068%20226%2058C274%2046%20312%2054%20356%2040%22%20stroke%3D%22%235c0011%22%20stroke-opacity%3D%22.5%22%20stroke-width%3D%226%22%2F%3E%3Cpath%20d%3D%22M0%2086C52%2078%2088%2088%20132%2076C164%2068%20200%2080%20236%2068C278%2054%20316%2064%20360%2052%22%20stroke%3D%22%23ff2447%22%20stroke-opacity%3D%22.18%22%20stroke-width%3D%223%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E"),
-		radial-gradient(ellipse 42% 76% at 18% 50%, rgba(255, 18, 43, 0.16), transparent 74%);
-	--aux-size: 100% 100%, 100% 100%;
-	--aux-filter: blur(0.35px) contrast(1.34) drop-shadow(0 0 13px rgba(255, 24, 49, 0.46));
-	--aux-opacity: 0.86;
-	--aux-motion: horror-scratch-deep 5.6s ease-in-out infinite;
-}
 
 .field[data-glow='heart'] {
 	--ready-border: rgba(255, 100, 164, 0.42);
@@ -957,21 +836,6 @@
 		0 0 9px rgba(74, 203, 230, 0.22),
 		0 0 24px rgba(203, 74, 184, 0.09);
 	--smoke-opacity: 0.08;
-}
-
-.field[data-theme='light'][data-glow='horror'] {
-	--ready-border: rgba(174, 35, 54, 0.36);
-	--haze-opacity: 0.5;
-	--body-opacity: 0.56;
-	--core-opacity: 0.72;
-	--flow-high: 0.26;
-	--spark-high: 0.22;
-	--smoke-opacity: 0.14;
-	--aux-opacity: 0.28;
-	--next-color: rgba(122, 22, 37, 0.88);
-	--next-shadow:
-		0 0 8px rgba(224, 57, 76, 0.24),
-		0 0 22px rgba(115, 0, 20, 0.09);
 }
 
 .field[data-theme='light'][data-glow='heart'] {
@@ -4222,95 +4086,6 @@
 	display: none;
 }
 
-.stage[data-glow='horror'] .field[data-glow] .torch-smoke,
-.stage[data-glow='horror'] .field[data-glow] .beam-smoke {
-	mix-blend-mode: normal;
-}
-
-@keyframes horror-flicker {
-	0%,
-	100% {
-		opacity: calc(var(--haze-opacity, var(--flow-low)) * 0.4);
-		background-position:
-			0% 50%,
-			0% 50%;
-		transform: translateY(-50%) translateX(-0.16em) scaleX(0.9);
-	}
-	24% {
-		opacity: var(--haze-opacity, var(--flow-high));
-		transform: translateY(-50%) translateX(0.18em) scaleX(1.03);
-	}
-	32% {
-		opacity: calc(var(--haze-opacity, var(--flow-high)) * 0.34);
-		transform: translateY(-50%) translateX(0.04em) scaleX(0.94);
-	}
-	52% {
-		opacity: calc(var(--haze-opacity, var(--flow-high)) * 0.82);
-		background-position:
-			100% 50%,
-			100% 50%;
-		transform: translateY(-50%) translateX(0.34em) scaleX(1.08);
-	}
-}
-
-@keyframes horror-pulse {
-	0%,
-	100% {
-		opacity: calc(var(--core-opacity) * 0.5);
-		transform: translateY(-50%) translateX(-0.08em) scaleX(0.82);
-	}
-	48% {
-		opacity: var(--core-opacity);
-		transform: translateY(-50%) translateX(0.1em) scaleX(1.1);
-	}
-	56% {
-		opacity: calc(var(--core-opacity) * 0.42);
-		transform: translateY(-50%) translateX(0.02em) scaleX(0.9);
-	}
-}
-
-@keyframes horror-sparks {
-	0%,
-	100% {
-		opacity: var(--spark-low);
-		transform: translateY(-48%) translateX(-0.12em) scale(0.88);
-	}
-	42% {
-		opacity: var(--spark-high);
-		transform: translateY(-54%) translateX(0.28em) scale(1.04);
-	}
-	52% {
-		opacity: calc(var(--spark-high) * 0.24);
-		transform: translateY(-46%) translateX(0.12em) scale(0.92);
-	}
-}
-
-@keyframes horror-streaks {
-	0%,
-	100% {
-		opacity: calc(var(--aux-opacity) * 0.34);
-		background-position:
-			0% 50%,
-			0% 50%,
-			0% 50%,
-			0% 50%;
-		transform: translateY(-50%) translateX(-0.12em) scaleX(0.92);
-	}
-	44% {
-		opacity: var(--aux-opacity);
-		background-position:
-			100% 50%,
-			70% 50%,
-			100% 50%,
-			100% 50%;
-		transform: translateY(-50%) translateX(0.38em) scaleX(1.06);
-	}
-	56% {
-		opacity: calc(var(--aux-opacity) * 0.32);
-		transform: translateY(-50%) translateX(0.1em) scaleX(0.94);
-	}
-}
-
 @keyframes heart-beat-glow {
 	0%,
 	100% {
@@ -4359,71 +4134,6 @@
 			54px -16px,
 			60% 50%;
 		transform: translateY(-72%) translateX(0.76em) scale(0.94);
-	}
-}
-
-@keyframes horror-lantern-deep {
-	0%,
-	100% {
-		opacity: calc(var(--haze-opacity, var(--flow-low)) * 0.38);
-		transform: translateY(-50%) translateX(-0.16em) scaleX(0.9);
-	}
-	18% {
-		opacity: calc(var(--haze-opacity, var(--flow-high)) * 0.78);
-		transform: translateY(-50%) translateX(0.12em) scaleX(1.02);
-	}
-	22% {
-		opacity: calc(var(--haze-opacity, var(--flow-high)) * 0.32);
-		transform: translateY(-50%) translateX(0.02em) scaleX(0.94);
-	}
-	54% {
-		opacity: var(--haze-opacity, var(--flow-high));
-		transform: translateY(-50%) translateX(0.34em) scaleX(1.08);
-	}
-	62% {
-		opacity: calc(var(--haze-opacity, var(--flow-high)) * 0.48);
-	}
-}
-
-@keyframes horror-static-deep {
-	0%,
-	100% {
-		opacity: var(--spark-low);
-		transform: translateY(-48%) translateX(-0.1em) scale(0.86);
-	}
-	42% {
-		opacity: var(--spark-high);
-		transform: translateY(-56%) translateX(0.24em) scale(1.04);
-	}
-	50% {
-		opacity: calc(var(--spark-high) * 0.24);
-		transform: translateY(-46%) translateX(0.1em) scale(0.92);
-	}
-}
-
-@keyframes horror-scratch-deep {
-	0%,
-	100% {
-		opacity: calc(var(--aux-opacity) * 0.3);
-		background-position:
-			0% 50%,
-			0% 50%,
-			0% 50%,
-			0% 50%;
-		transform: translateY(-50%) translateX(-0.12em) scaleX(0.92);
-	}
-	46% {
-		opacity: var(--aux-opacity);
-		background-position:
-			100% 50%,
-			70% 50%,
-			100% 50%,
-			100% 50%;
-		transform: translateY(-50%) translateX(0.34em) scaleX(1.06);
-	}
-	58% {
-		opacity: calc(var(--aux-opacity) * 0.34);
-		transform: translateY(-50%) translateX(0.12em) scaleX(0.94);
 	}
 }
 

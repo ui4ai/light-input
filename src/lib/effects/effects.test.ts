@@ -16,7 +16,8 @@ const PRESET_CSS_FILES = [
 	'src/lib/effects/bubblegum/index.css',
 	'src/lib/effects/optic/index.css',
 	'src/lib/effects/biolume/index.css',
-	'src/lib/effects/ocean/index.css'
+	'src/lib/effects/ocean/index.css',
+	'src/lib/effects/horror/index.css'
 ];
 
 function readPresetCss(): string {
