@@ -1,0 +1,1221 @@
+/* ============================================================
+   OCEAN v2 — "Прибой: the tide brings the words ashore"
+   Real surf, not a wedge of light. The field is a deep sea-night
+   vessel: blue-black water under a hinted horizon band, cold
+   marine rim, caret = a white-cyan droplet needle. On ignite THE
+   BREAKER rolls in along the reveal direction: prediction::before
+   is a masked water body with a ragged FOAM CREST (seven
+   overlapping foam radials + a crest highlight on its leading
+   edge) that sweeps left -> right across the suggestion zone in
+   ~900ms of travel, then recedes lower and dies into the resting
+   waterline (finite, one-shot, survives flow-off). The RESTING
+   WATERLINE is two overlapping scalloped ellipse-chain tiles
+   drifting horizontally at different speeds on seamless
+   whole-tile background-position loops — beam-veil (tile 3.6em,
+   +x) and beam-aux (tile 4.4em, -x) — whose interference reads as
+   living water at mid-lower text height. Below the line:
+   beam-body is the translucent deep-blue water glow, beam-smoke a
+   normal-blend depth shade that gives the water mass weight, and
+   prediction::after carries the CAUSTICS — two repeating dot/web
+   tiles counter-drifting inside ONE element via per-layer
+   background-position whole-tile loops, screen-blended and
+   subtle. beam-flow is the breaker's bright BACKWASH foam sheet
+   (finite, ~950ms); beam-spark is FOAM FIZZ near the word — tiny
+   white bubbles popping twice after the breaker passes, then a
+   calm loop; beam-hot is the caret swash glint where the words
+   enter the water. THE signature still element: the next word
+   casts a real inverted REFLECTION in the water via
+   -webkit-box-reflect: below with a gradient mask (Chrome-only,
+   intentional) — faint, strongest at the waterline, rippled by
+   the water layers passing behind the glyphs; glyph transforms
+   settle to zero so the reflection shows the settled word. Two
+   or three SPLASH DROPLETS arc up-forward from the ignition
+   point on next-word::after (finite ~700ms, survives flow-off).
+   SURFACING TEXT per glyph via var(--i): each glyph starts
+   submerged — translateY +0.14em, blue tint, blur 3px, a slight
+   refraction wobble via skewX — buoys up past the waterline with
+   a tiny overshoot, sheds a droplet glint (a bright flash above
+   its top at the surfacing beat) and settles pale sea-foam;
+   the data-alt ghost lifts off as fine spray. Tail = dim
+   blue-gray, masked fade, faintly submerged (tiny blur + tint).
+   Waiting = quiet lapping at the caret: a small waterline
+   segment bobbing (torch-haze), one buoy-dot rising and falling
+   with it (torch-core), an occasional tiny fizz (torch-flow)
+   over a dark pool (torch-smoke). Light theme = seaside
+   watercolor on paper: indigo ink text, watercolor wave washes
+   that DARKEN the paper at normal blend, foam as untouched paper
+   white ringed by blue-gray rims, a subtler reflection.
+   data-light-flow='off': breaker, droplets and surfacing still
+   play once (finite); waterline, caustics and depth hold as
+   stills (fizz layers are hidden by the shared flow-off rule).
+   No capsule anywhere: layer-radius 0, every layer and pseudo
+   dissolves through intersected left-fade x radial masks whose
+   fades complete INSIDE their boxes. Keyframes: ocean-*-v2 only
+   (legacy ocean-* and ocean-*-new stay untouched for legacy
+   consumers). ============================================================ */
+
+.field[data-glow='ocean'] {
+	--layer-radius: 0;
+	--layer-clip: none;
+	--ocean-breaker-o: 0.95;
+	--ocean-caustic-o: 0.55;
+	--ocean-scrim-o: 0.75;
+	--ocean-drops-o: 0.9;
+	--ready-border: rgba(96, 190, 235, 0.26);
+	--ready-shadow:
+		0 1px 0 rgba(205, 235, 250, 0.05) inset,
+		0 -38px 100px rgba(1, 12, 24, 0.72) inset,
+		0 32px 70px rgba(0, 0, 0, 0.55),
+		0 0 90px rgba(40, 150, 220, 0.1),
+		0 0 150px rgba(16, 80, 160, 0.05);
+	--field-wash:
+		linear-gradient(180deg, rgba(165, 215, 245, 0.05) 0%, rgba(120, 180, 220, 0.02) 9%, transparent 17%),
+		linear-gradient(180deg, transparent 14%, rgba(0, 6, 14, 0.5) 19%, rgba(0, 6, 14, 0.26) 22%, transparent 29%),
+		radial-gradient(ellipse 60% 130% at 82% -24%, rgba(70, 150, 210, 0.09), transparent 60%),
+		radial-gradient(ellipse 40% 90% at 18% 72%, rgba(40, 120, 190, 0.05), transparent 75%);
+	--caret-gradient: linear-gradient(
+		180deg,
+		rgb(245, 253, 255) 0%,
+		rgb(214, 245, 255) 26%,
+		rgb(150, 228, 255) 52%,
+		rgb(66, 176, 235) 76%,
+		rgb(196, 242, 255) 92%,
+		rgb(255, 255, 255) 100%
+	);
+	--caret-shadow:
+		0 0 5px rgba(230, 250, 255, 0.8),
+		0 0 14px rgba(130, 220, 250, 0.5),
+		0 10px 22px rgba(60, 180, 240, 0.3);
+	--haze-width: 13em;
+	--haze-height: 2.6em;
+	--haze-size: 3.6em 2.6em;
+	--haze-bg:
+		radial-gradient(ellipse 1.7em 0.32em at 0.9em 1.6em, rgba(212, 240, 255, 0.48), rgba(120, 205, 245, 0.18) 55%, transparent 80%),
+		radial-gradient(ellipse 1.5em 0.28em at 2.7em 1.7em, rgba(190, 232, 252, 0.4), rgba(110, 195, 240, 0.15) 55%, transparent 80%),
+		linear-gradient(180deg, transparent 0 58%, rgba(140, 215, 248, 0.09) 63%, rgba(90, 170, 225, 0.045) 74%, transparent 90%);
+	--haze-filter: blur(3.5px) saturate(1.15);
+	--haze-opacity: 0.85;
+	--haze-motion: ocean-line-drift-a-v2 13s linear 400ms infinite;
+	--torch-haze-motion: ocean-wait-lap-v2 4.8s ease-in-out infinite;
+	--haze-mask: linear-gradient(90deg, transparent 0, black 0.9em), radial-gradient(ellipse 52% 52% at 38% 50%, black 0 46%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	--body-width: 12em;
+	--body-height: 2.6em;
+	--body-size: 100% 100%;
+	--body-bg:
+		linear-gradient(180deg, transparent 0 60%, rgba(70, 170, 230, 0.13) 67%, rgba(30, 110, 190, 0.09) 80%, rgba(14, 60, 130, 0.04) 93%, transparent 100%),
+		radial-gradient(ellipse 4em 0.85em at 1.8em 1.78em, rgba(90, 200, 250, 0.14), transparent 76%);
+	--body-filter: blur(6px) saturate(1.2);
+	--body-opacity: 0.9;
+	--body-mask: linear-gradient(90deg, transparent 0, black 0.85em), radial-gradient(ellipse 52% 54% at 40% 54%, black 0 48%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	--core-width: 2.6em;
+	--core-height: 2.6em;
+	--core-size: auto;
+	--core-bg:
+		radial-gradient(ellipse 0.9em 0.2em at 0.55em 1.62em, rgba(236, 250, 255, 0.72), rgba(150, 225, 250, 0.28) 55%, transparent 80%),
+		radial-gradient(ellipse 0.5em 0.38em at 0.42em 1.48em, rgba(190, 240, 255, 0.32), transparent 76%);
+	--core-filter: blur(2.5px) saturate(1.15);
+	--core-opacity: 0.9;
+	--core-motion: ocean-caret-swash-v2 4.6s ease-in-out 900ms infinite;
+	--torch-core-motion: ocean-wait-buoy-v2 4.8s ease-in-out infinite;
+	--core-mask: linear-gradient(90deg, transparent 0, black 0.26em), radial-gradient(ellipse 52% 52% at 34% 56%, black 0 48%, rgba(0, 0, 0, 0.5) 74%, transparent 94%);
+	--flow-width: 12em;
+	--flow-height: 2.6em;
+	--flow-size: 100% 100%;
+	--flow-bg:
+		linear-gradient(100deg, transparent 0 6%, rgba(235, 250, 255, 0.42) 13%, rgba(170, 230, 252, 0.2) 24%, transparent 38%),
+		radial-gradient(ellipse 1.4em 0.4em at 22% 62%, rgba(250, 254, 255, 0.45), transparent 76%);
+	--flow-filter: blur(5px) saturate(1.2);
+	--flow-low: 0;
+	--flow-high: 0.75;
+	--flow-motion: ocean-backwash-v2 950ms cubic-bezier(0.3, 0.6, 0.3, 1) 260ms both;
+	--flow-mask: linear-gradient(90deg, transparent 0, black 0.8em), radial-gradient(ellipse 50% 52% at 40% 54%, black 0 46%, rgba(0, 0, 0, 0.5) 72%, transparent 96%);
+	--spark-width: 4.6em;
+	--spark-height: 2.6em;
+	--spark-size: 100% 100%;
+	--spark-bg:
+		radial-gradient(circle at 0.42em 1.5em, rgba(244, 252, 255, 0.9) 0 0.03em, rgba(160, 230, 252, 0.3) 0.038em 0.062em, transparent 0.085em),
+		radial-gradient(circle at 0.95em 1.66em, rgba(228, 248, 255, 0.75) 0 0.024em, rgba(140, 220, 250, 0.24) 0.032em 0.054em, transparent 0.075em),
+		radial-gradient(circle at 1.55em 1.44em, rgba(240, 252, 255, 0.68) 0 0.027em, rgba(150, 226, 250, 0.2) 0.035em 0.058em, transparent 0.08em),
+		radial-gradient(circle at 2.25em 1.6em, rgba(224, 246, 255, 0.55) 0 0.022em, transparent 0.06em),
+		radial-gradient(circle at 2.95em 1.5em, rgba(236, 250, 255, 0.46) 0 0.024em, transparent 0.064em),
+		radial-gradient(circle at 3.6em 1.68em, rgba(220, 244, 255, 0.36) 0 0.02em, transparent 0.055em);
+	--spark-filter: blur(0.2px) drop-shadow(0 0 4px rgba(180, 240, 255, 0.4));
+	--spark-low: 0.25;
+	--spark-high: 0.9;
+	--spark-motion:
+		ocean-fizz-pop-v2 1.15s ease-out 1.05s 2 both,
+		ocean-fizz-calm-v2 5.6s ease-in-out 3.4s infinite;
+	--spark-mask: linear-gradient(90deg, transparent 0, black 0.5em), radial-gradient(ellipse 52% 52% at 44% 56%, black 0 50%, rgba(0, 0, 0, 0.5) 76%, transparent 96%);
+	--smoke-width: 12em;
+	--smoke-height: 2.6em;
+	--smoke-size: 100% 100%;
+	--smoke-bg: linear-gradient(180deg, transparent 0 62%, rgba(1, 8, 18, 0.26) 72%, rgba(0, 5, 14, 0.38) 88%, rgba(0, 5, 14, 0.1) 97%, transparent 100%);
+	--smoke-filter: blur(8px);
+	--smoke-opacity: 0.75;
+	--smoke-blend: normal;
+	--smoke-motion: ocean-depth-breathe-v2 9s ease-in-out 1.2s infinite;
+	--smoke-mask: linear-gradient(90deg, transparent 0, black 0.9em), radial-gradient(ellipse 52% 54% at 40% 56%, black 0 48%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	--aux-width: 13em;
+	--aux-height: 2.6em;
+	--aux-size: 4.4em 2.6em;
+	--aux-bg:
+		radial-gradient(ellipse 2em 0.26em at 1.2em 1.68em, rgba(200, 236, 255, 0.34), rgba(110, 200, 242, 0.13) 58%, transparent 82%),
+		radial-gradient(ellipse 1.6em 0.22em at 3.4em 1.56em, rgba(224, 246, 255, 0.28), transparent 78%);
+	--aux-filter: blur(3px) saturate(1.1);
+	--aux-opacity: 0.8;
+	--aux-blend: screen;
+	--aux-motion: ocean-line-drift-b-v2 17s linear 400ms infinite;
+	--aux-mask: linear-gradient(90deg, transparent 0, black 0.9em), radial-gradient(ellipse 52% 52% at 40% 50%, black 0 46%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	--next-color: rgba(230, 246, 255, 0.96);
+	--next-shadow:
+		0 1px 2px rgba(0, 10, 20, 0.55),
+		0 0 10px rgba(140, 220, 250, 0.28),
+		0 0 26px rgba(60, 160, 230, 0.14),
+		0 0 48px rgba(30, 110, 200, 0.07);
+	--tail-color: rgba(142, 178, 204, 0.34);
+}
+
+/* The surf rides the shared beams again: undo the legacy zeroing pass and
+   anchor the waterline across the suggestion zone. Fizz starts near the
+   word, the caret swash hugs the entry point. */
+.stage[data-glow='ocean'] .field[data-glow] .prediction > .beam {
+	display: block;
+	left: -0.03em;
+	transform-origin: left center;
+}
+
+.stage[data-glow='ocean'] .field[data-glow] .prediction > .beam-spark {
+	left: 1.9em;
+	transform-origin: 1em center;
+}
+
+/* Two-layer masks (left fade x radial falloff) need intersection, not
+   union — on the pseudo layers too. */
+.stage[data-glow='ocean'] .field[data-glow] .prediction > .beam,
+.stage[data-glow='ocean'] .field[data-glow] .torch-beam,
+.stage[data-glow='ocean'] .field[data-glow] .prediction::before,
+.stage[data-glow='ocean'] .field[data-glow] .prediction::after {
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+}
+
+/* Torch layers serve the waiting lap only; never double-print in ready. */
+.stage[data-glow='ocean'] .field[data-glow] .caret-origin-glow[data-mode='ready'] {
+	display: none;
+}
+
+.stage[data-glow='ocean'] .field[data-glow] .prediction {
+	isolation: isolate;
+}
+
+/* Deep sea-night vessel: blue-black water, no wedge of light. */
+.stage[data-glow='ocean'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 100% 170% at 80% -45%, rgba(30, 90, 150, 0.11), transparent 55%),
+		linear-gradient(180deg, rgba(150, 205, 240, 0.02), transparent 34%),
+		linear-gradient(90deg, rgb(2, 9, 18), rgb(3, 13, 25) 52%, rgb(4, 15, 30));
+}
+
+/* Horizon hint: a cold sliver of sky over a darker band, breathing slowly.
+   Normal blend so the band may darken. */
+.stage[data-glow='ocean'] .field[data-glow]::before {
+	background: var(--field-wash);
+	background-size: 100% 100%;
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: normal;
+	opacity: 0.85;
+	animation: ocean-swell-v2 10s ease-in-out infinite;
+}
+
+/* Dissolve into the field's rounded clip, not the paint box; edge overlays
+   extended into the 64px padding so water never steps at the content box. */
+.stage[data-glow='ocean'] .field[data-glow] .paint {
+	overflow: visible;
+	clip-path: inset(-3.4em -5em -3.4em 0);
+}
+
+.stage[data-glow='ocean'] .field[data-glow] .edge-left {
+	left: -64px;
+	width: 156px;
+	background: linear-gradient(90deg, rgb(2, 9, 18) 0%, rgb(2, 9, 18) 40%, rgba(2, 9, 18, 0) 100%);
+	opacity: 0;
+}
+
+.stage[data-glow='ocean'] .field[data-glow] .viewport.scrolled .edge-left {
+	opacity: 1;
+}
+
+.stage[data-glow='ocean'] .field[data-glow] .edge-right {
+	right: -64px;
+	width: 224px;
+	background: linear-gradient(
+		270deg,
+		rgba(4, 15, 30, 0.9) 0%,
+		rgba(4, 15, 30, 0.55) 30%,
+		rgba(4, 15, 30, 0.16) 68%,
+		rgba(4, 15, 30, 0) 100%
+	);
+	opacity: 0.85;
+}
+
+/* THE BREAKER: a water body with a ragged foam crest on its leading edge
+   rolls in along the reveal direction, recedes lower and dies into the
+   waterline. Finite one-shot; the masks travel with the wave so it always
+   dissolves inside its own box. Survives flow-off. */
+.stage[data-glow='ocean'] .field[data-glow] .prediction::before {
+	position: absolute;
+	left: -0.6em;
+	top: 50%;
+	z-index: -3;
+	width: 8em;
+	height: 2.6em;
+	content: '';
+	pointer-events: none;
+	border-radius: 0;
+	clip-path: none;
+	background:
+		radial-gradient(circle at 6.05em 1.06em, rgba(248, 253, 255, 0.95) 0 0.05em, rgba(190, 240, 255, 0.4) 0.06em 0.1em, transparent 0.13em),
+		radial-gradient(circle at 6.55em 1.42em, rgba(240, 251, 255, 0.9) 0 0.055em, rgba(180, 236, 255, 0.36) 0.066em 0.108em, transparent 0.14em),
+		radial-gradient(circle at 7.05em 1.12em, rgba(244, 252, 255, 0.85) 0 0.045em, rgba(170, 232, 255, 0.3) 0.055em 0.095em, transparent 0.125em),
+		radial-gradient(circle at 6.3em 0.78em, rgba(236, 250, 255, 0.75) 0 0.04em, rgba(160, 228, 252, 0.26) 0.05em 0.085em, transparent 0.112em),
+		radial-gradient(circle at 6.85em 1.78em, rgba(232, 249, 255, 0.7) 0 0.042em, rgba(150, 224, 252, 0.22) 0.052em 0.086em, transparent 0.112em),
+		radial-gradient(circle at 7.4em 1.5em, rgba(228, 248, 255, 0.6) 0 0.035em, transparent 0.09em),
+		radial-gradient(circle at 5.75em 1.62em, rgba(240, 251, 255, 0.55) 0 0.032em, transparent 0.085em),
+		radial-gradient(ellipse 1.5em 0.68em at 6.5em 1.3em, rgba(238, 251, 255, 0.5), rgba(150, 225, 250, 0.2) 55%, transparent 80%),
+		linear-gradient(96deg, transparent 0 4%, rgba(24, 110, 190, 0.2) 20%, rgba(46, 160, 230, 0.32) 56%, rgba(120, 215, 250, 0.42) 80%, rgba(210, 245, 255, 0.26) 90%, transparent 97%);
+	filter: blur(1px) saturate(1.3) drop-shadow(0 0 10px rgba(120, 215, 250, 0.35));
+	-webkit-mask-image: linear-gradient(90deg, transparent 0, black 0.8em), radial-gradient(ellipse 52% 52% at 50% 52%, black 0 46%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	mask-image: linear-gradient(90deg, transparent 0, black 0.8em), radial-gradient(ellipse 52% 52% at 50% 52%, black 0 46%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+	mix-blend-mode: screen;
+	opacity: 0;
+	transform: translateY(-50%);
+	transform-origin: 4em 1.62em;
+	animation: ocean-breaker-v2 1.5s cubic-bezier(0.3, 0.65, 0.3, 1) 140ms both;
+}
+
+/* CAUSTICS: two repeating dot/web tiles counter-drifting below the
+   waterline inside one element — per-layer background-position moves each
+   tile a whole multiple per loop, so the drift is seamless. Persistent;
+   holds as a still with flow off. */
+.stage[data-glow='ocean'] .field[data-glow] .prediction::after {
+	position: absolute;
+	left: -0.7em;
+	top: 50%;
+	z-index: -2;
+	width: min(12.5em, calc(100% + 4em));
+	height: 2.6em;
+	content: '';
+	pointer-events: none;
+	border-radius: 0;
+	clip-path: none;
+	background-image:
+		radial-gradient(circle at 0.5em 0.42em, rgba(130, 218, 252, 0.22) 0 0.028em, transparent 0.085em),
+		linear-gradient(115deg, transparent 0 44%, rgba(110, 205, 245, 0.1) 48% 52%, transparent 56%);
+	background-position:
+		0em 1.35em,
+		0em 1.42em;
+	background-size:
+		2.4em 1.3em,
+		3em 1.4em;
+	filter: blur(0.6px) saturate(1.2);
+	-webkit-mask-image: linear-gradient(90deg, transparent 0, black 0.8em), radial-gradient(ellipse 50% 36% at 44% 72%, black 0 44%, rgba(0, 0, 0, 0.5) 72%, transparent 96%);
+	mask-image: linear-gradient(90deg, transparent 0, black 0.8em), radial-gradient(ellipse 50% 36% at 44% 72%, black 0 44%, rgba(0, 0, 0, 0.5) 72%, transparent 96%);
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+	mix-blend-mode: screen;
+	opacity: var(--ocean-caustic-o);
+	transform: translateY(-50%);
+	animation: ocean-caustics-drift-v2 12s linear infinite;
+}
+
+/* ---------- Text is sacred: the word comes ashore ---------- */
+/* THE signature still: a real inverted reflection in the water below the
+   word (-webkit-box-reflect, Chrome-only by design), strongest at the
+   waterline and fading with depth. Glyph transforms settle to zero, so the
+   reflection shows the settled word. */
+.stage[data-glow='ocean'] .field[data-glow] .next-word {
+	position: relative;
+	isolation: isolate;
+	z-index: 2;
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: var(--next-shadow);
+	-webkit-box-reflect: below -0.6em linear-gradient(180deg, transparent 0 52%, rgba(0, 0, 0, 0.14) 74%, rgba(0, 0, 0, 0.3) 100%);
+	animation:
+		ocean-word-in-v2 320ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		ocean-sheen-v2 6s ease-in-out 2s infinite;
+}
+
+/* Deep-water scrim between the surf and the glyphs: contrast insurance.
+   Its reflection doubles as the word's shadow on the water. */
+.stage[data-glow='ocean'] .field[data-glow] .next-word::before {
+	position: absolute;
+	inset: -0.2em -0.55em -0.24em -0.3em;
+	z-index: -2;
+	content: '';
+	pointer-events: none;
+	border-radius: 0.75em;
+	clip-path: none;
+	background: radial-gradient(ellipse 82% 92% at 38% 52%, rgba(1, 10, 20, 0.55), rgba(1, 10, 20, 0.24) 58%, transparent 88%);
+	filter: blur(6px);
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: normal;
+	opacity: var(--ocean-scrim-o);
+	transform: none;
+	animation: ocean-scrim-in-v2 420ms ease-out both;
+}
+
+/* SPLASH DROPLETS: three droplets arc up-forward at ignite and fall back.
+   Finite by design — they still play with light flow off. */
+.stage[data-glow='ocean'] .field[data-glow] .next-word::after {
+	position: absolute;
+	left: -0.15em;
+	top: -0.9em;
+	z-index: 1;
+	width: 2.2em;
+	height: 1.6em;
+	content: '';
+	pointer-events: none;
+	background:
+		radial-gradient(circle at 0.45em 0.6em, rgba(242, 252, 255, 0.95) 0 0.035em, rgba(160, 230, 252, 0.32) 0.045em 0.068em, transparent 0.09em),
+		radial-gradient(circle at 0.88em 0.36em, rgba(232, 249, 255, 0.85) 0 0.028em, rgba(150, 226, 250, 0.26) 0.036em 0.056em, transparent 0.075em),
+		radial-gradient(circle at 0.2em 0.84em, rgba(226, 247, 255, 0.7) 0 0.024em, transparent 0.062em);
+	filter: blur(0.2px) drop-shadow(0 0 4px rgba(170, 235, 255, 0.4));
+	mix-blend-mode: screen;
+	opacity: 0;
+	transform: translate(-0.3em, 0.45em);
+	animation: ocean-droplets-v2 700ms cubic-bezier(0.3, 0.55, 0.4, 1) 420ms both;
+}
+
+/* Per-glyph surfacing: submerged blue and blurred with a refraction wobble,
+   buoys up past the waterline with a tiny overshoot and a droplet glint,
+   settles pale sea-foam. Parity flips the wobble via --ocean-drift; the
+   nth-child variants outrank the legacy bob loops. */
+.stage[data-glow='ocean'] .field[data-glow] .next-word .glyph,
+.stage[data-glow='ocean'] .field[data-glow] .next-word .glyph:nth-child(even),
+.stage[data-glow='ocean'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-glow='ocean'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
+	--ocean-drift: 1;
+	color: var(--next-color);
+	background: none;
+	opacity: 1;
+	filter: none;
+	text-shadow: var(--next-shadow);
+	transform-origin: 50% 62%;
+	animation: ocean-glyph-surface-v2 900ms cubic-bezier(0.3, 0.7, 0.3, 1) both;
+	animation-delay: calc(240ms + var(--i) * 60ms);
+}
+
+.stage[data-glow='ocean'] .field[data-glow] .next-word .glyph:nth-child(even) {
+	--ocean-drift: -1;
+}
+
+/* The data-alt ghost lifts off the glyph as fine spray and evaporates. */
+.stage[data-glow='ocean'] .field[data-glow] .next-word .glyph::after {
+	z-index: 2;
+	content: attr(data-alt);
+	color: rgba(205, 240, 255, 0.85);
+	opacity: 0;
+	filter: none;
+	text-shadow: 0 0 0.28em rgba(150, 228, 252, 0.55);
+	transform: none;
+	transform-origin: 50% 30%;
+	animation: ocean-alt-spray-v2 560ms cubic-bezier(0.4, 0.1, 0.6, 1) both;
+	animation-delay: calc(240ms + var(--i) * 60ms);
+}
+
+/* Tail: dim blue-gray, faintly submerged — tiny blur, cold tint, masked fade. */
+.stage[data-glow='ocean'] .field[data-glow] .tail {
+	position: relative;
+	z-index: 2;
+	color: var(--tail-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: blur(0.4px) saturate(0.9);
+	text-shadow: 0 0 0.25em rgba(80, 160, 220, 0.12);
+	-webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.85) 0, rgba(0, 0, 0, 0.5) 2.8em, transparent 8.8em);
+	mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.85) 0, rgba(0, 0, 0, 0.5) 2.8em, transparent 8.8em);
+}
+
+.stage[data-glow='ocean'] .field[data-glow] .tail .glyph {
+	color: inherit;
+	background: none;
+	filter: none;
+	opacity: clamp(0.42, calc(0.7 - var(--i) * 0.014), 0.7);
+	text-shadow: none;
+	transform: translateY(0.035em);
+	animation: none;
+}
+
+/* Light flow off: the tide still comes in once — breaker, droplets and
+   surfacing play as finite entrances; waterline, caustics, depth and the
+   horizon hold as stills. (Fizz and backwash ride beam-spark/beam-flow,
+   which the shared flow-off rule hides.) */
+.stage[data-glow='ocean'][data-light-flow='off'] .field[data-glow]::before {
+	animation: none;
+}
+
+.stage[data-glow='ocean'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: ocean-breaker-v2 1.5s cubic-bezier(0.3, 0.65, 0.3, 1) 140ms both;
+}
+
+.stage[data-glow='ocean'][data-light-flow='off'] .field[data-glow] .prediction::after {
+	animation: none;
+}
+
+.stage[data-glow='ocean'][data-light-flow='off'] .field[data-glow] .beam-aux,
+.stage[data-glow='ocean'][data-light-flow='off'] .field[data-glow] .beam-smoke {
+	animation: none;
+}
+
+.stage[data-glow='ocean'][data-light-flow='off'] .field[data-glow] .beam-hot {
+	animation: beam-hot 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='ocean'][data-light-flow='off'] .field[data-glow] .next-word {
+	animation: ocean-word-in-v2 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='ocean'][data-light-flow='off'] .field[data-glow] .next-word::before {
+	animation: ocean-scrim-in-v2 420ms ease-out both;
+}
+
+.stage[data-glow='ocean'][data-light-flow='off'] .field[data-glow] .next-word::after {
+	animation: ocean-droplets-v2 700ms cubic-bezier(0.3, 0.55, 0.4, 1) 420ms both;
+}
+
+.stage[data-glow='ocean'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
+	animation: ocean-glyph-surface-v2 900ms cubic-bezier(0.3, 0.7, 0.3, 1) both;
+	animation-delay: calc(240ms + var(--i) * 60ms);
+}
+
+/* ---------- Light theme: seaside watercolor on paper ---------- */
+.field[data-theme='light'][data-glow='ocean'] {
+	--ocean-breaker-o: 0.8;
+	--ocean-caustic-o: 0.34;
+	--ocean-scrim-o: 0.88;
+	--ocean-drops-o: 0.75;
+	--ready-border: rgba(58, 122, 172, 0.34);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.98) inset,
+		0 -18px 50px rgba(120, 180, 220, 0.1) inset,
+		0 18px 46px rgba(34, 56, 76, 0.13),
+		0 0 76px rgba(90, 170, 220, 0.1);
+	--field-wash:
+		linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.2) 9%, transparent 17%),
+		linear-gradient(180deg, transparent 14%, rgba(74, 112, 156, 0.07) 19%, rgba(74, 112, 156, 0.035) 22%, transparent 29%),
+		radial-gradient(ellipse 60% 130% at 82% -24%, rgba(150, 200, 232, 0.16), transparent 60%),
+		radial-gradient(ellipse 40% 90% at 18% 72%, rgba(120, 170, 215, 0.07), transparent 75%);
+	--caret-gradient: linear-gradient(
+		180deg,
+		rgb(20, 52, 92) 0%,
+		rgb(34, 92, 148) 34%,
+		rgb(66, 148, 205) 62%,
+		rgb(150, 212, 245) 84%,
+		rgb(236, 250, 255) 100%
+	);
+	--caret-shadow:
+		0 0 6px rgba(60, 140, 200, 0.4),
+		0 0 16px rgba(40, 110, 180, 0.2);
+	--haze-bg:
+		radial-gradient(ellipse 1.7em 0.32em at 0.9em 1.6em, rgba(66, 122, 172, 0.36), rgba(96, 146, 190, 0.14) 55%, transparent 80%),
+		radial-gradient(ellipse 1.5em 0.28em at 2.7em 1.7em, rgba(80, 132, 178, 0.3), rgba(106, 152, 194, 0.12) 55%, transparent 80%),
+		linear-gradient(180deg, transparent 0 58%, rgba(96, 146, 192, 0.07) 63%, rgba(112, 158, 200, 0.04) 74%, transparent 90%);
+	--haze-filter: blur(3px) saturate(0.95);
+	--haze-opacity: 0.8;
+	--body-bg:
+		linear-gradient(180deg, transparent 0 60%, rgba(102, 150, 196, 0.13) 67%, rgba(120, 164, 204, 0.09) 80%, rgba(140, 178, 212, 0.045) 93%, transparent 100%),
+		radial-gradient(ellipse 4em 0.85em at 1.8em 1.78em, rgba(110, 158, 202, 0.12), transparent 76%);
+	--body-filter: blur(6px) saturate(0.95);
+	--body-opacity: 0.85;
+	--core-bg:
+		radial-gradient(ellipse 0.9em 0.2em at 0.55em 1.62em, rgba(58, 116, 168, 0.4), rgba(90, 140, 186, 0.16) 55%, transparent 80%),
+		radial-gradient(ellipse 0.5em 0.38em at 0.42em 1.48em, rgba(80, 134, 182, 0.2), transparent 76%);
+	--core-filter: blur(2.5px) saturate(0.95);
+	--core-opacity: 0.85;
+	--flow-bg:
+		linear-gradient(100deg, transparent 0 6%, rgba(88, 138, 184, 0.3) 13%, rgba(110, 156, 198, 0.14) 24%, transparent 38%),
+		radial-gradient(ellipse 1.4em 0.4em at 22% 62%, rgba(74, 126, 174, 0.3), transparent 76%);
+	--flow-filter: blur(5px) saturate(0.95);
+	--flow-high: 0.55;
+	--spark-bg:
+		radial-gradient(circle at 0.42em 1.5em, rgba(255, 255, 255, 0.95) 0 0.022em, rgba(94, 128, 158, 0.5) 0.028em 0.05em, transparent 0.07em),
+		radial-gradient(circle at 0.95em 1.66em, rgba(255, 255, 255, 0.9) 0 0.018em, rgba(102, 134, 162, 0.42) 0.024em 0.044em, transparent 0.062em),
+		radial-gradient(circle at 1.55em 1.44em, rgba(255, 255, 255, 0.92) 0 0.02em, rgba(98, 132, 160, 0.44) 0.026em 0.047em, transparent 0.066em),
+		radial-gradient(circle at 2.25em 1.6em, rgba(255, 255, 255, 0.85) 0 0.016em, rgba(108, 138, 164, 0.36) 0.022em 0.04em, transparent 0.056em),
+		radial-gradient(circle at 2.95em 1.5em, rgba(255, 255, 255, 0.8) 0 0.017em, rgba(104, 136, 162, 0.32) 0.023em 0.042em, transparent 0.058em),
+		radial-gradient(circle at 3.6em 1.68em, rgba(255, 255, 255, 0.75) 0 0.014em, rgba(112, 142, 166, 0.28) 0.02em 0.036em, transparent 0.05em);
+	--spark-filter: blur(0.2px);
+	--spark-low: 0.3;
+	--spark-high: 0.85;
+	--smoke-bg: linear-gradient(180deg, transparent 0 62%, rgba(88, 118, 152, 0.13) 72%, rgba(76, 106, 142, 0.18) 88%, rgba(76, 106, 142, 0.05) 97%, transparent 100%);
+	--smoke-opacity: 0.7;
+	--aux-bg:
+		radial-gradient(ellipse 2em 0.26em at 1.2em 1.68em, rgba(74, 128, 176, 0.28), rgba(100, 148, 190, 0.1) 58%, transparent 82%),
+		radial-gradient(ellipse 1.6em 0.22em at 3.4em 1.56em, rgba(88, 138, 184, 0.22), transparent 78%);
+	--aux-filter: blur(2.5px) saturate(0.95);
+	--aux-opacity: 0.75;
+	--aux-blend: normal;
+	--next-color: rgba(28, 52, 96, 0.94);
+	--next-shadow:
+		0 0 1px rgba(255, 255, 255, 0.88),
+		0 0 10px rgba(120, 176, 220, 0.22),
+		0 0 22px rgba(70, 130, 200, 0.09);
+	--tail-color: rgba(66, 96, 128, 0.4);
+}
+
+.stage[data-theme='light'][data-glow='ocean'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 90% 170% at 80% -34%, rgba(198, 226, 246, 0.35), transparent 56%),
+		linear-gradient(180deg, rgba(253, 254, 255, 0.98), rgba(244, 249, 253, 0.85) 48%, rgba(234, 243, 250, 0.88)),
+		linear-gradient(90deg, rgba(252, 254, 255, 0.98), rgba(242, 248, 252, 0.92));
+}
+
+.stage[data-theme='light'][data-glow='ocean'] .field[data-glow]::before {
+	mix-blend-mode: normal;
+	opacity: 0.75;
+	animation: ocean-swell-v2 10s ease-in-out infinite;
+}
+
+/* Watercolor must darken the paper, never screen into it. */
+.stage[data-theme='light'][data-glow='ocean'] .field[data-glow] .prediction > .beam,
+.stage[data-theme='light'][data-glow='ocean'] .field[data-glow] .torch-beam {
+	mix-blend-mode: normal;
+}
+
+/* Watercolor breaker: cerulean wash that darkens the paper; the foam is
+   untouched paper white ringed by blue-gray rims. */
+.stage[data-theme='light'][data-glow='ocean'] .field[data-glow] .prediction::before {
+	background:
+		radial-gradient(circle at 6.05em 1.06em, rgba(255, 255, 255, 0.96) 0 0.05em, rgba(96, 126, 156, 0.42) 0.06em 0.1em, transparent 0.13em),
+		radial-gradient(circle at 6.55em 1.42em, rgba(255, 255, 255, 0.94) 0 0.055em, rgba(100, 130, 158, 0.38) 0.066em 0.108em, transparent 0.14em),
+		radial-gradient(circle at 7.05em 1.12em, rgba(255, 255, 255, 0.92) 0 0.045em, rgba(106, 134, 162, 0.32) 0.055em 0.095em, transparent 0.125em),
+		radial-gradient(circle at 6.3em 0.78em, rgba(255, 255, 255, 0.88) 0 0.04em, rgba(110, 138, 164, 0.28) 0.05em 0.085em, transparent 0.112em),
+		radial-gradient(circle at 6.85em 1.78em, rgba(255, 255, 255, 0.85) 0 0.042em, rgba(114, 142, 168, 0.25) 0.052em 0.086em, transparent 0.112em),
+		radial-gradient(circle at 7.4em 1.5em, rgba(255, 255, 255, 0.8) 0 0.035em, rgba(118, 144, 170, 0.2) 0.043em 0.07em, transparent 0.09em),
+		radial-gradient(circle at 5.75em 1.62em, rgba(255, 255, 255, 0.78) 0 0.032em, rgba(112, 140, 166, 0.2) 0.04em 0.065em, transparent 0.085em),
+		radial-gradient(ellipse 1.5em 0.68em at 6.5em 1.3em, rgba(120, 162, 200, 0.2), rgba(140, 176, 208, 0.09) 55%, transparent 80%),
+		linear-gradient(96deg, transparent 0 4%, rgba(70, 122, 172, 0.16) 20%, rgba(56, 116, 172, 0.26) 56%, rgba(80, 138, 190, 0.3) 80%, rgba(120, 168, 210, 0.16) 90%, transparent 97%);
+	filter: blur(1px) saturate(0.95) drop-shadow(0 0.03em 0.14em rgba(60, 100, 150, 0.16));
+	mix-blend-mode: normal;
+}
+
+/* Pale ink caustics bleeding into the paper. */
+.stage[data-theme='light'][data-glow='ocean'] .field[data-glow] .prediction::after {
+	background-image:
+		radial-gradient(circle at 0.5em 0.42em, rgba(76, 128, 176, 0.2) 0 0.028em, transparent 0.085em),
+		linear-gradient(115deg, transparent 0 44%, rgba(88, 136, 182, 0.09) 48% 52%, transparent 56%);
+	filter: blur(0.6px) saturate(0.95);
+	mix-blend-mode: normal;
+}
+
+/* Indigo ink word; the reflection is subtler on watercolor water. */
+.stage[data-theme='light'][data-glow='ocean'] .field[data-glow] .next-word {
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: var(--next-shadow);
+	-webkit-box-reflect: below -0.6em linear-gradient(180deg, transparent 0 60%, rgba(0, 0, 0, 0.08) 80%, rgba(0, 0, 0, 0.18) 100%);
+	animation: ocean-word-in-v2 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Paper scrim keeps the ink legible over the washes. */
+.stage[data-theme='light'][data-glow='ocean'] .field[data-glow] .next-word::before {
+	background: radial-gradient(ellipse 82% 92% at 38% 52%, rgba(253, 254, 255, 0.88), rgba(253, 254, 255, 0.42) 58%, transparent 88%);
+	filter: blur(5px);
+	mix-blend-mode: normal;
+	opacity: var(--ocean-scrim-o);
+	animation: ocean-scrim-in-v2 420ms ease-out both;
+}
+
+/* Ink droplets on paper. */
+.stage[data-theme='light'][data-glow='ocean'] .field[data-glow] .next-word::after {
+	background:
+		radial-gradient(circle at 0.45em 0.6em, rgba(56, 108, 162, 0.8) 0 0.035em, rgba(90, 134, 176, 0.3) 0.045em 0.068em, transparent 0.09em),
+		radial-gradient(circle at 0.88em 0.36em, rgba(64, 116, 168, 0.68) 0 0.028em, rgba(96, 140, 180, 0.24) 0.036em 0.056em, transparent 0.075em),
+		radial-gradient(circle at 0.2em 0.84em, rgba(70, 120, 172, 0.55) 0 0.024em, transparent 0.062em);
+	filter: blur(0.2px);
+	mix-blend-mode: normal;
+}
+
+.stage[data-theme='light'][data-glow='ocean'] .field[data-glow] .next-word .glyph,
+.stage[data-theme='light'][data-glow='ocean'] .field[data-glow] .next-word .glyph:nth-child(even),
+.stage[data-theme='light'][data-glow='ocean'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-theme='light'][data-glow='ocean'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
+	color: var(--next-color);
+	text-shadow: var(--next-shadow);
+	animation-name: ocean-glyph-surface-light-v2;
+}
+
+.stage[data-theme='light'][data-glow='ocean'] .field[data-glow] .next-word .glyph::after {
+	color: rgba(70, 122, 174, 0.75);
+	text-shadow: 0 0 0.22em rgba(110, 156, 200, 0.35);
+}
+
+.stage[data-theme='light'][data-glow='ocean'] .field[data-glow] .tail,
+.stage[data-theme='light'][data-glow='ocean'] .field[data-glow] .tail .glyph {
+	color: var(--tail-color);
+	text-shadow: none;
+}
+
+.stage[data-theme='light'][data-glow='ocean'] .field[data-glow] .edge-left {
+	background: linear-gradient(90deg, rgb(252, 254, 255) 0%, rgb(252, 254, 255) 40%, rgba(252, 254, 255, 0) 100%);
+}
+
+.stage[data-theme='light'][data-glow='ocean'] .field[data-glow] .edge-right {
+	background: linear-gradient(
+		270deg,
+		rgba(242, 248, 252, 0.5) 0%,
+		rgba(242, 248, 252, 0.22) 42%,
+		rgba(242, 248, 252, 0) 100%
+	);
+	opacity: 0.55;
+}
+
+/* Light theme + flow off: re-win against the higher-specificity kills. */
+.stage[data-theme='light'][data-glow='ocean'][data-light-flow='off'] .field[data-glow]::before {
+	animation: none;
+}
+
+.stage[data-theme='light'][data-glow='ocean'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: ocean-breaker-v2 1.5s cubic-bezier(0.3, 0.65, 0.3, 1) 140ms both;
+}
+
+.stage[data-theme='light'][data-glow='ocean'][data-light-flow='off'] .field[data-glow] .prediction::after {
+	animation: none;
+}
+
+.stage[data-theme='light'][data-glow='ocean'][data-light-flow='off'] .field[data-glow] .next-word::before {
+	animation: ocean-scrim-in-v2 420ms ease-out both;
+}
+
+.stage[data-theme='light'][data-glow='ocean'][data-light-flow='off'] .field[data-glow] .next-word::after {
+	animation: ocean-droplets-v2 700ms cubic-bezier(0.3, 0.55, 0.4, 1) 420ms both;
+}
+
+.stage[data-theme='light'][data-glow='ocean'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
+	animation: ocean-glyph-surface-light-v2 900ms cubic-bezier(0.3, 0.7, 0.3, 1) both;
+	animation-delay: calc(240ms + var(--i) * 60ms);
+}
+
+/* ---------- Waiting state: quiet lapping at the caret ---------- */
+.field[data-state='waiting'][data-glow='ocean'] {
+	--haze-width: 5.4em;
+	--haze-height: 2.6em;
+	--haze-size: 2.7em 2.6em;
+	--haze-bg:
+		radial-gradient(ellipse 1.2em 0.24em at 0.7em 1.6em, rgba(206, 238, 255, 0.42), rgba(120, 205, 245, 0.16) 55%, transparent 80%),
+		radial-gradient(ellipse 1em 0.2em at 2em 1.7em, rgba(186, 230, 252, 0.34), transparent 78%);
+	--haze-filter: blur(3px) saturate(1.1);
+	--haze-opacity: 0.85;
+	--haze-mask: linear-gradient(90deg, transparent 0, black 0.3em), radial-gradient(ellipse 50% 50% at 34% 56%, black 0 46%, rgba(0, 0, 0, 0.5) 72%, transparent 96%);
+	--core-width: 2.4em;
+	--core-height: 2.6em;
+	--core-size: auto;
+	--core-bg:
+		radial-gradient(circle at 0.58em 1.34em, rgba(240, 252, 255, 0.9) 0 0.042em, rgba(160, 232, 252, 0.3) 0.052em 0.09em, transparent 0.12em),
+		radial-gradient(ellipse 0.34em 0.1em at 0.58em 1.62em, transparent 0 46%, rgba(196, 238, 255, 0.45) 62% 82%, transparent 98%),
+		radial-gradient(ellipse 0.5em 0.16em at 0.58em 1.64em, rgba(120, 205, 245, 0.2), transparent 80%);
+	--core-filter: blur(0.3px) drop-shadow(0 0 5px rgba(140, 225, 252, 0.4));
+	--core-opacity: 0.95;
+	--core-mask: linear-gradient(90deg, transparent 0, black 0.22em), radial-gradient(ellipse 52% 52% at 34% 54%, black 0 50%, rgba(0, 0, 0, 0.5) 76%, transparent 94%);
+	--flow-width: 2.6em;
+	--flow-height: 2.6em;
+	--flow-size: 100% 100%;
+	--flow-bg:
+		radial-gradient(circle at 0.95em 1.44em, rgba(238, 251, 255, 0.85) 0 0.024em, rgba(150, 226, 250, 0.26) 0.032em 0.052em, transparent 0.072em),
+		radial-gradient(circle at 1.5em 1.56em, rgba(226, 247, 255, 0.7) 0 0.02em, transparent 0.055em);
+	--flow-filter: blur(0.2px) drop-shadow(0 0 3px rgba(160, 232, 252, 0.35));
+	--flow-low: 0;
+	--flow-high: 0.8;
+	--flow-motion: ocean-wait-fizz-v2 7s ease-in-out 1.4s infinite;
+	--flow-mask: linear-gradient(90deg, transparent 0, black 0.24em), radial-gradient(ellipse 52% 52% at 40% 56%, black 0 50%, rgba(0, 0, 0, 0.5) 74%, transparent 94%);
+	--spark-width: 2.4em;
+	--spark-height: 2.6em;
+	--spark-size: auto;
+	--spark-bg: none;
+	--spark-low: 0;
+	--spark-high: 0;
+	--spark-motion: none;
+	--smoke-width: 4.6em;
+	--smoke-height: 2.6em;
+	--smoke-size: auto;
+	--smoke-bg: linear-gradient(180deg, transparent 0 62%, rgba(0, 7, 16, 0.32) 74%, rgba(0, 5, 12, 0.4) 88%, rgba(0, 5, 12, 0.1) 97%, transparent 100%);
+	--smoke-filter: blur(9px);
+	--smoke-opacity: 0.55;
+	--smoke-blend: normal;
+	--smoke-motion: none;
+	--smoke-mask: linear-gradient(90deg, transparent 0, black 0.24em), radial-gradient(ellipse 50% 52% at 36% 58%, black 0 48%, rgba(0, 0, 0, 0.5) 74%, transparent 94%);
+	--aux-opacity: 0;
+	--aux-motion: none;
+}
+
+.field[data-theme='light'][data-state='waiting'][data-glow='ocean'] {
+	--haze-bg:
+		radial-gradient(ellipse 1.2em 0.24em at 0.7em 1.6em, rgba(66, 122, 172, 0.34), rgba(96, 146, 190, 0.12) 55%, transparent 80%),
+		radial-gradient(ellipse 1em 0.2em at 2em 1.7em, rgba(80, 132, 178, 0.26), transparent 78%);
+	--haze-filter: blur(2.5px) saturate(0.95);
+	--haze-opacity: 0.8;
+	--core-bg:
+		radial-gradient(circle at 0.58em 1.34em, rgba(255, 255, 255, 0.95) 0 0.028em, rgba(94, 128, 158, 0.5) 0.036em 0.062em, transparent 0.085em),
+		radial-gradient(ellipse 0.34em 0.1em at 0.58em 1.62em, transparent 0 46%, rgba(76, 128, 176, 0.4) 62% 82%, transparent 98%),
+		radial-gradient(ellipse 0.5em 0.16em at 0.58em 1.64em, rgba(96, 146, 190, 0.16), transparent 80%);
+	--core-filter: blur(0.3px);
+	--core-opacity: 0.9;
+	--flow-bg:
+		radial-gradient(circle at 0.95em 1.44em, rgba(255, 255, 255, 0.9) 0 0.018em, rgba(98, 132, 160, 0.42) 0.024em 0.042em, transparent 0.06em),
+		radial-gradient(circle at 1.5em 1.56em, rgba(255, 255, 255, 0.8) 0 0.015em, rgba(106, 138, 164, 0.32) 0.02em 0.036em, transparent 0.05em);
+	--flow-filter: blur(0.2px);
+	--flow-high: 0.7;
+	--smoke-bg: linear-gradient(180deg, transparent 0 62%, rgba(88, 118, 152, 0.14) 74%, rgba(76, 106, 142, 0.18) 88%, rgba(76, 106, 142, 0.05) 97%, transparent 100%);
+	--smoke-opacity: 0.6;
+}
+
+/* Waiting + flow off: the water holds its breath. */
+.field[data-light-flow='off'][data-state='waiting'][data-glow='ocean'] {
+	--torch-haze-motion: none;
+	--torch-core-motion: none;
+	--flow-motion: none;
+	--spark-motion: none;
+	--smoke-motion: none;
+}
+
+/* ---------- Keyframes (ocean-*-v2) ---------- */
+@keyframes ocean-swell-v2 {
+	0%,
+	100% {
+		opacity: 0.72;
+	}
+	50% {
+		opacity: 0.92;
+	}
+}
+
+/* Waterline drift A: whole-tile x loop (tile 3.6em); mid stops only bob. */
+@keyframes ocean-line-drift-a-v2 {
+	0% {
+		background-position: 0em 0em;
+	}
+	25% {
+		background-position: 0.9em 0.05em;
+	}
+	50% {
+		background-position: 1.8em 0em;
+	}
+	75% {
+		background-position: 2.7em -0.045em;
+	}
+	100% {
+		background-position: 3.6em 0em;
+	}
+}
+
+/* Waterline drift B: counter-direction whole-tile loop (tile 4.4em). */
+@keyframes ocean-line-drift-b-v2 {
+	0% {
+		background-position: 0em 0em;
+	}
+	25% {
+		background-position: -1.1em -0.04em;
+	}
+	50% {
+		background-position: -2.2em 0em;
+	}
+	75% {
+		background-position: -3.3em 0.05em;
+	}
+	100% {
+		background-position: -4.4em 0em;
+	}
+}
+
+@keyframes ocean-depth-breathe-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--smoke-opacity, 0.75) * 0.82);
+	}
+	50% {
+		opacity: var(--smoke-opacity, 0.75);
+	}
+}
+
+/* THE BREAKER: roll in left -> right, crest over the word, recede lower,
+   settle into the resting waterline. One-shot. */
+@keyframes ocean-breaker-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-46%) translateX(-1.6em) scaleY(0.7);
+	}
+	18% {
+		opacity: var(--ocean-breaker-o, 0.95);
+		transform: translateY(-49%) translateX(-0.4em) scaleY(0.96);
+	}
+	55% {
+		opacity: var(--ocean-breaker-o, 0.95);
+		transform: translateY(-51%) translateX(2.6em) scaleY(1.04);
+	}
+	78% {
+		opacity: calc(var(--ocean-breaker-o, 0.95) * 0.5);
+		transform: translateY(-44%) translateX(4.2em) scaleY(0.72);
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(-40%) translateX(5.2em) scaleY(0.5);
+	}
+}
+
+/* Backwash foam sheet chasing the breaker, then gone. */
+@keyframes ocean-backwash-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-50%) translateX(-0.6em) scaleX(0.6);
+	}
+	30% {
+		opacity: var(--flow-high, 0.75);
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(-49%) translateX(4.6em) scaleX(1.1);
+	}
+}
+
+/* Caret swash: the little glint where words enter the water. */
+@keyframes ocean-caret-swash-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--core-opacity, 0.9) * 0.66);
+		transform: translateY(-50%) scaleX(1);
+	}
+	42% {
+		opacity: var(--core-opacity, 0.9);
+		transform: translateY(-50.6%) scaleX(1.06);
+	}
+	68% {
+		opacity: calc(var(--core-opacity, 0.9) * 0.8);
+		transform: translateY(-49.6%) scaleX(0.98);
+	}
+}
+
+/* Counter-drifting caustic tiles: per-layer background-position, each a
+   whole tile per loop (2.4em and -3em), y offsets constant. */
+@keyframes ocean-caustics-drift-v2 {
+	0% {
+		background-position:
+			0em 1.35em,
+			0em 1.42em;
+	}
+	100% {
+		background-position:
+			2.4em 1.35em,
+			-3em 1.42em;
+	}
+}
+
+/* Foam fizz: bubbles pop up and out — runs twice after the breaker. */
+@keyframes ocean-fizz-pop-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-49%) scale(0.85);
+	}
+	22% {
+		opacity: var(--spark-high, 0.9);
+		transform: translateY(-50.4%) scale(1);
+	}
+	58% {
+		opacity: calc(var(--spark-high, 0.9) * 0.55);
+		transform: translateY(-51.2%) scale(1.04);
+	}
+	100% {
+		opacity: calc(var(--spark-low, 0.25) * 0.8);
+		transform: translateY(-50%) scale(0.96);
+	}
+}
+
+/* ...then calm: a shy shimmer along the waterline. */
+@keyframes ocean-fizz-calm-v2 {
+	0%,
+	100% {
+		opacity: var(--spark-low, 0.25);
+		transform: translateY(-50%) scale(0.98);
+	}
+	36% {
+		opacity: calc(var(--spark-high, 0.9) * 0.5);
+		transform: translateY(-50.6%) scale(1);
+	}
+	62% {
+		opacity: calc(var(--spark-low, 0.25) * 0.7);
+	}
+	80% {
+		opacity: calc(var(--spark-high, 0.9) * 0.36);
+		transform: translateY(-49.6%) scale(1.01);
+	}
+}
+
+/* Splash droplets: arc up-forward, hang, fall back and vanish. */
+@keyframes ocean-droplets-v2 {
+	0% {
+		opacity: 0;
+		transform: translate(-0.3em, 0.45em) scale(0.8);
+	}
+	22% {
+		opacity: var(--ocean-drops-o, 0.9);
+		transform: translate(-0.08em, 0.08em) scale(1);
+	}
+	58% {
+		opacity: calc(var(--ocean-drops-o, 0.9) * 0.85);
+		transform: translate(0.26em, -0.18em) scale(1.02);
+	}
+	100% {
+		opacity: 0;
+		transform: translate(0.55em, 0.14em) scale(0.9);
+	}
+}
+
+@keyframes ocean-word-in-v2 {
+	0% {
+		opacity: 0;
+		transform: translateX(-0.06em);
+	}
+	100% {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+/* Wet sheen: a slow asymmetric glisten on the settled word — text-shadow
+   only, no transforms, so the reflection stays honest. */
+@keyframes ocean-sheen-v2 {
+	0%,
+	100% {
+		text-shadow:
+			0 1px 2px rgba(0, 10, 20, 0.55),
+			0 0 10px rgba(140, 220, 250, 0.24),
+			0 0 26px rgba(60, 160, 230, 0.12),
+			0 0 48px rgba(30, 110, 200, 0.06);
+	}
+	28% {
+		text-shadow:
+			0 1px 2px rgba(0, 10, 20, 0.55),
+			0 0 12px rgba(170, 234, 255, 0.4),
+			0 0 30px rgba(80, 180, 240, 0.2),
+			0 0 56px rgba(40, 130, 210, 0.1);
+	}
+	46% {
+		text-shadow:
+			0 1px 2px rgba(0, 10, 20, 0.55),
+			0 0 10px rgba(146, 224, 252, 0.28),
+			0 0 26px rgba(64, 164, 232, 0.13),
+			0 0 48px rgba(32, 114, 202, 0.065);
+	}
+	68% {
+		text-shadow:
+			0 1px 2px rgba(0, 10, 20, 0.55),
+			0 0 11px rgba(158, 228, 253, 0.34),
+			0 0 28px rgba(72, 172, 236, 0.17),
+			0 0 52px rgba(36, 122, 206, 0.085);
+	}
+}
+
+@keyframes ocean-scrim-in-v2 {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: var(--ocean-scrim-o, 0.75);
+	}
+}
+
+/* Surfacing glyph: submerged blue blur with a refraction wobble, buoys up
+   with a tiny overshoot and a droplet glint above its top, settles pale
+   sea-foam with transforms at zero (the reflection shows this state). */
+@keyframes ocean-glyph-surface-v2 {
+	0% {
+		opacity: 0.18;
+		color: rgb(56, 118, 168);
+		transform: translateY(0.14em) skewX(calc(var(--ocean-drift, 1) * -6deg)) scale(0.985);
+		filter: blur(3px) saturate(1.2);
+		text-shadow: none;
+	}
+	34% {
+		opacity: 0.72;
+		color: rgb(126, 196, 238);
+		transform: translateY(0.05em) skewX(calc(var(--ocean-drift, 1) * 4deg)) scale(0.995);
+		filter: blur(1.4px) saturate(1.25);
+		text-shadow: 0 0 8px rgba(120, 210, 250, 0.3);
+	}
+	58% {
+		opacity: 1;
+		color: rgb(238, 252, 255);
+		transform: translateY(-0.045em) skewX(0deg) scale(1.012);
+		filter: blur(0px) saturate(1.3);
+		text-shadow:
+			0 0 2px rgba(255, 255, 255, 0.85),
+			0 -0.5em 1px rgba(240, 252, 255, 0.75),
+			0 0 14px rgba(150, 230, 252, 0.55),
+			0 0 32px rgba(70, 180, 240, 0.28);
+	}
+	76% {
+		opacity: 1;
+		color: rgb(232, 248, 255);
+		transform: translateY(0.012em) skewX(0deg) scale(1.002);
+		filter: blur(0px) saturate(1.1);
+		text-shadow:
+			0 0 1px rgba(255, 255, 255, 0.4),
+			0 -0.5em 6px rgba(240, 252, 255, 0),
+			0 0 10px rgba(140, 220, 250, 0.3);
+	}
+	100% {
+		opacity: 1;
+		color: var(--next-color);
+		transform: translateY(0) skewX(0deg) scale(1);
+		filter: blur(0px) saturate(1);
+		text-shadow: var(--next-shadow);
+	}
+}
+
+@keyframes ocean-glyph-surface-light-v2 {
+	0% {
+		opacity: 0.2;
+		color: rgb(158, 186, 214);
+		transform: translateY(0.14em) skewX(calc(var(--ocean-drift, 1) * -6deg)) scale(0.985);
+		filter: blur(3px) saturate(0.9);
+		text-shadow: none;
+	}
+	34% {
+		opacity: 0.75;
+		color: rgb(96, 140, 190);
+		transform: translateY(0.05em) skewX(calc(var(--ocean-drift, 1) * 4deg)) scale(0.995);
+		filter: blur(1.4px) saturate(1);
+		text-shadow: 0 0 2px rgba(255, 255, 255, 0.7);
+	}
+	58% {
+		opacity: 1;
+		color: rgb(22, 58, 110);
+		transform: translateY(-0.045em) skewX(0deg) scale(1.012);
+		filter: blur(0px) saturate(1.2);
+		text-shadow:
+			0 0 2px rgba(255, 255, 255, 0.95),
+			0 -0.5em 1px rgba(255, 255, 255, 0.9),
+			0 0 12px rgba(110, 168, 216, 0.45);
+	}
+	76% {
+		opacity: 1;
+		color: rgb(26, 54, 100);
+		transform: translateY(0.012em) skewX(0deg) scale(1.002);
+		filter: blur(0px) saturate(1.05);
+		text-shadow:
+			0 0 1px rgba(255, 255, 255, 0.9),
+			0 -0.5em 6px rgba(255, 255, 255, 0),
+			0 0 10px rgba(120, 176, 220, 0.26);
+	}
+	100% {
+		opacity: 1;
+		color: var(--next-color);
+		transform: translateY(0) skewX(0deg) scale(1);
+		filter: blur(0px) saturate(1);
+		text-shadow: var(--next-shadow);
+	}
+}
+
+/* The alt ghost lifts off as spray and evaporates. */
+@keyframes ocean-alt-spray-v2 {
+	0% {
+		opacity: 0.65;
+		transform: translateY(0.06em) scale(0.92);
+		filter: blur(0.02em);
+	}
+	55% {
+		opacity: 0.28;
+		transform: translateY(-0.18em) translateX(0.04em) scale(1.06);
+		filter: blur(0.034em);
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(-0.34em) translateX(0.09em) scale(1.14);
+		filter: blur(0.05em);
+	}
+}
+
+/* Waiting lap: the mini waterline drifts one whole tile (2.7em) while the
+   whole segment bobs gently. */
+@keyframes ocean-wait-lap-v2 {
+	0% {
+		background-position: 0em 0em;
+		transform: translateY(-50%);
+	}
+	25% {
+		background-position: 0.675em 0em;
+		transform: translateY(-51%);
+	}
+	50% {
+		background-position: 1.35em 0em;
+		transform: translateY(-50%);
+	}
+	75% {
+		background-position: 2.025em 0em;
+		transform: translateY(-49.2%);
+	}
+	100% {
+		background-position: 2.7em 0em;
+		transform: translateY(-50%);
+	}
+}
+
+/* The buoy-dot rides the same swell: up when the line dips, down when it
+   lifts — always a beat behind. */
+@keyframes ocean-wait-buoy-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--core-opacity, 0.95) * 0.8);
+		transform: translateY(-50%);
+	}
+	30% {
+		opacity: var(--core-opacity, 0.95);
+		transform: translateY(-51.4%);
+	}
+	55% {
+		opacity: calc(var(--core-opacity, 0.95) * 0.88);
+		transform: translateY(-49.6%);
+	}
+	80% {
+		opacity: calc(var(--core-opacity, 0.95) * 0.92);
+		transform: translateY(-50.8%);
+	}
+}
+
+/* Occasional tiny fizz at the caret: dark for most of the loop, two quick
+   pops, then quiet again. */
+@keyframes ocean-wait-fizz-v2 {
+	0%,
+	54%,
+	100% {
+		opacity: 0;
+		transform: translateY(-50%) scale(0.9);
+	}
+	58% {
+		opacity: var(--flow-high, 0.8);
+		transform: translateY(-50.8%) scale(1);
+	}
+	64% {
+		opacity: calc(var(--flow-high, 0.8) * 0.2);
+		transform: translateY(-51.4%) scale(0.97);
+	}
+	70% {
+		opacity: calc(var(--flow-high, 0.8) * 0.6);
+		transform: translateY(-52%) scale(1.02);
+	}
+	78% {
+		opacity: 0;
+		transform: translateY(-52.6%) scale(0.92);
+	}
+}

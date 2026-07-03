@@ -15,7 +15,8 @@ const PRESET_CSS_FILES = [
 	'src/lib/effects/vortex/index.css',
 	'src/lib/effects/bubblegum/index.css',
 	'src/lib/effects/optic/index.css',
-	'src/lib/effects/biolume/index.css'
+	'src/lib/effects/biolume/index.css',
+	'src/lib/effects/ocean/index.css'
 ];
 
 function readPresetCss(): string {
