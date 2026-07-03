@@ -26,7 +26,8 @@ const PRESET_CSS_FILES = [
 	'src/lib/effects/diffusion/index.css',
 	'src/lib/effects/chromabloom/index.css',
 	'src/lib/effects/infrared/index.css',
-	'src/lib/effects/staged/index.css'
+	'src/lib/effects/staged/index.css',
+	'src/lib/effects/blueprint/index.css'
 ];
 
 function readPresetCss(): string {

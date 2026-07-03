@@ -1,0 +1,840 @@
+/* ============================================================
+   BLUEPRINT v2 — "Чертёж: будущее сначала чертят, потом строят".
+   The field is a draftsman's board: deep blueprint cyan-navy
+   vessel with a fine two-level grid (minor 20px hairlines, major
+   every 100px), corner registration L-brackets and a faint top
+   sheen — all utterly still. The ghost zone stays MONOSPACE.
+   THE SIGNATURE — WIREFRAME -> BUILT: every ghost glyph is line
+   work (-webkit-text-stroke, color: transparent). The NEXT
+   WORD's glyphs get BUILT: each traces in as a thin cyan outline,
+   FILLS with solid ink (per-glyph var(--i) stagger, keyframes
+   with no 100% frame so each settles onto the live filled slot),
+   flashes brighter at the just-inked beat, then holds. The TAIL
+   stays PURE WIREFRAME: outline-only glyphs whose stroke alpha
+   decays with var(--i) — the far future is only sketched. The
+   fill/outline inversion IS the near/far story. CONSTRUCTION
+   LINES (next-word::before): baseline rule under the word
+   extending past it, cap-height line above, two short extension
+   verticals at word start/end — 1px hairlines drawn in via
+   background-size draw-ins (no blur anywhere on line work).
+   DIMENSION MARK (next-word::after): one 1px line above the word
+   with 45deg drafting ticks at both ends, drawing in last. SNAP
+   CURSOR (prediction::before): a tiny crosshair + circle at the
+   caret origin (CAD snap), the only settled whisper — it
+   breathes; the grid never moves. REVEAL ORDER: crosshair snaps
+   (0ms), guides draw (~60-380ms), glyph outlines trace l->r and
+   fill, dimension mark last. WAITING: a CAD compass at the caret
+   — a dashed circle (repeating-conic dash ring read through a
+   ring mask) slowly ROTATING via a registered <angle>
+   (--bp-angle-v2) animated ON the torch-core (var() in a custom
+   property substitutes where that property computes), a STATIC
+   crosshair + faint blue pool on the torch-haze; every other
+   torch layer dead. LIGHT THEME — WHITE DRAFTING PAPER: the true
+   cyanotype inversion — near-white paper, pale blue grid, deep
+   navy ink fills, light blue tail outlines, medium blue guides
+   and crosshair. data-light-flow='off': draw-ins and fills play
+   once (finite); the crosshair breathe and the compass rotation
+   freeze. Every decorated layer's masks complete INSIDE their
+   boxes (mask-composite: intersect where two masks combine).
+   Keyframes blueprint-*-v2 and vars --bp-*-v2 only; legacy
+   blueprint-* rules in legacy.css are superseded and get
+   deleted.
+   ============================================================ */
+
+@property --bp-angle-v2 {
+	syntax: '<angle>';
+	inherits: false;
+	initial-value: 0deg;
+}
+
+.field[data-glow='blueprint'] {
+	--layer-radius: 999px;
+	--layer-clip: inset(0 round 999px);
+	--bp-grid-minor-v2: rgba(126, 208, 255, 0.05);
+	--bp-grid-major-v2: rgba(148, 220, 255, 0.1);
+	--bp-mark-v2: oklch(0.86 0.06 218 / 0.22);
+	--bp-vignette-v2: rgba(2, 9, 24, 0.5);
+	--bp-sheen-v2: rgba(214, 242, 255, 0.035);
+	--bp-board-bg-v2:
+		linear-gradient(var(--bp-mark-v2), var(--bp-mark-v2)) left 26px top 13px / 14px 1px no-repeat,
+		linear-gradient(var(--bp-mark-v2), var(--bp-mark-v2)) left 26px top 13px / 1px 14px no-repeat,
+		linear-gradient(var(--bp-mark-v2), var(--bp-mark-v2)) right 26px top 13px / 14px 1px no-repeat,
+		linear-gradient(var(--bp-mark-v2), var(--bp-mark-v2)) right 26px top 13px / 1px 14px no-repeat,
+		linear-gradient(var(--bp-mark-v2), var(--bp-mark-v2)) left 26px bottom 13px / 14px 1px no-repeat,
+		linear-gradient(var(--bp-mark-v2), var(--bp-mark-v2)) left 26px bottom 13px / 1px 14px no-repeat,
+		linear-gradient(var(--bp-mark-v2), var(--bp-mark-v2)) right 26px bottom 13px / 14px 1px no-repeat,
+		linear-gradient(var(--bp-mark-v2), var(--bp-mark-v2)) right 26px bottom 13px / 1px 14px no-repeat,
+		radial-gradient(ellipse 94% 160% at 50% 52%, transparent 0 52%, var(--bp-vignette-v2) 100%) 0 0 / 100% 100% no-repeat,
+		repeating-linear-gradient(0deg, transparent 0 99px, var(--bp-grid-major-v2) 99px 100px) 0 0 / 100% 100% repeat,
+		repeating-linear-gradient(90deg, transparent 0 99px, var(--bp-grid-major-v2) 99px 100px) 0 0 / 100% 100% repeat,
+		repeating-linear-gradient(0deg, var(--bp-grid-minor-v2) 0 1px, transparent 1px 20px) 0 0 / 100% 100% repeat,
+		repeating-linear-gradient(90deg, var(--bp-grid-minor-v2) 0 1px, transparent 1px 20px) 0 0 / 100% 100% repeat,
+		linear-gradient(180deg, var(--bp-sheen-v2), transparent 36%) 0 0 / 100% 100% no-repeat;
+	--bp-guide-v2: oklch(0.84 0.09 218 / 0.5);
+	--bp-guides-o-v2: 0.85;
+	--bp-dim-v2: oklch(0.88 0.08 215 / 0.62);
+	--bp-dim-o-v2: 0.9;
+	--bp-snap-v2: oklch(0.87 0.09 216 / 0.55);
+	--bp-snap-o-v2: 0.9;
+	--bp-ring-v2: oklch(0.88 0.09 213 / 0.85);
+	--bp-ink-fill-v2: oklch(0.95 0.045 205 / 0.98);
+	--bp-ink-stroke-v2: oklch(0.87 0.1 213 / 0.55);
+	--bp-ink-glow-v2:
+		0 0 0.28em oklch(0.85 0.1 213 / 0.3),
+		0 0 0.7em oklch(0.7 0.12 220 / 0.14);
+	--ready-border: rgba(108, 190, 255, 0.3);
+	--ready-shadow:
+		0 1px 0 rgba(214, 246, 255, 0.07) inset,
+		0 -34px 92px rgba(4, 22, 52, 0.6) inset,
+		0 0 52px oklch(0.55 0.08 240 / 0.12) inset,
+		0 30px 66px rgba(0, 0, 0, 0.5),
+		0 0 84px oklch(0.72 0.12 225 / 0.08);
+	--field-wash:
+		radial-gradient(ellipse 120% 180% at 50% -40%, oklch(0.5 0.07 240 / 0.1), transparent 60%),
+		linear-gradient(180deg, rgba(214, 242, 255, 0.03), transparent 38%);
+	--caret-gradient: linear-gradient(
+		180deg,
+		rgb(235, 253, 255) 0%,
+		rgb(148, 224, 255) 45%,
+		rgb(72, 176, 255) 78%,
+		rgb(28, 104, 224) 100%
+	);
+	--caret-shadow:
+		0 0 6px rgba(226, 250, 255, 0.75),
+		0 0 18px rgba(96, 198, 255, 0.5),
+		0 0 40px rgba(40, 128, 255, 0.24);
+	--haze-bg: none;
+	--haze-opacity: 0;
+	--haze-motion: none;
+	--torch-haze-motion: none;
+	--haze-mask: none;
+	--body-bg: none;
+	--body-opacity: 0;
+	--body-mask: none;
+	--core-bg: none;
+	--core-opacity: 0;
+	--core-motion: none;
+	--torch-core-motion: none;
+	--core-mask: none;
+	--flow-bg: none;
+	--flow-low: 0;
+	--flow-high: 0;
+	--flow-motion: none;
+	--flow-mask: none;
+	--spark-bg: none;
+	--spark-low: 0;
+	--spark-high: 0;
+	--spark-motion: none;
+	--spark-mask: none;
+	--smoke-bg: none;
+	--smoke-opacity: 0;
+	--smoke-motion: none;
+	--smoke-blend: normal;
+	--smoke-mask: none;
+	--aux-bg: none;
+	--aux-opacity: 0;
+	--aux-motion: none;
+	--aux-mask: none;
+	--next-color: var(--bp-ink-fill-v2);
+	--next-shadow: var(--bp-ink-glow-v2);
+	--tail-color: oklch(0.8 0.07 220 / 0.3);
+}
+
+/* The line work lives on the pseudos: every shared beam dies. Torch
+   layers serve the waiting compass only. */
+.stage[data-glow='blueprint'] .field[data-glow] .prediction > .beam {
+	display: none;
+}
+
+.stage[data-glow='blueprint'] .field[data-glow] .caret-origin-glow[data-mode='ready'] {
+	display: none;
+}
+
+/* Two-layer masks (left fade x shaped falloff) need intersection, not
+   union — the waiting torch layers and the snap cursor alike, so every
+   fade completes inside its own box. */
+.stage[data-glow='blueprint'] .field[data-glow] .torch-beam,
+.stage[data-glow='blueprint'] .field[data-glow] .prediction::before {
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+}
+
+.stage[data-glow='blueprint'] .field[data-glow] .prediction {
+	isolation: isolate;
+}
+
+/* Drafting board vessel: deep blueprint cyan-navy, not gray. */
+.stage[data-glow='blueprint'] .field[data-glow] {
+	background:
+		linear-gradient(180deg, rgba(214, 242, 255, 0.02), transparent 34%),
+		linear-gradient(90deg, rgb(7, 21, 46), rgb(9, 26, 55) 52%, rgb(8, 23, 50));
+}
+
+/* BOARD OVERLAY: registration brackets, edge vignette, major + minor
+   grid, top sheen. The grid is utterly still — never animated. */
+.stage[data-glow='blueprint'] .field[data-glow]::before {
+	background: var(--bp-board-bg-v2);
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: normal;
+	opacity: 1;
+	animation: none;
+}
+
+/* Dissolve into the field's rounded clip, not the paint box; edge
+   overlays extended into the 64px padding, painted in the vessel color
+   so the board never steps at the content box. */
+.stage[data-glow='blueprint'] .field[data-glow] .paint {
+	overflow: visible;
+	clip-path: inset(-3.4em -6em -3.4em 0);
+}
+
+.stage[data-glow='blueprint'] .field[data-glow] .edge-left {
+	left: -64px;
+	width: 156px;
+	background: linear-gradient(90deg, rgb(7, 21, 46) 0%, rgb(7, 21, 46) 40%, rgba(7, 21, 46, 0) 100%);
+	opacity: 0;
+}
+
+.stage[data-glow='blueprint'] .field[data-glow] .viewport.scrolled .edge-left {
+	opacity: 1;
+}
+
+.stage[data-glow='blueprint'] .field[data-glow] .edge-right {
+	display: block;
+	right: -64px;
+	width: 200px;
+	background: linear-gradient(270deg, rgba(8, 23, 50, 0.9) 0%, rgba(8, 23, 50, 0.5) 34%, rgba(8, 23, 50, 0) 100%);
+	opacity: 0.8;
+}
+
+/* ---------- SNAP CURSOR: the CAD crosshair at the caret origin ---------- */
+/* A 1px crosshair with a small snap circle marks where the drafting
+   starts; it snaps in first and keeps the only settled whisper (a slow
+   breathe). Hairline tips fade INSIDE the box via the radial mask. */
+.stage[data-glow='blueprint'] .field[data-glow] .prediction::before {
+	position: absolute;
+	left: -0.64em;
+	top: 0.02em;
+	right: auto;
+	bottom: auto;
+	z-index: -2;
+	width: 1.1em;
+	height: 0.96em;
+	content: '';
+	pointer-events: none;
+	border: 0;
+	border-radius: 0;
+	clip-path: none;
+	box-shadow: none;
+	background:
+		radial-gradient(circle 0.27em at 0.55em 0.48em, transparent 0 0.2em, var(--bp-snap-v2) 0.212em 0.258em, transparent 0.27em),
+		linear-gradient(var(--bp-snap-v2), var(--bp-snap-v2)) left 0 top 0.475em / 100% 1px no-repeat,
+		linear-gradient(var(--bp-snap-v2), var(--bp-snap-v2)) left 0.545em top 0 / 1px 100% no-repeat;
+	background-repeat: no-repeat;
+	filter: none;
+	-webkit-mask-image: radial-gradient(ellipse 68% 68% at 50% 50%, black 0 55%, rgba(0, 0, 0, 0.5) 80%, transparent 98%);
+	mask-image: radial-gradient(ellipse 68% 68% at 50% 50%, black 0 55%, rgba(0, 0, 0, 0.5) 80%, transparent 98%);
+	mix-blend-mode: normal;
+	opacity: var(--bp-snap-o-v2);
+	transform: none;
+	transform-origin: 50% 50%;
+	animation:
+		blueprint-snap-in-v2 380ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		blueprint-snap-breathe-v2 4.6s ease-in-out 380ms infinite;
+}
+
+/* The legacy draft sheet is gone — the guides live on the word itself. */
+.stage[data-glow='blueprint'] .field[data-glow] .prediction::after {
+	content: none;
+	background: none;
+	animation: none;
+}
+
+/* ---------- The word: drafted, then built ---------- */
+.stage[data-glow='blueprint'] .field[data-glow] .next-word {
+	position: relative;
+	isolation: isolate;
+	z-index: 5;
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-mask-image: none;
+	mask-image: none;
+	filter: none;
+	text-shadow: none;
+	transform: none;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	animation: blueprint-word-in-v2 200ms ease-out both;
+}
+
+/* CONSTRUCTION LINES: baseline rule under the word (full box, extends
+   past the word), cap-height line above, two extension verticals at
+   word start/end — 1px hairlines, zero blur, drawn in by animating
+   background-size from nothing onto the live slot sizes (keyframes
+   carry no 100% frame). */
+.stage[data-glow='blueprint'] .field[data-glow] .next-word::before {
+	position: absolute;
+	left: -0.34em;
+	top: -0.14em;
+	z-index: -1;
+	width: calc(100% + 0.68em);
+	height: 1.16em;
+	content: '';
+	pointer-events: none;
+	background:
+		linear-gradient(var(--bp-guide-v2), var(--bp-guide-v2)) left 0.24em top 0.3em no-repeat,
+		linear-gradient(var(--bp-guide-v2), var(--bp-guide-v2)) left 0 top 0.98em no-repeat;
+	background-size:
+		calc(100% - 0.48em) 1px,
+		100% 1px;
+	filter: none;
+	opacity: var(--bp-guides-o-v2);
+	animation: blueprint-guides-in-v2 320ms ease-out 60ms both;
+}
+
+/* DIMENSION MARK: one 1px line above the word with 45deg drafting ticks
+   at both ends — pure gradients, drawn in last. */
+.stage[data-glow='blueprint'] .field[data-glow] .next-word::after {
+	position: absolute;
+	left: -0.08em;
+	top: -0.6em;
+	z-index: -1;
+	width: calc(100% + 0.16em);
+	height: 0.44em;
+	content: '';
+	pointer-events: none;
+	background:
+		linear-gradient(45deg, transparent calc(50% - 0.8px), var(--bp-dim-v2) calc(50% - 0.8px) calc(50% + 0.8px), transparent calc(50% + 0.8px))
+			left 0 top 0.09em no-repeat,
+		linear-gradient(45deg, transparent calc(50% - 0.8px), var(--bp-dim-v2) calc(50% - 0.8px) calc(50% + 0.8px), transparent calc(50% + 0.8px))
+			right 0 top 0.09em no-repeat,
+		linear-gradient(var(--bp-dim-v2), var(--bp-dim-v2)) left 0 top 0.215em no-repeat;
+	background-size:
+		0.26em 0.26em,
+		0.26em 0.26em,
+		100% 1px;
+	filter: none;
+	opacity: var(--bp-dim-o-v2);
+	animation: blueprint-dim-in-v2 340ms ease-out 1150ms both;
+}
+
+/* THE BUILD: each glyph traces in as a thin cyan outline (transparent
+   fill + text-stroke), fills with solid ink, flashes at the just-inked
+   beat, then — no 100% frame — settles onto the live filled slot.
+   The nth-child group re-wins legacy tint splits. */
+.stage[data-glow='blueprint'] .field[data-glow] .next-word .glyph,
+.stage[data-glow='blueprint'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-glow='blueprint'] .field[data-glow] .next-word .glyph:nth-child(3n + 2),
+.stage[data-glow='blueprint'] .field[data-glow] .next-word .glyph:nth-child(3n) {
+	display: inline-block;
+	position: relative;
+	color: var(--bp-ink-fill-v2);
+	-webkit-text-stroke: 1px var(--bp-ink-stroke-v2);
+	-webkit-text-fill-color: currentColor;
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	opacity: 1;
+	filter: none;
+	text-shadow: var(--bp-ink-glow-v2);
+	transform: none;
+	animation: blueprint-build-v2 680ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+	animation-delay: calc(300ms + var(--i, 0) * 70ms);
+}
+
+/* The draft changes line weight, not letters: no scrambled alter egos. */
+.stage[data-glow='blueprint'] .field[data-glow] .next-word .glyph::after,
+.stage[data-glow='blueprint'] .field[data-glow] .tail .glyph::after {
+	opacity: 0;
+	animation: none;
+}
+
+/* ---------- Tail: the far future stays wireframe ---------- */
+/* Outline-only monospace glyphs — transparent fill, 1px stroke whose
+   alpha decays with var(--i) (floored so shapes stay legible well past
+   eight glyphs); the strip fades inside its own masked box. */
+.stage[data-glow='blueprint'] .field[data-glow] .tail {
+	position: relative;
+	isolation: isolate;
+	z-index: 2;
+	color: var(--tail-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-text-fill-color: currentColor;
+	filter: none;
+	text-shadow: none;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	-webkit-mask-image: linear-gradient(90deg, black 0, rgba(0, 0, 0, 0.6) 4em, rgba(0, 0, 0, 0.2) 8em, transparent 11em);
+	mask-image: linear-gradient(90deg, black 0, rgba(0, 0, 0, 0.6) 4em, rgba(0, 0, 0, 0.2) 8em, transparent 11em);
+	animation: blueprint-tail-in-v2 360ms ease-out 200ms both;
+}
+
+.stage[data-glow='blueprint'] .field[data-glow] .tail .glyph,
+.stage[data-glow='blueprint'] .field[data-glow] .tail .glyph:nth-child(3n + 1),
+.stage[data-glow='blueprint'] .field[data-glow] .tail .glyph:nth-child(3n + 2),
+.stage[data-glow='blueprint'] .field[data-glow] .tail .glyph:nth-child(3n) {
+	display: inline-block;
+	position: relative;
+	color: transparent;
+	-webkit-text-stroke: 1px oklch(0.83 0.09 218 / clamp(0.16, calc(0.62 - var(--i, 0) * 0.026), 0.62));
+	-webkit-text-fill-color: currentColor;
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	opacity: 1;
+	filter: none;
+	text-shadow: none;
+	transform: none;
+	animation: blueprint-sketch-in-v2 420ms ease-out both;
+	animation-delay: calc(420ms + var(--i, 0) * 45ms);
+}
+
+/* ---------- Light flow off: one full drafting pass, then a still ---------- */
+/* Draw-ins and fills play once (finite); the crosshair breathe freezes.
+   These re-win the legacy blueprint flow-off group that blanket-kills
+   the same animations. */
+.stage[data-glow='blueprint'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: blueprint-snap-in-v2 380ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-glow='blueprint'][data-light-flow='off'] .field[data-glow]::before {
+	animation: none;
+}
+
+.stage[data-glow='blueprint'][data-light-flow='off'] .field[data-glow] .next-word::before {
+	animation: blueprint-guides-in-v2 320ms ease-out 60ms both;
+}
+
+.stage[data-glow='blueprint'][data-light-flow='off'] .field[data-glow] .next-word::after {
+	animation: blueprint-dim-in-v2 340ms ease-out 1150ms both;
+}
+
+.stage[data-glow='blueprint'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
+	animation: blueprint-build-v2 680ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+	animation-delay: calc(300ms + var(--i, 0) * 70ms);
+}
+
+.stage[data-glow='blueprint'][data-light-flow='off'] .field[data-glow] .tail .glyph {
+	animation: blueprint-sketch-in-v2 420ms ease-out both;
+	animation-delay: calc(420ms + var(--i, 0) * 45ms);
+}
+
+/* ---------- Light theme: WHITE DRAFTING PAPER, blue ink ---------- */
+/* The cyanotype inverted: near-white paper, pale blue grid, navy ink
+   fills, light blue wireframe tail, medium blue guides. */
+.field[data-theme='light'][data-glow='blueprint'] {
+	--bp-grid-minor-v2: rgba(84, 146, 212, 0.13);
+	--bp-grid-major-v2: rgba(58, 122, 196, 0.19);
+	--bp-mark-v2: oklch(0.5 0.08 252 / 0.34);
+	--bp-vignette-v2: rgba(96, 128, 168, 0.12);
+	--bp-sheen-v2: rgba(255, 255, 255, 0.7);
+	--bp-guide-v2: oklch(0.52 0.11 252 / 0.55);
+	--bp-guides-o-v2: 0.9;
+	--bp-dim-v2: oklch(0.45 0.12 255 / 0.6);
+	--bp-dim-o-v2: 0.92;
+	--bp-snap-v2: oklch(0.48 0.12 254 / 0.55);
+	--bp-snap-o-v2: 0.85;
+	--bp-ring-v2: oklch(0.4 0.11 255 / 0.8);
+	--bp-ink-fill-v2: oklch(0.3 0.09 258 / 0.97);
+	--bp-ink-stroke-v2: oklch(0.36 0.11 255 / 0.45);
+	--bp-ink-glow-v2:
+		0 0 0.14em oklch(0.5 0.1 252 / 0.18),
+		0 1px 0 rgba(255, 255, 255, 0.55);
+	--ready-border: rgba(74, 138, 202, 0.36);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.96) inset,
+		0 -18px 50px rgba(116, 148, 190, 0.1) inset,
+		0 18px 46px rgba(46, 66, 96, 0.13),
+		0 0 58px oklch(0.6 0.09 250 / 0.09);
+	--field-wash:
+		radial-gradient(ellipse 90% 170% at 70% -34%, rgba(255, 255, 255, 0.7), transparent 58%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.5), transparent 42%);
+	--caret-gradient: linear-gradient(180deg, rgb(20, 34, 66) 0%, rgb(36, 74, 138) 55%, rgb(66, 124, 204) 100%);
+	--caret-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.5),
+		0 0 8px rgba(56, 108, 190, 0.3),
+		0 6px 14px rgba(40, 66, 110, 0.18);
+	--haze-opacity: 0;
+	--body-opacity: 0;
+	--core-opacity: 0;
+	--flow-low: 0;
+	--flow-high: 0;
+	--spark-low: 0;
+	--spark-high: 0;
+	--smoke-opacity: 0;
+	--aux-opacity: 0;
+	--next-color: var(--bp-ink-fill-v2);
+	--next-shadow: var(--bp-ink-glow-v2);
+	--tail-color: oklch(0.58 0.07 250 / 0.4);
+}
+
+/* Legacy scopes blueprint light vars on the stage: re-win the contested
+   ones at the same strength so the paper palette holds. */
+.stage[data-theme='light'][data-glow='blueprint'] .field[data-glow] {
+	--ready-border: rgba(74, 138, 202, 0.36);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.96) inset,
+		0 -18px 50px rgba(116, 148, 190, 0.1) inset,
+		0 18px 46px rgba(46, 66, 96, 0.13),
+		0 0 58px oklch(0.6 0.09 250 / 0.09);
+	--field-wash:
+		radial-gradient(ellipse 90% 170% at 70% -34%, rgba(255, 255, 255, 0.7), transparent 58%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.5), transparent 42%);
+	--haze-opacity: 0;
+	--body-opacity: 0;
+	--core-opacity: 0;
+	--flow-low: 0;
+	--flow-high: 0;
+	--spark-low: 0;
+	--spark-high: 0;
+	--smoke-opacity: 0;
+	--aux-opacity: 0;
+	--next-color: var(--bp-ink-fill-v2);
+	--next-shadow: var(--bp-ink-glow-v2);
+	--tail-color: oklch(0.58 0.07 250 / 0.4);
+}
+
+/* Paper vessel — the same board with the sun on it. */
+.stage[data-theme='light'][data-glow='blueprint'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 90% 160% at 70% -30%, rgba(255, 255, 255, 0.85), transparent 56%),
+		linear-gradient(180deg, rgb(252, 253, 255), rgb(246, 249, 253) 55%, rgb(240, 245, 251));
+	box-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.96) inset,
+		0 -1px 0 rgba(116, 148, 190, 0.14) inset,
+		0 20px 50px rgba(46, 66, 96, 0.12);
+}
+
+/* Re-pin the board overlay against legacy light rules that multiply it. */
+.stage[data-theme='light'][data-glow='blueprint'] .field[data-glow]::before {
+	background: var(--bp-board-bg-v2);
+	mix-blend-mode: normal;
+	animation: none;
+}
+
+/* Blue ink sits on paper — multiply, never screened away. */
+.stage[data-theme='light'][data-glow='blueprint'] .field[data-glow] .torch-beam {
+	mix-blend-mode: multiply;
+}
+
+/* Snap cursor on paper: same geometry, ink colors from the vars. */
+.stage[data-theme='light'][data-glow='blueprint'] .field[data-glow] .prediction::before {
+	mix-blend-mode: normal;
+	opacity: var(--bp-snap-o-v2);
+}
+
+.stage[data-theme='light'][data-glow='blueprint'] .field[data-glow] .next-word {
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: none;
+}
+
+/* Navy ink build: nth-child(n) matches the legacy light specificity. */
+.stage[data-theme='light'][data-glow='blueprint'] .field[data-glow] .next-word .glyph:nth-child(n) {
+	color: var(--bp-ink-fill-v2);
+	-webkit-text-stroke: 1px var(--bp-ink-stroke-v2);
+	-webkit-text-fill-color: currentColor;
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: var(--bp-ink-glow-v2);
+	animation: blueprint-build-light-v2 680ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+	animation-delay: calc(300ms + var(--i, 0) * 70ms);
+}
+
+.stage[data-theme='light'][data-glow='blueprint'] .field[data-glow] .tail {
+	color: var(--tail-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-text-fill-color: currentColor;
+	filter: none;
+	text-shadow: none;
+}
+
+/* Light blue wireframe tail: same decay curve, ink polarity flipped. */
+.stage[data-theme='light'][data-glow='blueprint'] .field[data-glow] .tail .glyph:nth-child(n) {
+	color: transparent;
+	-webkit-text-stroke: 1px oklch(0.56 0.1 252 / clamp(0.18, calc(0.68 - var(--i, 0) * 0.026), 0.68));
+	-webkit-text-fill-color: currentColor;
+	background: none;
+	opacity: 1;
+	filter: none;
+	text-shadow: none;
+	animation: blueprint-sketch-in-v2 420ms ease-out both;
+	animation-delay: calc(420ms + var(--i, 0) * 45ms);
+}
+
+.stage[data-theme='light'][data-glow='blueprint'] .field[data-glow] .edge-left {
+	background: linear-gradient(90deg, rgb(252, 253, 255) 0%, rgb(252, 253, 255) 40%, rgba(252, 253, 255, 0) 100%);
+}
+
+.stage[data-theme='light'][data-glow='blueprint'] .field[data-glow] .edge-right {
+	background: linear-gradient(270deg, rgba(240, 245, 251, 0.85) 0%, rgba(240, 245, 251, 0.4) 40%, rgba(240, 245, 251, 0) 100%);
+	opacity: 0.7;
+}
+
+/* Light theme + flow off: re-win the finite passes against the
+   higher-specificity light rules above. */
+.stage[data-theme='light'][data-glow='blueprint'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: blueprint-snap-in-v2 380ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage[data-theme='light'][data-glow='blueprint'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(n) {
+	animation: blueprint-build-light-v2 680ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+	animation-delay: calc(300ms + var(--i, 0) * 70ms);
+}
+
+.stage[data-theme='light'][data-glow='blueprint'][data-light-flow='off'] .field[data-glow] .tail .glyph:nth-child(n) {
+	animation: blueprint-sketch-in-v2 420ms ease-out both;
+	animation-delay: calc(420ms + var(--i, 0) * 45ms);
+}
+
+.stage[data-theme='light'][data-glow='blueprint'][data-light-flow='off'] .field[data-glow]::before {
+	animation: none;
+}
+
+/* ---------- Waiting: the CAD compass at the caret ---------- */
+/* A dashed circle slowly rotating over a static crosshair and a faint
+   blue pool. The rotation is a registered <angle> animated on the
+   torch-core; the crosshair + pool are static layers on the torch-haze.
+   Every other torch layer is dead. */
+.field[data-state='waiting'][data-glow='blueprint'] {
+	--haze-width: 3.2em;
+	--haze-height: 2.4em;
+	--haze-size:
+		100% 100%,
+		1.2em 1px,
+		1px 1.2em;
+	--haze-bg:
+		radial-gradient(ellipse 1.5em 0.95em at 0.72em 50%, oklch(0.62 0.1 235 / 0.16), transparent 76%),
+		linear-gradient(var(--bp-snap-v2), var(--bp-snap-v2)) left 0.12em center no-repeat,
+		linear-gradient(var(--bp-snap-v2), var(--bp-snap-v2)) left 0.715em center no-repeat;
+	--haze-filter: none;
+	--haze-opacity: 0.9;
+	--torch-haze-motion: none;
+	--haze-mask:
+		linear-gradient(90deg, transparent 0, black 0.24em, black calc(100% - 0.3em), transparent 100%),
+		radial-gradient(ellipse 62% 64% at 30% 50%, black 0 55%, rgba(0, 0, 0, 0.5) 78%, transparent 98%);
+	--body-bg: none;
+	--body-opacity: 0;
+	--core-width: 2.2em;
+	--core-height: 2.2em;
+	--core-size: 100% 100%;
+	--core-filter: none;
+	--core-opacity: 0.92;
+	--torch-core-motion: blueprint-compass-v2 10s linear infinite;
+	--core-mask:
+		linear-gradient(90deg, transparent 0, black 0.16em, black calc(100% - 0.16em), transparent 100%),
+		radial-gradient(circle 0.6em at 0.72em 50%, transparent 0 0.47em, black 0.49em 0.545em, transparent 0.565em);
+	--flow-bg: none;
+	--flow-low: 0;
+	--flow-high: 0;
+	--flow-motion: none;
+	--spark-bg: none;
+	--spark-low: 0;
+	--spark-high: 0;
+	--spark-motion: none;
+	--smoke-bg: none;
+	--smoke-opacity: 0;
+	--smoke-motion: none;
+	--aux-bg: none;
+	--aux-opacity: 0;
+	--aux-motion: none;
+}
+
+/* The dash ring itself: --core-bg is declared ON the torch-core (not the
+   field) because var() inside a custom property substitutes where that
+   property computes — only here does the repeating-conic re-read the
+   ANIMATED --bp-angle-v2 each frame, so the compass actually turns.
+   Soft 3-4deg angular stop transitions keep the dashes crisp without
+   blur; the ring mask cuts the pie into a circle. */
+.stage[data-glow='blueprint'] .field[data-glow][data-state='waiting'] .torch-core {
+	--core-bg: repeating-conic-gradient(
+		from var(--bp-angle-v2) at 0.72em 50%,
+		var(--bp-ring-v2) 0deg 13deg,
+		transparent 17deg 27deg,
+		var(--bp-ring-v2) 30deg
+	);
+}
+
+/* Paper waiting: the pool becomes a pale blue wash; ring + crosshair
+   ink colors flow in through the theme vars. */
+.field[data-theme='light'][data-state='waiting'][data-glow='blueprint'] {
+	--haze-bg:
+		radial-gradient(ellipse 1.5em 0.95em at 0.72em 50%, oklch(0.55 0.09 250 / 0.14), transparent 76%),
+		linear-gradient(var(--bp-snap-v2), var(--bp-snap-v2)) left 0.12em center no-repeat,
+		linear-gradient(var(--bp-snap-v2), var(--bp-snap-v2)) left 0.715em center no-repeat;
+	--haze-opacity: 0.85;
+	--core-opacity: 0.9;
+}
+
+/* Light + waiting: the stage-scoped light pass above out-specifies the
+   field-level waiting block and smothers the compass — re-raise the
+   torch opacities over it. */
+.stage[data-theme='light'][data-glow='blueprint'] .field[data-glow][data-state='waiting'] {
+	--haze-opacity: 0.85;
+	--core-opacity: 0.9;
+}
+
+/* Waiting + flow off: the compass holds perfectly still. */
+.field[data-light-flow='off'][data-state='waiting'][data-glow='blueprint'] {
+	--torch-haze-motion: none;
+	--torch-core-motion: none;
+}
+
+/* ---------- Keyframes (blueprint-*-v2) ---------- */
+/* The word row mounts on the board. */
+@keyframes blueprint-word-in-v2 {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+/* The sketch strip settles in. */
+@keyframes blueprint-tail-in-v2 {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+/* Construction lines draw from nothing onto their live slot sizes:
+   verticals grow down, horizontals sweep right (no 100% frame). */
+@keyframes blueprint-guides-in-v2 {
+	0% {
+		opacity: 0;
+		background-size:
+			0% 1px,
+			0% 1px;
+	}
+	28% {
+		opacity: var(--bp-guides-o-v2, 0.85);
+	}
+}
+
+/* The dimension line sweeps across while its end ticks grow in. */
+@keyframes blueprint-dim-in-v2 {
+	0% {
+		opacity: 0;
+		background-size:
+			0em 0em,
+			0em 0em,
+			0% 1px;
+	}
+	40% {
+		opacity: var(--bp-dim-o-v2, 0.9);
+	}
+}
+
+/* The snap cursor locks onto the caret... */
+@keyframes blueprint-snap-in-v2 {
+	0% {
+		opacity: 0;
+		transform: scale(1.6);
+	}
+	55% {
+		opacity: var(--bp-snap-o-v2, 0.9);
+	}
+}
+
+/* ...then keeps the drawing's only settled whisper. */
+@keyframes blueprint-snap-breathe-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--bp-snap-o-v2, 0.9) * 0.72);
+	}
+	50% {
+		opacity: var(--bp-snap-o-v2, 0.9);
+	}
+}
+
+/* THE BUILD: outline traced first, then the fill sweeps in, a brief
+   just-inked flash, and — no 100% frame — the glyph settles onto the
+   live filled slot. */
+@keyframes blueprint-build-v2 {
+	0% {
+		opacity: 0;
+		color: transparent;
+		-webkit-text-stroke-color: oklch(0.9 0.11 213 / 0);
+		text-shadow: none;
+	}
+	20% {
+		opacity: 1;
+		color: transparent;
+		-webkit-text-stroke-color: oklch(0.9 0.11 213 / 0.95);
+		text-shadow: none;
+	}
+	55% {
+		color: oklch(0.93 0.06 208 / 0.4);
+		-webkit-text-stroke-color: oklch(0.9 0.11 213 / 0.9);
+	}
+	78% {
+		color: oklch(0.99 0.03 200);
+		text-shadow:
+			0 0 0.3em oklch(0.9 0.13 210 / 0.6),
+			0 0 0.8em oklch(0.75 0.14 220 / 0.3);
+	}
+}
+
+/* Paper build: the outline is blue pencil, the fill deep navy ink,
+   the flash over-inked. */
+@keyframes blueprint-build-light-v2 {
+	0% {
+		opacity: 0;
+		color: transparent;
+		-webkit-text-stroke-color: oklch(0.42 0.12 255 / 0);
+		text-shadow: none;
+	}
+	20% {
+		opacity: 1;
+		color: transparent;
+		-webkit-text-stroke-color: oklch(0.42 0.12 255 / 0.9);
+		text-shadow: none;
+	}
+	55% {
+		color: oklch(0.34 0.1 257 / 0.4);
+		-webkit-text-stroke-color: oklch(0.42 0.12 255 / 0.8);
+	}
+	78% {
+		color: oklch(0.16 0.1 260);
+		text-shadow:
+			0 0 0.2em oklch(0.45 0.12 255 / 0.4),
+			0 1px 0 rgba(255, 255, 255, 0.6);
+	}
+}
+
+/* Tail wireframes are sketched in: a faint blur resolving to a crisp
+   outline (no 100% frame; the stroke alpha is the live slot's). */
+@keyframes blueprint-sketch-in-v2 {
+	0% {
+		opacity: 0;
+		filter: blur(1.2px);
+	}
+	60% {
+		opacity: 1;
+		filter: blur(0.3px);
+	}
+}
+
+/* Waiting: the compass turns — dashes crawl around the ring. */
+@keyframes blueprint-compass-v2 {
+	0% {
+		--bp-angle-v2: 0deg;
+	}
+	100% {
+		--bp-angle-v2: 360deg;
+	}
+}
