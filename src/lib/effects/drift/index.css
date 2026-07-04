@@ -1,0 +1,1123 @@
+/* ============================================================
+   DRIFT v2 — "Дрифт: слова входят в строку боком, в управляемом
+   заносе". A night street; each predicted word arrives like a
+   car in a controlled slide. THE SLIDE (the signature): every
+   NEXT-WORD glyph enters SIDEWAYS from the right — translateX
+   overshoot 0.5em with skewX(-11deg) oversteer, then CATCHES
+   GRIP: snaps back through a +3deg counter-skew and a tiny
+   settle shake (78%/90% micro-frames — the tires biting), all
+   in ~450ms per glyph with a var(--i) 60ms stagger; the
+   keyframes have no 100% frame, so each glyph settles onto the
+   live slot: crisp warm-white ink over a faint brake-heat
+   underglow, utterly still — the car has parked. A tiny GRIP
+   KICK of dust (glyph::before, FREE per effect) pops at each
+   glyph's catch beat (~240ms in) and evaporates. SKID MARKS
+   (prediction::after, z:-1 — rubber ON the asphalt, under the
+   text): two parallel dark streaks + thin warm heat edges +
+   a broken tread-texture band, curved by rotate(-1.4deg)
+   skewX(-14deg) on the pseudo, darkest under the parked word
+   and fading rightward to where the slide began; they DRAW IN
+   once (~200ms after the last glyph of a typical word lands,
+   scaleX from origin left, drift-skid-draw-v2, fill both) and
+   then stay — a permanent mark of the maneuver. TIRE SMOKE
+   (prediction::before, z:3 — over the tail, under the word):
+   five radial cloud lobes reading as 2-3 puffy billows with an
+   organic border-radius and blur 8px; the signature keyframe
+   drift-smoke-sweep-v2 ignites them and SWEEPS them rightward-
+   and-up into the tail zone while they dissipate (finite 1.6s,
+   fill both), after which drift-haze-curl-v2 takes over the
+   same properties (delay = sweep end) and slowly curls the
+   residual whisper at very low alpha, infinite. TAIL STILL
+   SLIDING: tail glyphs are mid-drift — var(--i) continues from
+   the next word, so the ramps are absolute: skewX up to -10deg
+   (-0.5deg/i), translateX 0.012em/i capped 0.2em, blur up to
+   2.4px, a horizontal text-shadow smear, alpha 0.62 -> 0.07;
+   the first 1-2 tail glyphs are almost upright (i≈6 ⇒ -3deg),
+   the far ones fully sideways; a slow staggered opacity
+   flutter keeps them unsettled. VESSEL — NIGHT ASPHALT:
+   near-black warm-gray field; the ::before overlay carries a
+   cold-blue night vignette, a single dashed warm LANE LINE
+   under the text baseline (2px strip at y 94px — baseline ≈
+   46 + 0.78×56 ≈ 90px in field coords) and a fine asphalt
+   grain (two px-unit dot rasters, 5x5px and 9x7px). The
+   component gates ::before to ready/waiting-field only; this
+   module re-implements that gating at its own specificity
+   (base opacity 0, state selectors raise it, the component's
+   520ms opacity transition still applies) so the road only
+   appears when the effect is live. CARET — BRAKE LIGHT: a hot
+   red-orange sliver (unique among the effects) whose glow
+   flickers with heat: a registered <number> (--dr-brake-a-v2)
+   is animated with steps(1, end) ON the .field, where
+   --caret-shadow computes (var() in a custom property
+   substitutes where that property computes), so the color-mix
+   alpha in the first shadow actually updates. WAITING —
+   IDLING AT THE START LINE: a thin heat-shimmer column wavers
+   above the caret (torch-haze, transform-only skew/bob
+   keyframes — safe on any element) while a small exhaust puff
+   grows, rises and fades every 2.8s (torch-core; 0% and 100%
+   both transparent, so the loop is seamless); every other
+   torch layer dead, explicit --haze-size / --core-size lists
+   match the layer counts because torch consumption applies
+   background-size after the shorthand. LIGHT THEME — DAY AT
+   THE TRACK: pale concrete vessel, skid marks as clear dark
+   rubber (multiply — the most visible element), gray multiply
+   smoke clouds, the word in near-black warm ink with a warm
+   edge, gray skewed tail smears, ochre lane dashes, deep
+   brake-red caret. data-light-flow='off': slide, grip kicks,
+   skid draw and the smoke sweep play once (finite); the
+   residual curl, brake flicker, tail flutter, shimmer and
+   exhaust puffs freeze — a photo of a finished run.
+   GEOMETRY (font 56px = 1em, pill 148px, line box 56px,
+   clearance above/below the line box = (148 - 56) / 2 = 46px
+   = 0.821em): smoke box top -0.5em / height 2em ⇒ bottom
+   1.5em, sweep+curl rise ≤ 0.28em ⇒ envelope top -0.78em;
+   skid box top 0.92em / height 0.55em ⇒ bottom 1.47em, the
+   -1.4deg rotation over a ≤9.5em width adds ≤ tan(1.4°) ×
+   4.75em ≈ 0.12em ⇒ 1.59em < 1.821em; grip kick top 0.5em /
+   height 0.8em, travel -0.13em ⇒ top 0.37em; waiting shimmer
+   2.2em centered (-0.6..1.6em), bob 0.06em ⇒ -0.66em; exhaust
+   puff 1.9em centered (-0.45..1.45em), rise 0.3em ⇒ -0.75em —
+   every box inside the pill, every mask fade completes INSIDE
+   its box (mask-composite: intersect where masks combine).
+   Readability: word ink alpha 0.97 in both themes, no breathe
+   — the parked word is the stillest thing in the frame.
+   Keyframes drift-*-v2 (signature smoke keyframe
+   drift-smoke-sweep-v2) and vars --dr-*-v2 only; legacy drift
+   rules in legacy.css are superseded and get deleted.
+   ============================================================ */
+
+@property --dr-brake-a-v2 {
+	syntax: '<number>';
+	inherits: false;
+	initial-value: 0.55;
+}
+
+.field[data-glow='drift'] {
+	--layer-radius: 999px;
+	--layer-clip: inset(0 round 999px);
+	--dr-ink-v2: oklch(0.95 0.02 70 / 0.97);
+	--dr-ink-glow-v2:
+		0 0.07em 0.3em oklch(0.6 0.18 40 / 0.32),
+		0 0.02em 0.08em oklch(0.72 0.12 48 / 0.2),
+		0 0 0.5em oklch(0.55 0.15 40 / 0.12);
+	--dr-tail-hue-v2: 0.8 0.02 65;
+	--dr-tail-smear-v2:
+		0.14em 0 0.12em oklch(0.8 0.02 65 / 0.12),
+		-0.05em 0 0.08em oklch(0.8 0.02 65 / 0.07);
+	--dr-smoke-hot-v2: oklch(0.9 0.008 80 / 0.32);
+	--dr-smoke-mid-v2: oklch(0.82 0.01 80 / 0.2);
+	--dr-smoke-soft-v2: oklch(0.74 0.012 80 / 0.13);
+	--dr-smoke-blend-v2: screen;
+	--dr-smoke-o-v2: 0.85;
+	--dr-rubber-v2: rgba(3, 2, 2, 0.62);
+	--dr-rubber-soft-v2: rgba(6, 5, 4, 0.44);
+	--dr-skid-edge-v2: oklch(0.66 0.14 45 / 0.1);
+	--dr-skid-blend-v2: normal;
+	--dr-skid-o-v2: 0.92;
+	--dr-tread-v2: rgba(0, 0, 0, 0.28);
+	--dr-kick-v2: oklch(0.86 0.012 80 / 0.3);
+	--dr-kick-soft-v2: oklch(0.78 0.014 80 / 0.18);
+	--dr-kick-blend-v2: screen;
+	--dr-heat-v2: oklch(0.82 0.035 60 / 0.13);
+	--dr-heat-soft-v2: oklch(0.76 0.03 65 / 0.09);
+	--dr-puff-v2: oklch(0.88 0.012 80 / 0.4);
+	--dr-puff-soft-v2: oklch(0.8 0.014 80 / 0.24);
+	--dr-brake-hue-v2: oklch(0.62 0.21 33);
+	--dr-vignette-v2: radial-gradient(ellipse 94% 150% at 50% 55%, transparent 0 44%, rgba(9, 15, 28, 0.52) 100%);
+	--dr-lane-v2: rgba(255, 178, 96, 0.07);
+	--dr-grain-lite-v2: rgba(228, 216, 198, 0.05);
+	--dr-grain-dark-v2: rgba(0, 0, 0, 0.4);
+	--ready-border: rgba(224, 200, 176, 0.14);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.04) inset,
+		0 -34px 90px rgba(6, 6, 8, 0.62) inset,
+		0 0 52px oklch(0.45 0.05 250 / 0.1) inset,
+		0 30px 66px rgba(0, 0, 0, 0.52),
+		0 0 80px oklch(0.6 0.15 40 / 0.07);
+	--field-wash: linear-gradient(180deg, rgba(236, 224, 206, 0.02), transparent 32%);
+	--caret-gradient: linear-gradient(
+		180deg,
+		rgb(255, 250, 246) 0%,
+		rgb(255, 206, 180) 30%,
+		rgb(255, 94, 54) 66%,
+		rgb(168, 28, 16) 100%
+	);
+	--caret-shadow:
+		0 0 6px color-mix(in oklab, var(--dr-brake-hue-v2) calc(var(--dr-brake-a-v2) * 100%), transparent),
+		0 0 18px oklch(0.58 0.2 35 / 0.4),
+		0 0 42px oklch(0.5 0.19 30 / 0.2);
+	--haze-bg: none;
+	--haze-opacity: 0;
+	--haze-motion: none;
+	--torch-haze-motion: none;
+	--haze-mask: none;
+	--body-bg: none;
+	--body-opacity: 0;
+	--body-mask: none;
+	--core-bg: none;
+	--core-opacity: 0;
+	--core-motion: none;
+	--torch-core-motion: none;
+	--core-mask: none;
+	--flow-bg: none;
+	--flow-low: 0;
+	--flow-high: 0;
+	--flow-motion: none;
+	--flow-mask: none;
+	--spark-bg: none;
+	--spark-low: 0;
+	--spark-high: 0;
+	--spark-motion: none;
+	--spark-mask: none;
+	--smoke-bg: none;
+	--smoke-opacity: 0;
+	--smoke-motion: none;
+	--smoke-blend: normal;
+	--smoke-mask: none;
+	--aux-bg: none;
+	--aux-opacity: 0;
+	--aux-motion: none;
+	--aux-mask: none;
+	--next-color: var(--dr-ink-v2);
+	--next-shadow: var(--dr-ink-glow-v2);
+	--tail-color: oklch(var(--dr-tail-hue-v2) / 0.4);
+}
+
+/* The maneuver lives on the glyphs and the prediction pseudos: every
+   shared beam dies. Torch layers serve the idling engine only. */
+.stage[data-glow='drift'] .field[data-glow] .prediction > .beam {
+	display: none;
+}
+
+.stage[data-glow='drift'] .field[data-glow] .caret-origin-glow[data-mode='ready'] {
+	display: none;
+}
+
+/* Multi-layer masks (horizontal envelope x right-edge fade x vertical
+   falloff on smoke and skid; left fade x shaped falloff on the torch
+   layers) need intersection, not union — every fade completes inside
+   its box. */
+.stage[data-glow='drift'] .field[data-glow] .torch-beam,
+.stage[data-glow='drift'] .field[data-glow] .prediction::before,
+.stage[data-glow='drift'] .field[data-glow] .prediction::after {
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+}
+
+/* Re-pins the legacy perspective; the pseudos stack inside the word. */
+.stage[data-glow='drift'] .field[data-glow] .prediction {
+	isolation: isolate;
+	perspective: none;
+}
+
+/* Night-street vessel: near-black warm asphalt. The brake-light heat
+   flicker animates the registered --dr-brake-a-v2 ON the field — the
+   only element where --caret-shadow computes, so the color-mix alpha
+   in the caret glow actually re-reads it each step. */
+.stage[data-glow='drift'] .field[data-glow] {
+	background:
+		linear-gradient(180deg, rgba(236, 224, 206, 0.02), transparent 30%),
+		linear-gradient(90deg, rgb(18, 17, 16), rgb(21, 20, 18) 52%, rgb(19, 18, 16));
+	animation: drift-brake-flicker-v2 5.2s steps(1, end) infinite;
+}
+
+/* THE ROAD (vessel overlay): cold-blue night vignette + one dashed warm
+   lane line under the text baseline (2px strip at y 94px; baseline ≈
+   46px + 0.78 x 56px ≈ 90px in field coords) + fine asphalt grain (two
+   px-unit dot rasters). Utterly still. Re-pins over the legacy
+   drift-field-slide, the shared 210% background-size and any blend.
+   The component gates ::before to ready/waiting-field; the legacy
+   rules used to force it always-on — this module re-implements the
+   gating at its own specificity instead (base opacity 0, the state
+   selectors below raise it; the component's 520ms opacity transition
+   still applies). */
+.stage[data-glow='drift'] .field[data-glow]::before {
+	background:
+		var(--dr-vignette-v2),
+		repeating-linear-gradient(90deg, var(--dr-lane-v2) 0 26px, transparent 26px 78px),
+		radial-gradient(circle at 1px 1px, var(--dr-grain-lite-v2) 0 0.6px, transparent 1.1px),
+		radial-gradient(circle at 2px 1.5px, var(--dr-grain-dark-v2) 0 0.7px, transparent 1.3px);
+	background-size:
+		100% 100%,
+		100% 2px,
+		5px 5px,
+		9px 7px;
+	background-position:
+		0 0,
+		0 94px,
+		0 0,
+		0 0;
+	background-repeat: no-repeat, no-repeat, repeat, repeat;
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: normal;
+	opacity: 0;
+	animation: none;
+}
+
+.stage[data-glow='drift'] .field[data-glow][data-state='ready']::before,
+.stage[data-glow='drift'] .field[data-glow][data-state='waiting'][data-loading-glow='field']::before {
+	opacity: 1;
+}
+
+/* Dissolve into the field's rounded clip, not the paint box; edge
+   overlays extended into the 64px padding, painted in the asphalt
+   color so the smoke never steps at the content box. */
+.stage[data-glow='drift'] .field[data-glow] .paint {
+	overflow: visible;
+	clip-path: inset(-3.4em -6em -3.4em 0);
+}
+
+.stage[data-glow='drift'] .field[data-glow] .edge-left {
+	left: -64px;
+	width: 156px;
+	background: linear-gradient(90deg, rgb(18, 17, 16) 0%, rgb(18, 17, 16) 40%, rgba(18, 17, 16, 0) 100%);
+	opacity: 0;
+}
+
+.stage[data-glow='drift'] .field[data-glow] .viewport.scrolled .edge-left {
+	opacity: 1;
+}
+
+.stage[data-glow='drift'] .field[data-glow] .edge-right {
+	display: block;
+	right: -64px;
+	width: 190px;
+	background: linear-gradient(270deg, rgba(19, 18, 16, 0.9) 0%, rgba(19, 18, 16, 0.5) 36%, rgba(19, 18, 16, 0) 100%);
+	opacity: 0.8;
+}
+
+/* ---------- TIRE SMOKE: billows sweeping into the tail zone ---------- */
+/* Box: left -0.35em, top -0.5em, height 2em ⇒ bottom at 1.5em (0.5em
+   below the line box); the sweep/curl rise tops out at -0.28em ⇒
+   envelope -0.78em, inside the 0.821em clearance. Five radial lobes =
+   2-3 puffy clouds; organic border-radius + blur 8px keep them soft
+   but SHAPED. Masks: horizontal envelope (brightest 0.3-2.6em after
+   the caret, gone INSIDE the box by 8.2em) x right-edge fade (covers
+   short predictions) x vertical falloff — all three intersected.
+   z-index 3: over the still-sliding tail, under the parked word.
+   After the finite signature sweep, the residual curl (delayed to the
+   sweep's end) takes over transform/opacity at whisper alpha. */
+.stage[data-glow='drift'] .field[data-glow] .prediction::before {
+	position: absolute;
+	left: -0.35em;
+	top: -0.5em;
+	right: auto;
+	bottom: auto;
+	z-index: 3;
+	display: block;
+	width: min(10.5em, calc(100% + 3em));
+	height: 2em;
+	content: '';
+	pointer-events: none;
+	border-radius: 58% 42% 62% 38% / 52% 60% 44% 56%;
+	background:
+		radial-gradient(ellipse 22% 34% at 12% 64%, var(--dr-smoke-hot-v2), transparent 62%),
+		radial-gradient(ellipse 16% 26% at 21% 42%, var(--dr-smoke-mid-v2), transparent 60%),
+		radial-gradient(ellipse 26% 38% at 35% 58%, var(--dr-smoke-mid-v2), transparent 64%),
+		radial-gradient(ellipse 20% 30% at 47% 38%, var(--dr-smoke-soft-v2), transparent 62%),
+		radial-gradient(ellipse 30% 42% at 61% 52%, var(--dr-smoke-soft-v2), transparent 66%);
+	background-repeat: no-repeat;
+	filter: blur(8px);
+	-webkit-mask-image:
+		linear-gradient(
+			90deg,
+			transparent 0,
+			rgba(0, 0, 0, 0.6) 0.3em,
+			black 0.7em 2.6em,
+			rgba(0, 0, 0, 0.55) 4.6em,
+			rgba(0, 0, 0, 0.24) 6.4em,
+			transparent 8.2em
+		),
+		linear-gradient(90deg, black 0 calc(100% - 1.2em), transparent 100%),
+		linear-gradient(180deg, transparent 0, rgba(0, 0, 0, 0.75) 24%, black 42% 66%, rgba(0, 0, 0, 0.7) 82%, transparent 100%);
+	mask-image:
+		linear-gradient(
+			90deg,
+			transparent 0,
+			rgba(0, 0, 0, 0.6) 0.3em,
+			black 0.7em 2.6em,
+			rgba(0, 0, 0, 0.55) 4.6em,
+			rgba(0, 0, 0, 0.24) 6.4em,
+			transparent 8.2em
+		),
+		linear-gradient(90deg, black 0 calc(100% - 1.2em), transparent 100%),
+		linear-gradient(180deg, transparent 0, rgba(0, 0, 0, 0.75) 24%, black 42% 66%, rgba(0, 0, 0, 0.7) 82%, transparent 100%);
+	mix-blend-mode: var(--dr-smoke-blend-v2);
+	opacity: 0;
+	transform: none;
+	animation:
+		drift-smoke-sweep-v2 1.6s cubic-bezier(0.2, 0.7, 0.3, 1) 120ms both,
+		drift-haze-curl-v2 6.5s ease-in-out 1.72s infinite;
+}
+
+/* ---------- SKID MARKS: rubber on the asphalt ---------- */
+/* Box: left 0.15em, top 0.92em, height 0.55em ⇒ bottom at 1.47em; the
+   -1.4deg rotation over ≤9.5em adds ≤0.12em ⇒ 1.59em, inside the
+   1.821em floor limit. Two parallel dark streak bands + thin warm heat
+   edges above each + a broken tread-texture band; rotate + skew on the
+   pseudo give the pair its curve. Darkest under the parked word
+   (left), fading rightward to where the slide began. Draws in once
+   ~200ms after the last glyph of a typical word lands (delay 980ms),
+   then stays. z-index -1: under the tail and the word — rubber is ON
+   the road. Masks: fade-out envelope x right-edge fade x vertical
+   containment, intersected. */
+.stage[data-glow='drift'] .field[data-glow] .prediction::after {
+	position: absolute;
+	left: 0.15em;
+	top: 0.92em;
+	right: auto;
+	bottom: auto;
+	z-index: -1;
+	display: block;
+	width: min(9.5em, calc(100% + 2.5em));
+	height: 0.55em;
+	content: '';
+	pointer-events: none;
+	border-radius: 0;
+	background:
+		linear-gradient(90deg, var(--dr-skid-edge-v2), transparent 68%),
+		linear-gradient(90deg, var(--dr-rubber-v2), var(--dr-rubber-soft-v2) 42%, transparent 94%),
+		linear-gradient(90deg, var(--dr-skid-edge-v2), transparent 74%),
+		linear-gradient(90deg, var(--dr-rubber-v2), var(--dr-rubber-soft-v2) 46%, transparent 96%),
+		repeating-linear-gradient(90deg, var(--dr-tread-v2) 0 0.42em, transparent 0.42em 0.58em);
+	background-size:
+		100% 0.03em,
+		100% 0.15em,
+		100% 0.03em,
+		100% 0.17em,
+		100% 0.42em;
+	background-position:
+		0 0.05em,
+		0 0.08em,
+		0 0.31em,
+		0 0.34em,
+		0 0.06em;
+	background-repeat: no-repeat;
+	filter: blur(0.4px);
+	-webkit-mask-image:
+		linear-gradient(90deg, rgba(0, 0, 0, 0.55) 0, black 0.35em 3.4em, rgba(0, 0, 0, 0.42) 5.8em, transparent 8.6em),
+		linear-gradient(90deg, black 0 calc(100% - 1em), transparent 100%),
+		linear-gradient(180deg, transparent 0, black 16% 86%, transparent 100%);
+	mask-image:
+		linear-gradient(90deg, rgba(0, 0, 0, 0.55) 0, black 0.35em 3.4em, rgba(0, 0, 0, 0.42) 5.8em, transparent 8.6em),
+		linear-gradient(90deg, black 0 calc(100% - 1em), transparent 100%),
+		linear-gradient(180deg, transparent 0, black 16% 86%, transparent 100%);
+	mix-blend-mode: var(--dr-skid-blend-v2);
+	opacity: var(--dr-skid-o-v2);
+	transform: rotate(-1.4deg) skewX(-14deg);
+	transform-origin: 0 50%;
+	animation: drift-skid-draw-v2 520ms ease-out 980ms both;
+}
+
+/* ---------- The word: oversteer, grip, parked ---------- */
+.stage[data-glow='drift'] .field[data-glow] .next-word {
+	position: relative;
+	isolation: isolate;
+	z-index: 5;
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-mask-image: none;
+	mask-image: none;
+	filter: none;
+	text-shadow: none;
+	transform: none;
+	animation: drift-word-in-v2 140ms ease-out both;
+}
+
+/* THE SLIDE: each glyph enters sideways from the right (translateX
+   0.5em, skewX -11deg), catches grip through a +3deg counter-skew,
+   shakes off the last momentum (78%/90% micro-frames) and — no 100%
+   frame — settles onto the live slot: upright, crisp warm-white over
+   the brake-heat underglow, utterly still. The nth-child group
+   re-wins legacy tint splits. */
+.stage[data-glow='drift'] .field[data-glow] .next-word .glyph,
+.stage[data-glow='drift'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-glow='drift'] .field[data-glow] .next-word .glyph:nth-child(3n + 2),
+.stage[data-glow='drift'] .field[data-glow] .next-word .glyph:nth-child(3n) {
+	display: inline-block;
+	position: relative;
+	color: var(--dr-ink-v2);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-text-fill-color: currentColor;
+	opacity: 1;
+	filter: none;
+	text-shadow: var(--dr-ink-glow-v2);
+	transform: none;
+	transform-origin: 50% 88%;
+	animation: drift-slide-in-v2 450ms cubic-bezier(0.2, 0.85, 0.25, 1) both;
+	animation-delay: calc(80ms + var(--i, 0) * 60ms);
+}
+
+/* GRIP KICK (glyph::before is free per effect): a tiny dust puff pops
+   at the glyph's catch beat (~240ms into its slide) and evaporates.
+   Box: left -0.1em, top 0.5em, height 0.8em ⇒ bottom at 1.3em; travel
+   -0.13em keeps the top at 0.37em — everything inside the clearance.
+   Fill both + invisible 0%/100% keeps it dark outside its beat. */
+.stage[data-glow='drift'] .field[data-glow] .next-word .glyph::before {
+	position: absolute;
+	left: -0.1em;
+	top: 0.5em;
+	z-index: -1;
+	width: calc(100% + 0.3em);
+	height: 0.8em;
+	content: '';
+	pointer-events: none;
+	background:
+		radial-gradient(ellipse 26% 34% at 30% 62%, var(--dr-kick-v2), transparent 66%),
+		radial-gradient(ellipse 22% 28% at 58% 46%, var(--dr-kick-soft-v2), transparent 68%),
+		radial-gradient(ellipse 18% 24% at 76% 60%, var(--dr-kick-soft-v2), transparent 70%);
+	background-repeat: no-repeat;
+	filter: blur(2px);
+	-webkit-mask-image: linear-gradient(90deg, transparent 0, black 0.14em, black calc(100% - 0.12em), transparent 100%);
+	mask-image: linear-gradient(90deg, transparent 0, black 0.14em, black calc(100% - 0.12em), transparent 100%);
+	mix-blend-mode: var(--dr-kick-blend-v2);
+	opacity: 0;
+	transform-origin: 30% 80%;
+	animation: drift-kick-v2 420ms ease-out both;
+	animation-delay: calc(320ms + var(--i, 0) * 60ms);
+}
+
+/* The slide bends letterforms, not letters: no scrambled alter egos
+   (kills the component data-alt echo and any legacy soft echo). */
+.stage[data-glow='drift'] .field[data-glow] .next-word .glyph::after,
+.stage[data-glow='drift'] .field[data-glow] .tail .glyph::after {
+	content: none;
+	opacity: 0;
+	animation: none;
+}
+
+/* ---------- Tail: the rest of the phrase, still sliding ---------- */
+/* Container: color/mask/filter re-pins over the component defaults and
+   the legacy container blur+skew; the envelope is gone inside 11em. */
+.stage[data-glow='drift'] .field[data-glow] .tail {
+	position: relative;
+	isolation: isolate;
+	z-index: 2;
+	color: var(--tail-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-text-fill-color: currentColor;
+	filter: none;
+	text-shadow: none;
+	transform: none;
+	-webkit-mask-image: linear-gradient(90deg, black 0 6.5em, rgba(0, 0, 0, 0.4) 9em, transparent 11em);
+	mask-image: linear-gradient(90deg, black 0 6.5em, rgba(0, 0, 0, 0.4) 9em, transparent 11em);
+	animation: drift-tail-in-v2 300ms ease-out 140ms both;
+}
+
+/* Mid-drift glyphs: var(--i) continues from the next word, so the
+   ramps are absolute — with distance each glyph is more sideways
+   (skewX -0.5deg/i, floor -10deg), further right of its slot
+   (translateX 0.012em/i, cap 0.2em), more smeared (blur up to 2.4px +
+   a horizontal text-shadow smear) and fainter (alpha 0.62 -> 0.07);
+   the first tail glyphs are almost upright. A slow staggered flutter
+   keeps them unsettled — they have not caught grip yet. */
+.stage[data-glow='drift'] .field[data-glow] .tail .glyph,
+.stage[data-glow='drift'] .field[data-glow] .tail .glyph:nth-child(3n + 1),
+.stage[data-glow='drift'] .field[data-glow] .tail .glyph:nth-child(3n + 2),
+.stage[data-glow='drift'] .field[data-glow] .tail .glyph:nth-child(3n) {
+	display: inline-block;
+	position: relative;
+	color: oklch(var(--dr-tail-hue-v2) / clamp(0.07, calc(0.62 - var(--i, 0) * 0.042), 0.62));
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-text-fill-color: currentColor;
+	opacity: 1;
+	filter: blur(clamp(0.1px, calc(var(--i, 0) * 0.13px), 2.4px));
+	text-shadow: var(--dr-tail-smear-v2);
+	transform: translateX(clamp(0em, calc(var(--i, 0) * 0.012em), 0.2em))
+		skewX(clamp(-10deg, calc(var(--i, 0) * -0.5deg), 0deg));
+	transform-origin: 50% 88%;
+	animation:
+		drift-tail-enter-v2 420ms ease-out both,
+		drift-tail-flutter-v2 3.6s ease-in-out infinite;
+	animation-delay: calc(180ms + var(--i, 0) * 40ms), calc(600ms + var(--i, 0) * 180ms);
+}
+
+/* ---------- Light flow off: one run, then a photo ---------- */
+/* The slide, grip kicks, skid draw and smoke sweep play once (finite);
+   the residual curl, tail flutter and brake flicker freeze. These
+   re-win the legacy shared flow-off animation kills AND this module's
+   own infinite base animations. */
+.stage[data-glow='drift'][data-light-flow='off'] .field[data-glow] {
+	animation: none;
+}
+
+.stage[data-glow='drift'][data-light-flow='off'] .field[data-glow]::before {
+	animation: none;
+}
+
+.stage[data-glow='drift'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: drift-smoke-sweep-v2 1.6s cubic-bezier(0.2, 0.7, 0.3, 1) 120ms both;
+}
+
+.stage[data-glow='drift'][data-light-flow='off'] .field[data-glow] .prediction::after {
+	animation: drift-skid-draw-v2 520ms ease-out 980ms both;
+}
+
+.stage[data-glow='drift'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
+	animation: drift-slide-in-v2 450ms cubic-bezier(0.2, 0.85, 0.25, 1) both;
+	animation-delay: calc(80ms + var(--i, 0) * 60ms);
+}
+
+.stage[data-glow='drift'][data-light-flow='off'] .field[data-glow] .next-word .glyph::before {
+	animation: drift-kick-v2 420ms ease-out both;
+	animation-delay: calc(320ms + var(--i, 0) * 60ms);
+}
+
+.stage[data-glow='drift'][data-light-flow='off'] .field[data-glow] .tail .glyph {
+	animation: drift-tail-enter-v2 420ms ease-out both;
+	animation-delay: calc(180ms + var(--i, 0) * 40ms);
+}
+
+/* ---------- Light theme: day at the track ---------- */
+/* The same maneuver in daylight: pale concrete, clear dark rubber
+   (multiply — the most visible element), gray multiply smoke, the
+   word in near-black warm ink, ochre lane dashes, deep brake-red
+   caret. */
+.field[data-theme='light'][data-glow='drift'] {
+	--dr-ink-v2: oklch(0.24 0.02 55 / 0.97);
+	--dr-ink-glow-v2:
+		0 1px 0 rgba(255, 255, 255, 0.6),
+		0 0.05em 0.24em oklch(0.5 0.13 45 / 0.22),
+		0 0 0.12em oklch(0.45 0.08 50 / 0.14);
+	--dr-tail-hue-v2: 0.45 0.015 60;
+	--dr-tail-smear-v2:
+		0.14em 0 0.12em oklch(0.45 0.015 60 / 0.14),
+		-0.05em 0 0.08em oklch(0.45 0.015 60 / 0.08);
+	--dr-smoke-hot-v2: oklch(0.5 0.012 70 / 0.11);
+	--dr-smoke-mid-v2: oklch(0.56 0.012 70 / 0.075);
+	--dr-smoke-soft-v2: oklch(0.62 0.01 70 / 0.05);
+	--dr-smoke-blend-v2: multiply;
+	--dr-smoke-o-v2: 0.7;
+	--dr-rubber-v2: rgba(38, 32, 28, 0.38);
+	--dr-rubber-soft-v2: rgba(52, 45, 40, 0.26);
+	--dr-skid-edge-v2: oklch(0.55 0.12 50 / 0.18);
+	--dr-skid-blend-v2: multiply;
+	--dr-skid-o-v2: 0.8;
+	--dr-tread-v2: rgba(30, 26, 22, 0.13);
+	--dr-kick-v2: oklch(0.5 0.012 70 / 0.24);
+	--dr-kick-soft-v2: oklch(0.58 0.012 70 / 0.15);
+	--dr-kick-blend-v2: multiply;
+	--dr-heat-v2: oklch(0.52 0.03 55 / 0.14);
+	--dr-heat-soft-v2: oklch(0.58 0.025 60 / 0.1);
+	--dr-puff-v2: oklch(0.46 0.012 70 / 0.3);
+	--dr-puff-soft-v2: oklch(0.54 0.012 70 / 0.18);
+	--dr-brake-hue-v2: oklch(0.48 0.19 30);
+	--dr-vignette-v2:
+		radial-gradient(ellipse 90% 160% at 70% -30%, rgba(255, 255, 255, 0.72), transparent 58%),
+		radial-gradient(ellipse 94% 155% at 50% 54%, transparent 0 52%, oklch(0.62 0.03 250 / 0.12) 100%);
+	--dr-lane-v2: oklch(0.55 0.1 75 / 0.3);
+	--dr-grain-lite-v2: rgba(255, 255, 255, 0.35);
+	--dr-grain-dark-v2: rgba(74, 68, 60, 0.11);
+	--ready-border: rgba(126, 118, 108, 0.32);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.95) inset,
+		0 -18px 50px rgba(140, 130, 118, 0.1) inset,
+		0 18px 46px rgba(62, 54, 46, 0.13),
+		0 0 58px oklch(0.55 0.12 45 / 0.08);
+	--field-wash:
+		radial-gradient(ellipse 90% 170% at 70% -34%, rgba(255, 255, 255, 0.7), transparent 58%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.5), transparent 42%);
+	--caret-gradient: linear-gradient(180deg, rgb(64, 20, 16) 0%, rgb(142, 28, 20) 50%, rgb(200, 54, 36) 100%);
+	--caret-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.5),
+		0 0 6px color-mix(in oklab, var(--dr-brake-hue-v2) calc(var(--dr-brake-a-v2) * 70%), transparent),
+		0 6px 14px rgba(96, 44, 34, 0.18);
+	--haze-opacity: 0;
+	--body-opacity: 0;
+	--core-opacity: 0;
+	--flow-low: 0;
+	--flow-high: 0;
+	--spark-low: 0;
+	--spark-high: 0;
+	--smoke-opacity: 0;
+	--aux-opacity: 0;
+	--next-color: var(--dr-ink-v2);
+	--next-shadow: var(--dr-ink-glow-v2);
+	--tail-color: oklch(var(--dr-tail-hue-v2) / 0.36);
+}
+
+/* Legacy scopes shared light vars on the stage: re-win the contested
+   ones at the same strength so the concrete palette holds. */
+.stage[data-theme='light'][data-glow='drift'] .field[data-glow] {
+	--ready-border: rgba(126, 118, 108, 0.32);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.95) inset,
+		0 -18px 50px rgba(140, 130, 118, 0.1) inset,
+		0 18px 46px rgba(62, 54, 46, 0.13),
+		0 0 58px oklch(0.55 0.12 45 / 0.08);
+	--field-wash:
+		radial-gradient(ellipse 90% 170% at 70% -34%, rgba(255, 255, 255, 0.7), transparent 58%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.5), transparent 42%);
+	--haze-opacity: 0;
+	--body-opacity: 0;
+	--core-opacity: 0;
+	--flow-low: 0;
+	--flow-high: 0;
+	--spark-low: 0;
+	--spark-high: 0;
+	--smoke-opacity: 0;
+	--aux-opacity: 0;
+	--next-color: var(--dr-ink-v2);
+	--next-shadow: var(--dr-ink-glow-v2);
+	--tail-color: oklch(var(--dr-tail-hue-v2) / 0.36);
+}
+
+/* Concrete vessel — the paddock in daylight. */
+.stage[data-theme='light'][data-glow='drift'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 90% 160% at 70% -30%, rgba(255, 255, 255, 0.85), transparent 56%),
+		linear-gradient(180deg, rgb(248, 247, 244), rgb(243, 241, 237) 55%, rgb(237, 234, 229));
+	box-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.95) inset,
+		0 -1px 0 rgba(140, 130, 118, 0.16) inset,
+		0 20px 50px rgba(62, 54, 46, 0.12);
+}
+
+/* Re-pin the road overlay against legacy light rules; the gating
+   selectors above keep working (their specificity is higher). */
+.stage[data-theme='light'][data-glow='drift'] .field[data-glow]::before {
+	/* --dr-vignette-v2 expands to TWO gradients in light — the size/
+	   position/repeat lists must count five layers, not four. */
+	background:
+		var(--dr-vignette-v2),
+		repeating-linear-gradient(90deg, var(--dr-lane-v2) 0 26px, transparent 26px 78px),
+		radial-gradient(circle at 1px 1px, var(--dr-grain-lite-v2) 0 0.6px, transparent 1.1px),
+		radial-gradient(circle at 2px 1.5px, var(--dr-grain-dark-v2) 0 0.7px, transparent 1.3px);
+	background-size:
+		100% 100%,
+		100% 100%,
+		100% 2px,
+		5px 5px,
+		9px 7px;
+	background-position:
+		0 0,
+		0 0,
+		0 94px,
+		0 0,
+		0 0;
+	background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat;
+	mix-blend-mode: normal;
+	animation: none;
+}
+
+/* Gray exhaust sinks into concrete — multiply, never screened away. */
+.stage[data-theme='light'][data-glow='drift'] .field[data-glow] .torch-beam {
+	mix-blend-mode: multiply;
+}
+
+/* Smoke, skid and kicks keep their geometry; paint flips through the
+   vars to multiply ink. */
+.stage[data-theme='light'][data-glow='drift'] .field[data-glow] .prediction::before {
+	mix-blend-mode: var(--dr-smoke-blend-v2);
+}
+
+.stage[data-theme='light'][data-glow='drift'] .field[data-glow] .prediction::after {
+	mix-blend-mode: var(--dr-skid-blend-v2);
+	opacity: var(--dr-skid-o-v2);
+}
+
+.stage[data-theme='light'][data-glow='drift'] .field[data-glow] .next-word .glyph::before {
+	mix-blend-mode: var(--dr-kick-blend-v2);
+}
+
+.stage[data-theme='light'][data-glow='drift'] .field[data-glow] .next-word {
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: none;
+}
+
+/* Warm near-black ink slide: the keyframes carry no color, so both
+   themes share them; nth-child(n) matches the legacy light
+   specificity. */
+.stage[data-theme='light'][data-glow='drift'] .field[data-glow] .next-word .glyph:nth-child(n) {
+	color: var(--dr-ink-v2);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-text-fill-color: currentColor;
+	opacity: 1;
+	filter: none;
+	text-shadow: var(--dr-ink-glow-v2);
+	animation: drift-slide-in-v2 450ms cubic-bezier(0.2, 0.85, 0.25, 1) both;
+	animation-delay: calc(80ms + var(--i, 0) * 60ms);
+}
+
+.stage[data-theme='light'][data-glow='drift'] .field[data-glow] .tail {
+	color: var(--tail-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-text-fill-color: currentColor;
+	filter: none;
+	text-shadow: none;
+}
+
+.stage[data-theme='light'][data-glow='drift'] .field[data-glow] .tail .glyph:nth-child(n) {
+	color: oklch(var(--dr-tail-hue-v2) / clamp(0.06, calc(0.56 - var(--i, 0) * 0.038), 0.56));
+	background: none;
+	opacity: 1;
+	filter: blur(clamp(0.1px, calc(var(--i, 0) * 0.13px), 2.4px));
+	text-shadow: var(--dr-tail-smear-v2);
+	transform: translateX(clamp(0em, calc(var(--i, 0) * 0.012em), 0.2em))
+		skewX(clamp(-10deg, calc(var(--i, 0) * -0.5deg), 0deg));
+	animation:
+		drift-tail-enter-v2 420ms ease-out both,
+		drift-tail-flutter-v2 3.6s ease-in-out infinite;
+	animation-delay: calc(180ms + var(--i, 0) * 40ms), calc(600ms + var(--i, 0) * 180ms);
+}
+
+.stage[data-theme='light'][data-glow='drift'] .field[data-glow] .edge-left {
+	background: linear-gradient(90deg, rgb(248, 247, 244) 0%, rgb(248, 247, 244) 40%, rgba(248, 247, 244, 0) 100%);
+}
+
+.stage[data-theme='light'][data-glow='drift'] .field[data-glow] .edge-right {
+	background: linear-gradient(270deg, rgba(237, 234, 229, 0.85) 0%, rgba(237, 234, 229, 0.4) 40%, rgba(237, 234, 229, 0) 100%);
+	opacity: 0.7;
+}
+
+/* Light theme + flow off: re-win the finite passes against the
+   higher-specificity light rules above. */
+.stage[data-theme='light'][data-glow='drift'][data-light-flow='off'] .field[data-glow] {
+	animation: none;
+}
+
+.stage[data-theme='light'][data-glow='drift'][data-light-flow='off'] .field[data-glow]::before {
+	animation: none;
+}
+
+.stage[data-theme='light'][data-glow='drift'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(n) {
+	animation: drift-slide-in-v2 450ms cubic-bezier(0.2, 0.85, 0.25, 1) both;
+	animation-delay: calc(80ms + var(--i, 0) * 60ms);
+}
+
+.stage[data-theme='light'][data-glow='drift'][data-light-flow='off'] .field[data-glow] .next-word .glyph::before {
+	animation: drift-kick-v2 420ms ease-out both;
+	animation-delay: calc(320ms + var(--i, 0) * 60ms);
+}
+
+.stage[data-theme='light'][data-glow='drift'][data-light-flow='off'] .field[data-glow] .tail .glyph:nth-child(n) {
+	animation: drift-tail-enter-v2 420ms ease-out both;
+	animation-delay: calc(180ms + var(--i, 0) * 40ms);
+}
+
+.stage[data-theme='light'][data-glow='drift'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: drift-smoke-sweep-v2 1.6s cubic-bezier(0.2, 0.7, 0.3, 1) 120ms both;
+}
+
+.stage[data-theme='light'][data-glow='drift'][data-light-flow='off'] .field[data-glow] .prediction::after {
+	animation: drift-skid-draw-v2 520ms ease-out 980ms both;
+}
+
+/* ---------- Waiting: idling at the start line ---------- */
+/* A thin heat-shimmer column wavers above the caret (torch-haze;
+   transform-only skew/bob keyframes are safe on any element) while a
+   small exhaust puff grows, rises and fades every 2.8s (torch-core;
+   both loop ends transparent, so the cycle is seamless). No animated
+   custom property is consumed in a background, so nothing must live
+   on the torch element. Explicit size lists match the layer counts
+   (torch consumption applies background-size after the shorthand).
+   Geometry: shimmer 2.2em tall centered on the line (-0.6..1.6em),
+   bob 0.06em ⇒ -0.66em; puff 1.9em centered (-0.45..1.45em), rise
+   0.3em ⇒ -0.75em — inside the 0.821em clearance. Every other torch
+   layer dead. */
+.field[data-state='waiting'][data-glow='drift'] {
+	--haze-width: 1.9em;
+	--haze-height: 2.2em;
+	--haze-size:
+		100% 100%,
+		100% 100%;
+	--haze-bg:
+		radial-gradient(ellipse 34% 60% at 34% 46%, var(--dr-heat-v2), transparent 74%),
+		radial-gradient(ellipse 24% 50% at 62% 36%, var(--dr-heat-soft-v2), transparent 76%);
+	--haze-filter: blur(6px);
+	--haze-opacity: 0.75;
+	--torch-haze-motion: drift-shimmer-v2 2.7s ease-in-out infinite;
+	--haze-mask:
+		linear-gradient(90deg, transparent 0, black 0.22em, black calc(100% - 0.26em), transparent 100%),
+		linear-gradient(180deg, transparent 0, rgba(0, 0, 0, 0.7) 22%, black 40% 70%, rgba(0, 0, 0, 0.5) 88%, transparent 100%);
+	--body-bg: none;
+	--body-opacity: 0;
+	--core-width: 2.4em;
+	--core-height: 1.9em;
+	--core-size:
+		100% 100%,
+		100% 100%,
+		100% 100%;
+	--core-bg:
+		radial-gradient(ellipse 20% 24% at 24% 68%, var(--dr-puff-v2), transparent 68%),
+		radial-gradient(ellipse 15% 18% at 36% 58%, var(--dr-puff-soft-v2), transparent 70%),
+		radial-gradient(ellipse 24% 28% at 28% 46%, var(--dr-puff-soft-v2), transparent 72%);
+	--core-filter: blur(5px);
+	--core-opacity: 0.9;
+	--torch-core-motion: drift-exhaust-v2 2.8s ease-in-out infinite;
+	--core-mask:
+		linear-gradient(90deg, transparent 0, black 0.18em, black calc(100% - 0.22em), transparent 100%),
+		radial-gradient(ellipse 64% 70% at 30% 55%, black 0 52%, rgba(0, 0, 0, 0.45) 78%, transparent 98%);
+	--flow-bg: none;
+	--flow-low: 0;
+	--flow-high: 0;
+	--flow-motion: none;
+	--spark-bg: none;
+	--spark-low: 0;
+	--spark-high: 0;
+	--spark-motion: none;
+	--smoke-bg: none;
+	--smoke-opacity: 0;
+	--smoke-motion: none;
+	--aux-bg: none;
+	--aux-opacity: 0;
+	--aux-motion: none;
+}
+
+/* Day idling: gray-ink shimmer and puffs — the colors flow in through
+   the theme vars; only the strengths need a nudge. */
+.field[data-theme='light'][data-state='waiting'][data-glow='drift'] {
+	--haze-opacity: 0.6;
+	--core-opacity: 0.8;
+}
+
+/* Light + waiting: the stage-scoped light pass above out-specifies the
+   field-level waiting block and stalls the engine — re-raise the torch
+   opacities over it. */
+.stage[data-theme='light'][data-glow='drift'] .field[data-glow][data-state='waiting'] {
+	--haze-opacity: 0.6;
+	--core-opacity: 0.8;
+}
+
+/* Waiting + flow off: the engine holds its idle pose. */
+.field[data-light-flow='off'][data-state='waiting'][data-glow='drift'] {
+	--torch-haze-motion: none;
+	--torch-core-motion: none;
+}
+
+/* ---------- Keyframes (drift-*-v2) ---------- */
+/* The word row mounts onto the street. */
+@keyframes drift-word-in-v2 {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+/* The sliding strip settles in. */
+@keyframes drift-tail-in-v2 {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+/* THE SLIDE: sideways entry from the right with oversteer, the grip
+   catch through a counter-skew, then the settle shake — no 100% frame,
+   so the glyph lands on the live upright slot. No color in the frames,
+   so both themes share it. */
+@keyframes drift-slide-in-v2 {
+	0% {
+		opacity: 0;
+		transform: translateX(0.5em) skewX(-11deg);
+		filter: blur(2.4px);
+	}
+	38% {
+		opacity: 0.92;
+		transform: translateX(0.18em) skewX(-9.5deg);
+		filter: blur(1.2px);
+	}
+	60% {
+		opacity: 1;
+		transform: translateX(-0.04em) skewX(3deg);
+		filter: blur(0.4px);
+	}
+	78% {
+		transform: translateX(0.018em) skewX(-1.4deg);
+		filter: blur(0);
+	}
+	90% {
+		transform: translateX(-0.008em) skewX(0.5deg);
+	}
+}
+
+/* GRIP KICK: a tiny dust puff pops at the catch beat, kicks back-and-
+   up and evaporates; 0% and 100% are both invisible (fill both). */
+@keyframes drift-kick-v2 {
+	0% {
+		opacity: 0;
+		transform: translate(0.05em, 0.05em) scale(0.5);
+		filter: blur(0.3px);
+	}
+	16% {
+		opacity: 0.85;
+		transform: translate(0.02em, 0.01em) scale(0.72);
+		filter: blur(0);
+	}
+	100% {
+		opacity: 0;
+		transform: translate(0.24em, -0.13em) scale(1.18);
+		filter: blur(1.1px);
+	}
+}
+
+/* SKID DRAW: the rubber extends rightward from under the parked word
+   (origin left) — no 100% frame, so it settles onto the live curved
+   slot (rotate -1.4deg, skewX -14deg) and stays forever. */
+@keyframes drift-skid-draw-v2 {
+	0% {
+		opacity: 0;
+		transform: rotate(-1.4deg) skewX(-14deg) scaleX(0.2);
+		filter: blur(1.6px);
+	}
+	60% {
+		opacity: var(--dr-skid-o-v2, 0.92);
+		filter: blur(0.7px);
+	}
+}
+
+/* THE SIGNATURE SWEEP: the smoke ignites, billows rightward-and-up
+   into the tail zone and dissipates to a whisper (finite, fill both;
+   the vertical rise stays ≤0.28em so the box never leaves the pill). */
+@keyframes drift-smoke-sweep-v2 {
+	0% {
+		opacity: 0;
+		transform: translate(-0.12em, 0.1em) scale(0.7);
+		filter: blur(8px);
+	}
+	14% {
+		opacity: var(--dr-smoke-o-v2, 0.85);
+		transform: translate(0.06em, 0.03em) scale(0.92);
+		filter: blur(8px);
+	}
+	55% {
+		opacity: calc(var(--dr-smoke-o-v2, 0.85) * 0.5);
+		transform: translate(0.55em, -0.15em) scale(1.1);
+		filter: blur(9px);
+	}
+	100% {
+		opacity: calc(var(--dr-smoke-o-v2, 0.85) * 0.16);
+		transform: translate(1.05em, -0.24em) scale(1.22);
+		filter: blur(10px);
+	}
+}
+
+/* ...then the residual haze slowly curls, delayed to the sweep's end;
+   its loop ends equal the sweep's 100% pose, so the handoff and the
+   cycle are both seamless. */
+@keyframes drift-haze-curl-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--dr-smoke-o-v2, 0.85) * 0.16);
+		transform: translate(1.05em, -0.24em) scale(1.22);
+		filter: blur(10px);
+	}
+	50% {
+		opacity: calc(var(--dr-smoke-o-v2, 0.85) * 0.09);
+		transform: translate(1.16em, -0.28em) scale(1.27);
+		filter: blur(11px);
+	}
+}
+
+/* Tail glyphs slide up into their mid-drift ramps (no 100% frame —
+   opacity, blur and the var(--i) transform settle onto the live
+   slots). */
+@keyframes drift-tail-enter-v2 {
+	0% {
+		opacity: 0;
+		transform: translateX(0.5em) skewX(-14deg);
+		filter: blur(3px);
+	}
+	60% {
+		opacity: 1;
+	}
+}
+
+/* The unsettled tail flutters — still fighting for grip. */
+@keyframes drift-tail-flutter-v2 {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.76;
+	}
+}
+
+/* Brake-light heat: the caret glow's alpha snaps between held poses —
+   registered <number>, animated on the field where --caret-shadow
+   computes. */
+@keyframes drift-brake-flicker-v2 {
+	0%,
+	100% {
+		--dr-brake-a-v2: 0.55;
+	}
+	8% {
+		--dr-brake-a-v2: 0.44;
+	}
+	12% {
+		--dr-brake-a-v2: 0.6;
+	}
+	41% {
+		--dr-brake-a-v2: 0.5;
+	}
+	46% {
+		--dr-brake-a-v2: 0.58;
+	}
+	72% {
+		--dr-brake-a-v2: 0.4;
+	}
+	77% {
+		--dr-brake-a-v2: 0.56;
+	}
+}
+
+/* WAITING: the heat column wavers above the caret (the translateY(-50%)
+   keeps the torch layer's own centering)... */
+@keyframes drift-shimmer-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--haze-opacity, 0.75) * 0.7);
+		transform: translateY(-50%) skewX(2.5deg);
+	}
+	33% {
+		opacity: var(--haze-opacity, 0.75);
+		transform: translateY(calc(-50% - 0.05em)) skewX(-3deg);
+	}
+	66% {
+		opacity: calc(var(--haze-opacity, 0.75) * 0.85);
+		transform: translateY(calc(-50% - 0.02em)) skewX(1.5deg);
+	}
+}
+
+/* ...while a small exhaust puff grows, rises and fades each cycle —
+   both loop ends transparent, so the 2.8s idle beat is seamless. */
+@keyframes drift-exhaust-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(calc(-50% + 0.16em)) scale(0.6);
+	}
+	18% {
+		opacity: var(--core-opacity, 0.9);
+		transform: translateY(calc(-50% + 0.08em)) scale(0.82);
+	}
+	55% {
+		opacity: calc(var(--core-opacity, 0.9) * 0.55);
+		transform: translateY(calc(-50% - 0.12em)) scale(1.05);
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(calc(-50% - 0.3em)) scale(1.28);
+	}
+}
