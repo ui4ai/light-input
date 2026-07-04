@@ -1,0 +1,1280 @@
+/* ============================================================
+   KALEIDOSCOPE v2 — "Калейдоскоп: предсказание в окуляре —
+   зеркальная мандала из цветного стекла". You are looking at the
+   future through the eyepiece of a kaleidoscope. THE MANDALA
+   (the signature piece): a 2.2em circular aperture sits AT the
+   caret (disc center = prediction x 0, line center) holding a
+   truly MIRRORED 8-fold pattern — a repeating-conic-gradient
+   with a 90deg period whose stop list is symmetric about the
+   45deg axis (w1 0-12 / w2 18-28 / w3 34-56 / w2 62-72 / w1
+   78-90: every band and every ramp mirrors, and w1 meets itself
+   across the period seam), so mirror axes fall on every 45deg
+   boundary — 4 periods = 8 mirrored stained-glass segments. Over
+   it: thin SEAM SPOKES on the same element (repeating-conic from
+   calc(--ka-spin-v2 - 1deg), a 2deg silver line centered on each
+   45deg mirror axis — they rotate WITH the pattern because both
+   read the same angle), an eyepiece RIM (dark ring 0.8-1.1em
+   radius with a violet glass inner edge — the tube you look
+   into), a glass glare and a dark glass-depth base. Rotation:
+   the registered <angle> --ka-spin-v2 is animated by
+   kaleidoscope-mandala-turn-v2 (14s linear) ON the pseudo that
+   paints the conics — var() in a custom property substitutes
+   where that property computes, so the angle must be consumed in
+   a background declared on the SAME element the animation runs
+   on (blueprint/blackhole precedent; a --core-bg with the var on
+   .field would bake 0deg forever). Layer COUNT on the disc: 5 —
+   glare(1) + rim(1) + spokes(1) + mirrored pattern(1) +
+   depth(1); every size list counts 5; nothing here animates
+   background-position. LIGHT-LEAK RAYS (.kaleidoscope-layer::
+   after, full 13.5em strip): ONE conic with three 1.4-1.8deg
+   slivers pivoting at the aperture center (1.3em 50%), reading
+   the SAME --ka-spin-v2 via its own copy of the 14s turn
+   animation (same keyframe/duration/timing, both start at ignite
+   mount — perfectly in sync with the mandala); a 2-mask
+   intersect (left fade that hides them over the disc x radial
+   falloff — every fade completes inside the box) keeps them as
+   faint spokes of light escaping across the ghost zone. STAINED-
+   GLASS SHARDS (the 12 .kaleidoscope-shard spans): translucent
+   glass polygons (clip-path, 4-5 vertices, three nth-child
+   silhouettes) filled with jewel glass derived from --kh — a
+   152deg body gradient whose far corner hue-shifts +42deg
+   (dispersion) + a bright facet edge + a glint dot (COUNT: 3
+   background layers). At ignite they TUMBLE IN (rotate from
+   -110deg + scale from 0, staggered by --kd, explicit 100% +
+   fill both), then drift on the SIGNATURE keyframe
+   kaleidoscope-shard-orbit-v2 — a slow elliptical loop (±0.055em
+   x, -0.055/+0.02em y) with a ±6deg sway around each shard's own
+   base pose (--kx/--ky/--kr/--ks live in the orbit frames; orbit
+   delay = --kd + 600ms = exactly the tumble end, and its 0% pose
+   is the base transform — seamless handoff). GLYPHS THROUGH THE
+   EYEPIECE: next-word glyphs land with a PRISMATIC SETTLE
+   (kaleidoscope-glyph-settle-v2, 70ms --i stagger): a mirrored
+   double exposure — a cyan echo up-left and a magenta echo
+   down-right (symmetric text-shadow pair, refraction through
+   glass) — collapses into clean readable ink (no 100% frame: the
+   shadows settle onto the live --ka-ink-echo-v2 residue, a
+   ±0.02em echo pair at 0.13 alpha + a soft halo); the ink cycles
+   3 muted jewel tints via nth-child(3n+…) custom-property hooks
+   (12% color-mix — readable, not carnival). TAIL — DEEPER IN THE
+   TUBE: glyph alpha decays with the absolute --i (continues from
+   the next word), the symmetric echo pair GROWS with --i
+   (0.005em/step — the mirror doubling strengthens as focus
+   falls) plus a tiny --i blur; the container mask ends the tail
+   by 8em. APERTURE HALO (prediction::before, z:-1, 2 layers):
+   light spilling from the tube around the disc; GLASS DUST
+   (prediction::after, z:5, 6 radial specks) pops once near the
+   aperture and lies still. VESSEL: dark theme is near-black warm
+   velvet (the inside of the instrument case); the ::before
+   overlay carries vignette(1) + top sheen(1) + a fine glass-dust
+   raster(1) — COUNT: 3, each --ka-*-v2 gradient var expands to
+   exactly ONE gradient in BOTH themes; the component gates
+   ::before to ready/waiting-field and this module re-implements
+   that gating at its own specificity (base opacity 0, state
+   selectors raise it). Light theme is an optics-shop counter in
+   daylight: pale warm vessel, the mandala in stained-glass
+   pastels sinking in with MULTIPLY (the white glare layer
+   becomes a no-op under multiply — accepted), rays as gently
+   darkened slivers (multiply), deep readable plum ink. WAITING —
+   THE MANDALA IS THE INDICATOR: torch-core carries a 1.6em
+   6-fold version (120deg period, stops w1 0-16 / w2 24-38 / w3
+   46-74 / w2 82-96 / w1 104-120 — mirrored about 60deg, seam
+   spokes every 60deg; COUNT: 4 layers — rim + spokes + pattern +
+   depth — in --core-size) spinning on the same registered angle:
+   --core-bg is declared ON .torch-core (blueprint pattern) where
+   --torch-core-motion animates --ka-spin-v2, and breathes via a
+   second comma-joined transform keyframe; torch-haze is a glass-
+   dust halo (2 layers, COUNT: 2 in --haze-size). Explicit size
+   lists everywhere because torch consumption applies
+   background-size after the shorthand. data-light-flow='off':
+   iris-open, rays-in, shard tumble, glyph settle, tail fade,
+   halo and dust play once (finite); the mandala turn, ray
+   rotation, shard orbits and the waiting spin freeze — a still
+   mandala at 0deg. GEOMETRY (font 56px = 1em, pill 148px, line
+   box 56px, clearance above/below = (148 - 56) / 2 = 46px =
+   0.821em; prediction pseudo tops are relative to the prediction
+   TOP): layer box left -1.3em / top -0.8em (> -0.821em) / 13.5 x
+   2.6em => bottom 1.8em < 1.821em; mandala disc 2.2em at layer
+   (0.2em, 0.2em) => prediction -1.1..1.1em x, -0.6..1.6em y,
+   entrance only scales DOWN (0.55) so the envelope never grows;
+   rays inset 0 = the layer box; shards: base box 0.72 x 0.62em,
+   --ks <= 0.9, worst-case rotated half-diagonal sqrt(0.36^2 +
+   0.31^2) ~ 0.475em x 0.9 = 0.428em + 0.055em orbit drift =
+   0.483em => shard center cy = 0.5em + --ky must sit in
+   [-0.338em, 1.338em] => --ky in [-0.83, 0.83]; the proposed
+   shard data keeps --ky in [-0.68, 0.52] => extremes -0.663em /
+   1.503em — inside the pill (the OLD component data reached --ky
+   -1.28em => top -1.13em, outside clearance: the array is
+   re-proposed alongside this module); halo box top -0.75em /
+   height 2.5em => bottom 1.75em; dust box top -0.62em / height
+   1em => bottom 0.38em; waiting disc 1.6em centered on the line,
+   breathe scale 1.04 => ±0.832em about line center, well inside
+   the 1.321em half-pill; dust halo 2.3 x 2em, scale 1.05 =>
+   ±1.05em — every box inside the pill, every 2-mask fade
+   intersected and completed INSIDE its box. Readability: settled
+   ink oklch L 0.94 on velvet / L 0.27 on the counter, alpha
+   0.97, echo residue <= 0.14 alpha at 0.02em — the settled word
+   never breathes. Keyframes kaleidoscope-*-v2 (signature
+   kaleidoscope-shard-orbit-v2 on the shards) and vars --ka-*-v2
+   only; legacy kaleidoscope rules in legacy.css are superseded
+   and get deleted (kaleidoscope is the SOLE member of the legacy
+   flow-off animation:none group — that whole block goes too).
+   ============================================================ */
+
+@property --ka-spin-v2 {
+	syntax: '<angle>';
+	inherits: false;
+	initial-value: 0deg;
+}
+
+.field[data-glow='kaleidoscope'] {
+	--layer-radius: 999px;
+	--layer-clip: inset(0 round 999px);
+	/* The three jewel-glass wedge colors of the mirrored pattern (one
+	   wedge = w1 -> w2 -> w3, then reversed — see the banner math). */
+	--ka-w1-v2: hsl(336 68% 56% / 0.34);
+	--ka-w2-v2: hsl(42 85% 60% / 0.28);
+	--ka-w3-v2: hsl(188 78% 55% / 0.32);
+	/* Seam spokes on the mirror axes + the eyepiece rim. */
+	--ka-seam-v2: rgba(240, 234, 255, 0.4);
+	--ka-rim-v2: rgba(8, 5, 12, 0.85);
+	--ka-rim-edge-v2: hsl(268 45% 70% / 0.35);
+	--ka-glare-v2: rgba(255, 252, 255, 0.16);
+	--ka-depth-a-v2: hsl(280 40% 24% / 0.5);
+	--ka-depth-b-v2: hsl(260 45% 12% / 0.55);
+	--ka-mandala-blend-v2: normal;
+	--ka-mandala-o-v2: 0.92;
+	/* Light-leak rays escaping the aperture. */
+	--ka-ray1-v2: rgba(255, 250, 255, 0.07);
+	--ka-ray2-v2: hsl(188 80% 65% / 0.06);
+	--ka-ray3-v2: hsl(326 80% 66% / 0.06);
+	--ka-ray-blend-v2: screen;
+	/* Shard glass: hsl S/L pairs consumed with the per-shard --kh hue. */
+	--ka-shard-top-v2: 85% 70%;
+	--ka-shard-mid-v2: 80% 58%;
+	--ka-shard-deep-v2: 75% 46%;
+	--ka-shard-a-v2: 0.4;
+	--ka-shard-a-deep-v2: 0.5;
+	--ka-facet-v2: rgba(255, 255, 255, 0.5);
+	--ka-facet-soft-v2: rgba(255, 255, 255, 0.35);
+	--ka-shard-o-v2: 0.9;
+	/* Settled ink + the residual mirrored echo pair. */
+	--ka-ink-base-v2: oklch(0.94 0.015 300 / 0.97);
+	--ka-ink-echo-v2:
+		-0.02em -0.012em 0 hsl(190 90% 70% / 0.14),
+		0.02em 0.012em 0 hsl(326 85% 68% / 0.13),
+		0 0 0.16em hsl(268 70% 72% / 0.16);
+	--ka-tint1-v2: hsl(336 70% 62%);
+	--ka-tint2-v2: hsl(42 80% 58%);
+	--ka-tint3-v2: hsl(188 75% 55%);
+	--ka-glyph-tint-v2: var(--ka-tint1-v2);
+	/* Tail: glass ink deeper in the tube + the growing echo pair. */
+	--ka-tail-lch-v2: 0.88 0.03 290;
+	--ka-tail-a0-v2: 0.55;
+	--ka-echo-cool-v2: hsl(190 85% 65% / 0.16);
+	--ka-echo-warm-v2: hsl(326 80% 64% / 0.14);
+	/* Aperture halo + glass dust. */
+	--ka-halo-v2: hsl(276 60% 60% / 0.1);
+	--ka-halo-ring-v2: hsl(190 70% 60% / 0.07);
+	--ka-halo-blend-v2: normal;
+	--ka-spark1-v2: rgba(255, 253, 255, 0.9);
+	--ka-spark2-v2: hsl(188 85% 72% / 0.8);
+	--ka-spark3-v2: hsl(326 85% 74% / 0.8);
+	/* Vessel overlay pieces — each var is exactly ONE gradient in BOTH
+	   themes so the 3-layer lists never drift. */
+	--ka-vignette-v2: radial-gradient(ellipse 94% 150% at 50% 55%, transparent 0 44%, rgba(6, 4, 10, 0.55) 100%);
+	--ka-sheen-v2: linear-gradient(180deg, rgba(200, 180, 230, 0.03), transparent 30%);
+	--ka-dust-v2: rgba(216, 200, 240, 0.05);
+	--ready-border: rgba(196, 170, 235, 0.18);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.05) inset,
+		0 -34px 90px rgba(10, 6, 16, 0.62) inset,
+		0 0 52px hsl(276 50% 50% / 0.12) inset,
+		0 30px 66px rgba(0, 0, 0, 0.52),
+		0 0 80px hsl(326 70% 60% / 0.08);
+	--field-wash: linear-gradient(180deg, rgba(226, 210, 245, 0.025), transparent 32%);
+	/* Caret — the lit slit of the eyepiece: white -> teal -> magenta ->
+	   brass, the tube's spectrum in one sliver. */
+	--caret-gradient: linear-gradient(
+		180deg,
+		rgb(255, 253, 255) 0%,
+		rgb(150, 229, 246) 32%,
+		rgb(246, 140, 222) 64%,
+		rgb(198, 164, 96) 100%
+	);
+	--caret-shadow:
+		0 0 7px rgba(255, 250, 255, 0.8),
+		0 0 18px hsl(188 85% 62% / 0.4),
+		0 0 38px hsl(326 85% 62% / 0.26);
+	--haze-bg: none;
+	--haze-opacity: 0;
+	--haze-motion: none;
+	--torch-haze-motion: none;
+	--haze-mask: none;
+	--body-bg: none;
+	--body-opacity: 0;
+	--body-mask: none;
+	--core-bg: none;
+	--core-opacity: 0;
+	--core-motion: none;
+	--torch-core-motion: none;
+	--core-mask: none;
+	--flow-bg: none;
+	--flow-low: 0;
+	--flow-high: 0;
+	--flow-motion: none;
+	--flow-mask: none;
+	--spark-bg: none;
+	--spark-low: 0;
+	--spark-high: 0;
+	--spark-motion: none;
+	--spark-mask: none;
+	--smoke-bg: none;
+	--smoke-opacity: 0;
+	--smoke-motion: none;
+	--smoke-blend: normal;
+	--smoke-mask: none;
+	--aux-bg: none;
+	--aux-opacity: 0;
+	--aux-motion: none;
+	--aux-mask: none;
+	--next-color: var(--ka-ink-base-v2);
+	--next-shadow: var(--ka-ink-echo-v2);
+	--tail-color: oklch(var(--ka-tail-lch-v2) / 0.4);
+}
+
+/* The instrument lives on the layer component and the glyphs: every
+   shared beam dies. Torch layers serve the waiting mandala only. */
+.stage[data-glow='kaleidoscope'] .field[data-glow] .prediction > .beam {
+	display: none;
+}
+
+.stage[data-glow='kaleidoscope'] .field[data-glow] .caret-origin-glow[data-mode='ready'] {
+	display: none;
+}
+
+/* Multi-layer FADE masks (left fade x radial falloff on the rays; left
+   fade x disc falloff on the torch layers) need intersection, not union
+   — every fade completes inside its box. */
+.stage[data-glow='kaleidoscope'] .field[data-glow] .torch-beam,
+.stage[data-glow='kaleidoscope'] .field[data-glow] .kaleidoscope-layer::after {
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+}
+
+/* Re-pins the legacy stacking; kills the legacy perspective. */
+.stage[data-glow='kaleidoscope'] .field[data-glow] .prediction {
+	isolation: isolate;
+	perspective: none;
+}
+
+/* Velvet case interior: near-black warm violet, utterly still. */
+.stage[data-glow='kaleidoscope'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 60% 140% at 18% -20%, rgba(120, 80, 150, 0.05), transparent 60%),
+		linear-gradient(90deg, rgb(17, 13, 20), rgb(21, 16, 24) 52%, rgb(17, 13, 20));
+	animation: none;
+}
+
+/* THE CASE LINING (vessel overlay): vignette + top sheen + a fine
+   glass-dust raster. 3 layers — vignette(1) + sheen(1) + dust(1) — and
+   every list below counts exactly 3. The component gates ::before to
+   ready/waiting-field; this module re-implements the gating at its own
+   specificity (base opacity 0, the state selectors raise it; the
+   component's 520ms opacity transition still applies). Kills the legacy
+   kaleidoscope-field-turn. */
+.stage[data-glow='kaleidoscope'] .field[data-glow]::before {
+	background:
+		var(--ka-vignette-v2),
+		var(--ka-sheen-v2),
+		radial-gradient(circle at 1px 1px, var(--ka-dust-v2) 0 0.5px, transparent 1px);
+	background-size:
+		100% 100%,
+		100% 100%,
+		47px 39px;
+	background-position:
+		0 0,
+		0 0,
+		0 0;
+	background-repeat: no-repeat, no-repeat, repeat;
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: normal;
+	opacity: 0;
+	animation: none;
+}
+
+.stage[data-glow='kaleidoscope'] .field[data-glow][data-state='ready']::before,
+.stage[data-glow='kaleidoscope'] .field[data-glow][data-state='waiting'][data-loading-glow='field']::before {
+	opacity: 1;
+}
+
+/* Dissolve into the field's rounded clip; edge overlays extended into
+   the 64px padding, painted in the velvet color. */
+.stage[data-glow='kaleidoscope'] .field[data-glow] .paint {
+	overflow: visible;
+	clip-path: inset(-3.4em -6em -3.4em 0);
+}
+
+.stage[data-glow='kaleidoscope'] .field[data-glow] .edge-left {
+	left: -64px;
+	width: 156px;
+	background: linear-gradient(90deg, rgb(17, 13, 20) 0%, rgb(17, 13, 20) 40%, rgba(17, 13, 20, 0) 100%);
+	opacity: 0;
+}
+
+.stage[data-glow='kaleidoscope'] .field[data-glow] .viewport.scrolled .edge-left {
+	opacity: 1;
+}
+
+/* Re-pins the legacy QA opacity:0 kill. */
+.stage[data-glow='kaleidoscope'] .field[data-glow] .edge-right {
+	display: block;
+	right: -64px;
+	width: 190px;
+	background: linear-gradient(270deg, rgba(19, 15, 22, 0.9) 0%, rgba(19, 15, 22, 0.5) 36%, rgba(19, 15, 22, 0) 100%);
+	opacity: 0.8;
+}
+
+/* No leftover legacy paint on the tail pseudos. */
+.stage[data-glow='kaleidoscope'] .field[data-glow] .tail::before,
+.stage[data-glow='kaleidoscope'] .field[data-glow] .tail::after {
+	content: none;
+	background: none;
+	box-shadow: none;
+	animation: none;
+}
+
+/* ---------- APERTURE HALO: light spilling from the tube ---------- */
+/* Box: left -1.75em, top -0.75em, 3.5 x 2.5em => center (0, 0.5em) =
+   the disc center, bottom 1.75em < 1.821em. 2 layers — inner spill(1) +
+   a faint colder ring echo(1) — COUNT: 2 in the size/position lists.
+   z:-1 — glow ON the velvet, under everything. Fades in once. */
+.stage[data-glow='kaleidoscope'] .field[data-glow] .prediction::before {
+	position: absolute;
+	left: -1.2em;
+	top: -0.75em;
+	right: auto;
+	bottom: auto;
+	z-index: -1;
+	display: block;
+	width: 3.5em;
+	height: 2.5em;
+	content: '';
+	pointer-events: none;
+	border-radius: 0;
+	background:
+		radial-gradient(circle 1.6em at 50% 50%, var(--ka-halo-v2), transparent 72%),
+		radial-gradient(circle 1.9em at 50% 50%, transparent 0 62%, var(--ka-halo-ring-v2) 74% 78%, transparent 88%);
+	background-size:
+		100% 100%,
+		100% 100%;
+	background-position:
+		0 0,
+		0 0;
+	background-repeat: no-repeat;
+	filter: blur(3px);
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: var(--ka-halo-blend-v2);
+	opacity: 1;
+	transform: none;
+	animation: kaleidoscope-halo-in-v2 520ms ease-out both;
+}
+
+/* ---------- GLASS DUST: sparkle motes by the aperture ---------- */
+/* Box: left -0.5em, top -0.62em, 2.8 x 1em => bottom 0.38em; pop scale
+   never exceeds 1.06 of the in-box specks. 6 radial speck layers —
+   COUNT: 6, single no-repeat (each speck is intrinsic to its layer).
+   z:5 — over the mandala glass, under the ink. Pops once (explicit
+   100% + fill both), then utterly still. */
+.stage[data-glow='kaleidoscope'] .field[data-glow] .prediction::after {
+	position: absolute;
+	left: 0.05em;
+	top: -0.62em;
+	right: auto;
+	bottom: auto;
+	z-index: 5;
+	display: block;
+	width: 2.8em;
+	height: 1em;
+	content: '';
+	pointer-events: none;
+	border-radius: 0;
+	background:
+		radial-gradient(circle 0.024em at 12% 30%, var(--ka-spark1-v2), transparent 100%),
+		radial-gradient(circle 0.018em at 26% 68%, var(--ka-spark2-v2), transparent 100%),
+		radial-gradient(circle 0.028em at 44% 22%, var(--ka-spark3-v2), transparent 100%),
+		radial-gradient(circle 0.016em at 62% 56%, var(--ka-spark1-v2), transparent 100%),
+		radial-gradient(circle 0.022em at 78% 34%, var(--ka-spark2-v2), transparent 100%),
+		radial-gradient(circle 0.015em at 92% 62%, var(--ka-spark3-v2), transparent 100%);
+	background-repeat: no-repeat;
+	filter: none;
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: normal;
+	opacity: 0;
+	transform: none;
+	transform-origin: 50% 50%;
+	animation: kaleidoscope-dust-pop-v2 640ms cubic-bezier(0.3, 1.1, 0.4, 1) 420ms both;
+}
+
+/* ---------- THE LAYER: aperture + shard field ---------- */
+/* One strip hosting the mandala pseudo, the 12 shards and the rays.
+   Box: left -1.3em, top -0.8em (> -0.821em), 13.5 x 2.6em => bottom
+   1.8em < 1.821em. The single right-fade mask dissolves far shards
+   with the tail (the mandala at the left edge sits in full black);
+   no second mask layer, so the default 'add' is fine here. */
+.stage[data-glow='kaleidoscope'] .field[data-glow] .kaleidoscope-layer {
+	position: absolute;
+	left: -0.75em;
+	top: -0.8em;
+	z-index: 4;
+	width: 13.5em;
+	height: 2.6em;
+	pointer-events: none;
+	transform-style: flat;
+	filter: none;
+	-webkit-mask-image: linear-gradient(90deg, black 0 9em, rgba(0, 0, 0, 0.35) 11.5em, transparent 13.2em);
+	mask-image: linear-gradient(90deg, black 0 9em, rgba(0, 0, 0, 0.35) 11.5em, transparent 13.2em);
+	-webkit-mask-size: 100% 100%;
+	mask-size: 100% 100%;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+}
+
+/* ---------- THE MANDALA: the mirrored eye of the tube ---------- */
+/* 2.2em disc at layer (0.2em, 0.2em) => centered on the caret at line
+   center; border-radius clips everything to the circle. 5 layers —
+   glare(1) + rim(1, dark ring 0.8-1.1em radius with the violet inner
+   edge; its last color runs to the box corners and the 50% radius
+   clips it) + seam spokes(1, 2deg lines centered on every 45deg mirror
+   axis via the -1deg from-offset) + the MIRRORED pattern(1, 90deg
+   period, stops symmetric about 45deg — see the banner) + glass
+   depth(1) — COUNT: 5 in the size/position lists. Both conics read
+   --ka-spin-v2 declared-and-animated ON THIS pseudo, so pattern and
+   seams turn together. The entrance only scales down (0.55 -> 1). */
+.stage[data-glow='kaleidoscope'] .field[data-glow] .kaleidoscope-layer::before {
+	position: absolute;
+	inset: auto;
+	left: 0.2em;
+	top: 0.2em;
+	right: auto;
+	bottom: auto;
+	width: 2.2em;
+	height: 2.2em;
+	content: '';
+	pointer-events: none;
+	border-radius: 50%;
+	background:
+		radial-gradient(ellipse 34% 26% at 36% 30%, var(--ka-glare-v2), transparent 70%),
+		radial-gradient(circle at 50% 50%, transparent 0 0.76em, var(--ka-rim-edge-v2) 0.8em 0.84em, var(--ka-rim-v2) 0.9em),
+		repeating-conic-gradient(from calc(var(--ka-spin-v2) - 1deg) at 50% 50%, var(--ka-seam-v2) 0deg 2deg, transparent 2deg 45deg),
+		repeating-conic-gradient(from var(--ka-spin-v2) at 50% 50%, var(--ka-w1-v2) 0deg 12deg, var(--ka-w2-v2) 18deg 28deg, var(--ka-w3-v2) 34deg 56deg, var(--ka-w2-v2) 62deg 72deg, var(--ka-w1-v2) 78deg 90deg),
+		radial-gradient(circle at 50% 50%, var(--ka-depth-a-v2), var(--ka-depth-b-v2) 76%);
+	background-size:
+		100% 100%,
+		100% 100%,
+		100% 100%,
+		100% 100%,
+		100% 100%;
+	background-position:
+		0 0,
+		0 0,
+		0 0,
+		0 0,
+		0 0;
+	background-repeat: no-repeat;
+	filter: blur(0.4px) saturate(1.15);
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: var(--ka-mandala-blend-v2);
+	opacity: var(--ka-mandala-o-v2);
+	transform: none;
+	transform-origin: 50% 50%;
+	animation:
+		kaleidoscope-iris-open-v2 620ms cubic-bezier(0.2, 0.9, 0.3, 1) both,
+		kaleidoscope-mandala-turn-v2 14s linear infinite;
+}
+
+/* ---------- LIGHT-LEAK RAYS: escaping across the ghost zone ---------- */
+/* Full layer box (13.5 x 2.6em, inset 0). ONE conic — three thin
+   slivers pivoting at the aperture center (1.3em 50%), rotating in
+   lockstep with the mandala (same keyframe, same 14s clock, same
+   ignite start). Masks: left fade (transparent over the disc, visible
+   from ~3em, gone INSIDE the box by calc(100% - 0.3em)) x radial
+   falloff — intersected via the stage rule. */
+.stage[data-glow='kaleidoscope'] .field[data-glow] .kaleidoscope-layer::after {
+	position: absolute;
+	inset: 0;
+	content: '';
+	pointer-events: none;
+	border-radius: 0;
+	background: conic-gradient(
+		from calc(var(--ka-spin-v2) + 12deg) at 1.3em 50%,
+		transparent 0deg 22deg,
+		var(--ka-ray1-v2) 24deg 25.8deg,
+		transparent 28deg 118deg,
+		var(--ka-ray2-v2) 120deg 121.4deg,
+		transparent 124deg 226deg,
+		var(--ka-ray3-v2) 228deg 229.6deg,
+		transparent 232deg 360deg
+	);
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	filter: blur(1.5px);
+	-webkit-mask-image:
+		linear-gradient(90deg, transparent 0 1.5em, black 3em calc(100% - 4em), rgba(0, 0, 0, 0.35) calc(100% - 2em), transparent calc(100% - 0.3em)),
+		radial-gradient(ellipse 85% 95% at 1.3em 50%, black 0 55%, rgba(0, 0, 0, 0.4) 78%, transparent 98%);
+	mask-image:
+		linear-gradient(90deg, transparent 0 1.5em, black 3em calc(100% - 4em), rgba(0, 0, 0, 0.35) calc(100% - 2em), transparent calc(100% - 0.3em)),
+		radial-gradient(ellipse 85% 95% at 1.3em 50%, black 0 55%, rgba(0, 0, 0, 0.4) 78%, transparent 98%);
+	-webkit-mask-size:
+		100% 100%,
+		100% 100%;
+	mask-size:
+		100% 100%,
+		100% 100%;
+	-webkit-mask-position:
+		0 0,
+		0 0;
+	mask-position:
+		0 0,
+		0 0;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	mix-blend-mode: var(--ka-ray-blend-v2);
+	opacity: 1;
+	transform: none;
+	animation:
+		kaleidoscope-rays-in-v2 700ms ease-out 200ms both,
+		kaleidoscope-mandala-turn-v2 14s linear infinite;
+}
+
+/* ---------- STAINED-GLASS SHARDS: drifting jewel fragments ---------- */
+/* Base box 0.72 x 0.62em at left 1.3em (so --kx 0 = the caret), scaled
+   by --ks <= 0.9. 3 background layers — facet edge(1) + glint dot(1) +
+   glass body(1, far corner hue-shifted +42deg — dispersion) — COUNT: 3
+   in the size/position lists. Shapes are clip-path polygons (base
+   pentagon + two nth-child recuts, matching the legacy override
+   specificity). Tumble in once (explicit 100% + fill both, staggered by
+   --kd), then the SIGNATURE elliptical orbit — delay --kd + 600ms =
+   exactly the tumble end, 0% pose = base transform: seamless. No
+   border/box-shadow: clip-path would shear them into artifacts. */
+.stage[data-glow='kaleidoscope'] .field[data-glow] .kaleidoscope-shard {
+	position: absolute;
+	left: 0.75em;
+	top: 50%;
+	width: 0.72em;
+	height: 0.62em;
+	border: none;
+	border-radius: 0;
+	background:
+		linear-gradient(118deg, var(--ka-facet-v2) 0 10%, transparent 18%),
+		radial-gradient(circle 0.09em at 30% 26%, var(--ka-facet-soft-v2), transparent 100%),
+		linear-gradient(152deg, hsl(var(--kh) var(--ka-shard-top-v2) / var(--ka-shard-a-v2)) 0%, hsl(var(--kh) var(--ka-shard-mid-v2) / var(--ka-shard-a-v2)) 52%, hsl(calc(var(--kh) + 42) var(--ka-shard-deep-v2) / var(--ka-shard-a-deep-v2)) 100%);
+	background-size:
+		100% 100%,
+		100% 100%,
+		100% 100%;
+	background-position:
+		0 0,
+		0 0,
+		0 0;
+	background-repeat: no-repeat;
+	box-shadow: none;
+	clip-path: polygon(50% 0, 100% 38%, 82% 100%, 16% 92%, 0 32%);
+	filter: saturate(1.15);
+	mix-blend-mode: normal;
+	opacity: var(--ka-shard-o-v2);
+	transform: translate3d(var(--kx), calc(-50% + var(--ky)), 0) rotate(var(--kr)) scale(var(--ks));
+	transform-origin: center;
+	animation:
+		kaleidoscope-shard-tumble-v2 600ms cubic-bezier(0.3, 1.1, 0.4, 1) both,
+		kaleidoscope-shard-orbit-v2 9s ease-in-out infinite;
+	animation-delay: var(--kd), calc(var(--kd) + 600ms);
+}
+
+/* Two more glass cuts — no two neighbours share a silhouette. */
+.stage[data-glow='kaleidoscope'] .field[data-glow] .kaleidoscope-shard:nth-child(3n + 1) {
+	clip-path: polygon(0 24%, 62% 0, 100% 58%, 30% 100%);
+}
+
+.stage[data-glow='kaleidoscope'] .field[data-glow] .kaleidoscope-shard:nth-child(3n + 2) {
+	clip-path: polygon(14% 0, 100% 30%, 58% 100%, 0 58%);
+}
+
+/* ---------- The word: resolving out of the tube ---------- */
+.stage[data-glow='kaleidoscope'] .field[data-glow] .next-word {
+	position: relative;
+	isolation: isolate;
+	z-index: 6;
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-mask-image: none;
+	mask-image: none;
+	filter: none;
+	text-shadow: none;
+	transform: none;
+	animation: kaleidoscope-word-in-v2 140ms ease-out both;
+}
+
+/* PRISMATIC SETTLE: a mirrored cyan/magenta double exposure collapses
+   into clean ink (no 100% frame — the shadow pair settles onto the
+   live --ka-ink-echo-v2 residue). The ink cycles 3 muted jewel tints
+   through the nth-child hooks below (12% mix — readable). Once landed
+   the word is utterly still. The nth-child group re-wins legacy tint
+   splits. */
+.stage[data-glow='kaleidoscope'] .field[data-glow] .next-word .glyph,
+.stage[data-glow='kaleidoscope'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-glow='kaleidoscope'] .field[data-glow] .next-word .glyph:nth-child(3n + 2),
+.stage[data-glow='kaleidoscope'] .field[data-glow] .next-word .glyph:nth-child(3n) {
+	display: inline-block;
+	position: relative;
+	color: color-mix(in oklab, var(--ka-ink-base-v2) 88%, var(--ka-glyph-tint-v2));
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-text-fill-color: currentColor;
+	opacity: 1;
+	filter: none;
+	text-shadow: var(--ka-ink-echo-v2);
+	transform: none;
+	animation: kaleidoscope-glyph-settle-v2 480ms cubic-bezier(0.25, 0.8, 0.3, 1) both;
+	animation-delay: calc(70ms + var(--i, 0) * 70ms);
+}
+
+/* The 3-step jewel tint cycle — custom properties only; the shared
+   rule above consumes them and the light theme re-tunes the base. */
+.stage[data-glow='kaleidoscope'] .field[data-glow] .next-word .glyph:nth-child(3n + 1) {
+	--ka-glyph-tint-v2: var(--ka-tint1-v2);
+}
+
+.stage[data-glow='kaleidoscope'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
+	--ka-glyph-tint-v2: var(--ka-tint2-v2);
+}
+
+.stage[data-glow='kaleidoscope'] .field[data-glow] .next-word .glyph:nth-child(3n) {
+	--ka-glyph-tint-v2: var(--ka-tint3-v2);
+}
+
+/* Glass shows letterforms, not alter egos: kill the component data-alt
+   echo on both strips. */
+.stage[data-glow='kaleidoscope'] .field[data-glow] .next-word .glyph::after,
+.stage[data-glow='kaleidoscope'] .field[data-glow] .tail .glyph::after {
+	content: none;
+	opacity: 0;
+	animation: none;
+}
+
+/* ---------- Tail: deeper in the tube ---------- */
+/* Container re-pins over the component defaults and the legacy blur/
+   text-shadow; the mask ends the tail by 8em (no pseudo overhangs
+   here, so the default mask sizing is safe). */
+.stage[data-glow='kaleidoscope'] .field[data-glow] .tail {
+	position: relative;
+	isolation: isolate;
+	z-index: 2;
+	display: inline-block;
+	vertical-align: baseline;
+	color: var(--tail-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: none;
+	transform: none;
+	-webkit-mask-image: linear-gradient(90deg, black 0 4.5em, rgba(0, 0, 0, 0.45) 6.3em, transparent 8em);
+	mask-image: linear-gradient(90deg, black 0 4.5em, rgba(0, 0, 0, 0.45) 6.3em, transparent 8em);
+	-webkit-mask-size: 100% 100%;
+	mask-size: 100% 100%;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	animation: kaleidoscope-tail-in-v2 280ms ease-out 120ms both;
+}
+
+/* Glass ink losing focus: alpha decays with the absolute --i (continues
+   from the next word), the mirrored echo pair GROWS with --i and a tiny
+   --i blur softens the deepest glyphs. The nth-child group re-wins
+   legacy tint splits. */
+.stage[data-glow='kaleidoscope'] .field[data-glow] .tail .glyph,
+.stage[data-glow='kaleidoscope'] .field[data-glow] .tail .glyph:nth-child(3n + 1),
+.stage[data-glow='kaleidoscope'] .field[data-glow] .tail .glyph:nth-child(3n + 2),
+.stage[data-glow='kaleidoscope'] .field[data-glow] .tail .glyph:nth-child(3n) {
+	display: inline-block;
+	position: relative;
+	z-index: 1;
+	color: oklch(var(--ka-tail-lch-v2) / clamp(0.08, calc(var(--ka-tail-a0-v2) - var(--i, 0) * 0.024), 0.6));
+	-webkit-text-fill-color: currentColor;
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	opacity: 1;
+	filter: blur(clamp(0px, calc((var(--i, 0) - 8) * 0.08px), 1px));
+	text-shadow:
+		calc(0.012em + var(--i, 0) * 0.005em) calc(-0.006em - var(--i, 0) * 0.0022em) 0.012em var(--ka-echo-cool-v2),
+		calc(-0.012em - var(--i, 0) * 0.005em) calc(0.006em + var(--i, 0) * 0.0022em) 0.012em var(--ka-echo-warm-v2);
+	transform: none;
+	-webkit-mask-image: none;
+	mask-image: none;
+	animation: kaleidoscope-deep-in-v2 380ms ease-out both;
+	animation-delay: calc(140ms + var(--i, 0) * 34ms);
+}
+
+/* ---------- Light flow off: one look, then the tube rests ---------- */
+/* Iris-open, rays-in, shard tumble, glyph settle, tail fade, halo and
+   dust play once (finite); the mandala turn, ray rotation and shard
+   orbits freeze at --ka-spin-v2 0deg — a still mandala. These re-win
+   the legacy shared flow-off kills AND this module's own infinite base
+   animations. */
+.stage[data-glow='kaleidoscope'][data-light-flow='off'] .field[data-glow] {
+	animation: none;
+}
+
+.stage[data-glow='kaleidoscope'][data-light-flow='off'] .field[data-glow]::before {
+	animation: none;
+}
+
+.stage[data-glow='kaleidoscope'][data-light-flow='off'] .field[data-glow] .kaleidoscope-layer::before {
+	animation: kaleidoscope-iris-open-v2 620ms cubic-bezier(0.2, 0.9, 0.3, 1) both;
+}
+
+.stage[data-glow='kaleidoscope'][data-light-flow='off'] .field[data-glow] .kaleidoscope-layer::after {
+	animation: kaleidoscope-rays-in-v2 700ms ease-out 200ms both;
+}
+
+.stage[data-glow='kaleidoscope'][data-light-flow='off'] .field[data-glow] .kaleidoscope-shard {
+	animation: kaleidoscope-shard-tumble-v2 600ms cubic-bezier(0.3, 1.1, 0.4, 1) both;
+	animation-delay: var(--kd);
+}
+
+.stage[data-glow='kaleidoscope'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
+	animation: kaleidoscope-glyph-settle-v2 480ms cubic-bezier(0.25, 0.8, 0.3, 1) both;
+	animation-delay: calc(70ms + var(--i, 0) * 70ms);
+}
+
+.stage[data-glow='kaleidoscope'][data-light-flow='off'] .field[data-glow] .tail .glyph {
+	animation: kaleidoscope-deep-in-v2 380ms ease-out both;
+	animation-delay: calc(140ms + var(--i, 0) * 34ms);
+}
+
+.stage[data-glow='kaleidoscope'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: kaleidoscope-halo-in-v2 520ms ease-out both;
+}
+
+.stage[data-glow='kaleidoscope'][data-light-flow='off'] .field[data-glow] .prediction::after {
+	animation: kaleidoscope-dust-pop-v2 640ms cubic-bezier(0.3, 1.1, 0.4, 1) 420ms both;
+}
+
+/* ---------- Light theme: the optics-shop counter ---------- */
+/* Pale warm vessel; the mandala in stained-glass pastels sinking in
+   with multiply (the white glare layer becomes a no-op under multiply
+   — accepted, the rim and pattern carry the reading); rays as gently
+   darkened slivers; deep readable plum ink. Every gradient var still
+   expands to exactly ONE gradient — the 3-layer vessel lists hold. */
+.field[data-theme='light'][data-glow='kaleidoscope'] {
+	--ka-w1-v2: hsl(336 55% 72% / 0.5);
+	--ka-w2-v2: hsl(42 70% 70% / 0.45);
+	--ka-w3-v2: hsl(188 60% 68% / 0.5);
+	--ka-seam-v2: rgba(88, 70, 52, 0.4);
+	--ka-rim-v2: rgba(96, 84, 110, 0.32);
+	--ka-rim-edge-v2: hsl(268 30% 55% / 0.28);
+	--ka-glare-v2: rgba(255, 255, 255, 0);
+	--ka-depth-a-v2: hsl(280 20% 92% / 0.35);
+	--ka-depth-b-v2: hsl(270 25% 82% / 0.4);
+	--ka-mandala-blend-v2: multiply;
+	--ka-mandala-o-v2: 0.9;
+	--ka-ray1-v2: hsl(268 30% 45% / 0.1);
+	--ka-ray2-v2: hsl(196 45% 40% / 0.09);
+	--ka-ray3-v2: hsl(326 40% 45% / 0.09);
+	--ka-ray-blend-v2: multiply;
+	--ka-shard-top-v2: 62% 52%;
+	--ka-shard-mid-v2: 58% 44%;
+	--ka-shard-deep-v2: 55% 36%;
+	--ka-shard-a-v2: 0.34;
+	--ka-shard-a-deep-v2: 0.44;
+	--ka-facet-v2: rgba(255, 255, 255, 0.75);
+	--ka-facet-soft-v2: rgba(255, 255, 255, 0.55);
+	--ka-shard-o-v2: 0.88;
+	--ka-ink-base-v2: oklch(0.27 0.04 315 / 0.97);
+	--ka-ink-echo-v2:
+		-0.018em -0.01em 0 hsl(196 85% 38% / 0.2),
+		0.018em 0.01em 0 hsl(326 75% 42% / 0.18),
+		0 1px 0 rgba(255, 255, 255, 0.6);
+	--ka-tail-lch-v2: 0.34 0.03 300;
+	--ka-tail-a0-v2: 0.58;
+	--ka-echo-cool-v2: hsl(196 80% 34% / 0.2);
+	--ka-echo-warm-v2: hsl(326 70% 40% / 0.17);
+	--ka-halo-v2: hsl(276 30% 45% / 0.09);
+	--ka-halo-ring-v2: hsl(196 40% 40% / 0.06);
+	--ka-halo-blend-v2: multiply;
+	--ka-spark1-v2: rgba(120, 100, 140, 0.85);
+	--ka-spark2-v2: hsl(196 65% 34% / 0.75);
+	--ka-spark3-v2: hsl(326 60% 40% / 0.75);
+	--ka-vignette-v2: radial-gradient(ellipse 94% 150% at 50% 55%, transparent 0 52%, oklch(0.75 0.03 320 / 0.14) 100%);
+	--ka-sheen-v2: linear-gradient(180deg, rgba(255, 255, 255, 0.6), transparent 34%);
+	--ka-dust-v2: rgba(120, 100, 130, 0.05);
+	--ready-border: rgba(140, 122, 138, 0.34);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.95) inset,
+		0 -18px 50px rgba(150, 130, 156, 0.1) inset,
+		0 18px 46px rgba(62, 48, 66, 0.13),
+		0 0 58px hsl(326 45% 55% / 0.08);
+	--field-wash:
+		radial-gradient(ellipse 90% 170% at 70% -34%, rgba(255, 255, 255, 0.7), transparent 58%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.5), transparent 42%);
+	--caret-gradient: linear-gradient(
+		180deg,
+		rgb(96, 74, 130) 0%,
+		rgb(38, 140, 170) 40%,
+		rgb(170, 52, 138) 75%,
+		rgb(120, 90, 40) 100%
+	);
+	--caret-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.5),
+		0 0 7px hsl(276 45% 50% / 0.4),
+		0 6px 14px rgba(80, 60, 96, 0.2);
+	--haze-opacity: 0;
+	--body-opacity: 0;
+	--core-opacity: 0;
+	--flow-low: 0;
+	--flow-high: 0;
+	--spark-low: 0;
+	--spark-high: 0;
+	--smoke-opacity: 0;
+	--aux-opacity: 0;
+	--next-color: var(--ka-ink-base-v2);
+	--next-shadow: var(--ka-ink-echo-v2);
+	--tail-color: oklch(var(--ka-tail-lch-v2) / 0.4);
+}
+
+/* Legacy scopes shared light vars on the stage: re-win the contested
+   ones at the same strength so the counter palette holds. */
+.stage[data-theme='light'][data-glow='kaleidoscope'] .field[data-glow] {
+	--ready-border: rgba(140, 122, 138, 0.34);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.95) inset,
+		0 -18px 50px rgba(150, 130, 156, 0.1) inset,
+		0 18px 46px rgba(62, 48, 66, 0.13),
+		0 0 58px hsl(326 45% 55% / 0.08);
+	--field-wash:
+		radial-gradient(ellipse 90% 170% at 70% -34%, rgba(255, 255, 255, 0.7), transparent 58%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.5), transparent 42%);
+	--haze-opacity: 0;
+	--body-opacity: 0;
+	--core-opacity: 0;
+	--flow-low: 0;
+	--flow-high: 0;
+	--spark-low: 0;
+	--spark-high: 0;
+	--smoke-opacity: 0;
+	--aux-opacity: 0;
+	--next-color: var(--ka-ink-base-v2);
+	--next-shadow: var(--ka-ink-echo-v2);
+	--tail-color: oklch(var(--ka-tail-lch-v2) / 0.4);
+}
+
+/* The counter in daylight — pale warm violet-white. */
+.stage[data-theme='light'][data-glow='kaleidoscope'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 90% 160% at 70% -30%, rgba(255, 255, 255, 0.85), transparent 56%),
+		linear-gradient(180deg, rgb(251, 248, 250), rgb(247, 243, 246) 55%, rgb(241, 236, 240));
+	box-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.95) inset,
+		0 -1px 0 rgba(150, 130, 156, 0.16) inset,
+		0 20px 50px rgba(62, 48, 66, 0.12);
+}
+
+/* The waiting mandala and its dust sink into the paper, never
+   screened. */
+.stage[data-theme='light'][data-glow='kaleidoscope'] .field[data-glow] .torch-beam {
+	mix-blend-mode: multiply;
+}
+
+/* Pastel glass re-reads on white through the vars; the blends flip
+   here at light-scope strength. */
+.stage[data-theme='light'][data-glow='kaleidoscope'] .field[data-glow] .kaleidoscope-layer::before {
+	mix-blend-mode: var(--ka-mandala-blend-v2);
+	opacity: var(--ka-mandala-o-v2);
+}
+
+.stage[data-theme='light'][data-glow='kaleidoscope'] .field[data-glow] .kaleidoscope-layer::after {
+	mix-blend-mode: var(--ka-ray-blend-v2);
+}
+
+.stage[data-theme='light'][data-glow='kaleidoscope'] .field[data-glow] .prediction::before {
+	mix-blend-mode: var(--ka-halo-blend-v2);
+}
+
+.stage[data-theme='light'][data-glow='kaleidoscope'] .field[data-glow] .next-word {
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: none;
+}
+
+/* Deep plum ink on the counter: the settle keyframes carry only echo
+   colors that read on both themes; nth-child(n) matches the legacy
+   light specificity. */
+.stage[data-theme='light'][data-glow='kaleidoscope'] .field[data-glow] .next-word .glyph:nth-child(n) {
+	color: color-mix(in oklab, var(--ka-ink-base-v2) 88%, var(--ka-glyph-tint-v2));
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-text-fill-color: currentColor;
+	opacity: 1;
+	filter: none;
+	text-shadow: var(--ka-ink-echo-v2);
+	animation: kaleidoscope-glyph-settle-v2 480ms cubic-bezier(0.25, 0.8, 0.3, 1) both;
+	animation-delay: calc(70ms + var(--i, 0) * 70ms);
+}
+
+.stage[data-theme='light'][data-glow='kaleidoscope'] .field[data-glow] .tail {
+	color: var(--tail-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: none;
+}
+
+.stage[data-theme='light'][data-glow='kaleidoscope'] .field[data-glow] .tail .glyph:nth-child(n) {
+	color: oklch(var(--ka-tail-lch-v2) / clamp(0.08, calc(var(--ka-tail-a0-v2) - var(--i, 0) * 0.024), 0.6));
+	-webkit-text-fill-color: currentColor;
+	background: none;
+	opacity: 1;
+	filter: blur(clamp(0px, calc((var(--i, 0) - 8) * 0.08px), 1px));
+	text-shadow:
+		calc(0.012em + var(--i, 0) * 0.005em) calc(-0.006em - var(--i, 0) * 0.0022em) 0.012em var(--ka-echo-cool-v2),
+		calc(-0.012em - var(--i, 0) * 0.005em) calc(0.006em + var(--i, 0) * 0.0022em) 0.012em var(--ka-echo-warm-v2);
+	animation: kaleidoscope-deep-in-v2 380ms ease-out both;
+	animation-delay: calc(140ms + var(--i, 0) * 34ms);
+}
+
+.stage[data-theme='light'][data-glow='kaleidoscope'] .field[data-glow] .edge-left {
+	background: linear-gradient(90deg, rgb(251, 248, 250) 0%, rgb(251, 248, 250) 40%, rgba(251, 248, 250, 0) 100%);
+}
+
+.stage[data-theme='light'][data-glow='kaleidoscope'] .field[data-glow] .edge-right {
+	background: linear-gradient(270deg, rgba(241, 236, 240, 0.85) 0%, rgba(241, 236, 240, 0.4) 40%, rgba(241, 236, 240, 0) 100%);
+	opacity: 0.7;
+}
+
+/* Light theme + flow off: re-win the finite passes against the
+   higher-specificity light rules above. */
+.stage[data-theme='light'][data-glow='kaleidoscope'][data-light-flow='off'] .field[data-glow] {
+	animation: none;
+}
+
+.stage[data-theme='light'][data-glow='kaleidoscope'][data-light-flow='off'] .field[data-glow]::before {
+	animation: none;
+}
+
+.stage[data-theme='light'][data-glow='kaleidoscope'][data-light-flow='off'] .field[data-glow] .kaleidoscope-layer::before {
+	animation: kaleidoscope-iris-open-v2 620ms cubic-bezier(0.2, 0.9, 0.3, 1) both;
+}
+
+.stage[data-theme='light'][data-glow='kaleidoscope'][data-light-flow='off'] .field[data-glow] .kaleidoscope-layer::after {
+	animation: kaleidoscope-rays-in-v2 700ms ease-out 200ms both;
+}
+
+.stage[data-theme='light'][data-glow='kaleidoscope'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(n) {
+	animation: kaleidoscope-glyph-settle-v2 480ms cubic-bezier(0.25, 0.8, 0.3, 1) both;
+	animation-delay: calc(70ms + var(--i, 0) * 70ms);
+}
+
+.stage[data-theme='light'][data-glow='kaleidoscope'][data-light-flow='off'] .field[data-glow] .tail .glyph:nth-child(n) {
+	animation: kaleidoscope-deep-in-v2 380ms ease-out both;
+	animation-delay: calc(140ms + var(--i, 0) * 34ms);
+}
+
+/* ---------- Waiting: the mandala turns while the tube thinks ---------- */
+/* torch-core carries the small 6-fold mandala (120deg period, mirrored
+   about 60deg — banner math), disc center at (0.8em, 50%) of the 1.6em
+   box. 4 --core-bg layers — rim(1) + seam spokes(1, every 60deg) +
+   mirrored pattern(1) + glass depth(1) — COUNT: 4 in --core-size. The
+   spin (--ka-spin-v2) and the breathe are comma-joined in
+   --torch-core-motion and run ON .torch-core — where --core-bg is
+   declared (rule below), so the conics actually turn. torch-haze is a
+   faint glass-dust halo (2 layers — COUNT: 2 in --haze-size) breathing
+   slowly. Geometry: disc 1.6em centered on the line, breathe scale
+   1.04 => ±0.832em about line center < the 1.321em half-pill; dust
+   2.3 x 2em, scale 1.05 => ±1.05em. Every other torch layer dead. */
+.field[data-state='waiting'][data-glow='kaleidoscope'] {
+	--haze-width: 2.3em;
+	--haze-height: 2em;
+	--haze-size:
+		100% 100%,
+		100% 100%;
+	--haze-bg:
+		radial-gradient(ellipse 40% 36% at 40% 46%, var(--ka-halo-v2), transparent 72%),
+		radial-gradient(ellipse 32% 28% at 56% 58%, var(--ka-halo-ring-v2), transparent 74%);
+	--haze-filter: blur(5px);
+	--haze-opacity: 0.7;
+	--torch-haze-motion: kaleidoscope-dust-halo-v2 4.2s ease-in-out infinite;
+	--haze-mask:
+		linear-gradient(90deg, transparent 0, black 0.2em, black calc(100% - 0.22em), transparent 100%),
+		radial-gradient(ellipse 74% 72% at 50% 50%, black 0 58%, rgba(0, 0, 0, 0.45) 80%, transparent 98%);
+	--body-bg: none;
+	--body-opacity: 0;
+	--core-width: 1.6em;
+	--core-height: 1.6em;
+	--core-size:
+		100% 100%,
+		100% 100%,
+		100% 100%,
+		100% 100%;
+	--core-filter: blur(0.3px) saturate(1.1);
+	--core-opacity: 0.92;
+	--torch-core-motion:
+		kaleidoscope-mandala-turn-v2 12s linear infinite,
+		kaleidoscope-wait-breathe-v2 3.4s ease-in-out infinite;
+	--core-mask:
+		linear-gradient(90deg, transparent 0, black 0.12em, black calc(100% - 0.12em), transparent 100%),
+		radial-gradient(circle 0.74em at 0.8em 50%, black 0 0.56em, rgba(0, 0, 0, 0.5) 0.64em, transparent 0.7em);
+	--flow-bg: none;
+	--flow-low: 0;
+	--flow-high: 0;
+	--flow-motion: none;
+	--spark-bg: none;
+	--spark-low: 0;
+	--spark-high: 0;
+	--spark-motion: none;
+	--smoke-bg: none;
+	--smoke-opacity: 0;
+	--smoke-motion: none;
+	--aux-bg: none;
+	--aux-opacity: 0;
+	--aux-motion: none;
+}
+
+/* The small mandala's paint: --core-bg is declared ON the torch-core
+   (not the field) because var() inside a custom property substitutes
+   where that property computes — only here do the conics re-read the
+   ANIMATED --ka-spin-v2 each frame (blueprint compass precedent).
+   Mirror math: period 120deg, w1 0-16 / w2 24-38 / w3 46-74 / w2 82-96
+   / w1 104-120 — every band and ramp mirrors about 60deg, w1 meets
+   itself at the seam; 3 periods = 6 mirrored segments; spokes every
+   60deg, centered by the -1.5deg from-offset. */
+.stage[data-glow='kaleidoscope'] .field[data-glow][data-state='waiting'] .torch-core {
+	--core-bg:
+		radial-gradient(circle at 0.8em 50%, transparent 0 0.5em, var(--ka-rim-edge-v2) 0.52em 0.56em, var(--ka-rim-v2) 0.6em 0.7em, transparent 0.74em),
+		repeating-conic-gradient(from calc(var(--ka-spin-v2) - 1.5deg) at 0.8em 50%, var(--ka-seam-v2) 0deg 3deg, transparent 3deg 60deg),
+		repeating-conic-gradient(from var(--ka-spin-v2) at 0.8em 50%, var(--ka-w1-v2) 0deg 16deg, var(--ka-w2-v2) 24deg 38deg, var(--ka-w3-v2) 46deg 74deg, var(--ka-w2-v2) 82deg 96deg, var(--ka-w1-v2) 104deg 120deg),
+		radial-gradient(circle 0.72em at 0.8em 50%, var(--ka-depth-a-v2), var(--ka-depth-b-v2) 78%);
+}
+
+/* The breathe must swell the disc in place, not swing it around the
+   caret: re-origin both waiting layers into their box centers (the
+   component default is left-center). */
+.stage[data-glow='kaleidoscope'] .field[data-glow] .torch-core {
+	transform-origin: 0.8em 50%;
+}
+
+.stage[data-glow='kaleidoscope'] .field[data-glow] .torch-haze {
+	transform-origin: 1.15em 50%;
+}
+
+/* Daylight waiting: pastel glass on paper — only the strengths nudge;
+   the colors already flipped through the theme block. */
+.field[data-theme='light'][data-state='waiting'][data-glow='kaleidoscope'] {
+	--haze-opacity: 0.55;
+	--core-opacity: 0.88;
+}
+
+/* Light + waiting: the stage-scoped light pass above out-specifies the
+   field-level waiting block and blacks out the eyepiece — re-raise the
+   torch opacities over it. */
+.stage[data-theme='light'][data-glow='kaleidoscope'] .field[data-glow][data-state='waiting'] {
+	--haze-opacity: 0.55;
+	--core-opacity: 0.88;
+}
+
+/* Waiting + flow off: the mandala holds perfectly still. */
+.field[data-light-flow='off'][data-state='waiting'][data-glow='kaleidoscope'] {
+	--torch-haze-motion: none;
+	--torch-core-motion: none;
+}
+
+/* ---------- Keyframes (kaleidoscope-*-v2) ---------- */
+/* THE TURN: one slow full revolution of the registered angle — 0 ->
+   360deg is seamless; consumed by every conic that reads --ka-spin-v2
+   on its own element (mandala, rays, waiting disc). */
+@keyframes kaleidoscope-mandala-turn-v2 {
+	0% {
+		--ka-spin-v2: 0deg;
+	}
+	100% {
+		--ka-spin-v2: 360deg;
+	}
+}
+
+/* The aperture opens: the disc scales DOWN into focus (0.55 -> live) —
+   no 100% frame, so it settles onto the live slot; the envelope never
+   exceeds the resting 2.2em. */
+@keyframes kaleidoscope-iris-open-v2 {
+	0% {
+		opacity: 0;
+		transform: scale(0.55);
+		filter: blur(4px) saturate(1.15);
+	}
+	60% {
+		opacity: var(--ka-mandala-o-v2, 0.92);
+	}
+}
+
+/* Light finds the cracks: the rays fade up once (no 100% frame). */
+@keyframes kaleidoscope-rays-in-v2 {
+	0% {
+		opacity: 0;
+	}
+	60% {
+		opacity: 1;
+	}
+}
+
+/* Shards tumble in from nothing — rotate from -110deg + scale from 0,
+   explicit 100% + fill both: they land exactly on the base pose the
+   orbit picks up. */
+@keyframes kaleidoscope-shard-tumble-v2 {
+	0% {
+		opacity: 0;
+		transform: translate3d(var(--kx), calc(-50% + var(--ky)), 0) rotate(calc(var(--kr) - 110deg)) scale(0);
+	}
+	100% {
+		opacity: var(--ka-shard-o-v2, 0.9);
+		transform: translate3d(var(--kx), calc(-50% + var(--ky)), 0) rotate(var(--kr)) scale(var(--ks));
+	}
+}
+
+/* THE SIGNATURE ORBIT: each shard rides a slow elliptical loop around
+   its own base pose with a gentle sway — identity at both ends, so the
+   tumble handoff and the loop are both seamless. (Signature keyframe:
+   kaleidoscope-shard-orbit-v2.) */
+@keyframes kaleidoscope-shard-orbit-v2 {
+	0%,
+	100% {
+		transform: translate3d(var(--kx), calc(-50% + var(--ky)), 0) rotate(var(--kr)) scale(var(--ks));
+	}
+	25% {
+		transform: translate3d(calc(var(--kx) + 0.055em), calc(-50% + var(--ky) - 0.02em), 0) rotate(calc(var(--kr) + 3deg)) scale(calc(var(--ks) * 1.02));
+	}
+	50% {
+		transform: translate3d(var(--kx), calc(-50% + var(--ky) - 0.055em), 0) rotate(calc(var(--kr) + 6deg)) scale(var(--ks));
+	}
+	75% {
+		transform: translate3d(calc(var(--kx) - 0.055em), calc(-50% + var(--ky) + 0.02em), 0) rotate(calc(var(--kr) + 3deg)) scale(calc(var(--ks) * 0.98));
+	}
+}
+
+/* The word row mounts in the tube. */
+@keyframes kaleidoscope-word-in-v2 {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+/* PRISMATIC SETTLE: the mirrored cyan/magenta double exposure collapses
+   into ink — no 100% frame: the shadow pair, blur and offset settle
+   onto the live slot (the --ka-ink-echo-v2 residue). Echo colors read
+   on both themes. */
+@keyframes kaleidoscope-glyph-settle-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(0.015em);
+		filter: blur(1.8px);
+		text-shadow:
+			-0.09em -0.05em 0.03em hsl(190 95% 68% / 0.6),
+			0.09em 0.05em 0.03em hsl(326 90% 66% / 0.55),
+			0 0 0.34em rgba(255, 255, 255, 0.3);
+	}
+	45% {
+		opacity: 1;
+		text-shadow:
+			-0.045em -0.024em 0.02em hsl(190 95% 68% / 0.4),
+			0.045em 0.024em 0.02em hsl(326 90% 66% / 0.36),
+			0 0 0.2em rgba(255, 255, 255, 0.18);
+	}
+}
+
+/* The deep strip settles in. */
+@keyframes kaleidoscope-tail-in-v2 {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+/* Tail glyphs surface from deeper in the tube (no 100% frame — opacity
+   and blur settle onto the live --i slots). */
+@keyframes kaleidoscope-deep-in-v2 {
+	0% {
+		opacity: 0;
+		filter: blur(1.6px);
+	}
+	60% {
+		opacity: 1;
+	}
+}
+
+/* The tube's spill warms up once. */
+@keyframes kaleidoscope-halo-in-v2 {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+/* Glass dust pops by the aperture and lies still forever (explicit
+   100% + fill both). */
+@keyframes kaleidoscope-dust-pop-v2 {
+	0% {
+		opacity: 0;
+		transform: scale(0.4);
+	}
+	55% {
+		opacity: 1;
+		transform: scale(1.06);
+	}
+	100% {
+		opacity: 0.85;
+		transform: scale(1);
+	}
+}
+
+/* WAITING: the disc breathes gently while it turns — 0% and 100% match
+   and the translateY(-50%) keeps the torch layer's own centering. */
+@keyframes kaleidoscope-wait-breathe-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--core-opacity, 0.92) * 0.72);
+		transform: translateY(-50%) scale(0.97);
+	}
+	50% {
+		opacity: var(--core-opacity, 0.92);
+		transform: translateY(-50%) scale(1.04);
+	}
+}
+
+/* ...inside a faint halo of glass dust, breathing slower. */
+@keyframes kaleidoscope-dust-halo-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--haze-opacity, 0.7) * 0.65);
+		transform: translateY(-50%) scale(0.97);
+	}
+	50% {
+		opacity: var(--haze-opacity, 0.7);
+		transform: translateY(-50%) scale(1.05);
+	}
+}

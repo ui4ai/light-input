@@ -32,7 +32,8 @@ const PRESET_CSS_FILES = [
 	'src/lib/effects/ghosttext/index.css',
 	'src/lib/effects/drift/index.css',
 	'src/lib/effects/art/index.css',
-	'src/lib/effects/scratch/index.css'
+	'src/lib/effects/scratch/index.css',
+	'src/lib/effects/kaleidoscope/index.css'
 ];
 
 function readPresetCss(): string {
@@ -144,7 +145,7 @@ describe('glow inventory', () => {
 		expect(css).toContain(".field[data-glow='scratch']");
 		expect(css).toContain('scratch-foil-shimmer-v2');
 		expect(css).toContain(".field[data-glow='kaleidoscope']");
-		expect(css).toContain('kaleidoscope-shard-orbit');
+		expect(css).toContain('kaleidoscope-shard-orbit-v2');
 	});
 
 	it('ships a dedicated DOM layer for the kaleidoscope effect', () => {
