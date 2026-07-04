@@ -30,7 +30,8 @@ const PRESET_CSS_FILES = [
 	'src/lib/effects/blueprint/index.css',
 	'src/lib/effects/spoiler/index.css',
 	'src/lib/effects/ghosttext/index.css',
-	'src/lib/effects/drift/index.css'
+	'src/lib/effects/drift/index.css',
+	'src/lib/effects/art/index.css'
 ];
 
 function readPresetCss(): string {
@@ -138,7 +139,7 @@ describe('glow inventory', () => {
 		expect(css).toContain(".field[data-glow='drift']");
 		expect(css).toContain('drift-smoke-sweep-v2');
 		expect(css).toContain(".field[data-glow='art']");
-		expect(css).toContain('art-tail-blob');
+		expect(css).toContain('art-tail-blob-v2');
 		expect(css).toContain(".field[data-glow='scratch']");
 		expect(css).toContain('scratch-foil-shimmer');
 		expect(css).toContain(".field[data-glow='kaleidoscope']");
