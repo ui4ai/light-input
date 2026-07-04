@@ -8,6 +8,7 @@ node_modules
 /.svelte-kit
 /build
 /qa-screenshots
+/qa
 
 # OS
 .DS_Store
