@@ -31,7 +31,8 @@ const PRESET_CSS_FILES = [
 	'src/lib/effects/spoiler/index.css',
 	'src/lib/effects/ghosttext/index.css',
 	'src/lib/effects/drift/index.css',
-	'src/lib/effects/art/index.css'
+	'src/lib/effects/art/index.css',
+	'src/lib/effects/scratch/index.css'
 ];
 
 function readPresetCss(): string {
@@ -141,7 +142,7 @@ describe('glow inventory', () => {
 		expect(css).toContain(".field[data-glow='art']");
 		expect(css).toContain('art-tail-blob-v2');
 		expect(css).toContain(".field[data-glow='scratch']");
-		expect(css).toContain('scratch-foil-shimmer');
+		expect(css).toContain('scratch-foil-shimmer-v2');
 		expect(css).toContain(".field[data-glow='kaleidoscope']");
 		expect(css).toContain('kaleidoscope-shard-orbit');
 	});

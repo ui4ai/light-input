@@ -1,0 +1,1147 @@
+/* ============================================================
+   SCRATCH v2 — "Скретч-карта: будущее напечатано под фольгой,
+   расчищено только следующее слово". A lottery scratch card:
+   the whole prediction is already PRINTED on the cardstock, but
+   scratch-off foil still covers everything past the next word.
+   THE FOIL (the signature): the TAIL is hidden under a brushed-
+   silver band hugging the tail's line (tail::before, rounded
+   0.45em, inset -0.15em ⇒ 1.3em tall) built from 4 metal layers
+   — specular sweep(1) + vertical brush streaks(1) + warm
+   reflection(1) + base metal(1), COUNT: 4 in the size list and
+   in BOTH scratch-foil-shimmer-v2 position lists (the signature
+   keyframe: a narrow highlight crossing l→r every 4s; both loop
+   ends park the highlight OUTSIDE the 240%-wide window, so the
+   position jump at the wrap is invisible). Its LEFT edge is the
+   torn scratch boundary — a 3-layer mask UNION (main plate from
+   0.34em + deep teeth strip 0..0.34em + shallow teeth strip
+   0.14..0.34em; explicit mask-size/position/repeat lists COUNT:
+   3). This union builds a jagged SILHOUETTE — intentionally the
+   default 'add' compositing, NOT the intersect-for-fades case:
+   no fade lives on this pseudo; the right/vertical dissolve is
+   inherited from the .tail container mask, which wraps pseudos.
+   The band shadow is filter:drop-shadow (applied AFTER the
+   mask, so it traces the jagged edge; box-shadow would be
+   clipped by the mask). Tail glyphs under the foil: INVISIBLE
+   print (transparent fill), except the HALF-SCRATCHED BOUNDARY:
+   glyph 1 shows through 2-3 thin diagonal scratch slits
+   (striped mask + 0.55-0.6 alpha ink, z:4 over the z:3 foil —
+   reads as print exposed in the slits), glyph 2 a fainter
+   single-slit hint. THE SCRATCHED ZONE: the next word is fully
+   revealed print — crisp card ink with a faint gold prize edge
+   (text-shadow), revealed at ignite by a 400ms l→r clip wipe on
+   .next-word (scratch-word-wipe-v2 — the last coin stroke) with
+   a per-glyph sharpen stagger. Around it: SCRATCH STROKES
+   (prediction::before, z:-1 — coin marks ON the substrate):
+   three ~-20deg elongated traces + a soft scraped-sheen ellipse
+   (4 layers, COUNT: 4 in the size/position lists), drawn in
+   once (scratch-strokes-in-v2, scaleX from origin left, no 100%
+   frame); masked by a horizontal taper x an elliptical falloff
+   — intersected, every fade completes INSIDE the box. FOIL
+   CRUMBS (prediction::after, z:1 — on the card, under the foil
+   where they meet): seven silver flake specks (6 silver + 1
+   gold, COUNT: 7 radial layers, single no-repeat) scattered
+   just below the baseline; they pop and settle once at ignite
+   (scratch-crumbs-pop-v2, explicit 100% + fill both) and then
+   lie utterly still. VESSEL — THE CARD: light theme is the
+   PRIMARY reading — warm off-white cardstock; the ::before
+   overlay carries vignette(1) + a printed inset frame (ONE
+   gradient drawing both 1px hairlines 10px from top/bottom —
+   the pill's rounded ends sit in the 64px padding under the
+   edge scrims, so side lines are not drawn)(1) + a guilloche-
+   ish print raster (two interlocking repeating-radial arc
+   tiles, 44px, offset 22px)(2) — COUNT: 4 layers, each
+   --sc-*-v2 gradient var expands to exactly ONE gradient in
+   BOTH themes so the lists never drift. The component gates
+   ::before to ready/waiting-field; this module re-implements
+   that gating at its own specificity (base opacity 0, state
+   selectors raise it). Dark theme is the MIDNIGHT EDITION: deep
+   blue-black card, the same print in faint silver, the foil
+   popping metallic. CARET — A COIN EDGE: a warm-gold sliver
+   ridged by a 90deg hard-stop gradient (vertical micro-
+   stripes); its glint flickers via a registered <number>
+   (--sc-glint-a-v2) animated with steps(1, end) ON the .field,
+   where --caret-shadow computes (var() in a custom property
+   substitutes where that property computes), so the color-mix
+   alpha actually updates. WAITING — THE COIN HOVERS: torch-core
+   carries 2-3 arc-shaped rub marks — three conic wedges (COUNT:
+   3 in --core-size) cut into arcs by a ring mask (left-fade x
+   ring, intersected via the stage .torch-beam rule) — slowly
+   swinging back and forth around an in-box origin and pulsing
+   (scratch-rub-cycle-v2: the scraping is about to begin);
+   torch-haze is a faint silver dust cloud (2 layers, COUNT: 2
+   in --haze-size) breathing on scratch-dust-hover-v2. Every
+   other torch layer dead; explicit size lists because torch
+   consumption applies background-size after the shorthand.
+   data-light-flow='off': the word wipe, glyph stagger, stroke
+   draw and crumb pop play once (finite); the foil shimmer, the
+   coin glint, the dust and the rub arcs freeze — the foil stays
+   metallic through its static gradient. GEOMETRY (font 56px =
+   1em, pill 148px, line box 56px, clearance above/below the
+   line box = (148 - 56) / 2 = 46px = 0.821em; prediction pseudo
+   'top' offsets are relative to the prediction's TOP): foil
+   band top -0.15em / bottom 1.15em, drop-shadow reach 0.05em +
+   0.1em blur ⇒ ≤1.3em < 1.821em; strokes box top -0.12em /
+   height 1.26em ⇒ bottom 1.14em; crumbs box top 0.88em / height
+   0.5em ⇒ bottom 1.38em, pop rise -0.16em ⇒ top 0.72em; word
+   wipe clip insets -0.35em ⇒ -0.35em / 1.35em; waiting rub disc
+   1.5em centered on the line (-0.25..1.25em, rotation about its
+   own center adds nothing); dust cloud 2.1x2em (-0.5..1.5em),
+   scale 1.05 ⇒ -0.55em — every box inside the pill. The .tail
+   container mask is oversized (size calc(100%+2em) both axes,
+   position -1em -1em, no-repeat, stops shifted +1em) so the
+   foil's -0.35em/-0.3em/-0.15em overhangs and its drop shadow
+   stay covered — a default-repeat mask would wrap and eat the
+   jagged edge. Readability: ink oklch L 0.26 on the white card,
+   L 0.93 warm cream on midnight, alpha 0.97, and the revealed
+   word never breathes — scraped-free print is the stillest,
+   richest thing in the frame. Keyframes scratch-*-v2 (signature
+   keyframe scratch-foil-shimmer-v2 on the foil band) and vars
+   --sc-*-v2 only; legacy scratch rules in legacy.css are
+   superseded and get deleted (NOTE: legacy scratch shares its
+   flow-off animation:none group with kaleidoscope — line
+   surgery only, keep the kaleidoscope selectors).
+   ============================================================ */
+
+@property --sc-glint-a-v2 {
+	syntax: '<number>';
+	inherits: false;
+	initial-value: 0.55;
+}
+
+.field[data-glow='scratch'] {
+	--layer-radius: 999px;
+	--layer-clip: inset(0 round 999px);
+	/* Revealed print: warm cream ink on the midnight card, with a faint
+	   gold prize edge. */
+	--sc-ink-v2: oklch(0.93 0.045 85 / 0.97);
+	--sc-ink-edge-v2:
+		0 0.018em 0 oklch(0.7 0.12 82 / 0.45),
+		0 0 0.14em oklch(0.76 0.11 80 / 0.2);
+	/* Print showing through the scratch slits at the boundary. */
+	--sc-slit-ink-v2: oklch(0.92 0.04 85 / 0.6);
+	--sc-slit-ink-soft-v2: oklch(0.92 0.04 85 / 0.3);
+	/* The scratch-off foil: brushed cool silver + a warm reflection. */
+	--sc-foil-hi-v2: oklch(0.88 0.006 250);
+	--sc-foil-mid-v2: oklch(0.72 0.008 250);
+	--sc-foil-lo-v2: oklch(0.55 0.012 253);
+	--sc-foil-edge-v2: oklch(0.4 0.015 253);
+	--sc-foil-streak-v2: rgba(255, 255, 255, 0.12);
+	--sc-foil-streak-dark-v2: rgba(0, 0, 0, 0.1);
+	--sc-foil-warm-v2: oklch(0.8 0.05 75 / 0.18);
+	--sc-foil-spec-v2: rgba(255, 255, 255, 0.5);
+	--sc-foil-drop-v2: drop-shadow(0 0.04em 0.1em rgba(0, 0, 0, 0.55));
+	/* Coin marks on the scraped substrate. */
+	--sc-mark-v2: oklch(0.84 0.01 250 / 0.12);
+	--sc-mark-soft-v2: oklch(0.84 0.01 250 / 0.08);
+	--sc-mark-faint-v2: oklch(0.85 0.01 250 / 0.05);
+	--sc-mark-blend-v2: normal;
+	/* Foil flakes under the word. */
+	--sc-crumb-v2: oklch(0.87 0.008 250 / 0.95);
+	--sc-crumb-dim-v2: oklch(0.7 0.01 250 / 0.85);
+	--sc-crumb-gold-v2: oklch(0.78 0.12 82 / 0.9);
+	--sc-crumb-shadow-v2: drop-shadow(0 0.014em 0.04em rgba(0, 0, 0, 0.5));
+	/* Card print — each var is exactly ONE gradient in BOTH themes so the
+	   4-layer vessel lists never drift. */
+	--sc-print-v2: rgba(174, 192, 228, 0.05);
+	--sc-frame-v2: rgba(174, 192, 228, 0.13);
+	--sc-vignette-v2: radial-gradient(ellipse 94% 150% at 50% 55%, transparent 0 46%, rgba(6, 9, 20, 0.5) 100%);
+	/* Waiting: the hovering coin. */
+	--sc-rub-v2: oklch(0.86 0.01 250 / 0.5);
+	--sc-rub-soft-v2: oklch(0.86 0.01 250 / 0.3);
+	--sc-dust-v2: oklch(0.84 0.01 250 / 0.13);
+	--sc-dust-soft-v2: oklch(0.84 0.01 250 / 0.08);
+	--sc-coin-hue-v2: oklch(0.78 0.13 85);
+	--ready-border: rgba(196, 208, 232, 0.16);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.045) inset,
+		0 -34px 90px rgba(5, 8, 18, 0.62) inset,
+		0 0 52px oklch(0.5 0.05 260 / 0.1) inset,
+		0 30px 66px rgba(0, 0, 0, 0.52),
+		0 0 80px oklch(0.72 0.1 85 / 0.07);
+	--field-wash: linear-gradient(180deg, rgba(214, 226, 248, 0.025), transparent 32%);
+	/* Coin-edge caret: 90deg hard stops = vertical micro-ridges. */
+	--caret-gradient: linear-gradient(
+		90deg,
+		rgb(122, 86, 36) 0 12%,
+		rgb(255, 233, 176) 18% 30%,
+		rgb(178, 128, 58) 38% 54%,
+		rgb(255, 219, 148) 62% 76%,
+		rgb(108, 74, 30) 84% 100%
+	);
+	--caret-shadow:
+		0 0 6px color-mix(in oklab, var(--sc-coin-hue-v2) calc(var(--sc-glint-a-v2) * 100%), transparent),
+		0 0 16px oklch(0.72 0.11 82 / 0.3),
+		0 0 36px oklch(0.66 0.1 80 / 0.14);
+	--haze-bg: none;
+	--haze-opacity: 0;
+	--haze-motion: none;
+	--torch-haze-motion: none;
+	--haze-mask: none;
+	--body-bg: none;
+	--body-opacity: 0;
+	--body-mask: none;
+	--core-bg: none;
+	--core-opacity: 0;
+	--core-motion: none;
+	--torch-core-motion: none;
+	--core-mask: none;
+	--flow-bg: none;
+	--flow-low: 0;
+	--flow-high: 0;
+	--flow-motion: none;
+	--flow-mask: none;
+	--spark-bg: none;
+	--spark-low: 0;
+	--spark-high: 0;
+	--spark-motion: none;
+	--spark-mask: none;
+	--smoke-bg: none;
+	--smoke-opacity: 0;
+	--smoke-motion: none;
+	--smoke-blend: normal;
+	--smoke-mask: none;
+	--aux-bg: none;
+	--aux-opacity: 0;
+	--aux-motion: none;
+	--aux-mask: none;
+	--next-color: var(--sc-ink-v2);
+	--next-shadow: var(--sc-ink-edge-v2);
+	--tail-color: rgba(0, 0, 0, 0);
+}
+
+/* The card lives on the glyphs and the prediction/tail pseudos: every
+   shared beam dies. Torch layers serve the hovering coin only. */
+.stage[data-glow='scratch'] .field[data-glow] .prediction > .beam {
+	display: none;
+}
+
+.stage[data-glow='scratch'] .field[data-glow] .caret-origin-glow[data-mode='ready'] {
+	display: none;
+}
+
+/* Multi-layer FADE masks (horizontal taper x elliptical falloff on the
+   scratch strokes; left fade x ring/blob falloff on the torch layers)
+   need intersection, not union — every fade completes inside its box.
+   The foil band (tail::before) is NOT in this rule: its 3-layer mask is
+   a silhouette UNION (plate + teeth) and keeps the default 'add'. */
+.stage[data-glow='scratch'] .field[data-glow] .torch-beam,
+.stage[data-glow='scratch'] .field[data-glow] .prediction::before {
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+}
+
+/* Re-pins the legacy stacking; the pseudos stack inside the word. */
+.stage[data-glow='scratch'] .field[data-glow] .prediction {
+	isolation: isolate;
+	perspective: none;
+}
+
+/* Midnight-edition cardstock: deep blue-black with a cool top sheen.
+   The coin glint animates the registered --sc-glint-a-v2 ON the field —
+   the only element where --caret-shadow computes, so the color-mix
+   alpha in the caret glow actually re-reads it each step. */
+.stage[data-glow='scratch'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 80% 150% at 24% -30%, rgba(150, 175, 235, 0.06), transparent 60%),
+		linear-gradient(90deg, rgb(15, 18, 31), rgb(19, 23, 38) 52%, rgb(16, 19, 33));
+	animation: scratch-glint-v2 7.4s steps(1, end) infinite;
+}
+
+/* THE CARD PRINT (vessel overlay): vignette + printed inset frame + the
+   guilloche-ish arc raster. Utterly still. 4 layers — vignette(1) +
+   frame hairlines(1, ONE gradient drawing both 10px-inset horizontal
+   lines; the pill's rounded ends live in the 64px padding under the
+   edge scrims, so no side lines) + arc raster A(1) + arc raster B(1) —
+   and every list below counts exactly 4. The component gates ::before
+   to ready/waiting-field; this module re-implements the gating at its
+   own specificity (base opacity 0, the state selectors below raise it;
+   the component's 520ms opacity transition still applies). */
+.stage[data-glow='scratch'] .field[data-glow]::before {
+	background:
+		var(--sc-vignette-v2),
+		linear-gradient(
+			180deg,
+			transparent 0 10px,
+			var(--sc-frame-v2) 10px 11px,
+			transparent 11px calc(100% - 11px),
+			var(--sc-frame-v2) calc(100% - 11px) calc(100% - 10px),
+			transparent calc(100% - 10px)
+		),
+		repeating-radial-gradient(circle at 0 0, transparent 0 9px, var(--sc-print-v2) 9px 10px, transparent 10px 22px),
+		repeating-radial-gradient(circle at 0 0, transparent 0 9px, var(--sc-print-v2) 9px 10px, transparent 10px 22px);
+	background-size:
+		100% 100%,
+		100% 100%,
+		44px 44px,
+		44px 44px;
+	background-position:
+		0 0,
+		0 0,
+		0 0,
+		22px 22px;
+	background-repeat: no-repeat, no-repeat, repeat, repeat;
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: normal;
+	opacity: 0;
+	animation: none;
+}
+
+.stage[data-glow='scratch'] .field[data-glow][data-state='ready']::before,
+.stage[data-glow='scratch'] .field[data-glow][data-state='waiting'][data-loading-glow='field']::before {
+	opacity: 1;
+}
+
+/* Dissolve into the field's rounded clip, not the paint box; edge
+   overlays extended into the 64px padding, painted in the card color
+   so the print never steps at the content box. */
+.stage[data-glow='scratch'] .field[data-glow] .paint {
+	overflow: visible;
+	clip-path: inset(-3.4em -6em -3.4em 0);
+}
+
+.stage[data-glow='scratch'] .field[data-glow] .edge-left {
+	left: -64px;
+	width: 156px;
+	background: linear-gradient(90deg, rgb(15, 18, 31) 0%, rgb(15, 18, 31) 40%, rgba(15, 18, 31, 0) 100%);
+	opacity: 0;
+}
+
+.stage[data-glow='scratch'] .field[data-glow] .viewport.scrolled .edge-left {
+	opacity: 1;
+}
+
+.stage[data-glow='scratch'] .field[data-glow] .edge-right {
+	display: block;
+	right: -64px;
+	width: 190px;
+	background: linear-gradient(270deg, rgba(16, 19, 33, 0.9) 0%, rgba(16, 19, 33, 0.5) 36%, rgba(16, 19, 33, 0) 100%);
+	opacity: 0.8;
+}
+
+/* ---------- SCRATCH STROKES: coin marks on the substrate ---------- */
+/* Box: left -0.3em, top -0.12em, height 1.26em ⇒ bottom at 1.14em <
+   1.821em, top -0.12em > -0.821em. 4 background layers — three ~-20deg
+   elongated traces (the ~200deg gradient line is near-vertical, so its
+   bands tilt ~20deg off horizontal) + a soft scraped-sheen ellipse —
+   COUNT: 4 in the size/position lists; per-layer sizes/positions
+   scatter the traces along the word. Masks: horizontal taper (fade-in
+   0.3em, gone INSIDE the box at calc(100% - 0.06em)) x elliptical
+   vertical falloff — intersected (stage rule above). z-index -1: marks
+   ON the card, under the revealed print. Drawn once at ignite by the
+   coin (scaleX from origin left, no 100% frame — settles onto the live
+   slot). */
+.stage[data-glow='scratch'] .field[data-glow] .prediction::before {
+	position: absolute;
+	left: -0.3em;
+	top: -0.12em;
+	right: auto;
+	bottom: auto;
+	z-index: -1;
+	display: block;
+	width: min(6em, calc(100% + 0.8em));
+	height: 1.26em;
+	content: '';
+	pointer-events: none;
+	border-radius: 0;
+	background:
+		linear-gradient(200deg, transparent 0 44%, var(--sc-mark-v2) 47% 49.5%, transparent 53%),
+		linear-gradient(197deg, transparent 0 60%, var(--sc-mark-soft-v2) 63% 64.8%, transparent 68%),
+		linear-gradient(203deg, transparent 0 28%, var(--sc-mark-soft-v2) 31% 32.6%, transparent 36%),
+		radial-gradient(ellipse 60% 50% at 40% 55%, var(--sc-mark-faint-v2), transparent 75%);
+	background-size:
+		60% 100%,
+		55% 100%,
+		58% 100%,
+		100% 100%;
+	background-position:
+		0 0,
+		100% 0,
+		55% 0,
+		0 0;
+	background-repeat: no-repeat;
+	filter: blur(0.3px);
+	-webkit-mask-image:
+		linear-gradient(90deg, transparent 0, rgba(0, 0, 0, 0.8) 0.3em, black 0.7em calc(100% - 1em), rgba(0, 0, 0, 0.4) calc(100% - 0.4em), transparent calc(100% - 0.06em)),
+		radial-gradient(ellipse 92% 78% at 45% 52%, black 0 55%, rgba(0, 0, 0, 0.5) 80%, transparent 96%);
+	mask-image:
+		linear-gradient(90deg, transparent 0, rgba(0, 0, 0, 0.8) 0.3em, black 0.7em calc(100% - 1em), rgba(0, 0, 0, 0.4) calc(100% - 0.4em), transparent calc(100% - 0.06em)),
+		radial-gradient(ellipse 92% 78% at 45% 52%, black 0 55%, rgba(0, 0, 0, 0.5) 80%, transparent 96%);
+	mix-blend-mode: var(--sc-mark-blend-v2);
+	opacity: 1;
+	transform: none;
+	transform-origin: 0 50%;
+	animation: scratch-strokes-in-v2 520ms cubic-bezier(0.25, 0.8, 0.3, 1) 60ms both;
+}
+
+/* ---------- FOIL CRUMBS: flakes settling under the word ---------- */
+/* Box: left -0.1em, top 0.88em, height 0.5em ⇒ bottom at 1.38em <
+   1.821em; the pop rise is -0.16em ⇒ top envelope 0.72em. 7 radial
+   speck layers — 6 silver + 1 gold prize flake — COUNT: 7, single
+   no-repeat applies to all (no size list: each circle is intrinsic to
+   its layer). z-index 1: crumbs lie ON the card — under the tail's
+   foil where the boxes meet, under the word, over the coin marks.
+   They pop once (explicit 100% frame + fill both) and then never
+   move again. */
+.stage[data-glow='scratch'] .field[data-glow] .prediction::after {
+	position: absolute;
+	left: -0.1em;
+	top: 0.88em;
+	right: auto;
+	bottom: auto;
+	z-index: 1;
+	display: block;
+	width: min(4.6em, calc(100% + 0.4em));
+	height: 0.5em;
+	content: '';
+	pointer-events: none;
+	border-radius: 0;
+	background:
+		radial-gradient(circle 0.032em at 8% 30%, var(--sc-crumb-v2), transparent 100%),
+		radial-gradient(circle 0.026em at 18% 62%, var(--sc-crumb-dim-v2), transparent 100%),
+		radial-gradient(circle 0.04em at 30% 42%, var(--sc-crumb-v2), transparent 100%),
+		radial-gradient(circle 0.024em at 44% 70%, var(--sc-crumb-dim-v2), transparent 100%),
+		radial-gradient(circle 0.034em at 57% 34%, var(--sc-crumb-gold-v2), transparent 100%),
+		radial-gradient(circle 0.028em at 72% 58%, var(--sc-crumb-v2), transparent 100%),
+		radial-gradient(circle 0.022em at 86% 44%, var(--sc-crumb-dim-v2), transparent 100%);
+	background-repeat: no-repeat;
+	filter: var(--sc-crumb-shadow-v2);
+	-webkit-mask-image: none;
+	mask-image: none;
+	mix-blend-mode: normal;
+	opacity: 0;
+	transform: none;
+	animation: scratch-crumbs-pop-v2 700ms cubic-bezier(0.3, 1.1, 0.4, 1) 260ms both;
+}
+
+/* ---------- The word: scraped free, a winning print ---------- */
+/* The 400ms wipe is THE REVEAL: the word's cover retreats l→r (clip
+   opens rightward — the last coin stroke). Negative clip insets keep
+   the gold edge shadows unclipped. Re-pins the component word-reveal
+   and the legacy shimmer shadows. */
+.stage[data-glow='scratch'] .field[data-glow] .next-word {
+	position: relative;
+	isolation: isolate;
+	z-index: 5;
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-mask-image: none;
+	mask-image: none;
+	filter: none;
+	text-shadow: none;
+	transform: none;
+	animation: scratch-word-wipe-v2 400ms cubic-bezier(0.25, 0.8, 0.3, 1) 30ms both;
+}
+
+/* Crisp card ink with the faint gold prize edge. Each glyph sharpens in
+   under the retreating foil (finite, no 100% frame — settles onto the
+   live slot); once landed the print is utterly still. The nth-child
+   group re-wins legacy tint splits. */
+.stage[data-glow='scratch'] .field[data-glow] .next-word .glyph,
+.stage[data-glow='scratch'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
+.stage[data-glow='scratch'] .field[data-glow] .next-word .glyph:nth-child(3n + 2),
+.stage[data-glow='scratch'] .field[data-glow] .next-word .glyph:nth-child(3n) {
+	display: inline-block;
+	position: relative;
+	color: var(--sc-ink-v2);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-text-fill-color: currentColor;
+	opacity: 1;
+	filter: none;
+	text-shadow: var(--sc-ink-edge-v2);
+	transform: none;
+	animation: scratch-glyph-in-v2 300ms ease-out both;
+	animation-delay: calc(50ms + var(--i, 0) * 55ms);
+}
+
+/* Print under foil, not alter egos: no scrambled echoes (kills the
+   component data-alt echo and any legacy soft echo). */
+.stage[data-glow='scratch'] .field[data-glow] .next-word .glyph::after,
+.stage[data-glow='scratch'] .field[data-glow] .tail .glyph::after {
+	content: none;
+	opacity: 0;
+	animation: none;
+}
+
+/* ---------- Tail: printed future under the foil ---------- */
+/* Container re-pins over the component defaults (.tail color + fade
+   mask). The mask is OVERSIZED (size calc(100%+2em) on both axes,
+   position -1em -1em, no-repeat, gradient stops shifted +1em: actual
+   full coverage to 6.5em, gone at 11.5em): a default-repeat mask would
+   wrap at the foil's -0.35em left / -0.15em vertical overhangs and eat
+   the jagged edge. This one mask also dissolves the foil band and its
+   drop shadow into the right-edge scrim. */
+.stage[data-glow='scratch'] .field[data-glow] .tail {
+	position: relative;
+	isolation: isolate;
+	z-index: 2;
+	display: inline-block;
+	vertical-align: baseline;
+	color: var(--tail-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: none;
+	transform: none;
+	-webkit-mask-image: linear-gradient(90deg, black 0 7.5em, rgba(0, 0, 0, 0.5) 10em, transparent 12.5em);
+	mask-image: linear-gradient(90deg, black 0 7.5em, rgba(0, 0, 0, 0.5) 10em, transparent 12.5em);
+	-webkit-mask-size: calc(100% + 2em) calc(100% + 2em);
+	mask-size: calc(100% + 2em) calc(100% + 2em);
+	-webkit-mask-position: -1em -1em;
+	mask-position: -1em -1em;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	animation: scratch-tail-in-v2 280ms ease-out 100ms both;
+}
+
+/* The covered print: invisible — the foil hides it completely. z:1
+   keeps the glyphs under the z:3 band; the boundary glyphs re-raise
+   below. The nth-child group re-wins legacy tint splits. */
+.stage[data-glow='scratch'] .field[data-glow] .tail .glyph,
+.stage[data-glow='scratch'] .field[data-glow] .tail .glyph:nth-child(3n + 1),
+.stage[data-glow='scratch'] .field[data-glow] .tail .glyph:nth-child(3n + 2),
+.stage[data-glow='scratch'] .field[data-glow] .tail .glyph:nth-child(3n) {
+	display: inline-block;
+	position: relative;
+	z-index: 1;
+	color: transparent;
+	-webkit-text-fill-color: transparent;
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	opacity: 1;
+	filter: none;
+	text-shadow: none;
+	transform: none;
+	-webkit-mask-image: none;
+	mask-image: none;
+	animation: none;
+}
+
+/* HALF-SCRATCHED BOUNDARY: the first tail glyph shows through 2-3 thin
+   diagonal scratch slits in the foil — striped mask + readable-alpha
+   ink, z:4 OVER the z:3 band (the letter reads as print exposed in the
+   slits). Glyph 2: a fainter single-slit hint. The repeating mask tile
+   covers the glyph box everywhere, so no size/position juggling. */
+.stage[data-glow='scratch'] .field[data-glow] .tail .glyph:nth-child(1) {
+	z-index: 4;
+	color: var(--sc-slit-ink-v2);
+	-webkit-text-fill-color: currentColor;
+	-webkit-mask-image: repeating-linear-gradient(102deg, black 0 0.05em, transparent 0.05em 0.24em, black 0.24em 0.28em, transparent 0.28em 0.46em);
+	mask-image: repeating-linear-gradient(102deg, black 0 0.05em, transparent 0.05em 0.24em, black 0.24em 0.28em, transparent 0.28em 0.46em);
+}
+
+.stage[data-glow='scratch'] .field[data-glow] .tail .glyph:nth-child(2) {
+	z-index: 4;
+	color: var(--sc-slit-ink-soft-v2);
+	-webkit-text-fill-color: currentColor;
+	-webkit-mask-image: repeating-linear-gradient(99deg, transparent 0 0.12em, black 0.12em 0.155em, transparent 0.155em 0.42em);
+	mask-image: repeating-linear-gradient(99deg, transparent 0 0.12em, black 0.12em 0.155em, transparent 0.155em 0.42em);
+}
+
+/* ---------- THE FOIL: brushed silver still hiding the rest ---------- */
+/* Box: inset -0.15em -0.3em -0.15em -0.35em ⇒ a 1.3em-tall band, top
+   -0.15em > -0.821em, bottom 1.15em < 1.821em; the drop shadow reaches
+   ≤ 0.05em + 0.1em blur ⇒ 1.3em. 4 background layers — specular
+   sweep(1, 240% wide, the ONLY animated layer) + vertical brush
+   streaks(1) + warm reflection(1) + base metal(1) — COUNT: 4 in the
+   size list and in BOTH scratch-foil-shimmer-v2 position lists. Mask:
+   3-layer silhouette UNION (default 'add', deliberately NOT intersect
+   — this is a shape, not a fade; see the composite rule comment):
+   plate from 0.34em(1) + deep teeth bars sized 0.34em x 100%(1) +
+   shallow teeth bars sized 0.2em x 100% at x 0.14em(1) — COUNT: 3 in
+   the mask size/position/repeat lists. The shadow is filter:
+   drop-shadow so it traces the torn edge AFTER masking (box-shadow
+   would be clipped away). z-index 3: over the hidden print, under the
+   slit glyphs. */
+.stage[data-glow='scratch'] .field[data-glow] .tail::before {
+	position: absolute;
+	inset: -0.15em -0.3em -0.15em -0.35em;
+	z-index: 3;
+	content: '';
+	pointer-events: none;
+	border-radius: 0.45em;
+	background:
+		linear-gradient(105deg, transparent 0 42%, var(--sc-foil-spec-v2) 49% 51%, transparent 58%),
+		repeating-linear-gradient(90deg, var(--sc-foil-streak-v2) 0 1px, transparent 1px 3px, var(--sc-foil-streak-dark-v2) 3px 4px, transparent 4px 7px),
+		radial-gradient(ellipse 46% 88% at 68% 30%, var(--sc-foil-warm-v2), transparent 74%),
+		linear-gradient(
+			180deg,
+			var(--sc-foil-edge-v2) 0,
+			var(--sc-foil-hi-v2) 16%,
+			var(--sc-foil-mid-v2) 52%,
+			var(--sc-foil-lo-v2) 86%,
+			var(--sc-foil-edge-v2) 100%
+		);
+	background-size:
+		240% 100%,
+		100% 100%,
+		100% 100%,
+		100% 100%;
+	background-position:
+		0% 0,
+		0 0,
+		0 0,
+		0 0;
+	background-repeat: no-repeat;
+	box-shadow: none;
+	filter: var(--sc-foil-drop-v2);
+	-webkit-mask-image:
+		linear-gradient(90deg, transparent 0 0.34em, black 0.34em),
+		repeating-linear-gradient(180deg, black 0 0.16em, transparent 0.16em 0.34em, black 0.34em 0.4em, transparent 0.4em 0.62em),
+		repeating-linear-gradient(180deg, transparent 0 0.07em, black 0.07em 0.2em, transparent 0.2em 0.3em, black 0.3em 0.34em, transparent 0.34em 0.5em);
+	mask-image:
+		linear-gradient(90deg, transparent 0 0.34em, black 0.34em),
+		repeating-linear-gradient(180deg, black 0 0.16em, transparent 0.16em 0.34em, black 0.34em 0.4em, transparent 0.4em 0.62em),
+		repeating-linear-gradient(180deg, transparent 0 0.07em, black 0.07em 0.2em, transparent 0.2em 0.3em, black 0.3em 0.34em, transparent 0.34em 0.5em);
+	-webkit-mask-size:
+		100% 100%,
+		0.34em 100%,
+		0.2em 100%;
+	mask-size:
+		100% 100%,
+		0.34em 100%,
+		0.2em 100%;
+	-webkit-mask-position:
+		0 0,
+		0 0,
+		0.14em 0;
+	mask-position:
+		0 0,
+		0 0,
+		0.14em 0;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	mix-blend-mode: normal;
+	opacity: 1;
+	transform: none;
+	animation: scratch-foil-shimmer-v2 4s ease-in-out 900ms infinite;
+}
+
+/* The legacy score-line crawler lived on tail::after — dead: the story
+   needs one band, not etched stripes (line surgery removes the legacy
+   rule later; this re-pin keeps the module self-sufficient meanwhile). */
+.stage[data-glow='scratch'] .field[data-glow] .tail::after {
+	content: none;
+	background: none;
+	box-shadow: none;
+	animation: none;
+}
+
+/* ---------- Light flow off: one scrape, then a still card ---------- */
+/* The word wipe, glyph stagger, stroke draw and crumb pop play once
+   (finite); the foil shimmer, coin glint, dust and rub arcs freeze —
+   the foil stays metallic through its static gradients. These re-win
+   the legacy shared flow-off animation kills AND this module's own
+   infinite base animations. */
+.stage[data-glow='scratch'][data-light-flow='off'] .field[data-glow] {
+	animation: none;
+}
+
+.stage[data-glow='scratch'][data-light-flow='off'] .field[data-glow]::before {
+	animation: none;
+}
+
+.stage[data-glow='scratch'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: scratch-strokes-in-v2 520ms cubic-bezier(0.25, 0.8, 0.3, 1) 60ms both;
+}
+
+.stage[data-glow='scratch'][data-light-flow='off'] .field[data-glow] .prediction::after {
+	animation: scratch-crumbs-pop-v2 700ms cubic-bezier(0.3, 1.1, 0.4, 1) 260ms both;
+}
+
+.stage[data-glow='scratch'][data-light-flow='off'] .field[data-glow] .next-word {
+	animation: scratch-word-wipe-v2 400ms cubic-bezier(0.25, 0.8, 0.3, 1) 30ms both;
+}
+
+.stage[data-glow='scratch'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
+	animation: scratch-glyph-in-v2 300ms ease-out both;
+	animation-delay: calc(50ms + var(--i, 0) * 55ms);
+}
+
+.stage[data-glow='scratch'][data-light-flow='off'] .field[data-glow] .tail {
+	animation: scratch-tail-in-v2 280ms ease-out 100ms both;
+}
+
+.stage[data-glow='scratch'][data-light-flow='off'] .field[data-glow] .tail::before {
+	animation: none;
+}
+
+/* ---------- Light theme: the primary reading — the lottery card ---------- */
+/* Warm off-white cardstock; deep sepia ink with a darker-gold prize
+   edge; the foil at deeper silver mid-tones so the metal pops on
+   white; coin marks sink in with multiply — a card on a shop counter
+   in daylight. Every gradient var still expands to exactly ONE
+   gradient — the 4-layer vessel lists hold. */
+.field[data-theme='light'][data-glow='scratch'] {
+	--sc-ink-v2: oklch(0.26 0.03 60 / 0.97);
+	--sc-ink-edge-v2:
+		0 1px 0 rgba(255, 255, 255, 0.65),
+		0.018em 0.018em 0 oklch(0.58 0.12 84 / 0.4),
+		0 0 0.1em oklch(0.6 0.1 82 / 0.12);
+	--sc-slit-ink-v2: oklch(0.3 0.03 60 / 0.55);
+	--sc-slit-ink-soft-v2: oklch(0.3 0.03 60 / 0.28);
+	--sc-foil-hi-v2: oklch(0.9 0.005 250);
+	--sc-foil-mid-v2: oklch(0.72 0.008 250);
+	--sc-foil-lo-v2: oklch(0.52 0.012 252);
+	--sc-foil-edge-v2: oklch(0.44 0.015 252);
+	--sc-foil-streak-v2: rgba(255, 255, 255, 0.3);
+	--sc-foil-streak-dark-v2: rgba(40, 36, 30, 0.1);
+	--sc-foil-warm-v2: oklch(0.78 0.06 70 / 0.26);
+	--sc-foil-spec-v2: rgba(255, 255, 255, 0.8);
+	--sc-foil-drop-v2: drop-shadow(0 0.045em 0.1em rgba(58, 48, 32, 0.32));
+	--sc-mark-v2: oklch(0.42 0.02 70 / 0.14);
+	--sc-mark-soft-v2: oklch(0.42 0.02 70 / 0.09);
+	--sc-mark-faint-v2: oklch(0.5 0.02 70 / 0.06);
+	--sc-mark-blend-v2: multiply;
+	--sc-crumb-v2: oklch(0.6 0.01 250 / 0.92);
+	--sc-crumb-dim-v2: oklch(0.5 0.012 252 / 0.8);
+	--sc-crumb-gold-v2: oklch(0.6 0.12 84 / 0.9);
+	--sc-crumb-shadow-v2: drop-shadow(0 0.014em 0.03em rgba(70, 58, 40, 0.35));
+	--sc-print-v2: rgba(122, 104, 78, 0.06);
+	--sc-frame-v2: rgba(122, 104, 78, 0.3);
+	--sc-vignette-v2: radial-gradient(ellipse 94% 150% at 50% 55%, transparent 0 52%, oklch(0.72 0.03 80 / 0.14) 100%);
+	--sc-rub-v2: oklch(0.45 0.02 70 / 0.5);
+	--sc-rub-soft-v2: oklch(0.45 0.02 70 / 0.32);
+	--sc-dust-v2: oklch(0.5 0.015 250 / 0.14);
+	--sc-dust-soft-v2: oklch(0.5 0.015 250 / 0.09);
+	--sc-coin-hue-v2: oklch(0.6 0.13 84);
+	--ready-border: rgba(138, 124, 102, 0.34);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.95) inset,
+		0 -18px 50px rgba(150, 134, 108, 0.1) inset,
+		0 18px 46px rgba(66, 56, 42, 0.13),
+		0 0 58px oklch(0.65 0.1 84 / 0.08);
+	--field-wash:
+		radial-gradient(ellipse 90% 170% at 70% -34%, rgba(255, 255, 255, 0.7), transparent 58%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.5), transparent 42%);
+	--caret-gradient: linear-gradient(
+		90deg,
+		rgb(92, 60, 20) 0 12%,
+		rgb(224, 178, 96) 18% 30%,
+		rgb(140, 98, 42) 38% 54%,
+		rgb(214, 166, 86) 62% 76%,
+		rgb(84, 56, 18) 84% 100%
+	);
+	--caret-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.5),
+		0 0 6px color-mix(in oklab, var(--sc-coin-hue-v2) calc(var(--sc-glint-a-v2) * 70%), transparent),
+		0 6px 14px rgba(96, 72, 32, 0.2);
+	--haze-opacity: 0;
+	--body-opacity: 0;
+	--core-opacity: 0;
+	--flow-low: 0;
+	--flow-high: 0;
+	--spark-low: 0;
+	--spark-high: 0;
+	--smoke-opacity: 0;
+	--aux-opacity: 0;
+	--next-color: var(--sc-ink-v2);
+	--next-shadow: var(--sc-ink-edge-v2);
+	--tail-color: rgba(0, 0, 0, 0);
+}
+
+/* Legacy scopes shared light vars on the stage: re-win the contested
+   ones at the same strength so the cardstock palette holds. */
+.stage[data-theme='light'][data-glow='scratch'] .field[data-glow] {
+	--ready-border: rgba(138, 124, 102, 0.34);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.95) inset,
+		0 -18px 50px rgba(150, 134, 108, 0.1) inset,
+		0 18px 46px rgba(66, 56, 42, 0.13),
+		0 0 58px oklch(0.65 0.1 84 / 0.08);
+	--field-wash:
+		radial-gradient(ellipse 90% 170% at 70% -34%, rgba(255, 255, 255, 0.7), transparent 58%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.5), transparent 42%);
+	--haze-opacity: 0;
+	--body-opacity: 0;
+	--core-opacity: 0;
+	--flow-low: 0;
+	--flow-high: 0;
+	--spark-low: 0;
+	--spark-high: 0;
+	--smoke-opacity: 0;
+	--aux-opacity: 0;
+	--next-color: var(--sc-ink-v2);
+	--next-shadow: var(--sc-ink-edge-v2);
+	--tail-color: rgba(0, 0, 0, 0);
+}
+
+/* Warm cardstock vessel — the card in daylight. */
+.stage[data-theme='light'][data-glow='scratch'] .field[data-glow] {
+	background:
+		radial-gradient(ellipse 90% 160% at 70% -30%, rgba(255, 255, 255, 0.85), transparent 56%),
+		linear-gradient(180deg, rgb(252, 249, 242), rgb(248, 244, 236) 55%, rgb(243, 238, 228));
+	box-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.95) inset,
+		0 -1px 0 rgba(150, 134, 108, 0.16) inset,
+		0 20px 50px rgba(66, 56, 42, 0.12);
+}
+
+/* The silver dust and rub marks sink into the paper, never screened. */
+.stage[data-theme='light'][data-glow='scratch'] .field[data-glow] .torch-beam {
+	mix-blend-mode: multiply;
+}
+
+/* Coin marks multiply into the cardstock; the crumbs keep their gray
+   metal reading through the theme vars. */
+.stage[data-theme='light'][data-glow='scratch'] .field[data-glow] .prediction::before {
+	mix-blend-mode: var(--sc-mark-blend-v2);
+}
+
+.stage[data-theme='light'][data-glow='scratch'] .field[data-glow] .prediction::after {
+	filter: var(--sc-crumb-shadow-v2);
+}
+
+.stage[data-theme='light'][data-glow='scratch'] .field[data-glow] .next-word {
+	color: var(--next-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: none;
+	animation: scratch-word-wipe-v2 400ms cubic-bezier(0.25, 0.8, 0.3, 1) 30ms both;
+}
+
+/* Deep sepia print on white: the wipe/stagger keyframes carry no
+   color, so both themes share them; nth-child(n) matches the legacy
+   light specificity. */
+.stage[data-theme='light'][data-glow='scratch'] .field[data-glow] .next-word .glyph:nth-child(n) {
+	color: var(--sc-ink-v2);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-text-fill-color: currentColor;
+	opacity: 1;
+	filter: none;
+	text-shadow: var(--sc-ink-edge-v2);
+	animation: scratch-glyph-in-v2 300ms ease-out both;
+	animation-delay: calc(50ms + var(--i, 0) * 55ms);
+}
+
+.stage[data-theme='light'][data-glow='scratch'] .field[data-glow] .tail {
+	color: var(--tail-color);
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	filter: none;
+	text-shadow: none;
+}
+
+.stage[data-theme='light'][data-glow='scratch'] .field[data-glow] .tail .glyph:nth-child(n) {
+	color: transparent;
+	-webkit-text-fill-color: transparent;
+	background: none;
+	opacity: 1;
+	filter: none;
+	text-shadow: none;
+	animation: none;
+}
+
+/* Light boundary re-wins: the :nth-child(n) pass above out-specifies
+   nothing but ties the dark-scope slit rules — repeat them at light
+   scope, after it, so the half-scratched letter survives. */
+.stage[data-theme='light'][data-glow='scratch'] .field[data-glow] .tail .glyph:nth-child(1) {
+	color: var(--sc-slit-ink-v2);
+	-webkit-text-fill-color: currentColor;
+}
+
+.stage[data-theme='light'][data-glow='scratch'] .field[data-glow] .tail .glyph:nth-child(2) {
+	color: var(--sc-slit-ink-soft-v2);
+	-webkit-text-fill-color: currentColor;
+}
+
+.stage[data-theme='light'][data-glow='scratch'] .field[data-glow] .edge-left {
+	background: linear-gradient(90deg, rgb(252, 249, 242) 0%, rgb(252, 249, 242) 40%, rgba(252, 249, 242, 0) 100%);
+}
+
+.stage[data-theme='light'][data-glow='scratch'] .field[data-glow] .edge-right {
+	background: linear-gradient(270deg, rgba(243, 238, 228, 0.85) 0%, rgba(243, 238, 228, 0.4) 40%, rgba(243, 238, 228, 0) 100%);
+	opacity: 0.7;
+}
+
+/* Light theme + flow off: re-win the finite passes against the
+   higher-specificity light rules above. */
+.stage[data-theme='light'][data-glow='scratch'][data-light-flow='off'] .field[data-glow] {
+	animation: none;
+}
+
+.stage[data-theme='light'][data-glow='scratch'][data-light-flow='off'] .field[data-glow]::before {
+	animation: none;
+}
+
+.stage[data-theme='light'][data-glow='scratch'][data-light-flow='off'] .field[data-glow] .prediction::before {
+	animation: scratch-strokes-in-v2 520ms cubic-bezier(0.25, 0.8, 0.3, 1) 60ms both;
+}
+
+.stage[data-theme='light'][data-glow='scratch'][data-light-flow='off'] .field[data-glow] .prediction::after {
+	animation: scratch-crumbs-pop-v2 700ms cubic-bezier(0.3, 1.1, 0.4, 1) 260ms both;
+}
+
+.stage[data-theme='light'][data-glow='scratch'][data-light-flow='off'] .field[data-glow] .next-word {
+	animation: scratch-word-wipe-v2 400ms cubic-bezier(0.25, 0.8, 0.3, 1) 30ms both;
+}
+
+.stage[data-theme='light'][data-glow='scratch'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(n) {
+	animation: scratch-glyph-in-v2 300ms ease-out both;
+	animation-delay: calc(50ms + var(--i, 0) * 55ms);
+}
+
+.stage[data-theme='light'][data-glow='scratch'][data-light-flow='off'] .field[data-glow] .tail::before {
+	animation: none;
+}
+
+/* ---------- Waiting: the coin hovers over the card ---------- */
+/* torch-core: three conic wedges (COUNT: 3 in --core-size) cut into
+   arc-shaped rub marks by the ring mask (left fade x ring band —
+   intersected via the stage .torch-beam rule) and swung back and forth
+   around the disc center while pulsing: scraping is about to begin.
+   torch-haze: a faint silver dust cloud (2 layers — COUNT: 2 in
+   --haze-size) breathing slowly. Transform keyframes are safe on any
+   element — no animated custom property is consumed in a background.
+   Geometry: rub disc 1.5em centered on the line (-0.25..1.25em; the
+   rotation is about its own center, adding nothing); ring band
+   0.43-0.55em radius, inside the 0.75em half-box; dust 2.1x2em
+   (-0.5..1.5em), scale 1.05 ⇒ -0.55em — inside the 0.821em clearance.
+   Every other torch layer dead. */
+.field[data-state='waiting'][data-glow='scratch'] {
+	--haze-width: 2.1em;
+	--haze-height: 2em;
+	--haze-size:
+		100% 100%,
+		100% 100%;
+	--haze-bg:
+		radial-gradient(ellipse 38% 34% at 42% 46%, var(--sc-dust-v2), transparent 72%),
+		radial-gradient(ellipse 30% 26% at 58% 60%, var(--sc-dust-soft-v2), transparent 74%);
+	--haze-filter: blur(5px);
+	--haze-opacity: 0.75;
+	--torch-haze-motion: scratch-dust-hover-v2 3.6s ease-in-out infinite;
+	--haze-mask:
+		linear-gradient(90deg, transparent 0, black 0.2em, black calc(100% - 0.22em), transparent 100%),
+		radial-gradient(ellipse 74% 72% at 50% 50%, black 0 58%, rgba(0, 0, 0, 0.45) 80%, transparent 98%);
+	--body-bg: none;
+	--body-opacity: 0;
+	--core-width: 1.5em;
+	--core-height: 1.5em;
+	--core-size:
+		100% 100%,
+		100% 100%,
+		100% 100%;
+	--core-bg:
+		conic-gradient(from 224deg at 50% 50%, var(--sc-rub-v2) 0 34deg, transparent 40deg 360deg),
+		conic-gradient(from 318deg at 50% 50%, var(--sc-rub-soft-v2) 0 26deg, transparent 32deg 360deg),
+		conic-gradient(from 92deg at 50% 50%, var(--sc-rub-soft-v2) 0 22deg, transparent 28deg 360deg);
+	--core-filter: blur(0.6px);
+	--core-opacity: 0.9;
+	--torch-core-motion: scratch-rub-cycle-v2 2.6s ease-in-out infinite;
+	--core-mask:
+		linear-gradient(90deg, transparent 0, black 0.14em, black calc(100% - 0.14em), transparent 100%),
+		radial-gradient(circle 0.62em at 50% 50%, transparent 0 58%, black 70% 88%, rgba(0, 0, 0, 0.3) 94%, transparent 100%);
+	--flow-bg: none;
+	--flow-low: 0;
+	--flow-high: 0;
+	--flow-motion: none;
+	--spark-bg: none;
+	--spark-low: 0;
+	--spark-high: 0;
+	--spark-motion: none;
+	--smoke-bg: none;
+	--smoke-opacity: 0;
+	--smoke-motion: none;
+	--aux-bg: none;
+	--aux-opacity: 0;
+	--aux-motion: none;
+}
+
+/* The swing must turn the rub marks in place, not around the caret:
+   re-origin both waiting layers into their box centers (the component
+   default is left-center). */
+.stage[data-glow='scratch'] .field[data-glow] .torch-core {
+	transform-origin: 0.75em 50%;
+}
+
+.stage[data-glow='scratch'] .field[data-glow] .torch-haze {
+	transform-origin: 1.05em 50%;
+}
+
+/* Daylight hovering: gray rub marks on white — only the strengths
+   nudge; the colors already flipped through the theme block. */
+.field[data-theme='light'][data-state='waiting'][data-glow='scratch'] {
+	--haze-opacity: 0.6;
+	--core-opacity: 0.85;
+}
+
+/* Light + waiting: the stage-scoped light pass above out-specifies the
+   field-level waiting block and pockets the coin — re-raise the torch
+   opacities over it. */
+.stage[data-theme='light'][data-glow='scratch'] .field[data-glow][data-state='waiting'] {
+	--haze-opacity: 0.6;
+	--core-opacity: 0.85;
+}
+
+/* Waiting + flow off: the coin holds still over the card. */
+.field[data-light-flow='off'][data-state='waiting'][data-glow='scratch'] {
+	--torch-haze-motion: none;
+	--torch-core-motion: none;
+}
+
+/* ---------- Keyframes (scratch-*-v2) ---------- */
+/* THE REVEAL WIPE: the word's cover retreats l→r in 400ms — the last
+   coin stroke; both ends explicit so the clip-path interpolates (no
+   discrete jump). Negative insets keep the gold edge glow unclipped.
+   No color in the frames, so both themes share it. */
+@keyframes scratch-word-wipe-v2 {
+	0% {
+		clip-path: inset(-0.35em 100% -0.35em -0.15em);
+	}
+	100% {
+		clip-path: inset(-0.35em -0.2em -0.35em -0.15em);
+	}
+}
+
+/* Each printed glyph sharpens as the foil leaves it (no 100% frame —
+   opacity/blur/offset settle onto the live slot). */
+@keyframes scratch-glyph-in-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(0.02em);
+		filter: blur(1.6px);
+	}
+	55% {
+		opacity: 1;
+	}
+}
+
+/* SCRATCH STROKES: the coin marks extend l→r across the scraped zone
+   (origin left; no 100% frame — settles onto the live slot). */
+@keyframes scratch-strokes-in-v2 {
+	0% {
+		opacity: 0;
+		transform: scaleX(0.35);
+		filter: blur(1.2px);
+	}
+	60% {
+		opacity: 1;
+	}
+}
+
+/* FOIL CRUMBS: the flakes pop off the card, hop once and settle —
+   explicit 100% + fill both: they lie still forever after. */
+@keyframes scratch-crumbs-pop-v2 {
+	0% {
+		opacity: 0;
+		transform: translateY(-0.16em) scale(0.6);
+	}
+	40% {
+		opacity: 1;
+		transform: translateY(0.02em) scale(1.04);
+	}
+	70% {
+		transform: translateY(-0.03em) scale(1);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+}
+
+/* The covered strip settles in. */
+@keyframes scratch-tail-in-v2 {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+/* THE SIGNATURE SHIMMER: a narrow specular highlight travels the foil
+   band l→r every 4s — only layer 1 of 4 moves; both position lists
+   COUNT the same 4 layers as the band's background. At 0% and 100% the
+   highlight (at 47-53% of the 240%-wide layer) sits OUTSIDE the
+   visible window, so the wrap jump is invisible and the metal rests
+   plain between sweeps. */
+@keyframes scratch-foil-shimmer-v2 {
+	0% {
+		background-position:
+			0% 0,
+			0 0,
+			0 0,
+			0 0;
+	}
+	55%,
+	100% {
+		background-position:
+			100% 0,
+			0 0,
+			0 0,
+			0 0;
+	}
+}
+
+/* The coin turns in the light: the caret glint's alpha snaps between
+   held poses — registered <number>, animated on the field where
+   --caret-shadow computes. */
+@keyframes scratch-glint-v2 {
+	0%,
+	100% {
+		--sc-glint-a-v2: 0.55;
+	}
+	9% {
+		--sc-glint-a-v2: 0.42;
+	}
+	14% {
+		--sc-glint-a-v2: 0.62;
+	}
+	43% {
+		--sc-glint-a-v2: 0.48;
+	}
+	48% {
+		--sc-glint-a-v2: 0.6;
+	}
+	74% {
+		--sc-glint-a-v2: 0.38;
+	}
+	79% {
+		--sc-glint-a-v2: 0.56;
+	}
+}
+
+/* WAITING: the rub marks swing back and forth around the disc center
+   and pulse — 0% and 100% match, so the loop is seamless; the
+   translateY(-50%) keeps the torch layer's own centering. */
+@keyframes scratch-rub-cycle-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--core-opacity, 0.9) * 0.45);
+		transform: translateY(-50%) rotate(-10deg);
+	}
+	30% {
+		opacity: var(--core-opacity, 0.9);
+	}
+	50% {
+		opacity: calc(var(--core-opacity, 0.9) * 0.85);
+		transform: translateY(-50%) rotate(12deg);
+	}
+	78% {
+		opacity: calc(var(--core-opacity, 0.9) * 0.6);
+	}
+}
+
+/* ...inside a faint cloud of scraped silver dust, breathing slowly. */
+@keyframes scratch-dust-hover-v2 {
+	0%,
+	100% {
+		opacity: calc(var(--haze-opacity, 0.75) * 0.65);
+		transform: translateY(-50%) scale(0.97);
+	}
+	50% {
+		opacity: var(--haze-opacity, 0.75);
+		transform: translateY(-50%) scale(1.05);
+	}
+}
