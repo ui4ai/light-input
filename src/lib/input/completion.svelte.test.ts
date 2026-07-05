@@ -4,17 +4,19 @@ import {
 	CompletionEngine,
 	DEMO_COMPLETION_DELAY_MS,
 	PREDICTION_ERROR,
+	type CompleteFn,
 	type CompletionEngineContext
 } from './completion.svelte';
 
 const DEMO = "Let's make something that actually makes a difference";
 
-/** A mutable context so tests can steer value/mode/endpoint and toggle shouldPredict. */
+/** A mutable context so tests can steer value/mode/endpoint/complete and toggle shouldPredict. */
 function makeCtx(overrides: Partial<Record<keyof CompletionEngineContext, unknown>> = {}) {
 	const state = {
 		value: '',
 		mode: 'llm' as 'llm' | 'demo',
 		endpoint: '/api/complete',
+		complete: undefined as CompleteFn | undefined,
 		debounceMs: 100,
 		predict: true
 	};
@@ -22,6 +24,7 @@ function makeCtx(overrides: Partial<Record<keyof CompletionEngineContext, unknow
 		value: () => state.value,
 		mode: () => state.mode,
 		endpoint: () => state.endpoint,
+		complete: () => state.complete,
 		debounceMs: () => state.debounceMs,
 		shouldPredict: () => state.predict,
 		...(overrides as Partial<CompletionEngineContext>)
@@ -326,6 +329,143 @@ describe('CompletionEngine', () => {
 
 			// normalizeInlineCompletion collapses whitespace and preserves one leading space.
 			expect(engine.suggestion).toBe(' spaced out');
+		});
+	});
+
+	describe('custom complete()', () => {
+		it('calls complete() (not fetch) with the input text and an abort signal, then commits', async () => {
+			const { ctx, state } = makeCtx();
+			state.value = 'plug me';
+			let seenText = '';
+			let seenSignal: AbortSignal | undefined;
+			state.complete = vi.fn(async (text, c) => {
+				seenText = text;
+				seenSignal = c.signal;
+				return ' from-fn';
+			});
+			const fetchSpy = vi.spyOn(globalThis, 'fetch');
+			const engine = new CompletionEngine(ctx);
+
+			engine.schedulePrediction();
+			await vi.advanceTimersByTimeAsync(100);
+
+			expect(state.complete).toHaveBeenCalledTimes(1);
+			expect(seenText).toBe('plug me');
+			expect(seenSignal).toBeInstanceOf(AbortSignal);
+			expect(fetchSpy).not.toHaveBeenCalled(); // endpoint is ignored when complete is set
+			expect(engine.suggestion).toBe(' from-fn');
+			expect(engine.loading).toBe(false);
+		});
+
+		it('normalizes the complete() result exactly like the fetch path', async () => {
+			const { ctx, state } = makeCtx();
+			state.value = 'norm';
+			state.complete = vi.fn(async () => '  spaced\tout  ');
+			const engine = new CompletionEngine(ctx);
+
+			engine.schedulePrediction();
+			await vi.advanceTimersByTimeAsync(100);
+
+			expect(engine.suggestion).toBe(' spaced out');
+		});
+
+		it('still applies the stale-value guard to a slow complete()', async () => {
+			const { ctx, state } = makeCtx();
+			state.value = 'first';
+			let resolveFn: (s: string) => void = () => {};
+			state.complete = vi.fn(() => new Promise<string>((res) => (resolveFn = res)));
+			const engine = new CompletionEngine(ctx);
+
+			engine.schedulePrediction();
+			await vi.advanceTimersByTimeAsync(100); // complete() in flight for 'first'
+
+			state.value = 'second'; // user typed on
+			resolveFn(' STALE');
+			await vi.advanceTimersByTimeAsync(0);
+
+			expect(engine.suggestion).toBe(''); // superseded result dropped
+		});
+
+		it('aborts the in-flight complete() via the shared signal on cancelPending', async () => {
+			const { ctx, state } = makeCtx();
+			state.value = 'abort me';
+			let capturedSignal: AbortSignal | undefined;
+			state.complete = vi.fn((_text, c) => {
+				capturedSignal = c.signal;
+				return new Promise<string>(() => {}); // never resolves
+			});
+			const engine = new CompletionEngine(ctx);
+
+			engine.schedulePrediction();
+			await vi.advanceTimersByTimeAsync(100);
+			expect(engine.loading).toBe(true);
+			expect(capturedSignal?.aborted).toBe(false);
+
+			engine.cancelPending();
+			expect(capturedSignal?.aborted).toBe(true);
+			expect(engine.loading).toBe(false);
+		});
+
+		it('surfaces PREDICTION_ERROR when complete() rejects (non-abort)', async () => {
+			const { ctx, state } = makeCtx();
+			state.value = 'boom';
+			state.complete = vi.fn(async () => {
+				throw new Error('backend exploded');
+			});
+			const engine = new CompletionEngine(ctx);
+
+			engine.schedulePrediction();
+			await vi.advanceTimersByTimeAsync(100);
+
+			expect(engine.error).toBe(PREDICTION_ERROR);
+			expect(engine.suggestion).toBe('');
+			expect(engine.loading).toBe(false);
+		});
+
+		it('swallows an AbortError thrown by complete() (no error surfaced)', async () => {
+			const { ctx, state } = makeCtx();
+			state.value = 'quiet';
+			state.complete = vi.fn(async () => {
+				throw new DOMException('Aborted', 'AbortError');
+			});
+			const engine = new CompletionEngine(ctx);
+
+			engine.schedulePrediction();
+			await vi.advanceTimersByTimeAsync(100);
+
+			expect(engine.error).toBe('');
+			expect(engine.suggestion).toBe('');
+		});
+
+		it('demo mode never consults complete()', async () => {
+			const { ctx, state } = makeCtx();
+			state.mode = 'demo';
+			state.value = DEMO.slice(0, 13);
+			state.complete = vi.fn(async () => ' should-not-run');
+			const engine = new CompletionEngine(ctx);
+
+			engine.schedulePrediction();
+			await vi.advanceTimersByTimeAsync(state.debounceMs + DEMO_COMPLETION_DELAY_MS);
+
+			expect(state.complete).not.toHaveBeenCalled();
+			expect(engine.suggestion).toBe(DEMO.slice(13)); // scripted demo completion, not the fn
+		});
+
+		it('caches the complete() result and reuses it without a second call', async () => {
+			const { ctx, state } = makeCtx();
+			state.value = 'reuse';
+			state.complete = vi.fn(async () => ' cached-fn');
+			const engine = new CompletionEngine(ctx);
+
+			engine.schedulePrediction();
+			await vi.advanceTimersByTimeAsync(100);
+			expect(engine.suggestion).toBe(' cached-fn');
+			expect(state.complete).toHaveBeenCalledTimes(1);
+
+			engine.schedulePrediction();
+			expect(engine.suggestion).toBe(' cached-fn'); // served from cache synchronously
+			await vi.advanceTimersByTimeAsync(100);
+			expect(state.complete).toHaveBeenCalledTimes(1); // no second invocation
 		});
 	});
 });

@@ -25,6 +25,15 @@ export const DEMO_COMPLETION_DELAY_MS = 220;
 /** The message shown when a prediction request fails. */
 export const PREDICTION_ERROR = 'Prediction is unavailable right now.';
 
+/**
+ * A custom completion source. Receives the current input text plus an `AbortSignal` that fires when
+ * the request is superseded/cancelled, and resolves with the raw completion string (normalized by
+ * the engine exactly like an endpoint response). When supplied it REPLACES the endpoint fetch for
+ * `llm` mode; `demo` mode is unaffected. It runs inside the same debounce/cache/stale/abort guards
+ * as the built-in fetch path.
+ */
+export type CompleteFn = (text: string, ctx: { signal: AbortSignal }) => Promise<string>;
+
 export interface CompletionEngineContext {
 	/** The live input value (the guard compares this against the captured request text). */
 	value: () => string;
@@ -32,6 +41,11 @@ export interface CompletionEngineContext {
 	mode: () => CompletionMode;
 	/** The fetch endpoint for llm mode. */
 	endpoint: () => string;
+	/**
+	 * Optional custom completion function. When it returns a function, `llm` mode calls it instead
+	 * of fetching `endpoint` (the endpoint is then ignored). `demo` mode never consults it.
+	 */
+	complete: () => CompleteFn | undefined;
 	/** The debounce window in ms. */
 	debounceMs: () => number;
 	/** Whether a prediction should currently be scheduled/kept (focus + text + caret-at-end). */
@@ -125,6 +139,24 @@ export class CompletionEngine {
 		});
 	}
 
+	/** The built-in endpoint fetch: POST {text, mode} and return the raw completion string. */
+	async #fetchCompletion(text: string, mode: CompletionMode, signal: AbortSignal) {
+		const res = await fetch(this.#ctx.endpoint(), {
+			method: 'POST',
+			headers: { 'content-type': 'application/json' },
+			body: JSON.stringify({ text, mode }),
+			signal
+		});
+
+		const data = (await res.json().catch(() => ({}))) as CompletionResponse;
+
+		if (!res.ok) {
+			throw new Error(data.error || `Completion failed (${res.status})`);
+		}
+
+		return data.completion;
+	}
+
 	/** Whether the response for `seq`/`text`/`mode` is still the one we want to commit. */
 	#isStale(seq: number, text: string, mode: CompletionMode) {
 		return (
@@ -155,22 +187,17 @@ export class CompletionEngine {
 				return;
 			}
 
-			const res = await fetch(this.#ctx.endpoint(), {
-				method: 'POST',
-				headers: { 'content-type': 'application/json' },
-				body: JSON.stringify({ text, mode }),
-				signal: aborter.signal
-			});
-
-			const data = (await res.json().catch(() => ({}))) as CompletionResponse;
-
-			if (!res.ok) {
-				throw new Error(data.error || `Completion failed (${res.status})`);
-			}
+			// A custom `complete` function, when supplied, replaces the endpoint fetch for llm mode.
+			// It sees the same abort signal and its result flows through the identical stale guard,
+			// normalization, cache write, and igniteKey bump as the fetch path below.
+			const complete = this.#ctx.complete();
+			const raw = complete
+				? await complete(text, { signal: aborter.signal })
+				: await this.#fetchCompletion(text, mode, aborter.signal);
 
 			if (this.#isStale(seq, text, mode)) return;
 
-			const next = normalizeInlineCompletion(data.completion);
+			const next = normalizeInlineCompletion(raw);
 			this.suggestion = next;
 			this.#cache.set(this.#cacheKey(text), next);
 			if (next) this.igniteKey += 1;

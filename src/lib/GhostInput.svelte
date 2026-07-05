@@ -19,26 +19,62 @@
 		type ThemeMode,
 		type VisualState
 	} from './autocomplete';
-	import { CompletionEngine } from './input/completion.svelte';
+	import { CompletionEngine, type CompleteFn } from './input/completion.svelte';
 	import { isScriptedInput, scriptedKeyInput } from './input/demo-script';
 	import { ghostGlyphs } from './input/glyphs';
 	import { SelectionTracker } from './input/selection.svelte';
-	import type { Component } from 'svelte';
+	import type { EffectDefinition } from './effects/types';
+	import type { Component, Snippet } from 'svelte';
+
+	/** State passed to a custom `caret` snippet so it can mirror the built-in caret's classes. */
+	interface CaretState {
+		/** The input is focused (the default caret adds `.active` and blinks). */
+		focused: boolean;
+		/** A prediction request is in flight (the default caret adds `.thinking`). */
+		loading: boolean;
+		/** A suggestion is showing (the default caret adds `.steady` and stops blinking). */
+		ready: boolean;
+	}
 
 	interface Props {
 		minChars?: number;
 		maxChars?: number;
 		debounceMs?: number;
 		endpoint?: string;
-		glow?: GlowVariant;
+		/**
+		 * Built-in effect name, or any custom effect's name (widened to `string` so consumer-defined
+		 * effects type-check while the built-ins keep autocomplete). Set explicitly, or supply
+		 * {@link Props.effect} to derive it. An explicit `glow` wins over `effect`.
+		 */
+		glow?: GlowVariant | (string & {});
 		/** Optional effect-specific DOM layer rendered inside the live prediction. */
 		layer?: Component<{ suggestion: string; lightFlow: boolean }>;
+		/**
+		 * Sugar for wiring a whole effect at once: sets `glow` to `effect.meta.name` and `layer` to
+		 * `effect.layer`. Explicit `glow`/`layer` props take precedence over the effect's values.
+		 */
+		effect?: EffectDefinition;
+		/**
+		 * Custom completion source for `llm` mode. When set it REPLACES the `endpoint` fetch (the
+		 * endpoint is ignored) while keeping the same debounce, cache, stale-guard, and abort
+		 * behavior. `demo` mode is unaffected.
+		 */
+		complete?: CompleteFn;
 		loadingGlow?: LoadingGlow;
 		lightFlow?: boolean;
 		theme?: ThemeMode;
 		completionMode?: CompletionMode;
 		placeholder?: string;
 		touchAccept?: boolean;
+		/** Focus the input on mount. Defaults to true; set false to leave host focus untouched. */
+		autofocus?: boolean;
+		/** Render override for the caret element (the default `.caret` span is used when omitted). */
+		caret?: Snippet<[CaretState]>;
+		/**
+		 * Render override for the waiting-indicator children (the `.caret-origin-glow` subtree). Only
+		 * rendered where the default torch stack would render — i.e. never when `loadingGlow='none'`.
+		 */
+		waiting?: Snippet;
 	}
 
 
@@ -47,15 +83,26 @@
 		maxChars = MAX_INPUT_CHARS,
 		debounceMs = DEFAULT_DEBOUNCE_MS,
 		endpoint = '/api/complete',
-		glow = 'torch',
-		layer: Layer = undefined,
+		glow = undefined,
+		layer = undefined,
+		effect: effectDef = undefined,
+		complete = undefined,
 		loadingGlow = 'torch',
 		lightFlow = true,
 		theme = 'dark',
 		completionMode = 'llm',
 		placeholder = '',
-		touchAccept = true
+		touchAccept = true,
+		autofocus = true,
+		caret = undefined,
+		waiting = undefined
 	}: Props = $props();
+
+	// Effect sugar: an explicit `glow`/`layer` prop always wins; otherwise fall back to the effect's
+	// values, then to the `torch` default. Resolved once here so the rest of the component and the
+	// engine read a single source of truth.
+	const resolvedGlow = $derived(glow ?? effectDef?.meta.name ?? 'torch');
+	const Layer = $derived(layer ?? effectDef?.layer);
 
 	let inputEl = $state<HTMLInputElement>();
 	let value = $state('');
@@ -70,6 +117,7 @@
 			value: () => value,
 			mode: () => completionMode,
 			endpoint: () => endpoint,
+			complete: () => complete,
 			debounceMs: () => debounceMs,
 			shouldPredict
 		},
@@ -248,10 +296,12 @@
 		};
 
 		document.addEventListener('selectionchange', handleSelectionChange);
-		queueMicrotask(() => {
-			el.focus();
-			syncSelection();
-		});
+		if (autofocus) {
+			queueMicrotask(() => {
+				el.focus();
+				syncSelection();
+			});
+		}
 
 		return () => {
 			document.removeEventListener('selectionchange', handleSelectionChange);
@@ -260,7 +310,7 @@
 	});
 
 	$effect(() => {
-		const nextVisualKey = `${glow}|${loadingGlow}|${lightFlow}|${theme}`;
+		const nextVisualKey = `${resolvedGlow}|${loadingGlow}|${lightFlow}|${theme}`;
 		if (nextVisualKey === visualKey) return;
 		visualKey = nextVisualKey;
 
@@ -268,7 +318,9 @@
 	});
 
 	$effect(() => {
-		const nextSourceKey = `${endpoint}|${completionMode}`;
+		// The completion source is (endpoint, mode, complete-fn): changing any of them invalidates
+		// cached suggestions, since they may have come from a now-replaced backend.
+		const nextSourceKey = `${endpoint}|${completionMode}|${complete ? 'fn' : 'none'}`;
 		if (nextSourceKey === sourceKey) return;
 		sourceKey = nextSourceKey;
 		engine.clearCache();
@@ -281,14 +333,14 @@
 <div
 	class="stage"
 	data-state={visualState}
-	data-glow={glow}
+	data-glow={resolvedGlow}
 	data-light-flow={lightFlow ? 'on' : 'off'}
 	data-theme={theme}
 >
 	<div
 		class="field"
 		data-state={visualState}
-		data-glow={glow}
+		data-glow={resolvedGlow}
 		data-loading-glow={loadingGlow}
 		data-light-flow={lightFlow ? 'on' : 'off'}
 		data-theme={theme}
@@ -332,20 +384,28 @@
 					{:else}
 						<span class="typed">{visibleText.before}</span>
 						{#if collapsed}
-							<span
-								class="caret"
-								class:active={focused}
-								class:thinking={engine.loading}
-								class:steady={showGhost}
-							></span>
+							{#if caret}
+								{@render caret({ focused, loading: engine.loading, ready: showGhost })}
+							{:else}
+								<span
+									class="caret"
+									class:active={focused}
+									class:thinking={engine.loading}
+									class:steady={showGhost}
+								></span>
+							{/if}
 							{#if showCaretGlow}
 								<span class="caret-origin-glow" data-mode={showGhost ? 'ready' : 'waiting'}>
-									<span class="torch-beam torch-haze"></span>
-									<span class="torch-beam torch-flow"></span>
-									<span class="torch-beam torch-core"></span>
-									<span class="torch-beam torch-aux"></span>
-									<span class="torch-beam torch-spark"></span>
-									<span class="torch-beam torch-smoke"></span>
+									{#if waiting}
+										{@render waiting()}
+									{:else}
+										<span class="torch-beam torch-haze"></span>
+										<span class="torch-beam torch-flow"></span>
+										<span class="torch-beam torch-core"></span>
+										<span class="torch-beam torch-aux"></span>
+										<span class="torch-beam torch-spark"></span>
+										<span class="torch-beam torch-smoke"></span>
+									{/if}
 								</span>
 							{/if}
 						{:else}
