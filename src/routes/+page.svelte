@@ -1,13 +1,5 @@
 <script lang="ts">
-	import ChevronDown from '@lucide/svelte/icons/chevron-down';
-	import CircleOff from '@lucide/svelte/icons/circle-off';
-	import Flashlight from '@lucide/svelte/icons/flashlight';
-	import FlaskConical from '@lucide/svelte/icons/flask-conical';
-	import Moon from '@lucide/svelte/icons/moon';
-	import PanelTop from '@lucide/svelte/icons/panel-top';
-	import ServerCog from '@lucide/svelte/icons/server-cog';
-	import Sun from '@lucide/svelte/icons/sun';
-	import Waves from '@lucide/svelte/icons/waves';
+	import { browser } from '$app/environment';
 	import { env } from '$env/dynamic/public';
 	import { onMount, tick } from 'svelte';
 	// Dogfood the published package: the demo resolves these exactly as external consumers do (root
@@ -15,6 +7,7 @@
 	// the specifiers at src/lib in dev/build.
 	import {
 		GhostInput,
+		GLOW_VARIANTS,
 		type CompletionMode,
 		type GlowVariant,
 		type LoadingGlow,
@@ -28,9 +21,16 @@
 		serializeDemoSettings,
 		type DemoSettings
 	} from './demo/settings';
-	import { glowIcon } from './demo/icons';
+	import Hero from './demo/Hero.svelte';
+	import PlaygroundControls from './demo/PlaygroundControls.svelte';
+	import GlowRail from './demo/GlowRail.svelte';
+	import EffectCaption from './demo/EffectCaption.svelte';
 
 	const DEMO_ONLY = env.PUBLIC_LIGHT_INPUT_DEMO_ONLY === 'true';
+	const EFFECT_QUERY_PARAM = 'effect';
+	const KNOWN_GLOWS = new Set<string>(GLOW_VARIANTS);
+	/** Hold the field in the waiting state this long when "Simulate thinking" is pressed. */
+	const SIMULATE_THINKING_MS = 2500;
 
 	let theme = $state<ThemeMode>(DEFAULT_DEMO_SETTINGS.theme);
 	let glow = $state<GlowVariant>(DEFAULT_DEMO_SETTINGS.glow);
@@ -39,14 +39,13 @@
 	let completionMode = $state<CompletionMode>(
 		DEMO_ONLY ? 'demo' : DEFAULT_DEMO_SETTINGS.completionMode
 	);
-	let glowMenuOpen = $state(false);
-	let controlsEl = $state<HTMLElement>();
+	let simulating = $state(false);
 	let refocusFrame = 0;
 	let settingsHydrated = false;
 
-	const selectedGlow = $derived.by(() => {
-		return glowOptions.find((option) => option.value === glow) ?? glowOptions[0];
-	});
+	const selectedGlow = $derived(
+		glowOptions.find((option) => option.value === glow) ?? glowOptions[0]
+	);
 
 	function focusInput() {
 		document.querySelector<HTMLInputElement>('[data-testid="ghost-input"]')?.focus({
@@ -82,6 +81,30 @@
 		localStorage.setItem(DEMO_SETTINGS_STORAGE_KEY, serializeDemoSettings(currentSettings()));
 	}
 
+	// Deep links use the native History API, not SvelteKit's replaceState. This route is prerendered
+	// (prerender = true) and served as a static page, where kit's client router never finishes
+	// initializing for this single-page demo — kit's replaceState throws "before router is
+	// initialized" on load AND on later clicks. The `?effect=` value is page state, not navigation
+	// (no data reload, no route change), so history.replaceState is the correct primitive. We
+	// preserve kit's own history state object and only ever read the effect from `location`, so the
+	// router and this URL can never disagree. Everything is guarded by `browser` (never runs on SSR).
+
+	/** A `?effect=<name>` value from the URL, if it names a real effect; otherwise null. */
+	function deepLinkGlow(): GlowVariant | null {
+		if (!browser) return null;
+		const raw = new URLSearchParams(window.location.search).get(EFFECT_QUERY_PARAM);
+		return raw && KNOWN_GLOWS.has(raw) ? (raw as GlowVariant) : null;
+	}
+
+	/** Reflect the active effect into `?effect=` (no history entry, no navigation, no data reload). */
+	function syncEffectQuery() {
+		if (!settingsHydrated || !browser) return;
+		const url = new URL(window.location.href);
+		if (url.searchParams.get(EFFECT_QUERY_PARAM) === glow) return;
+		url.searchParams.set(EFFECT_QUERY_PARAM, glow);
+		window.history.replaceState(window.history.state, '', url);
+	}
+
 	async function refocusInput() {
 		await tick();
 		focusInput();
@@ -94,7 +117,6 @@
 	}
 
 	function setTheme(nextTheme: ThemeMode) {
-		glowMenuOpen = false;
 		theme = nextTheme;
 		persistSettings();
 		void refocusInput();
@@ -102,56 +124,136 @@
 
 	function setGlow(nextGlow: GlowVariant) {
 		glow = nextGlow;
-		glowMenuOpen = false;
 		persistSettings();
+		syncEffectQuery();
 		void refocusInput();
 	}
 
 	function setLoadingGlow(nextGlow: LoadingGlow) {
-		glowMenuOpen = false;
 		loadingGlow = nextGlow;
 		persistSettings();
 		void refocusInput();
 	}
 
 	function setCompletionMode(nextMode: CompletionMode) {
-		glowMenuOpen = false;
 		completionMode = DEMO_ONLY ? 'demo' : nextMode;
 		persistSettings();
 		void refocusInput();
 	}
 
 	function toggleLightFlow() {
-		glowMenuOpen = false;
 		lightFlow = !lightFlow;
 		persistSettings();
 		void refocusInput();
 	}
 
-	function toggleGlowMenu() {
-		glowMenuOpen = !glowMenuOpen;
-		void refocusInput();
+	// --- Simulate thinking -------------------------------------------------------------------
+	//
+	// The field only shows the waiting indicators while the completion engine is loading with no
+	// suggestion yet — in demo mode that window is a 220ms blink. To hold it open, we briefly flip
+	// to LLM mode with `window.fetch` stubbed to resolve after ~2.5s. Flipping the mode re-runs the
+	// engine's prediction (its source-key effect calls schedulePrediction when the field has text,
+	// focus, and the caret at the end), which hits the stubbed fetch and parks in `waiting`. When
+	// the timer fires the fetch resolves with the scripted completion and we restore the prior mode.
+	//
+	// If the field is empty there's nothing to predict, so we first seed a completable prefix (in
+	// LLM mode, so onBeforeInput doesn't intercept it). This is a demo-only affordance that never
+	// touches the package.
+
+	/** The demo sentence the field completes; mirrors the package's DEMO_COMPLETION_TEXT. */
+	const DEMO_SENTENCE = "Let's make something that actually makes a difference";
+	/** A completable seed used when the field is empty at simulate time. */
+	const SIMULATE_SEED = "Let's make so";
+
+	function fixedDemoCompletion(text: string): string {
+		const clipped = text.trimStart().slice(0, DEMO_SENTENCE.length);
+		if (!DEMO_SENTENCE.toLowerCase().startsWith(clipped.toLowerCase())) return '';
+		return DEMO_SENTENCE.slice(clipped.length);
 	}
 
-	function onWindowKeydown(event: KeyboardEvent) {
-		if (!glowMenuOpen || event.key !== 'Escape') return;
-		glowMenuOpen = false;
-		void refocusInput();
+	let originalFetch: typeof window.fetch | null = null;
+	let simulateTimer: ReturnType<typeof setTimeout> | undefined;
+	let revealTimer: ReturnType<typeof setTimeout> | undefined;
+	let preSimulateMode: CompletionMode = 'demo';
+
+	function restoreSimulate() {
+		clearTimeout(simulateTimer);
+		clearTimeout(revealTimer);
+		simulateTimer = undefined;
+		revealTimer = undefined;
+		if (originalFetch) {
+			window.fetch = originalFetch;
+			originalFetch = null;
+		}
+		completionMode = DEMO_ONLY ? 'demo' : preSimulateMode;
+		simulating = false;
 	}
 
-	function onWindowPointerDown(event: PointerEvent) {
-		if (!glowMenuOpen) return;
-		if (event.target instanceof Node && controlsEl?.contains(event.target)) return;
-		glowMenuOpen = false;
-		void refocusInput();
+	/**
+	 * Set the input value through the native setter + a real `input` event so Svelte's bind:value
+	 * syncs. Runs in LLM mode where onBeforeInput early-returns, so the literal value flows straight
+	 * through onInput and drives the engine.
+	 */
+	function seedText(input: HTMLInputElement, text: string) {
+		const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set;
+		setter?.call(input, text);
+		input.setSelectionRange(text.length, text.length);
+		input.dispatchEvent(new InputEvent('input', { inputType: 'insertText', bubbles: true }));
+	}
+
+	async function simulateThinking() {
+		if (simulating) return;
+		const input = document.querySelector<HTMLInputElement>('[data-testid="ghost-input"]');
+		if (!input) return;
+
+		simulating = true;
+		preSimulateMode = completionMode;
+		input.focus();
+
+		// Stub fetch to hang, then resolve after the hold with the scripted completion for the final
+		// text — so the field reveals a real ghost when it finishes "thinking".
+		originalFetch = window.fetch;
+		let resolveFetch: ((value: Response) => void) | null = null;
+		window.fetch = (() =>
+			new Promise<Response>((resolve) => {
+				resolveFetch = resolve;
+			})) as typeof window.fetch;
+
+		// LLM mode: onBeforeInput early-returns so a seeded literal value flows through. Flipping the
+		// mode also re-runs the engine's prediction against the stubbed (hanging) fetch -> waiting.
+		completionMode = 'llm';
+		await tick();
+		if (!input.value.trim()) seedText(input, SIMULATE_SEED);
+		await refocusInput();
+
+		simulateTimer = setTimeout(() => {
+			const completion = fixedDemoCompletion(input.value);
+			resolveFetch?.(
+				new Response(JSON.stringify({ completion }), {
+					status: 200,
+					headers: { 'content-type': 'application/json' }
+				})
+			);
+			// Let the resolved suggestion render, then drop back to the prior mode + real fetch.
+			revealTimer = setTimeout(restoreSimulate, 90);
+		}, SIMULATE_THINKING_MS);
 	}
 
 	onMount(() => {
 		applySettings(parseDemoSettings(localStorage.getItem(DEMO_SETTINGS_STORAGE_KEY)));
+
+		// A valid `?effect=` overrides the stored glow (deep-link takes precedence on load).
+		const linked = deepLinkGlow();
+		if (linked) glow = linked;
+
 		settingsHydrated = true;
+		// Persist the resolved state (deep link may have changed glow) and reflect it into the URL.
+		persistSettings();
+		syncEffectQuery();
 
 		return () => {
 			cancelAnimationFrame(refocusFrame);
+			restoreSimulate();
 		};
 	});
 </script>
@@ -160,200 +262,44 @@
 	<meta name="color-scheme" content="dark light" />
 </svelte:head>
 
-<svelte:window onkeydown={onWindowKeydown} onpointerdown={onWindowPointerDown} />
-
 <main class="scene" data-theme={theme}>
 	<h1 class="sr-only">light-input ghost autocomplete demo</h1>
 
-	<section class="controls" aria-label="Demo parameters" bind:this={controlsEl}>
-		<div class="control-group">
-			<span class="control-label">Theme</span>
-			<div class="segmented" role="group" aria-label="Theme">
-				<button
-					type="button"
-					class="segment"
-					class:active={theme === 'dark'}
-					aria-pressed={theme === 'dark'}
-					onpointerdown={keepInputFocus}
-					onclick={() => setTheme('dark')}
-				>
-					<Moon size={17} strokeWidth={2.25} aria-hidden="true" />
-					<span>Dark</span>
-				</button>
-				<button
-					type="button"
-					class="segment"
-					class:active={theme === 'light'}
-					aria-pressed={theme === 'light'}
-					onpointerdown={keepInputFocus}
-					onclick={() => setTheme('light')}
-				>
-					<Sun size={17} strokeWidth={2.25} aria-hidden="true" />
-					<span>Light</span>
-				</button>
-			</div>
-		</div>
+	<Hero />
 
-		<div class="control-group grow">
-			<span class="control-label">Thinking</span>
-			<div class="segmented three" role="group" aria-label="Thinking glow">
-				<button
-					type="button"
-					class="segment"
-					class:active={loadingGlow === 'torch'}
-					aria-label="Caret glow"
-					aria-pressed={loadingGlow === 'torch'}
-					onpointerdown={keepInputFocus}
-					onclick={() => setLoadingGlow('torch')}
-				>
-					<Flashlight size={17} strokeWidth={2.25} aria-hidden="true" />
-					<span>Caret</span>
-				</button>
-				<button
-					type="button"
-					class="segment"
-					class:active={loadingGlow === 'field'}
-					aria-label="Field glow"
-					aria-pressed={loadingGlow === 'field'}
-					onpointerdown={keepInputFocus}
-					onclick={() => setLoadingGlow('field')}
-				>
-					<PanelTop size={17} strokeWidth={2.25} aria-hidden="true" />
-					<span>Field</span>
-				</button>
-				<button
-					type="button"
-					class="segment"
-					class:active={loadingGlow === 'none'}
-					aria-label="No thinking glow"
-					aria-pressed={loadingGlow === 'none'}
-					onpointerdown={keepInputFocus}
-					onclick={() => setLoadingGlow('none')}
-				>
-					<CircleOff size={17} strokeWidth={2.25} aria-hidden="true" />
-					<span>Off</span>
-				</button>
-			</div>
-		</div>
-
-		<div class="control-group mode-group">
-			<span class="control-label">Mode</span>
-			<div class="segmented mode" role="group" aria-label="Completion mode">
-				{#if DEMO_ONLY}
-					<button type="button" class="segment active locked" aria-pressed="true" disabled>
-						<FlaskConical size={17} strokeWidth={2.25} aria-hidden="true" />
-						<span>Demo</span>
-					</button>
-				{:else}
-					<button
-						type="button"
-						class="segment"
-						class:active={completionMode === 'llm'}
-						aria-pressed={completionMode === 'llm'}
-						onpointerdown={keepInputFocus}
-						onclick={() => setCompletionMode('llm')}
-					>
-						<ServerCog size={17} strokeWidth={2.25} aria-hidden="true" />
-						<span>LLM</span>
-					</button>
-					<button
-						type="button"
-						class="segment"
-						class:active={completionMode === 'demo'}
-						aria-pressed={completionMode === 'demo'}
-						onpointerdown={keepInputFocus}
-						onclick={() => setCompletionMode('demo')}
-					>
-						<FlaskConical size={17} strokeWidth={2.25} aria-hidden="true" />
-						<span>Demo</span>
-					</button>
-				{/if}
-			</div>
-		</div>
-
-		<div class="control-group glow-group">
-			<span class="control-label">Glow</span>
-			<div class="glow-picker" data-open={glowMenuOpen ? 'true' : 'false'}>
-				<button
-					type="button"
-					class="glow-trigger"
-					data-glow={selectedGlow.value}
-					aria-haspopup="listbox"
-					aria-expanded={glowMenuOpen}
-					aria-label="Glow style"
-					onpointerdown={keepInputFocus}
-					onclick={toggleGlowMenu}
-				>
-					{#if selectedGlow}
-						{@const SelectedIcon = glowIcon(selectedGlow.value)}
-						<SelectedIcon size={17} strokeWidth={2.25} aria-hidden="true" />
-						<span>{selectedGlow.label}</span>
-					{/if}
-					<span class="glow-chevron" aria-hidden="true">
-						<ChevronDown size={17} strokeWidth={2.25} />
-					</span>
-				</button>
-
-				{#if glowMenuOpen}
-					<div class="glow-menu" role="listbox" aria-label="Glow style">
-						{#each glowOptions as option}
-							{@const Icon = glowIcon(option.value)}
-							<button
-								type="button"
-								class="glow-option"
-								class:active={glow === option.value}
-								data-glow={option.value}
-								role="option"
-								aria-label={`${option.label} glow`}
-								aria-selected={glow === option.value}
-								onpointerdown={keepInputFocus}
-								onclick={() => setGlow(option.value)}
-							>
-								<Icon size={17} strokeWidth={2.25} aria-hidden="true" />
-								<span>{option.label}</span>
-							</button>
-						{/each}
-					</div>
-				{/if}
-			</div>
-		</div>
-
-		<div class="control-group flow-group">
-			<span class="control-label">Flow</span>
-			<button
-				type="button"
-				class="flow-toggle"
-				class:active={lightFlow}
-				aria-pressed={lightFlow}
-				onpointerdown={keepInputFocus}
-				onclick={toggleLightFlow}
-			>
-				<Waves size={18} strokeWidth={2.25} aria-hidden="true" />
-				<span class="toggle-text">{lightFlow ? 'On' : 'Off'}</span>
-				<span class="toggle-rail" aria-hidden="true">
-					<span class="toggle-dot"></span>
-				</span>
-			</button>
-		</div>
-
-		<a
-			class="github-link"
-			href="https://github.com/ui4ai/light-input"
-			target="_blank"
-			rel="noreferrer"
-			aria-label="Open ui4ai/light-input on GitHub"
-			title="ui4ai/light-input"
-		>
-			<svg viewBox="0 0 24 24" aria-hidden="true">
-				<path
-					d="M12 2C6.48 2 2 6.58 2 12.24c0 4.52 2.87 8.35 6.84 9.7.5.1.68-.22.68-.5v-1.88c-2.78.62-3.37-1.22-3.37-1.22-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.56 2.35 1.11 2.92.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05A9.33 9.33 0 0 1 12 6.94c.85 0 1.7.12 2.5.34 1.9-1.32 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.79-4.57 5.04.36.32.68.94.68 1.9v2.81c0 .28.18.6.69.5A10.06 10.06 0 0 0 22 12.24C22 6.58 17.52 2 12 2Z"
-				/>
-			</svg>
-		</a>
-	</section>
+	<div class="controls-row">
+		<GlowRail {glow} onSelect={setGlow} onKeepFocus={keepInputFocus} />
+		<PlaygroundControls
+			{theme}
+			{loadingGlow}
+			{completionMode}
+			{lightFlow}
+			demoOnly={DEMO_ONLY}
+			onKeepFocus={keepInputFocus}
+			onSetTheme={setTheme}
+			onSetLoadingGlow={setLoadingGlow}
+			onSetCompletionMode={setCompletionMode}
+			onToggleLightFlow={toggleLightFlow}
+		/>
+	</div>
 
 	<section class="demo" aria-label="Autocomplete demo">
-		<GhostInput {glow} layer={selectedGlow.layer} {loadingGlow} {lightFlow} {theme} {completionMode} />
+		<div class="stage-wrap">
+			<GhostInput
+				{glow}
+				layer={selectedGlow.layer}
+				{loadingGlow}
+				{lightFlow}
+				{theme}
+				{completionMode}
+			/>
+			<EffectCaption
+				{glow}
+				label={selectedGlow.label}
+				{simulating}
+				onSimulate={simulateThinking}
+			/>
+		</div>
 	</section>
 </main>
 
@@ -387,11 +333,11 @@
 
 		position: relative;
 		display: grid;
-		grid-template-rows: auto minmax(0, 1fr);
-		gap: clamp(26px, 5vh, 64px);
+		grid-template-rows: auto auto minmax(0, 1fr);
+		gap: clamp(18px, 3.2vh, 34px);
 		min-height: 100dvh;
 		overflow: hidden;
-		padding: 28px 48px 52px;
+		padding: 26px 48px 44px;
 		color: var(--control-ink);
 		isolation: isolate;
 		color-scheme: dark;
@@ -447,7 +393,7 @@
 	.scene::after {
 		left: 9vw;
 		right: 9vw;
-		top: 50%;
+		top: 54%;
 		z-index: -2;
 		height: 260px;
 		background: var(--scene-aurora);
@@ -456,667 +402,13 @@
 		transition: background 520ms ease;
 	}
 
-	.controls {
-		position: relative;
-		z-index: 3;
+	.controls-row {
 		display: flex;
-		flex-wrap: wrap;
+		flex-direction: column;
 		gap: 10px;
 		align-self: start;
 		justify-self: center;
 		width: min(1120px, 100%);
-		padding: 10px;
-		border: 1px solid var(--control-border);
-		border-radius: 28px;
-		background:
-			linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0)),
-			var(--control-bg);
-		box-shadow:
-			0 1px 0 rgba(255, 255, 255, 0.26) inset,
-			0 20px 54px var(--control-shadow);
-		backdrop-filter: blur(24px) saturate(1.2);
-		-webkit-backdrop-filter: blur(24px) saturate(1.2);
-	}
-
-	.control-group {
-		display: flex;
-		min-width: 0;
-		align-items: center;
-		gap: 8px;
-	}
-
-	.control-group.grow {
-		flex: 1 1 340px;
-	}
-
-	.flow-group {
-		margin-left: auto;
-	}
-
-	.glow-group {
-		flex: 1 1 100%;
-		align-items: stretch;
-	}
-
-	.control-label {
-		flex: 0 0 auto;
-		color: var(--control-muted);
-		font-size: 12px;
-		font-weight: 650;
-		line-height: 1;
-		letter-spacing: 0;
-	}
-
-	.segmented {
-		display: grid;
-		grid-auto-columns: minmax(86px, 1fr);
-		grid-auto-flow: column;
-		gap: 4px;
-		min-width: 0;
-		padding: 4px;
-		border: 1px solid rgba(255, 255, 255, 0.06);
-		border-radius: 20px;
-		background: rgba(0, 0, 0, 0.12);
-	}
-
-	.scene[data-theme='light'] .segmented {
-		border-color: rgba(54, 70, 101, 0.1);
-		background: rgba(229, 236, 247, 0.68);
-	}
-
-	.segmented.three {
-		width: min(100%, 342px);
-	}
-
-	.glow-picker {
-		position: relative;
-		flex: 1 1 auto;
-		min-width: 0;
-		z-index: 1;
-		isolation: isolate;
-	}
-
-	.glow-picker[data-open='true'] {
-		z-index: 40;
-	}
-
-	.segment,
-	.flow-toggle,
-	.github-link,
-	.glow-trigger,
-	.glow-option {
-		display: inline-grid;
-		height: 42px;
-		align-items: center;
-		border: 1px solid transparent;
-		color: var(--control-muted);
-		background: transparent;
-		cursor: pointer;
-		text-decoration: none;
-		-webkit-tap-highlight-color: transparent;
-		transition:
-			color 180ms ease,
-			border-color 180ms ease,
-			background 180ms ease,
-			box-shadow 180ms ease,
-			transform 120ms ease;
-	}
-
-	.segment {
-		grid-template-columns: 17px auto;
-		gap: 7px;
-		justify-content: center;
-		min-width: 0;
-		padding: 0 12px;
-		border-radius: 16px;
-	}
-
-	.segment:disabled {
-		cursor: default;
-		transform: none;
-	}
-
-	.segment.locked {
-		min-width: 112px;
-	}
-
-	.glow-trigger,
-	.glow-option {
-		--glow-a: rgba(255, 145, 72, 0.18);
-		--glow-b: rgba(255, 214, 145, 0.08);
-		--glow-border: rgba(255, 195, 139, 0.22);
-		--glow-shadow: rgba(255, 128, 58, 0.16);
-
-		position: relative;
-		grid-template-columns: 17px minmax(0, auto);
-		gap: 7px;
-		justify-content: center;
-		min-width: 0;
-		padding: 0 11px;
-		overflow: hidden;
-		border-radius: 16px;
-		background: var(--segment-bg);
-		isolation: isolate;
-	}
-
-	.glow-trigger {
-		grid-template-columns: 17px minmax(0, 1fr) 17px;
-		justify-content: stretch;
-		width: 100%;
-		padding: 0 12px;
-		border-radius: 18px;
-		background:
-			radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.1), transparent 34%),
-			linear-gradient(90deg, var(--glow-a), var(--glow-b)),
-			var(--segment-bg);
-		border-color: var(--glow-border);
-		box-shadow:
-			0 0 26px var(--glow-shadow),
-			0 1px 0 rgba(255, 255, 255, 0.13) inset;
-		color: var(--control-ink);
-	}
-
-	.glow-chevron {
-		justify-self: end;
-		opacity: 0.66;
-		transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
-	}
-
-	.glow-picker[data-open='true'] .glow-chevron {
-		transform: rotate(180deg);
-	}
-
-	.glow-option::before,
-	.glow-option::after {
-		position: absolute;
-		content: '';
-		pointer-events: none;
-		border-radius: inherit;
-		opacity: 0;
-		transition:
-			opacity 180ms ease,
-			transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
-	}
-
-	.glow-option::before {
-		inset: -1px;
-		z-index: -2;
-		background:
-			radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.16), transparent 34%),
-			linear-gradient(90deg, var(--glow-a), var(--glow-b));
-	}
-
-	.glow-option::after {
-		left: 12px;
-		right: 12px;
-		bottom: 4px;
-		z-index: -1;
-		height: 2px;
-		background: linear-gradient(90deg, transparent, var(--glow-a), var(--glow-b), transparent);
-		filter: blur(2px);
-		transform: scaleX(0.54);
-	}
-
-	.glow-menu {
-		position: absolute;
-		top: calc(100% + 8px);
-		left: 0;
-		right: 0;
-		z-index: 20;
-		display: grid;
-		grid-template-columns: repeat(3, minmax(0, 1fr));
-		gap: 5px;
-		max-height: min(364px, calc(100dvh - 170px));
-		padding: 6px;
-		overflow: auto;
-		border: 1px solid var(--control-border);
-		border-radius: 20px;
-		background:
-			linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0)),
-			rgba(18, 19, 23, 0.97);
-		box-shadow:
-			0 1px 0 rgba(255, 255, 255, 0.18) inset,
-			0 24px 60px rgba(0, 0, 0, 0.34),
-			0 0 0 1px rgba(0, 0, 0, 0.28);
-		backdrop-filter: blur(24px) saturate(1.24);
-		-webkit-backdrop-filter: blur(24px) saturate(1.24);
-		scrollbar-width: none;
-	}
-
-	.glow-menu::-webkit-scrollbar {
-		display: none;
-	}
-
-	.glow-menu .glow-option {
-		justify-content: start;
-		width: 100%;
-		height: 40px;
-	}
-
-	.scene[data-theme='light'] .glow-menu {
-		background:
-			linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.32)),
-			rgba(250, 253, 255, 0.98);
-		box-shadow:
-			0 1px 0 rgba(255, 255, 255, 0.86) inset,
-			0 24px 60px rgba(29, 42, 69, 0.22),
-			0 0 0 1px rgba(255, 255, 255, 0.68);
-	}
-
-	.glow-trigger[data-glow='candle'],
-	.glow-option[data-glow='candle'] {
-		--glow-a: rgba(255, 146, 45, 0.23);
-		--glow-b: rgba(255, 213, 116, 0.1);
-		--glow-border: rgba(255, 184, 91, 0.28);
-		--glow-shadow: rgba(255, 113, 36, 0.17);
-	}
-
-	.glow-trigger[data-glow='lightning'],
-	.glow-option[data-glow='lightning'] {
-		--glow-a: rgba(80, 219, 255, 0.22);
-		--glow-b: rgba(112, 93, 255, 0.12);
-		--glow-border: rgba(113, 218, 255, 0.3);
-		--glow-shadow: rgba(61, 205, 255, 0.16);
-	}
-
-	.glow-trigger[data-glow='aurora'],
-	.glow-option[data-glow='aurora'] {
-		--glow-a: rgba(80, 242, 190, 0.2);
-		--glow-b: rgba(139, 122, 255, 0.11);
-		--glow-border: rgba(102, 231, 198, 0.28);
-		--glow-shadow: rgba(62, 220, 180, 0.14);
-	}
-
-	.glow-trigger[data-glow='plasma'],
-	.glow-option[data-glow='plasma'] {
-		--glow-a: rgba(255, 79, 204, 0.2);
-		--glow-b: rgba(61, 227, 255, 0.12);
-		--glow-border: rgba(245, 99, 214, 0.28);
-		--glow-shadow: rgba(225, 76, 196, 0.15);
-	}
-
-	.glow-trigger[data-glow='prism'],
-	.glow-option[data-glow='prism'] {
-		--glow-a: rgba(255, 199, 72, 0.19);
-		--glow-b: rgba(81, 171, 255, 0.13);
-		--glow-border: rgba(180, 205, 255, 0.25);
-		--glow-shadow: rgba(90, 174, 255, 0.14);
-	}
-
-	.glow-trigger[data-glow='ember'],
-	.glow-option[data-glow='ember'] {
-		--glow-a: rgba(255, 82, 35, 0.21);
-		--glow-b: rgba(255, 155, 65, 0.1);
-		--glow-border: rgba(255, 111, 70, 0.27);
-		--glow-shadow: rgba(211, 63, 34, 0.16);
-	}
-
-	.glow-trigger[data-glow='neon'],
-	.glow-option[data-glow='neon'] {
-		--glow-a: rgba(86, 255, 185, 0.2);
-		--glow-b: rgba(255, 70, 203, 0.11);
-		--glow-border: rgba(102, 240, 196, 0.28);
-		--glow-shadow: rgba(71, 240, 184, 0.15);
-	}
-
-	.glow-trigger[data-glow='nebula'],
-	.glow-option[data-glow='nebula'] {
-		--glow-a: rgba(155, 113, 255, 0.2);
-		--glow-b: rgba(255, 172, 88, 0.1);
-		--glow-border: rgba(174, 142, 255, 0.27);
-		--glow-shadow: rgba(143, 103, 255, 0.16);
-	}
-
-	.glow-trigger[data-glow='smoke'],
-	.glow-option[data-glow='smoke'] {
-		--glow-a: rgba(235, 244, 248, 0.28);
-		--glow-b: rgba(111, 132, 150, 0.18);
-		--glow-border: rgba(232, 241, 248, 0.3);
-		--glow-shadow: rgba(205, 225, 238, 0.18);
-	}
-
-	.glow-trigger[data-glow='solar'],
-	.glow-option[data-glow='solar'] {
-		--glow-a: rgba(255, 199, 66, 0.28);
-		--glow-b: rgba(255, 74, 35, 0.14);
-		--glow-border: rgba(255, 204, 89, 0.34);
-		--glow-shadow: rgba(255, 154, 39, 0.22);
-	}
-
-	.glow-trigger[data-glow='holo'],
-	.glow-option[data-glow='holo'] {
-		--glow-a: rgba(78, 236, 255, 0.25);
-		--glow-b: rgba(255, 63, 215, 0.16);
-		--glow-border: rgba(133, 238, 255, 0.32);
-		--glow-shadow: rgba(85, 219, 255, 0.2);
-	}
-
-	.glow-trigger[data-glow='blackhole'],
-	.glow-option[data-glow='blackhole'] {
-		--glow-a: rgba(16, 13, 27, 0.52);
-		--glow-b: rgba(142, 90, 255, 0.16);
-		--glow-border: rgba(148, 120, 255, 0.34);
-		--glow-shadow: rgba(77, 48, 160, 0.24);
-	}
-
-	.glow-trigger[data-glow='flame'],
-	.glow-option[data-glow='flame'] {
-		--glow-a: rgba(255, 74, 18, 0.33);
-		--glow-b: rgba(255, 205, 63, 0.14);
-		--glow-border: rgba(255, 105, 42, 0.42);
-		--glow-shadow: rgba(255, 60, 18, 0.28);
-	}
-
-	.glow-trigger[data-glow='matrix'],
-	.glow-option[data-glow='matrix'] {
-		--glow-a: rgba(56, 255, 124, 0.24);
-		--glow-b: rgba(4, 88, 38, 0.2);
-		--glow-border: rgba(93, 255, 151, 0.34);
-		--glow-shadow: rgba(46, 255, 119, 0.22);
-	}
-
-	.glow-trigger[data-glow='snow'],
-	.glow-option[data-glow='snow'] {
-		--glow-a: rgba(221, 250, 255, 0.3);
-		--glow-b: rgba(80, 170, 255, 0.16);
-		--glow-border: rgba(210, 248, 255, 0.42);
-		--glow-shadow: rgba(120, 206, 255, 0.22);
-	}
-
-	.glow-trigger[data-glow='toxic'],
-	.glow-option[data-glow='toxic'] {
-		--glow-a: rgba(187, 255, 38, 0.34);
-		--glow-b: rgba(34, 255, 132, 0.18);
-		--glow-border: rgba(201, 255, 60, 0.44);
-		--glow-shadow: rgba(158, 255, 36, 0.28);
-	}
-
-	.glow-trigger[data-glow='vortex'],
-	.glow-option[data-glow='vortex'] {
-		--glow-a: rgba(70, 238, 255, 0.31);
-		--glow-b: rgba(255, 62, 220, 0.19);
-		--glow-border: rgba(113, 230, 255, 0.4);
-		--glow-shadow: rgba(82, 173, 255, 0.28);
-	}
-
-	.glow-trigger[data-glow='bubblegum'],
-	.glow-option[data-glow='bubblegum'] {
-		--glow-a: rgba(255, 92, 190, 0.34);
-		--glow-b: rgba(255, 190, 232, 0.2);
-		--glow-border: rgba(255, 138, 214, 0.44);
-		--glow-shadow: rgba(255, 88, 187, 0.28);
-	}
-
-	.glow-trigger[data-glow='optic'],
-	.glow-option[data-glow='optic'] {
-		--glow-a: rgba(204, 238, 255, 0.28);
-		--glow-b: rgba(84, 118, 255, 0.18);
-		--glow-border: rgba(185, 218, 255, 0.4);
-		--glow-shadow: rgba(116, 150, 255, 0.26);
-	}
-
-	.glow-trigger[data-glow='biolume'],
-	.glow-option[data-glow='biolume'] {
-		--glow-a: rgba(41, 255, 214, 0.32);
-		--glow-b: rgba(66, 102, 255, 0.18);
-		--glow-border: rgba(91, 255, 221, 0.42);
-		--glow-shadow: rgba(39, 229, 215, 0.28);
-	}
-
-	.glow-trigger[data-glow='ocean'],
-	.glow-option[data-glow='ocean'] {
-		--glow-a: rgba(32, 206, 255, 0.34);
-		--glow-b: rgba(31, 92, 255, 0.2);
-		--glow-border: rgba(91, 222, 255, 0.44);
-		--glow-shadow: rgba(34, 184, 255, 0.28);
-	}
-
-	.glow-trigger[data-glow='horror'],
-	.glow-option[data-glow='horror'] {
-		--glow-a: rgba(255, 32, 54, 0.3);
-		--glow-b: rgba(24, 0, 8, 0.34);
-		--glow-border: rgba(255, 64, 88, 0.42);
-		--glow-shadow: rgba(255, 20, 48, 0.26);
-	}
-
-	.glow-trigger[data-glow='heart'],
-	.glow-option[data-glow='heart'] {
-		--glow-a: rgba(255, 70, 132, 0.33);
-		--glow-b: rgba(255, 152, 196, 0.19);
-		--glow-border: rgba(255, 104, 162, 0.44);
-		--glow-shadow: rgba(255, 62, 134, 0.28);
-	}
-
-	.glow-trigger[data-glow='liquidglass'],
-	.glow-option[data-glow='liquidglass'] {
-		--glow-a: rgba(224, 250, 255, 0.32);
-		--glow-b: rgba(154, 190, 255, 0.18);
-		--glow-border: rgba(225, 246, 255, 0.46);
-		--glow-shadow: rgba(164, 220, 255, 0.28);
-	}
-
-	.glow-trigger[data-glow='android'],
-	.glow-option[data-glow='android'] {
-		--glow-a: rgba(84, 255, 133, 0.31);
-		--glow-b: rgba(70, 220, 255, 0.18);
-		--glow-border: rgba(118, 255, 155, 0.44);
-		--glow-shadow: rgba(54, 232, 120, 0.26);
-	}
-
-	.glow-trigger[data-glow='fontshift'],
-	.glow-option[data-glow='fontshift'] {
-		--glow-a: rgba(255, 232, 160, 0.28);
-		--glow-b: rgba(174, 116, 255, 0.16);
-		--glow-border: rgba(255, 220, 138, 0.42);
-		--glow-shadow: rgba(230, 172, 72, 0.24);
-	}
-
-	.glow-trigger[data-glow='rorschach'],
-	.glow-option[data-glow='rorschach'] {
-		--glow-a: rgba(238, 241, 255, 0.24);
-		--glow-b: rgba(26, 18, 52, 0.26);
-		--glow-border: rgba(205, 210, 255, 0.36);
-		--glow-shadow: rgba(122, 116, 190, 0.22);
-	}
-
-	.glow-trigger[data-glow='diffusion'],
-	.glow-option[data-glow='diffusion'] {
-		--glow-a: rgba(255, 140, 220, 0.25);
-		--glow-b: rgba(74, 224, 255, 0.18);
-		--glow-border: rgba(255, 160, 230, 0.38);
-		--glow-shadow: rgba(196, 86, 255, 0.24);
-	}
-
-	.glow-trigger[data-glow='chromabloom'],
-	.glow-option[data-glow='chromabloom'] {
-		--glow-a: rgba(255, 70, 120, 0.26);
-		--glow-b: rgba(45, 238, 255, 0.2);
-		--glow-border: rgba(255, 236, 92, 0.42);
-		--glow-shadow: rgba(255, 72, 150, 0.26);
-	}
-
-	.glow-trigger[data-glow='infrared'],
-	.glow-option[data-glow='infrared'] {
-		--glow-a: rgba(255, 74, 44, 0.31);
-		--glow-b: rgba(129, 70, 255, 0.2);
-		--glow-border: rgba(255, 108, 54, 0.42);
-		--glow-shadow: rgba(255, 78, 34, 0.26);
-	}
-
-	.glow-trigger[data-glow='staged'],
-	.glow-option[data-glow='staged'] {
-		--glow-a: rgba(255, 244, 196, 0.34);
-		--glow-b: rgba(22, 18, 10, 0.22);
-		--glow-border: rgba(255, 232, 156, 0.44);
-		--glow-shadow: rgba(255, 218, 116, 0.26);
-	}
-
-	.glow-trigger[data-glow='blueprint'],
-	.glow-option[data-glow='blueprint'] {
-		--glow-a: rgba(62, 154, 255, 0.3);
-		--glow-b: rgba(160, 232, 255, 0.16);
-		--glow-border: rgba(110, 194, 255, 0.42);
-		--glow-shadow: rgba(58, 142, 255, 0.24);
-	}
-
-	.segment.active,
-	.flow-toggle.active,
-	.glow-option.active {
-		color: var(--control-ink);
-		border-color: var(--segment-active-border);
-		background: var(--segment-active-bg);
-		box-shadow:
-			0 0 28px var(--segment-shadow),
-			0 1px 0 rgba(255, 255, 255, 0.14) inset;
-	}
-
-	.glow-option.active {
-		border-color: var(--glow-border);
-		box-shadow:
-			0 0 30px var(--glow-shadow),
-			0 1px 0 rgba(255, 255, 255, 0.15) inset;
-	}
-
-	.glow-option.active::before {
-		opacity: 1;
-	}
-
-	.glow-option.active::after {
-		opacity: 0.9;
-		transform: scaleX(1);
-	}
-
-	.segment:active,
-	.flow-toggle:active,
-	.glow-trigger:active,
-	.glow-option:active {
-		transform: scale(0.97);
-	}
-
-	.segment span,
-	.glow-trigger span,
-	.glow-option span,
-	.toggle-text {
-		overflow: hidden;
-		font-size: 13px;
-		font-weight: 650;
-		line-height: 1;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
-
-	.flow-toggle {
-		grid-template-columns: 18px auto 42px;
-		gap: 8px;
-		min-width: 120px;
-		padding: 0 9px 0 12px;
-		border-radius: 19px;
-		background: var(--segment-bg);
-	}
-
-	.toggle-rail {
-		position: relative;
-		width: 40px;
-		height: 22px;
-		border-radius: 999px;
-		background: var(--rail-bg);
-		box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1) inset;
-	}
-
-	.toggle-dot {
-		position: absolute;
-		top: 4px;
-		left: 4px;
-		width: 14px;
-		height: 14px;
-		border-radius: 999px;
-		background: var(--rail-dot);
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
-		transition:
-			transform 210ms cubic-bezier(0.16, 1, 0.3, 1),
-			background 180ms ease,
-			box-shadow 180ms ease;
-	}
-
-	.flow-toggle.active .toggle-dot {
-		background: rgb(255, 193, 122);
-		box-shadow:
-			0 0 14px rgba(255, 132, 58, 0.52),
-			0 2px 8px rgba(0, 0, 0, 0.2);
-		transform: translateX(18px);
-	}
-
-	.github-link {
-		position: relative;
-		width: 42px;
-		place-items: center;
-		overflow: hidden;
-		border-radius: 16px;
-		background:
-			radial-gradient(circle at 28% 18%, rgba(255, 255, 255, 0.12), transparent 36%),
-			var(--segment-bg);
-		color: var(--control-ink);
-		box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset;
-		isolation: isolate;
-	}
-
-	.github-link::before,
-	.github-link::after {
-		position: absolute;
-		content: '';
-		pointer-events: none;
-		transition:
-			opacity 180ms ease,
-			transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
-	}
-
-	.github-link::before {
-		inset: -1px;
-		z-index: -2;
-		border-radius: inherit;
-		background:
-			radial-gradient(circle at 50% 20%, rgba(255, 240, 215, 0.2), transparent 38%),
-			linear-gradient(135deg, rgba(255, 145, 72, 0.2), rgba(255, 224, 160, 0.08));
-		opacity: 0;
-	}
-
-	.github-link::after {
-		left: 10px;
-		right: 10px;
-		bottom: 5px;
-		height: 2px;
-		border-radius: 999px;
-		background: linear-gradient(90deg, transparent, rgba(255, 166, 92, 0.78), transparent);
-		filter: blur(1.5px);
-		opacity: 0;
-		transform: scaleX(0.5);
-	}
-
-	.github-link svg {
-		width: 20px;
-		height: 20px;
-		fill: currentColor;
-		filter: drop-shadow(0 0 10px rgba(255, 178, 110, 0.16));
-	}
-
-	.github-link:hover,
-	.github-link:focus-visible {
-		border-color: rgba(255, 190, 122, 0.32);
-		box-shadow:
-			0 0 24px rgba(255, 132, 58, 0.14),
-			0 1px 0 rgba(255, 255, 255, 0.14) inset;
-	}
-
-	.github-link:hover::before,
-	.github-link:focus-visible::before,
-	.github-link:hover::after,
-	.github-link:focus-visible::after {
-		opacity: 1;
-		transform: scaleX(1);
-	}
-
-	.github-link:active {
-		transform: scale(0.97);
 	}
 
 	.demo {
@@ -1128,127 +420,36 @@
 		place-items: center;
 	}
 
+	.stage-wrap {
+		display: flex;
+		flex-direction: column;
+		gap: clamp(18px, 3vh, 30px);
+		align-items: center;
+		width: 100%;
+	}
+
 	@media (max-width: 900px) {
 		.scene {
-			gap: 32px;
+			gap: 20px;
 			padding: 22px 18px 32px;
 		}
 
 		.scene::after {
 			display: none;
 		}
-
-		.controls {
-			width: min(100%, 640px);
-			border-radius: 24px;
-			backdrop-filter: none;
-			-webkit-backdrop-filter: none;
-		}
-
-		.glow-menu {
-			backdrop-filter: none;
-			-webkit-backdrop-filter: none;
-		}
-
-		.control-group,
-		.control-group.grow,
-		.flow-group {
-			flex: 1 1 100%;
-			margin-left: 0;
-		}
-
-		.control-label {
-			width: 58px;
-		}
-
-		.segmented,
-		.segmented.three,
-		.glow-picker,
-		.flow-toggle {
-			flex: 1 1 auto;
-			width: auto;
-		}
-
-		.glow-menu {
-			grid-template-columns: repeat(3, minmax(0, 1fr));
-		}
 	}
 
 	@media (max-width: 520px) {
 		.scene {
-			gap: 24px;
+			gap: 18px;
 			padding: 18px 14px 24px;
-		}
-
-		.controls {
-			gap: 8px;
-			padding: 8px;
-			border-radius: 22px;
-		}
-
-		.control-group {
-			display: grid;
-			grid-template-columns: 54px minmax(0, 1fr);
-			gap: 8px;
-			width: 100%;
-		}
-
-		.segmented {
-			grid-auto-columns: minmax(0, 1fr);
-		}
-
-		.segment,
-		.glow-trigger,
-		.glow-option {
-			gap: 5px;
-			padding: 0 8px;
-		}
-
-		.segment span,
-		.glow-trigger span,
-		.glow-option span,
-		.toggle-text {
-			font-size: 12px;
-		}
-
-		.glow-menu {
-			grid-template-columns: repeat(3, minmax(0, 1fr));
-			max-height: min(340px, calc(100dvh - 292px));
-		}
-
-		.flow-toggle {
-			grid-template-columns: 18px auto 40px;
-			width: 100%;
-		}
-	}
-
-	@media (max-width: 360px) {
-		.segmented.three .segment {
-			grid-template-columns: 17px;
-			padding: 0;
-		}
-
-		.segmented.three .segment span {
-			position: absolute;
-			width: 1px;
-			height: 1px;
-			padding: 0;
-			overflow: hidden;
-			clip: rect(0, 0, 0, 0);
-			white-space: nowrap;
-			border: 0;
 		}
 	}
 
 	@media (max-height: 620px) and (orientation: landscape) {
 		.scene {
-			gap: 18px;
+			gap: 14px;
 			padding-block: 14px;
-		}
-
-		.controls {
-			transform: scale(0.94);
-			transform-origin: top center;
 		}
 	}
 </style>

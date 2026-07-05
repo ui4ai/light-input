@@ -1,0 +1,298 @@
+/*
+ * Per-effect accent palette for the demo glow rail.
+ *
+ * Each effect chip carries a four-token accent pack — --glow-a (dominant tint), --glow-b
+ * (secondary), --glow-border, --glow-shadow — read by the chip chrome in GlowRail.svelte. A chip
+ * with no pack falls back to the torch-orange base below (correct for `torch`, wrong for anything
+ * else), so demo/accents.test.ts asserts every GLOW_VARIANTS name resolves a pack here.
+ *
+ * The 32 classic..blueprint packs are ported verbatim from the pre-rail dropdown; the final six
+ * (spoiler, ghosttext, drift, art, scratch, kaleidoscope) are new and match each effect's own
+ * palette (see src/lib/effects/<name>/index.css): spoiler silver-lilac, ghosttext cold cyan, drift
+ * ember-red over blue night, art the four-pigment gouache set, scratch silver foil + prize gold,
+ * kaleidoscope the jewel-glass magenta/gold/cyan wedges.
+ *
+ * Keyed on `.glow-accent[data-glow='<name>']`; the base default lives on `.glow-accent` itself. This is
+ * a plain (unscoped) stylesheet imported by GlowRail so the tokens survive Svelte's scoping.
+ */
+
+.glow-accent {
+	--glow-a: rgba(255, 145, 72, 0.18);
+	--glow-b: rgba(255, 214, 145, 0.08);
+	--glow-border: rgba(255, 195, 139, 0.22);
+	--glow-shadow: rgba(255, 128, 58, 0.16);
+}
+
+.glow-accent[data-glow='candle'] {
+	--glow-a: rgba(255, 146, 45, 0.23);
+	--glow-b: rgba(255, 213, 116, 0.1);
+	--glow-border: rgba(255, 184, 91, 0.28);
+	--glow-shadow: rgba(255, 113, 36, 0.17);
+}
+
+.glow-accent[data-glow='lightning'] {
+	--glow-a: rgba(80, 219, 255, 0.22);
+	--glow-b: rgba(112, 93, 255, 0.12);
+	--glow-border: rgba(113, 218, 255, 0.3);
+	--glow-shadow: rgba(61, 205, 255, 0.16);
+}
+
+.glow-accent[data-glow='aurora'] {
+	--glow-a: rgba(80, 242, 190, 0.2);
+	--glow-b: rgba(139, 122, 255, 0.11);
+	--glow-border: rgba(102, 231, 198, 0.28);
+	--glow-shadow: rgba(62, 220, 180, 0.14);
+}
+
+.glow-accent[data-glow='plasma'] {
+	--glow-a: rgba(255, 79, 204, 0.2);
+	--glow-b: rgba(61, 227, 255, 0.12);
+	--glow-border: rgba(245, 99, 214, 0.28);
+	--glow-shadow: rgba(225, 76, 196, 0.15);
+}
+
+.glow-accent[data-glow='prism'] {
+	--glow-a: rgba(255, 199, 72, 0.19);
+	--glow-b: rgba(81, 171, 255, 0.13);
+	--glow-border: rgba(180, 205, 255, 0.25);
+	--glow-shadow: rgba(90, 174, 255, 0.14);
+}
+
+.glow-accent[data-glow='ember'] {
+	--glow-a: rgba(255, 82, 35, 0.21);
+	--glow-b: rgba(255, 155, 65, 0.1);
+	--glow-border: rgba(255, 111, 70, 0.27);
+	--glow-shadow: rgba(211, 63, 34, 0.16);
+}
+
+.glow-accent[data-glow='neon'] {
+	--glow-a: rgba(86, 255, 185, 0.2);
+	--glow-b: rgba(255, 70, 203, 0.11);
+	--glow-border: rgba(102, 240, 196, 0.28);
+	--glow-shadow: rgba(71, 240, 184, 0.15);
+}
+
+.glow-accent[data-glow='nebula'] {
+	--glow-a: rgba(155, 113, 255, 0.2);
+	--glow-b: rgba(255, 172, 88, 0.1);
+	--glow-border: rgba(174, 142, 255, 0.27);
+	--glow-shadow: rgba(143, 103, 255, 0.16);
+}
+
+.glow-accent[data-glow='smoke'] {
+	--glow-a: rgba(235, 244, 248, 0.28);
+	--glow-b: rgba(111, 132, 150, 0.18);
+	--glow-border: rgba(232, 241, 248, 0.3);
+	--glow-shadow: rgba(205, 225, 238, 0.18);
+}
+
+.glow-accent[data-glow='solar'] {
+	--glow-a: rgba(255, 199, 66, 0.28);
+	--glow-b: rgba(255, 74, 35, 0.14);
+	--glow-border: rgba(255, 204, 89, 0.34);
+	--glow-shadow: rgba(255, 154, 39, 0.22);
+}
+
+.glow-accent[data-glow='holo'] {
+	--glow-a: rgba(78, 236, 255, 0.25);
+	--glow-b: rgba(255, 63, 215, 0.16);
+	--glow-border: rgba(133, 238, 255, 0.32);
+	--glow-shadow: rgba(85, 219, 255, 0.2);
+}
+
+.glow-accent[data-glow='blackhole'] {
+	--glow-a: rgba(16, 13, 27, 0.52);
+	--glow-b: rgba(142, 90, 255, 0.16);
+	--glow-border: rgba(148, 120, 255, 0.34);
+	--glow-shadow: rgba(77, 48, 160, 0.24);
+}
+
+.glow-accent[data-glow='flame'] {
+	--glow-a: rgba(255, 74, 18, 0.33);
+	--glow-b: rgba(255, 205, 63, 0.14);
+	--glow-border: rgba(255, 105, 42, 0.42);
+	--glow-shadow: rgba(255, 60, 18, 0.28);
+}
+
+.glow-accent[data-glow='matrix'] {
+	--glow-a: rgba(56, 255, 124, 0.24);
+	--glow-b: rgba(4, 88, 38, 0.2);
+	--glow-border: rgba(93, 255, 151, 0.34);
+	--glow-shadow: rgba(46, 255, 119, 0.22);
+}
+
+.glow-accent[data-glow='snow'] {
+	--glow-a: rgba(221, 250, 255, 0.3);
+	--glow-b: rgba(80, 170, 255, 0.16);
+	--glow-border: rgba(210, 248, 255, 0.42);
+	--glow-shadow: rgba(120, 206, 255, 0.22);
+}
+
+.glow-accent[data-glow='toxic'] {
+	--glow-a: rgba(187, 255, 38, 0.34);
+	--glow-b: rgba(34, 255, 132, 0.18);
+	--glow-border: rgba(201, 255, 60, 0.44);
+	--glow-shadow: rgba(158, 255, 36, 0.28);
+}
+
+.glow-accent[data-glow='vortex'] {
+	--glow-a: rgba(70, 238, 255, 0.31);
+	--glow-b: rgba(255, 62, 220, 0.19);
+	--glow-border: rgba(113, 230, 255, 0.4);
+	--glow-shadow: rgba(82, 173, 255, 0.28);
+}
+
+.glow-accent[data-glow='bubblegum'] {
+	--glow-a: rgba(255, 92, 190, 0.34);
+	--glow-b: rgba(255, 190, 232, 0.2);
+	--glow-border: rgba(255, 138, 214, 0.44);
+	--glow-shadow: rgba(255, 88, 187, 0.28);
+}
+
+.glow-accent[data-glow='optic'] {
+	--glow-a: rgba(204, 238, 255, 0.28);
+	--glow-b: rgba(84, 118, 255, 0.18);
+	--glow-border: rgba(185, 218, 255, 0.4);
+	--glow-shadow: rgba(116, 150, 255, 0.26);
+}
+
+.glow-accent[data-glow='biolume'] {
+	--glow-a: rgba(41, 255, 214, 0.32);
+	--glow-b: rgba(66, 102, 255, 0.18);
+	--glow-border: rgba(91, 255, 221, 0.42);
+	--glow-shadow: rgba(39, 229, 215, 0.28);
+}
+
+.glow-accent[data-glow='ocean'] {
+	--glow-a: rgba(32, 206, 255, 0.34);
+	--glow-b: rgba(31, 92, 255, 0.2);
+	--glow-border: rgba(91, 222, 255, 0.44);
+	--glow-shadow: rgba(34, 184, 255, 0.28);
+}
+
+.glow-accent[data-glow='horror'] {
+	--glow-a: rgba(255, 32, 54, 0.3);
+	--glow-b: rgba(24, 0, 8, 0.34);
+	--glow-border: rgba(255, 64, 88, 0.42);
+	--glow-shadow: rgba(255, 20, 48, 0.26);
+}
+
+.glow-accent[data-glow='heart'] {
+	--glow-a: rgba(255, 70, 132, 0.33);
+	--glow-b: rgba(255, 152, 196, 0.19);
+	--glow-border: rgba(255, 104, 162, 0.44);
+	--glow-shadow: rgba(255, 62, 134, 0.28);
+}
+
+.glow-accent[data-glow='liquidglass'] {
+	--glow-a: rgba(224, 250, 255, 0.32);
+	--glow-b: rgba(154, 190, 255, 0.18);
+	--glow-border: rgba(225, 246, 255, 0.46);
+	--glow-shadow: rgba(164, 220, 255, 0.28);
+}
+
+.glow-accent[data-glow='android'] {
+	--glow-a: rgba(84, 255, 133, 0.31);
+	--glow-b: rgba(70, 220, 255, 0.18);
+	--glow-border: rgba(118, 255, 155, 0.44);
+	--glow-shadow: rgba(54, 232, 120, 0.26);
+}
+
+.glow-accent[data-glow='fontshift'] {
+	--glow-a: rgba(255, 232, 160, 0.28);
+	--glow-b: rgba(174, 116, 255, 0.16);
+	--glow-border: rgba(255, 220, 138, 0.42);
+	--glow-shadow: rgba(230, 172, 72, 0.24);
+}
+
+.glow-accent[data-glow='rorschach'] {
+	--glow-a: rgba(238, 241, 255, 0.24);
+	--glow-b: rgba(26, 18, 52, 0.26);
+	--glow-border: rgba(205, 210, 255, 0.36);
+	--glow-shadow: rgba(122, 116, 190, 0.22);
+}
+
+.glow-accent[data-glow='diffusion'] {
+	--glow-a: rgba(255, 140, 220, 0.25);
+	--glow-b: rgba(74, 224, 255, 0.18);
+	--glow-border: rgba(255, 160, 230, 0.38);
+	--glow-shadow: rgba(196, 86, 255, 0.24);
+}
+
+.glow-accent[data-glow='chromabloom'] {
+	--glow-a: rgba(255, 70, 120, 0.26);
+	--glow-b: rgba(45, 238, 255, 0.2);
+	--glow-border: rgba(255, 236, 92, 0.42);
+	--glow-shadow: rgba(255, 72, 150, 0.26);
+}
+
+.glow-accent[data-glow='infrared'] {
+	--glow-a: rgba(255, 74, 44, 0.31);
+	--glow-b: rgba(129, 70, 255, 0.2);
+	--glow-border: rgba(255, 108, 54, 0.42);
+	--glow-shadow: rgba(255, 78, 34, 0.26);
+}
+
+.glow-accent[data-glow='staged'] {
+	--glow-a: rgba(255, 244, 196, 0.34);
+	--glow-b: rgba(22, 18, 10, 0.22);
+	--glow-border: rgba(255, 232, 156, 0.44);
+	--glow-shadow: rgba(255, 218, 116, 0.26);
+}
+
+.glow-accent[data-glow='blueprint'] {
+	--glow-a: rgba(62, 154, 255, 0.3);
+	--glow-b: rgba(160, 232, 255, 0.16);
+	--glow-border: rgba(110, 194, 255, 0.42);
+	--glow-shadow: rgba(58, 142, 255, 0.24);
+}
+
+/* --- The six effects the pre-rail dropdown never styled (matched to each palette). --- */
+
+/* spoiler — brushed silver dust over a lilac veil. */
+.glow-accent[data-glow='spoiler'] {
+	--glow-a: rgba(196, 191, 224, 0.28);
+	--glow-b: rgba(157, 154, 188, 0.16);
+	--glow-border: rgba(210, 206, 236, 0.36);
+	--glow-shadow: rgba(150, 146, 196, 0.22);
+}
+
+/* ghosttext — cold cyan wisp on a night-blue field. */
+.glow-accent[data-glow='ghosttext'] {
+	--glow-a: rgba(158, 213, 227, 0.28);
+	--glow-b: rgba(120, 176, 210, 0.16);
+	--glow-border: rgba(176, 221, 233, 0.4);
+	--glow-shadow: rgba(112, 190, 214, 0.22);
+}
+
+/* drift — ember-red brake light over a blue-night vignette. */
+.glow-accent[data-glow='drift'] {
+	--glow-a: rgba(233, 65, 31, 0.3);
+	--glow-b: rgba(42, 117, 186, 0.2);
+	--glow-border: rgba(255, 108, 68, 0.4);
+	--glow-shadow: rgba(214, 58, 30, 0.24);
+}
+
+/* art — the four gouache pigments (terracotta lead, blue counter). */
+.glow-accent[data-glow='art'] {
+	--glow-a: rgba(227, 103, 76, 0.28);
+	--glow-b: rgba(90, 132, 212, 0.18);
+	--glow-border: rgba(232, 150, 110, 0.4);
+	--glow-shadow: rgba(207, 168, 86, 0.24);
+}
+
+/* scratch — brushed silver foil with a warm prize-gold edge. */
+.glow-accent[data-glow='scratch'] {
+	--glow-a: rgba(213, 216, 219, 0.3);
+	--glow-b: rgba(222, 175, 86, 0.2);
+	--glow-border: rgba(224, 227, 231, 0.42);
+	--glow-shadow: rgba(200, 168, 96, 0.22);
+}
+
+/* kaleidoscope — mirrored jewel glass (magenta wedge, cyan wedge). */
+.glow-accent[data-glow='kaleidoscope'] {
+	--glow-a: rgba(219, 67, 128, 0.3);
+	--glow-b: rgba(51, 206, 230, 0.2);
+	--glow-border: rgba(230, 120, 168, 0.42);
+	--glow-shadow: rgba(200, 90, 150, 0.26);
+}
