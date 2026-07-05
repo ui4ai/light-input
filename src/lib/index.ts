@@ -8,6 +8,16 @@
 // bundlers dedupe it to a single copy.
 export { default as GhostInput } from './GhostInput.svelte';
 
+// GhostInput's public snippet/callback surface. `CaretState` is what a custom `caret` snippet
+// receives; `AcceptDetail` is the `onaccept` callback payload. These live in a plain .ts module so
+// svelte-package emits them into dist/ (a type declared inside the component's <script> would not
+// be re-exportable from the package root).
+export type { CaretState, AcceptDetail } from './input/types';
+
+// The custom completion-source function type (the `complete` prop). Re-exported so a consumer can
+// annotate their own `complete` implementation against the exact signature the component expects.
+export type { CompleteFn } from './input/completion.svelte';
+
 // The autocomplete contract: types (GlowVariant, ThemeMode, LoadingGlow, VisualState,
 // CompletionMode, CompletionResponse, ...), tunable constants, the LRU CompletionCache, and the
 // pure completion/normalization helpers consumers need to drive or extend the component.

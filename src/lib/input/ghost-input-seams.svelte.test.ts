@@ -14,6 +14,7 @@ import { flushSync, mount, tick, unmount } from 'svelte';
 import GhostInput from '$lib/GhostInput.svelte';
 import CaretSnippetHarness from './__fixtures__/CaretSnippetHarness.svelte';
 import WaitingSnippetHarness from './__fixtures__/WaitingSnippetHarness.svelte';
+import BindValueHarness from './__fixtures__/BindValueHarness.svelte';
 import EffectLayerA from './__fixtures__/EffectLayerA.svelte';
 import EffectLayerB from './__fixtures__/EffectLayerB.svelte';
 import {
@@ -340,6 +341,122 @@ describe('GhostInput W6 seams', () => {
 				expect(m.stage().getAttribute('data-state')).toBe('waiting');
 				expect(m.target.querySelector('.caret-origin-glow')).toBeNull();
 				expect(m.target.querySelector('.custom-waiting')).toBeNull();
+			} finally {
+				m.destroy();
+			}
+		});
+	});
+
+	describe('bind:value', () => {
+		// The harness owns a reactive `text` state two-way bound to GhostInput's `value`, mirrors it
+		// into an <output class="bound"> probe, and exports setValue/getValue.
+		type BoundHarness = MountedInput & {
+			exports: { setValue(v: string): void; getValue(): string };
+			bound: () => string;
+		};
+
+		async function mountBound(props: Record<string, unknown>): Promise<BoundHarness> {
+			const target = document.createElement('div');
+			document.body.appendChild(target);
+			const component = mount(BindValueHarness, { target, props }) as unknown as {
+				setValue(v: string): void;
+				getValue(): string;
+			};
+			await drainTimers();
+			const input = target.querySelector('input') as HTMLInputElement;
+			return {
+				target,
+				input,
+				component: component as unknown as MountedInput['component'],
+				exports: component,
+				stage: () => target.querySelector('.stage') as HTMLElement,
+				html: () => (target.querySelector('.stage') as HTMLElement).outerHTML,
+				bound: () => (target.querySelector('output.bound') as HTMLElement).textContent ?? '',
+				destroy: () => {
+					unmount(component as unknown as Parameters<typeof unmount>[0]);
+					target.remove();
+				}
+			};
+		}
+
+		it('reflects typing OUT to the bound prop (input -> prop)', async () => {
+			const m = await mountBound({ completionMode: 'demo' });
+			try {
+				await typeDemoInto(m, READY_PREFIX);
+				// The scripted demo pipeline rebuilds `value` to the typed prefix; the binding must
+				// surface it on the parent's state (read through both the export and the DOM probe).
+				expect(m.input.value).toBe(READY_PREFIX);
+				expect(m.exports.getValue()).toBe(READY_PREFIX);
+				expect(m.bound()).toBe(READY_PREFIX);
+			} finally {
+				m.destroy();
+			}
+		});
+
+		it('reflects a parent SET back into the input (prop -> input)', async () => {
+			const m = await mountBound({ completionMode: 'demo' });
+			try {
+				m.exports.setValue('Hello there');
+				flushSync();
+				await tick();
+				flushSync();
+				// Setting the parent state must drive the <input> value through the binding.
+				expect(m.input.value).toBe('Hello there');
+				expect(m.bound()).toBe('Hello there');
+			} finally {
+				m.destroy();
+			}
+		});
+
+		it('seeds the input from an initial bound value', async () => {
+			const m = await mountBound({ completionMode: 'demo', initialValue: 'seeded' });
+			try {
+				expect(m.input.value).toBe('seeded');
+				expect(m.exports.getValue()).toBe('seeded');
+			} finally {
+				m.destroy();
+			}
+		});
+	});
+
+	describe('onaccept', () => {
+		it('fires with { word, text } when the next word is Tab-accepted', async () => {
+			const onaccept = vi.fn();
+			const m = await mountGhost({ completionMode: 'demo', onaccept });
+			await typeDemo(m, READY_PREFIX);
+			try {
+				expect(m.stage().getAttribute('data-state')).toBe('ready');
+				// Tab accepts the next word. For the demo phrase, "Let's make so" + suggestion
+				// "mething that actually makes a difference" => accepted word "mething".
+				m.input.dispatchEvent(
+					new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true })
+				);
+				await tick();
+				flushSync();
+
+				expect(onaccept).toHaveBeenCalledTimes(1);
+				const detail = onaccept.mock.calls[0][0] as { word: string; text: string };
+				expect(detail.word).toBe('mething');
+				expect(detail.text).toBe("Let's make something");
+				// The payload text equals the input value after acceptance.
+				expect(detail.text).toBe(m.input.value);
+			} finally {
+				m.destroy();
+			}
+		});
+
+		it('does not fire without a ready suggestion', async () => {
+			const onaccept = vi.fn();
+			const m = await mountGhost({ completionMode: 'demo', onaccept });
+			try {
+				// No text typed => no suggestion => Tab is a no-op for acceptance.
+				m.input.focus();
+				m.input.dispatchEvent(
+					new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true })
+				);
+				await tick();
+				flushSync();
+				expect(onaccept).not.toHaveBeenCalled();
 			} finally {
 				m.destroy();
 			}

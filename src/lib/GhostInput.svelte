@@ -4,7 +4,7 @@
 	// same file, and bundlers dedupe it to one copy so nothing loads twice. Relative imports only —
 	// this component ships in the package, so it must not depend on the $lib alias.
 	import './effects/core.css';
-	import { tick } from 'svelte';
+	import { tick, untrack } from 'svelte';
 	import {
 		DEFAULT_DEBOUNCE_MS,
 		DEMO_COMPLETION_TEXT,
@@ -23,20 +23,22 @@
 	import { isScriptedInput, scriptedKeyInput } from './input/demo-script';
 	import { ghostGlyphs } from './input/glyphs';
 	import { SelectionTracker } from './input/selection.svelte';
+	import type { AcceptDetail, CaretState } from './input/types';
 	import type { EffectDefinition } from './effects/types';
 	import type { Component, Snippet } from 'svelte';
 
-	/** State passed to a custom `caret` snippet so it can mirror the built-in caret's classes. */
-	interface CaretState {
-		/** The input is focused (the default caret adds `.active` and blinks). */
-		focused: boolean;
-		/** A prediction request is in flight (the default caret adds `.thinking`). */
-		loading: boolean;
-		/** A suggestion is showing (the default caret adds `.steady` and stops blinking). */
-		ready: boolean;
-	}
-
 	interface Props {
+		/**
+		 * The input's text. Two-way bindable (`bind:value`): the parent can read what the user typed
+		 * and set it programmatically. Prediction fires only when the caret sits at the end, so
+		 * setting this to a value the user is not editing-at-end simply won't trigger a suggestion.
+		 */
+		value?: string;
+		/**
+		 * Minimum trimmed length before a prediction is scheduled, compared **strictly greater-than**:
+		 * a suggestion is requested only once `value.trim().length > minChars` (so the default `2`
+		 * needs a 3rd non-space character).
+		 */
 		minChars?: number;
 		maxChars?: number;
 		debounceMs?: number;
@@ -71,14 +73,25 @@
 		/** Render override for the caret element (the default `.caret` span is used when omitted). */
 		caret?: Snippet<[CaretState]>;
 		/**
-		 * Render override for the waiting-indicator children (the `.caret-origin-glow` subtree). Only
-		 * rendered where the default torch stack would render — i.e. never when `loadingGlow='none'`.
+		 * Render override for the waiting-indicator children (the six `.torch-*` beams inside
+		 * `.caret-origin-glow`). It renders only where the default torch stack would — i.e. only while
+		 * the caret glow is shown: the `waiting` state with `loadingGlow='torch'`. With
+		 * `loadingGlow='field'` or `'none'` the caret glow has no `data-mode='waiting'` wrapper, so
+		 * the waiting indicator (snippet or default beams) does not render there. (The READY-mode
+		 * caret glow is a separate subtree and is unaffected by this snippet.)
 		 */
 		waiting?: Snippet;
+		/**
+		 * Fired each time a word is accepted (Tab / → / the mobile accept button). `word` is the
+		 * accepted next word (with any leading space); `text` is the full input value after it is
+		 * appended. Lowercase per Svelte 5 callback-prop convention.
+		 */
+		onaccept?: (detail: AcceptDetail) => void;
 	}
 
 
 	let {
+		value = $bindable(''),
 		minChars = MIN_INPUT_CHARS,
 		maxChars = MAX_INPUT_CHARS,
 		debounceMs = DEFAULT_DEBOUNCE_MS,
@@ -95,7 +108,8 @@
 		touchAccept = true,
 		autofocus = true,
 		caret = undefined,
-		waiting = undefined
+		waiting = undefined,
+		onaccept = undefined
 	}: Props = $props();
 
 	// Effect sugar: an explicit `glow`/`layer` prop always wins; otherwise fall back to the effect's
@@ -105,7 +119,6 @@
 	const Layer = $derived(layer ?? effectDef?.layer);
 
 	let inputEl = $state<HTMLInputElement>();
-	let value = $state('');
 	let focused = $state(false);
 	let composing = $state(false);
 	let visualKey = '';
@@ -273,10 +286,15 @@
 		if (!showGhost || !ghost.next) return;
 
 		const rest = ghost.rest;
-		value += ghost.next;
+		const word = ghost.next;
+		value += word;
 		engine.suggestion = rest;
 		engine.error = '';
 		engine.igniteKey += 1;
+
+		// Notify the host of the accepted word and the resulting value. Fired after the value update
+		// so `text` is the post-acceptance input value, before the async caret/selection sync below.
+		onaccept?.({ word, text: value });
 
 		await tick();
 		if (!inputEl) return;
@@ -296,7 +314,11 @@
 		};
 
 		document.addEventListener('selectionchange', handleSelectionChange);
-		if (autofocus) {
+		// `autofocus` is a MOUNT-ONLY switch: read it untracked so this effect never re-subscribes to
+		// it. Toggling the prop after mount must not re-run this effect and re-focus the input (which
+		// would steal host focus or cancel a live suggestion). The effect's only reactive dependency
+		// is `inputEl`, which is written exactly once when the <input> mounts.
+		if (untrack(() => autofocus)) {
 			queueMicrotask(() => {
 				el.focus();
 				syncSelection();
@@ -320,6 +342,10 @@
 	$effect(() => {
 		// The completion source is (endpoint, mode, complete-fn): changing any of them invalidates
 		// cached suggestions, since they may have come from a now-replaced backend.
+		// CAVEAT: `complete` is tracked by PRESENCE (`fn`/`none`), not identity — swapping one custom
+		// `complete` function for a DIFFERENT one (both truthy) leaves the LRU cache intact, so a key
+		// already cached by the previous function is still served. Change `endpoint` or `mode`, or
+		// remount, to force a clear when two custom sources can disagree on the same input.
 		const nextSourceKey = `${endpoint}|${completionMode}|${complete ? 'fn' : 'none'}`;
 		if (nextSourceKey === sourceKey) return;
 		sourceKey = nextSourceKey;

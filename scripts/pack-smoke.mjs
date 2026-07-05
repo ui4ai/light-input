@@ -137,13 +137,15 @@ try {
 		version: '0.0.0'
 	}, null, 2));
 
-	// Resolve svelte + vite + plugin from the repo's own node_modules so the install stays offline
-	// and fast; the consumer still resolves the tarball's exports map for '@ui4ai/light-input/*'.
+	// Resolve svelte + vite + plugin + typescript from the repo's own node_modules so the install
+	// stays offline and fast; the consumer still resolves the tarball's exports map for
+	// '@ui4ai/light-input/*'. typescript is used by step 6c (skipLibCheck:false tsc).
 	const svelteDir = path.join(REPO, 'node_modules', 'svelte');
 	const viteDir = path.join(REPO, 'node_modules', 'vite');
 	const pluginDir = path.join(REPO, 'node_modules', '@sveltejs', 'vite-plugin-svelte');
+	const typescriptDir = path.join(REPO, 'node_modules', 'typescript');
 	run('npm', ['install', '--no-audit', '--no-fund', '--prefer-offline', '--no-save',
-		tarballPath, svelteDir, viteDir, pluginDir], { cwd: proj });
+		tarballPath, svelteDir, viteDir, pluginDir, typescriptDir], { cwd: proj });
 
 	// Confirm the exports map resolves the per-effect subpath the way a consumer imports it.
 	const resolved = run('node', ['-e',
@@ -217,6 +219,85 @@ try {
 	check('SSR render emits the field anatomy', /class="[^"]*field/.test(ssrHtml) && /ghost-input/.test(ssrHtml),
 		`${ssrHtml.length} chars of html`);
 	void ssrBundle;
+
+	// ── 6c. Consumer type-check with skipLibCheck:false ────────────────────────────────────────
+	// The shipped .d.ts must not carry side-effect CSS imports (`import './index.css'` etc.): a
+	// consumer whose tsconfig sets skipLibCheck:false type-checks our declarations, and TypeScript
+	// then fails to resolve those `.css` specifiers (TS2882 / TS2307). scripts/fix-dts.mjs strips
+	// them during `npm run package`. This step proves the strip actually shipped AND that a strict
+	// consumer compiles cleanly against the package — including the README's typed complete() sample.
+	console.log('[pack-smoke] 6c. consumer type-check (skipLibCheck:false)');
+
+	// (i) Belt-and-braces: no shipped .d.ts in the installed package contains a bare side-effect CSS
+	//     import. (JSDoc example lines are `* import '...css'`, which this line-anchored regex skips.)
+	const installedPkg = path.join(proj, 'node_modules', '@ui4ai', 'light-input');
+	const cssImportInDts = /^\s*import\s+(['"])[^'"]+\.css\1\s*;\s*$/m;
+	const dtsWithCssImport = [];
+	const scanDts = (dir) => {
+		for (const entry of readdirSync(dir, { withFileTypes: true })) {
+			const full = path.join(dir, entry.name);
+			if (entry.isDirectory()) scanDts(full);
+			else if (entry.name.endsWith('.d.ts') && cssImportInDts.test(readFileSync(full, 'utf8'))) {
+				dtsWithCssImport.push(path.relative(installedPkg, full));
+			}
+		}
+	};
+	scanDts(path.join(installedPkg, 'dist'));
+	check('shipped .d.ts carry no side-effect CSS imports', dtsWithCssImport.length === 0,
+		dtsWithCssImport.length ? `offending: ${dtsWithCssImport.slice(0, 3).join(', ')}` : '');
+
+	// (ii) A strict consumer probe: imports the root types (incl. CompleteFn + the new snippet/
+	//      callback types) and a per-effect subpath, and reproduces the README complete() sample
+	//      VERBATIM so a regression in that sample's types trips here.
+	writeFileSync(path.join(proj, 'src', 'ts-probe.ts'),
+		`import { GhostInput, type CompleteFn, type CaretState, type AcceptDetail } from '${PKG_NAME}';\n` +
+		`import aurora from '${PKG_NAME}/effects/aurora';\n` +
+		`\n` +
+		`// README 'Completion source' sample — must type-check verbatim under strict + skipLibCheck:false.\n` +
+		`const complete: CompleteFn = async (text, { signal }) => {\n` +
+		`\tconst r = await fetch('/my/endpoint', { method: 'POST', body: text, signal });\n` +
+		`\tconst data = (await r.json()) as { completion: string };\n` +
+		`\treturn data.completion;\n` +
+		`};\n` +
+		`\n` +
+		`const caret: CaretState = { focused: true, loading: false, ready: false };\n` +
+		`const accept: AcceptDetail = { word: 'x', text: 'y' };\n` +
+		`const onaccept = (d: AcceptDetail): void => { void d; };\n` +
+		`\n` +
+		`// Reference every binding so noUnusedLocals is satisfied and imports are retained.\n` +
+		`export const refs = { GhostInput, aurora, complete, caret, accept, onaccept };\n`
+	);
+	writeFileSync(path.join(proj, 'tsconfig.probe.json'), JSON.stringify({
+		compilerOptions: {
+			module: 'esnext',
+			moduleResolution: 'bundler',
+			target: 'esnext',
+			strict: true,
+			skipLibCheck: false, // the whole point: type-check the package's own .d.ts
+			noUnusedLocals: true,
+			noEmit: true,
+			types: []
+		},
+		include: ['src/ts-probe.ts']
+	}, null, 2));
+
+	let tscOut = '';
+	let tscOk = true;
+	try {
+		tscOut = run('npx', ['tsc', '-p', 'tsconfig.probe.json'], { cwd: proj });
+	} catch (err) {
+		tscOk = false;
+		tscOut = `${err.stdout || ''}${err.stderr || ''}`;
+	}
+	// The load-bearing assertion: zero errors, and specifically zero errors originating in the
+	// installed package's declarations (node_modules/@ui4ai) — the exact class fix-dts prevents.
+	const pkgErrors = tscOut
+		.split('\n')
+		.filter((l) => /error TS\d+/.test(l) && /@ui4ai[\\/]/.test(l));
+	check('consumer tsc (skipLibCheck:false) passes with 0 errors', tscOk && !/error TS\d+/.test(tscOut),
+		tscOk ? '' : tscOut.split('\n').filter((l) => /error TS\d+/.test(l)).slice(0, 4).join(' | '));
+	check('no type errors originate in node_modules/@ui4ai', pkgErrors.length === 0,
+		pkgErrors.length ? pkgErrors.slice(0, 3).join(' | ') : '');
 
 	// ── summary ────────────────────────────────────────────────────────────────────────────────
 	console.log('');

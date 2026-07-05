@@ -109,7 +109,10 @@ export class CompletionCache {
 
 		while (this.#entries.size > this.limit) {
 			const oldestKey = this.#entries.keys().next().value;
-			if (!oldestKey) return;
+			// Guard the (impossible-while-size>limit) empty iterator, not falsiness: an empty-string
+			// key ('' — a legitimate cache key) is falsy but must still be evicted, so compare to
+			// undefined rather than using `!oldestKey`.
+			if (oldestKey === undefined) return;
 			this.#entries.delete(oldestKey);
 		}
 	}

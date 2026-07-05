@@ -1,4 +1,4 @@
-![light-input demo](static/demo.gif)
+![light-input demo](https://raw.githubusercontent.com/ui4ai/light-input/main/static/demo.gif)
 
 # @ui4ai/light-input
 
@@ -92,15 +92,21 @@ in one prop. The explicit form is the escape hatch — an explicit `glow` or `la
 machinery. When `complete` is set it replaces the `endpoint` fetch for `llm` mode:
 
 ```svelte
-<script>
-	const complete = async (text, { signal }) => {
+<script lang="ts">
+	import { GhostInput, type CompleteFn } from '@ui4ai/light-input';
+
+	const complete: CompleteFn = async (text, { signal }) => {
 		const r = await fetch('/my/endpoint', { method: 'POST', body: text, signal });
-		return (await r.json()).completion; // raw continuation; the component normalizes it
+		const data = (await r.json()) as { completion: string };
+		return data.completion; // raw continuation; the component normalizes it
 	};
 </script>
 
 <GhostInput {complete} />
 ```
+
+`CompleteFn` is exported from the package root, so your `complete` type-checks against the exact
+signature the component expects (`(text: string, ctx: { signal: AbortSignal }) => Promise<string>`).
 
 **Thinking indicator.** `loadingGlow` chooses where the "thinking" light shows while the model works:
 `"torch"` (a weak flashlight warming up from the caret — the default), `"field"` (the whole input
@@ -127,9 +133,12 @@ indicator's contents, and every other node stays byte-identical to the built-in 
 The `waiting` snippet renders only where the default torch stack would — so with `loadingGlow="none"`
 neither the snippet nor the default beams appear (style the field instead).
 
-**Other props:** `theme` (`"dark"` | `"light"`), `lightFlow` (keep the flow/particle motion drifting;
-`false` for a steadier reveal), `completionMode` (`"llm"` | `"demo"`), `minChars` (2), `maxChars`
-(2000), `debounceMs` (260), `placeholder`, `touchAccept` (the mobile accept button).
+**Other props:** `value` (two-way bindable input text — `bind:value`), `onaccept` (callback
+`({ word, text }) => void`, fired when a word is accepted), `theme` (`"dark"` | `"light"`),
+`lightFlow` (keep the flow/particle motion drifting; `false` for a steadier reveal), `completionMode`
+(`"llm"` | `"demo"`), `minChars` (2 — compared **strictly greater-than**, so a prediction needs
+`value.trim().length > minChars`, i.e. 3+ non-space characters at the default), `maxChars` (2000),
+`debounceMs` (260), `placeholder`, `touchAccept` (the mobile accept button).
 
 ## Authoring your own effect
 
@@ -153,8 +162,8 @@ export default defineEffect({ meta }); // add `layer` for a DOM effect
 <GhostInput effect={myEffect} />
 ```
 
-`defineEffect` returns its argument unchanged and, in dev, warns if `meta.name` is not kebab-case (the
-name becomes the `data-glow` selector every rule keys on).
+`defineEffect` returns its argument unchanged and warns at runtime if `meta.name` is not kebab-case
+(the name becomes the `data-glow` selector every rule keys on).
 
 ## The effects
 
@@ -209,15 +218,16 @@ This repo is both the published library (`src/lib`) and its demo app (`src/route
 project.
 
 ```
+CONTRACT.md                 the effect-authoring reference (repo root; also shipped in the tarball)
 src/lib/                    the package (built by @sveltejs/package into dist/)
   GhostInput.svelte         the component
   input/                    the completion state machine (debounce, cache, abort, glyphs, selection)
+    types.ts                public snippet/callback types (CaretState, AcceptDetail)
   effects/
     core.css                the shared anatomy every effect builds on
     <name>/                 one folder per effect: index.css, meta.ts, index.ts, optional Layer.svelte
     index.ts                the ALL-39 registry (the ./effects entry)
     types.ts, define.ts     the effect contract types + defineEffect()
-    CONTRACT.md             the effect-authoring reference (also shipped in the tarball)
 src/routes/                 the demo app (landing gallery + a local OpenRouter proxy, not packaged)
 scripts/                    packaging + QA tooling (below)
 ```
@@ -254,13 +264,17 @@ the `@ui4ai` scope.
 
 ### Known limitation — `prefers-reduced-motion`
 
-The core anatomy honors `prefers-reduced-motion: reduce` for the default (torch) layers, but a
-per-effect module's own infinite animations **intentionally override it** — a `data-glow`-scoped
-module rule at (0,5,0) beats the media query's base-anatomy `animation: none` at (0,2,0). This is a
-deliberate parity choice for this `0.1.0`: the effects keep their visual identity, and full reduced-
-motion support (adding scoped `animation: none` under the media query for each module) is tracked as a
-follow-up. If motion sensitivity matters for your app, prefer `torch` or set `lightFlow={false}` to
-calm the flow/particle layers.
+Reduced-motion support is **partial** in `0.1.0`. `core.css` carries a
+`@media (prefers-reduced-motion: reduce)` block, but its `animation: none` rules are low-specificity
+(0,1,0)/(0,2,0), so they only win where nothing outranks them. In practice today: the **caret
+blink/think** and the **word / tail entrance** animations stop, but the **torch beams** and the
+**field wash** keep animating — the anatomy that drives them lives at `data-glow`-scoped (0,5,0)
+rules that outrank the media kill (and per-effect modules layer their own (0,5,0) animations on top).
+
+So an effect keeps its visual identity under reduced-motion rather than going still. Full parity —
+emitting a scoped `animation: none` at (0,5,0) under the media query for the core beams and every
+module — is a tracked follow-up. If motion sensitivity matters for your app, prefer `torch` and set
+`lightFlow={false}` to calm the flow/particle layers.
 
 ## License
 

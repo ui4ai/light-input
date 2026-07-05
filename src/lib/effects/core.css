@@ -11,8 +11,11 @@
 
    Placement is load-bearing: this block sits at the TOP of core.css — ABOVE the
    Torch token defaults, the generic light pack, the anatomy consumers and the
-   flow-off kill — mirroring today's bundle order where the component's compiled
-   CSS precedes core.css, which precedes legacy.css, which precedes the modules.
+   flow-off kill — mirroring the per-effect entry order every effect ships with:
+   each effect's index.ts imports '../core.css' FIRST, then its own './index.css',
+   so core (this chrome, then the anatomy defaults) always precedes the skin
+   modules in the cascade. (There is no separate legacy.css bundle any more — the
+   former classics graduated into their own per-effect modules.)
    Keyframes are plain @keyframes (the former -global- prefix is gone; names are
    unchanged — effect modules reference beam-open, beam-hot, torch-haze, etc. by
    name, and the classic var-packs name candle-flame, smoke-drift, … in their

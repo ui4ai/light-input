@@ -47,7 +47,7 @@ export const meta: EffectMeta = {
 };
 ```
 
-`defineEffect(effect)` is an identity helper: it returns its argument unchanged and, in dev, warns
+`defineEffect(effect)` is an identity helper: it returns its argument unchanged and warns at runtime
 if `meta.name` is not kebab-case (a malformed name silently matches no CSS). The `name` you choose is
 the value that lands in `data-glow` and that every selector in your `index.css` keys on — it MUST be
 globally unique across the effects a given app loads.
@@ -285,11 +285,17 @@ honored.
 
 Known limitation for `0.1.0`, recorded here so it is not mistaken for a bug. `core.css` carries a
 `@media (prefers-reduced-motion: reduce)` block that sets `animation: none` on the base anatomy
-(`.field::before`, `.caret`, `.torch-beam`, `.beam`, `.next-word`, `.tail`). Those rules are (0,2,0),
-so a per-effect module's own animation — set at `.stage[data-glow='x'] .field[data-glow] .beam-veil`
-(0,5,0) — **overrides** the reduced-motion kill. Net effect today: the default torch layers quiet
-down under reduced-motion, but each effect's signature animations keep running (a deliberate
-visual-identity choice, not real support).
+(`.field::before`, `.caret.active`, `.caret.thinking`, `.torch-beam`, `.beam`, `.next-word`,
+`.tail`). Those rules are only (0,1,0)/(0,2,0), so they win **only where nothing outranks them**.
+
+What actually stops today: the **caret blink/think** (`.caret.active`/`.caret.thinking` at (0,2,0),
+tied by the media rule which comes later) and the **word/tail entrances** (`.next-word`/`.tail` at
+(0,1,0), same story). What keeps animating: the **torch beams** and the **field wash** — the anatomy
+that drives them is applied at `.stage[data-glow] .field[data-glow] .torch-haze` (0,5,0) and the
+field-flow `::before` at ≥(0,4,1), both of which outrank the media kill. And a per-effect module's
+own animation — set at the same (0,5,0) band — likewise **overrides** the reduced-motion kill. Net
+effect: caret and entrance motion quiet down, but the beams, field wash, and each effect's signature
+animation keep running (a deliberate visual-identity choice for now, not full support).
 
 **If your effect must honor reduced-motion**, add your own scoped kill:
 
@@ -471,11 +477,14 @@ Replaces the six `.torch-*` beams inside `.caret-origin-glow`:
 ```
 
 **Gating (important):** the `waiting` snippet renders **only where the default torch stack would** —
-i.e. only when the caret glow is shown. That means it renders when a suggestion is showing
-(`ready`, `data-mode='ready'`) or while thinking with `loadingGlow='torch'`
-(`data-mode='waiting'`). With `loadingGlow='field'` or `loadingGlow='none'`, the `.caret-origin-glow`
-wrapper is not rendered at all, so **neither the snippet nor the default beams appear** — style the
-thinking indicator via the field instead (§6).
+i.e. only inside the caret glow, and only in its `data-mode='waiting'` form: the `waiting` state
+with `loadingGlow='torch'`. While **thinking** with `loadingGlow='field'` or `loadingGlow='none'`,
+no `data-mode='waiting'` caret glow is rendered, so **neither the snippet nor the default beams
+appear** as the thinking indicator — style the field instead (§6).
+
+Note this scopes only the *thinking* indicator. When a suggestion is showing (`ready`), the caret
+glow still renders in its `data-mode='ready'` form regardless of `loadingGlow` — but that READY
+subtree is not what the `waiting` snippet targets; the snippet is for the thinking phase.
 
 ---
 
@@ -499,6 +508,13 @@ prop is then ignored). Your function runs inside the same guards as the built-in
 cache, monotonic stale-response guard, and the shared `AbortSignal` (which fires when the request is
 superseded or the input blurs — honor it). Return the raw completion string; the component normalizes
 it exactly like an endpoint response. `demo` mode never calls `complete`.
+
+**Cache-invalidation caveat.** The component clears its LRU cache when the completion *source* key
+changes, but that key tracks `complete` by **presence** (`fn` vs `none`), not by identity. Swapping
+one custom `complete` function for a *different* one (both truthy) does **not** clear the cache, so a
+key already cached by the previous function is still served from cache. If two custom sources can
+return different completions for the same input, force a fresh fetch by also changing `endpoint` or
+`completionMode`, or by remounting.
 
 Custom effect names + persisted settings: an app that lets users pick effects should validate a
 persisted name against the effects it actually registered (built-ins from `GLOW_VARIANTS` plus its

@@ -121,4 +121,14 @@ describe('CompletionCache', () => {
 		expect(() => new CompletionCache(0)).toThrow(/positive integer/u);
 		expect(() => new CompletionCache(1.5)).toThrow(/positive integer/u);
 	});
+
+	it('evicts an empty-string key (falsy but valid) instead of leaking past the limit', () => {
+		const cache = new CompletionCache(1);
+		cache.set('', 'blank'); // '' is a legitimate, falsy key
+		cache.set('a', 'one'); // must evict the empty-string key, not bail on its falsiness
+
+		expect(cache.size).toBe(1);
+		expect(cache.get('')).toBeUndefined();
+		expect(cache.get('a')).toBe('one');
+	});
 });
