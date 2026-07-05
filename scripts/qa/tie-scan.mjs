@@ -262,21 +262,44 @@ function splitCoreCss(css) {
 // ---------------------------------------------------------------------------
 
 function moduleImportOrder(which) {
-	// Read effects/index.css @import order for the given arrangement. NEW reads the working-tree
-	// list (post-W2: core.css + 11 classic modules + 27 redesigned modules, NO legacy.css); OLD
-	// reads git HEAD's list (pre-W2: core.css + legacy.css + 27 redesigned modules, NO classic
-	// modules). The two lists genuinely differ now that the classics graduated out of legacy.css,
-	// so each side must use its own @import order for a faithful cascade reconstruction.
-	const indexCss =
-		which === 'new'
-			? readFileSync(path.join(EFFECTS_DIR, 'index.css'), 'utf8')
-			: gitShow('HEAD', 'src/lib/effects/index.css');
-	const imports = [...indexCss.matchAll(/@import\s+'\.\/([^']+)'/g)].map((m) => m[1]);
-	return imports; // e.g. NEW: ['core.css','candle/index.css', ...]; OLD: ['core.css','legacy.css', ...]
+	// Derive the effect-CSS cascade order for the given arrangement. Since W5 the aggregate flows
+	// through JS entries: effects/index.ts statically imports every effect entry in cascade order
+	// and each entry imports '../core.css' then './index.css'. When an arrangement still carries
+	// the old effects/index.css aggregator (pre-W5 git refs), fall back to its @import list.
+	const read = (relPath) => {
+		try {
+			return which === 'new'
+				? readFileSync(path.join(REPO, relPath), 'utf8')
+				: gitShow('HEAD', relPath);
+		} catch {
+			return null;
+		}
+	};
+
+	const indexCss = read('src/lib/effects/index.css');
+	if (indexCss !== null) {
+		return [...indexCss.matchAll(/@import\s+'\.\/([^']+)'/g)].map((m) => m[1]);
+	}
+
+	const registry = read('src/lib/effects/index.ts');
+	if (registry === null) {
+		throw new Error(`cannot determine module import order for arrangement '${which}'`);
+	}
+	const names = [...registry.matchAll(/from\s+'\.\/([a-z-]+)\/index\.js'/g)].map((m) => m[1]);
+	const order = ['core.css'];
+	for (const name of names) {
+		// torch's entry imports only core.css — it ships no skin of its own.
+		if (read(`src/lib/effects/${name}/index.css`) !== null) order.push(`${name}/index.css`);
+	}
+	return order;
 }
 
 function gitShow(ref, relPath) {
-	return execFileSync('git', ['show', `${ref}:${relPath}`], { cwd: REPO, encoding: 'utf8' });
+	return execFileSync('git', ['show', `${ref}:${relPath}`], {
+		cwd: REPO,
+		encoding: 'utf8',
+		stdio: ['ignore', 'pipe', 'pipe']
+	});
 }
 
 function extractComponentStyle(svelteSource) {
@@ -332,11 +355,13 @@ function buildArrangement(which) {
 			guards.push(c1.guard, c2.guard);
 		}
 
-		// legacy.css (only OLD/HEAD has it — the classics live here pre-W2).
-		const legacyCss = read('legacy.css');
-		const lg = extractRules(legacyCss, { file: 'legacy.css', section: 'legacy' });
-		all.push(...lg.rules);
-		guards.push(lg.guard);
+		// legacy.css (only pre-W2 arrangements have it — the classics lived there).
+		if (importOrder.includes('legacy.css')) {
+			const legacyCss = read('legacy.css');
+			const lg = extractRules(legacyCss, { file: 'legacy.css', section: 'legacy' });
+			all.push(...lg.rules);
+			guards.push(lg.guard);
+		}
 	}
 
 	// modules (order is load-bearing but between-module order does not matter for ties; we keep
