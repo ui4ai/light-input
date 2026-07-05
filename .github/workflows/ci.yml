@@ -1,0 +1,22 @@
+# Continuous integration: run the full check suite on every push to main and every PR targeting
+# main. This is the gate that must be green before the Pages deploy runs and before a release can
+# be cut. See checks.yml for the actual steps.
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+# Cancel superseded runs on the same ref (a new push to a branch/PR obsoletes the previous one).
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Checks
+    uses: ./.github/workflows/checks.yml

@@ -281,6 +281,30 @@ its entrance pose. If your effect adds infinite motion on other layers, add a ma
 `.stage[data-glow='my-effect'][data-light-flow='off'] … { animation: none }` so "flow off" is
 honored.
 
+### `prefers-reduced-motion` — current parity (FOLLOW-UP)
+
+Known limitation for `0.1.0`, recorded here so it is not mistaken for a bug. `core.css` carries a
+`@media (prefers-reduced-motion: reduce)` block that sets `animation: none` on the base anatomy
+(`.field::before`, `.caret`, `.torch-beam`, `.beam`, `.next-word`, `.tail`). Those rules are (0,2,0),
+so a per-effect module's own animation — set at `.stage[data-glow='x'] .field[data-glow] .beam-veil`
+(0,5,0) — **overrides** the reduced-motion kill. Net effect today: the default torch layers quiet
+down under reduced-motion, but each effect's signature animations keep running (a deliberate
+visual-identity choice, not real support).
+
+**If your effect must honor reduced-motion**, add your own scoped kill:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+	.stage[data-glow='my-effect'] .field[data-glow] .beam-veil,
+	.stage[data-glow='my-effect'] .field[data-glow] .beam-hot {
+		animation: none;
+	}
+}
+```
+
+Making this the package default for all 39 effects (emitting the scoped `animation: none` at (0,5,0)
+under the media query in every module) is a tracked follow-up.
+
 ---
 
 ## 7. The var()-in-custom-property pitfall (read this)

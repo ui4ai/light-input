@@ -1,0 +1,43 @@
+# Reusable check suite for @ui4ai/light-input. Every entry point (CI on push/PR, the Pages deploy,
+# and the manual npm release) calls this so the exact same gate guards all of them — no drift
+# between "what CI runs" and "what actually ships".
+name: Checks
+
+on:
+  workflow_call:
+
+jobs:
+  verify:
+    name: svelte-check · tests · build · package · pack-smoke
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type-check (svelte-check)
+        run: npm run check
+
+      - name: Unit + contract tests
+        run: npm test
+
+      - name: Build demo (client)
+        run: npm run build
+
+      - name: Build GitHub Pages demo
+        run: npm run build:pages
+
+      - name: Package the library (svelte-package + publint)
+        run: npm run package
+
+      - name: Packaging smoke test (tarball + isolation + SSR)
+        run: npm run pack-smoke

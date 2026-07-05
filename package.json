@@ -3,6 +3,25 @@
 	"version": "0.1.0",
 	"description": "Ghost-text autocomplete input for Svelte 5, with 39 per-effect light skins you import one at a time.",
 	"license": "MIT",
+	"homepage": "https://ui4ai.github.io/light-input/",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ui4ai/light-input.git"
+	},
+	"bugs": {
+		"url": "https://github.com/ui4ai/light-input/issues"
+	},
+	"keywords": [
+		"svelte",
+		"svelte5",
+		"autocomplete",
+		"ghost-text",
+		"inline-completion",
+		"input",
+		"llm",
+		"copilot",
+		"effects"
+	],
 	"type": "module",
 	"svelte": "./dist/index.js",
 	"types": "./dist/index.d.ts",
@@ -27,6 +46,7 @@
 	},
 	"files": [
 		"dist",
+		"CONTRACT.md",
 		"!dist/**/*.test.*",
 		"!dist/**/*.spec.*",
 		"!dist/**/__fixtures__",

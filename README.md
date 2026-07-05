@@ -1,106 +1,267 @@
 ![light-input demo](static/demo.gif)
 
-# light-input
+# @ui4ai/light-input
 
-A small **Svelte 5 + SvelteKit** demo of an LLM ghost-text autocomplete. Type more
-than 2 characters and the next words are predicted by an LLM (via
-[OpenRouter](https://openrouter.ai)) and **ignite** — a warm light smoothly turns on
-and highlights the next word, Cursor / Apple-Intelligence style. Press **Tab** or
-**→** to accept the next word.
+A ghost-text autocomplete `<input>` for **Svelte 5** with **39 deep light effects** you import one at
+a time. Type, and the model's continuation **ignites** in place — a warm light turns on and highlights
+the next word, Cursor / Apple-Intelligence style. Press **Tab** or **→** to accept it, word by word.
 
-## Try it
+The component is the brain (transparent input + painted ghost layer + a small, robust completion state
+machine). Each effect is the skin: pure CSS, keyed on a `data-glow` attribute, plus an optional Svelte
+DOM layer for effects with live particles. Ship one effect and you pay ~24 KB of CSS; the other 38 stay
+out of your bundle.
 
-[Open the GitHub Pages demo](https://ui4ai.github.io/light-input/) — the hosted build
-is locked to **Demo** mode and does not call OpenRouter.
+**[▶ Live demo — all 39 effects](https://ui4ai.github.io/light-input/)** (hosted build runs a scripted
+demo, no backend).
 
-## Stack
+- Svelte 5 (runes) · zero runtime dependencies · one peer (`svelte`)
+- The glow is pure CSS; the SF/system font is native. Targets current Safari & Chrome.
 
-- Svelte 5 (runes) · SvelteKit 2 · Vite 8 · TypeScript
-- No UI/animation dependencies — the glow is pure CSS, the SF/system font is native.
-- Targets current Safari & Chrome.
-
-## Run it
+## Install
 
 ```sh
-npm install
-npm run dev -- --open
+npm install @ui4ai/light-input
 ```
 
-The OpenRouter key is read from `.env` (already created for this demo). To set your own:
+## Quick start
 
-```sh
-cp .env.example .env
-# then edit OPENROUTER_API_KEY (and optionally OPENROUTER_MODEL)
+Import the component and one effect. The effect's CSS rides along as a side-effect import, so there is
+nothing else to wire up:
+
+```svelte
+<script>
+	import { GhostInput } from '@ui4ai/light-input';
+	import aurora from '@ui4ai/light-input/effects/aurora';
+</script>
+
+<GhostInput effect={aurora} endpoint="/api/complete" />
 ```
 
-```ini
-OPENROUTER_API_KEY=your_openrouter_api_key_here
-OPENROUTER_MODEL=openai/gpt-4.1-mini  # any OpenRouter slug; fast models feel best
-LIGHT_INPUT_COMPLETION_MODE=llm       # set to demo to skip OpenRouter server-side
-LIGHT_INPUT_DEMO_COMPLETION=Let's make something that actually makes a difference
+Your `endpoint` receives `POST { text, mode }` and returns `{ completion: string }`. To plug in any
+other backend (a local model, a different API shape) without touching the state machine, pass a
+[`complete` function](#customization) instead.
+
+`torch` is the default effect and needs no import — its skin *is* the core anatomy:
+
+```svelte
+<GhostInput />
 ```
 
-> **Security:** the key lives **server-side only**. The browser talks to
-> `POST /api/complete`, which proxies to OpenRouter — the key is never shipped to the
-> client. The key in `.env` is temporary; rotate/revoke it when you're done.
+## Per-effect imports & tree-shaking
 
-For visual testing without spending tokens, switch the top control to **Demo**. That
-sends `mode: "demo"` to `/api/complete` and returns the fixed
-`LIGHT_INPUT_DEMO_COMPLETION` suffix without calling OpenRouter. Set
-`LIGHT_INPUT_COMPLETION_MODE=demo` to force this behavior on the server.
+There are two ways to bring in effects, and the difference is your bundle size:
 
-## How it works
+```ts
+// ✅ One effect — ~24 KB of CSS (core anatomy + that skin), minified. Nothing else ships.
+import aurora from '@ui4ai/light-input/effects/aurora';
+import matrix from '@ui4ai/light-input/effects/matrix'; // brings its DOM layer too
 
-| Piece | File |
+// ⚠️ The whole registry — every effect's CSS + both DOM layers. For galleries/pickers that
+//     show the full set (this is what the demo uses); do NOT reach for it to get one effect.
+import { effects, effectByName } from '@ui4ai/light-input/effects';
+```
+
+Each per-effect entry imports `../core.css` first, then its own skin, so the cascade is correct no
+matter your import order. The package declares `"sideEffects": ["**/*.css"]`, which keeps the CSS alive
+under tree-shaking while everything else stays shakeable — **per-effect imports are the performance
+mechanism**, not a footgun. Importing from the package root (`import { GhostInput }`) pulls only the
+component and `core.css`.
+
+CDN / no-bundler? The core anatomy is exposed directly at `@ui4ai/light-input/core.css`.
+
+## Customization
+
+Every knob below is a plain prop on `GhostInput`. Defaults reproduce the demo's behavior.
+
+**Focus.** The input focuses on mount by default (the demo relies on it). In a host app where stealing
+focus is rude, turn it off:
+
+```svelte
+<GhostInput autofocus={false} />
+```
+
+**Effect (sugar vs. explicit).** `effect={x}` sets `glow` to `x.meta.name` and `layer` to `x.layer`
+in one prop. The explicit form is the escape hatch — an explicit `glow` or `layer` always wins:
+
+```svelte
+<GhostInput effect={aurora} />                          <!-- sugar -->
+<GhostInput glow="aurora" layer={aurora.layer} />       <!-- explicit -->
+```
+
+**Completion source.** Swap the backend without forking the debounce / cache / abort / stale-guard
+machinery. When `complete` is set it replaces the `endpoint` fetch for `llm` mode:
+
+```svelte
+<script>
+	const complete = async (text, { signal }) => {
+		const r = await fetch('/my/endpoint', { method: 'POST', body: text, signal });
+		return (await r.json()).completion; // raw continuation; the component normalizes it
+	};
+</script>
+
+<GhostInput {complete} />
+```
+
+**Thinking indicator.** `loadingGlow` chooses where the "thinking" light shows while the model works:
+`"torch"` (a weak flashlight warming up from the caret — the default), `"field"` (the whole input
+warms), or `"none"` (invisible loading).
+
+```svelte
+<GhostInput loadingGlow="field" />
+```
+
+**Caret & waiting overrides (Svelte 5 snippets).** Replace just the caret element, or the thinking
+indicator's contents, and every other node stays byte-identical to the built-in markup:
+
+```svelte
+<GhostInput>
+	{#snippet caret({ focused, loading, ready })}
+		<span class="block-caret" data-ready={ready}></span>
+	{/snippet}
+	{#snippet waiting()}
+		<span class="orbit-spinner"></span>
+	{/snippet}
+</GhostInput>
+```
+
+The `waiting` snippet renders only where the default torch stack would — so with `loadingGlow="none"`
+neither the snippet nor the default beams appear (style the field instead).
+
+**Other props:** `theme` (`"dark"` | `"light"`), `lightFlow` (keep the flow/particle motion drifting;
+`false` for a steadier reveal), `completionMode` (`"llm"` | `"demo"`), `minChars` (2), `maxChars`
+(2000), `debounceMs` (260), `placeholder`, `touchAccept` (the mobile accept button).
+
+## Authoring your own effect
+
+An effect is **pure CSS plus optional DOM** — you never modify the component or `core.css`. You set
+custom properties and structural rules keyed on `[data-glow='<your-name>']`, and (if the look needs live
+DOM) ship one Svelte layer. The full reference — the state grammar, the class anatomy, every design
+token, and the cascade ladder — is in **[CONTRACT.md](CONTRACT.md)**, which ships inside the package.
+
+```ts
+// my-effect/index.ts
+import '@ui4ai/light-input/core.css'; // anatomy first (ordering invariant — see CONTRACT.md §5)
+import './index.css'; // your skin
+import { defineEffect } from '@ui4ai/light-input';
+import { meta } from './meta';
+
+export { meta };
+export default defineEffect({ meta }); // add `layer` for a DOM effect
+```
+
+```svelte
+<GhostInput effect={myEffect} />
+```
+
+`defineEffect` returns its argument unchanged and, in dev, warns if `meta.name` is not kebab-case (the
+name becomes the `data-glow` selector every rule keys on).
+
+## The effects
+
+39 built-ins, in the order they appear in the picker. Import each at
+`@ui4ai/light-input/effects/<name>`.
+
+| Effect | `name` | The look |
+| --- | --- | --- |
+| Torch | `torch` | The default warm flashlight; a soft beam warms on at the caret. (Core anatomy — no import.) |
+| Candle | `candle` | A warm flame at the caret: flickering haze, licking core, drifting smoke. |
+| Bolt | `lightning` | A strike across the caret — bolt haze, surging flow, crackling particles. |
+| Aurora | `aurora` | A slow curtain of light drifting across the caret. |
+| Plasma | `plasma` | An electric magenta/cyan bloom pulsing at the caret. |
+| Prism | `prism` | A spectral sweep of refracted color across the caret. |
+| Ember | `ember` | Glowing coals: warm haze, floating sparks, rolling smoke. |
+| Neon | `neon` | A buzzing tube of light scanning at the caret. |
+| Nebula | `nebula` | A slow galactic swirl of interstellar color. |
+| Smoke | `smoke` | Thick billows curling up from the caret. |
+| Solar | `solar` | A blazing corona: churning haze, molten core, sweeping flares. |
+| Holo | `holo` | An iridescent hologram scanning across the caret. |
+| Blackhole | `blackhole` | An accretion disk spins; light streams inward and dissolves at the horizon. |
+| Flame | `flame` | A gas-burner jet from the caret — blue nozzle and a buoyant rising plume. |
+| Matrix | `matrix` | Digital rain: falling glyph columns with a bright decoding head. *(DOM layer)* |
+| Snow | `snow` | A polar-night blizzard — parallax dot fields and hero crystals on the wind. |
+| Toxic | `toxic` | A radioactive acid puddle spreads under the word with a living meniscus. |
+| Vortex | `vortex` | A spacetime whirlpool — interfering spiral arms spin around the eye. |
+| Bubble Gum | `bubblegum` | A glossy gum bubble inflates from the caret and breathes behind the word. |
+| Optic | `optic` | Camera autofocus: the word arrives defocused with chromatic aberration, then racks sharp. |
+| Biolume | `biolume` | Deep-sea bioluminescence — marine snow sinks and plankton answers the text. |
+| Ocean | `ocean` | A breaker rolls in along the reveal with a ragged foam crest. |
+| Horror | `horror` | Dread by absence of light — darkness falls in hard steps over the field. |
+| Heart | `heart` | A cardiac monitor: the reveal is a lub-dub heartbeat, rim and layers pulsing. |
+| Liquid Glass | `liquidglass` | A refractive glass lozenge hovers over the word and magnifies it. |
+| Android | `android` | A mechanical split-flap board — flap cells clatter into the letters. |
+| Font Shift | `fontshift` | Kinetic typography: the type itself breathes and shifts — no glow. |
+| Rorschach | `rorschach` | A symmetric inkblot blooms and bleeds across a vertical fold axis. |
+| Diffusion | `diffusion` | A denoising sampler — latent RGB noise resolves into the word. |
+| Chroma Bloom | `chromabloom` | A gray world flowers: settled glyphs bloom into a living rainbow. |
+| Infrared | `infrared` | A thermal camera — glyph color is temperature, and the future reads as heat. |
+| Staged | `staged` | A theatre in stage blacks: a spotlight finds the word over breathing footlights. |
+| Blueprint | `blueprint` | A draftsman's board — the word is drawn onto a fine grid, then built. |
+| Spoiler | `spoiler` | A Telegram spoiler: particle dust hides the future; only the next word is revealed. |
+| Ghost Text | `ghosttext` | A spectral apparition — each glyph wafts in like a ghost through a wall. |
+| Drift | `drift` | Words arrive sideways in a controlled slide, then catch and settle. |
+| Art | `art` | A painting: the next word is wet pigment laid by a brush; the rest is a pencil sketch. |
+| Scratch | `scratch` | A lottery scratch card — foil covers the future; only the next word is cleared. |
+| Kaleidoscope | `kaleidoscope` | The future through an eyepiece — a mirrored mandala of colored glass. *(DOM layer)* |
+
+## Development
+
+This repo is both the published library (`src/lib`) and its demo app (`src/routes`), one SvelteKit
+project.
+
+```
+src/lib/                    the package (built by @sveltejs/package into dist/)
+  GhostInput.svelte         the component
+  input/                    the completion state machine (debounce, cache, abort, glyphs, selection)
+  effects/
+    core.css                the shared anatomy every effect builds on
+    <name>/                 one folder per effect: index.css, meta.ts, index.ts, optional Layer.svelte
+    index.ts                the ALL-39 registry (the ./effects entry)
+    types.ts, define.ts     the effect contract types + defineEffect()
+    CONTRACT.md             the effect-authoring reference (also shipped in the tarball)
+src/routes/                 the demo app (landing gallery + a local OpenRouter proxy, not packaged)
+scripts/                    packaging + QA tooling (below)
+```
+
+npm scripts:
+
+| Script | What it does |
 | --- | --- |
-| The component (transparent input + painted ghost layer + glow) | [`src/lib/GhostInput.svelte`](src/lib/GhostInput.svelte) |
-| Effect modules: core anatomy, per-effect CSS, optional DOM layers, registry | [`src/lib/effects/`](src/lib/effects) |
-| Shared autocomplete types, limits, and display helpers | [`src/lib/autocomplete.ts`](src/lib/autocomplete.ts) |
-| Server proxy + prompt to OpenRouter | [`src/lib/server/complete.ts`](src/lib/server/complete.ts) · [`src/lib/server/completion-request.ts`](src/lib/server/completion-request.ts) · [`src/lib/server/completion-protocol.ts`](src/lib/server/completion-protocol.ts) · [`src/lib/server/rate-limit.ts`](src/lib/server/rate-limit.ts) · [`src/routes/api/complete/+server.ts`](src/routes/api/complete/+server.ts) |
-| Demo page | [`src/routes/+page.svelte`](src/routes/+page.svelte) |
+| `npm run dev` | Run the demo app locally. |
+| `npm run build` / `build:pages` | Build the demo (client / GitHub Pages static). |
+| `npm run package` | `svelte-package` → `dist/`, then `publint`. |
+| `npm run pack-smoke` | End-to-end: pack the tarball, assert its contents (39 effects, no `src/`/server/qa), install it into a throwaway vite+svelte project, verify single-effect CSS isolation + budget and an SSR render. |
+| `npm test` | Vitest — unit tests plus the per-effect **contract test** (`src/lib/effects/contract.test.ts`) that parses every module and enforces `data-glow` gating, namespaced keyframes/`@property`, the registry order, and an infinite-animation budget. |
+| `npm run check` | `svelte-check`. |
 
-A few details that make it feel right:
+Visual-identity QA harness (`scripts/qa/`) — the guard that ~29 K lines of effect CSS render
+identically as they moved into per-effect modules:
 
-- **Gated + debounced.** Nothing fires until the text is longer than 2 characters; then
-  requests are debounced (~260 ms) and the previous in-flight request is aborted, which
-  also aborts the upstream OpenRouter call.
-- **Hardened proxy.** `POST /api/complete` rejects non-JSON bodies, malformed or
-  oversized requests, and overlong input, sends `Cache-Control: no-store`, applies a
-  bounded in-memory token-bucket rate limit, and returns sanitized errors instead of
-  upstream details.
-- **Stale-response guard.** A reply is dropped if you kept typing while it was in flight.
-- **The "ignite".** When a suggestion lands, layered blurred beams animate on at the
-  caret (`beam-open`, `beam-hot`, `word-reveal`, `tail-reveal`), the next word brightens,
-  the tail fades to the right, and the whole bar warms from within. Respects
-  `prefers-reduced-motion`.
-- **Loading light modes.** `GhostInput` defaults to `loadingGlow="torch"`, a weak
-  flashlight that warms up from the caret while the model is thinking. Use
-  `loadingGlow="field"` for the full-input warm-up, or `"none"` to keep loading invisible.
-- **Live demo controls.** The page exposes theme, thinking-glow, completion mode, glow
-  preset, and natural light-flow controls. Settings are persisted in `localStorage`.
-  `lightFlow` keeps the flashlight subtly drifting; turn it off for a steadier reveal.
-- **Touch accept.** On iPhone / coarse-pointer screens, a compact arrow button appears
-  inside the field when a suggestion is live. Tapping it accepts the next word, same as
-  `Tab` / `→` on a hardware keyboard.
-- **Correct spacing.** Chat APIs strip leading whitespace from replies, so the model uses
-  an explicit protocol: `JOIN:<continuation>` for same-word/suffix completions and
-  `SPACE:<continuation>` for next-word completions. The server parses that protocol and
-  does not use language-specific spacing heuristics. User text is sent to the model as a
-  JSON string data payload, not as free-form instructions.
+| Script | What it does |
+| --- | --- |
+| `qa:oracle` (`style-oracle.mjs`) | Drive the demo through all 39 effects × {dark,light} × {ready,waiting} = 156 combos in a frozen-animation snapshot; dump `getComputedStyle` for the full anatomy (incl. pseudo-elements) to one deterministic JSON per combo. |
+| `qa:diff` (`diff-oracle.mjs`) | Diff two oracle runs; the release gate is **zero diffs** against the baseline. |
+| `qa:shots` / `qa:diff:shots` | Screenshot matrix + pixel diff (`capture.mjs` / `diff-shots.mjs`). |
+| `tie-scan.mjs` | Structural cascade check: prove no equal-specificity tie flipped a winner as component CSS unscoped into `core.css`. |
+| `check-namespaces.mjs` | Assert `@keyframes` / `@property` names are globally unique across the whole effect bundle. |
 
-## Verify
+### Releasing
 
-```sh
-npm test
-npm run check
-npm run build
-```
+CI (`.github/workflows/ci.yml`) runs the full suite on every push/PR to `main`; the Pages deploy
+(`pages.yml`) and the manual npm release (`release.yml`) both gate on it. To publish: bump `version` in
+`package.json`, then run the **Release** workflow from the Actions tab — it re-runs the suite and
+`npm publish --provenance --access public`. Requires an `NPM_TOKEN` repo secret with publish rights to
+the `@ui4ai` scope.
 
-## Build
+### Known limitation — `prefers-reduced-motion`
 
-```sh
-npm run build && npm run preview
-```
+The core anatomy honors `prefers-reduced-motion: reduce` for the default (torch) layers, but a
+per-effect module's own infinite animations **intentionally override it** — a `data-glow`-scoped
+module rule at (0,5,0) beats the media query's base-anatomy `animation: none` at (0,2,0). This is a
+deliberate parity choice for this `0.1.0`: the effects keep their visual identity, and full reduced-
+motion support (adding scoped `animation: none` under the media query for each module) is tracked as a
+follow-up. If motion sensitivity matters for your app, prefer `torch` or set `lightFlow={false}` to
+calm the flow/particle layers.
 
-This uses `@sveltejs/adapter-auto`; swap in a concrete
-[adapter](https://svelte.dev/docs/kit/adapters) for your deploy target.
+## License
+
+MIT © ui4ai. See [LICENSE](LICENSE).

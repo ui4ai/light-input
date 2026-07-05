@@ -1,0 +1,69 @@
+# Manual npm release for @ui4ai/light-input.
+#
+# Trigger from the Actions tab (workflow_dispatch). It runs the FULL check suite first and only
+# publishes if every check passes, so a broken tree can never ship.
+#
+# One-time setup required in the repo settings:
+#   • Secret  NPM_TOKEN  — an npm automation/granular token with publish rights to the
+#     @ui4ai scope (Settings → Secrets and variables → Actions → New repository secret).
+#   • The workflow publishes with --provenance, which needs the `id-token: write` permission
+#     granted below and a runner on npm ≥ 9.5 (Node 24 ships a newer npm — fine).
+#
+# Versioning is manual: bump `version` in package.json (e.g. `npm version minor`) and push before
+# running this. The publish step is idempotent-safe — npm refuses to republish an existing version,
+# so a re-run after a partial failure will not double-publish.
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: 'Run npm publish with --dry-run only (no upload)'
+        type: boolean
+        default: false
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  # Reuse the exact CI gate. Publishing is blocked unless this succeeds.
+  checks:
+    name: Checks
+    uses: ./.github/workflows/checks.yml
+
+  publish:
+    name: Publish to npm
+    needs: checks
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # required for npm provenance
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # `prepublishOnly` (check + test + package) runs automatically as part of `npm publish`,
+      # building dist/ and re-validating before anything is uploaded.
+      - name: Publish (dry run)
+        if: ${{ inputs.dry-run }}
+        run: npm publish --provenance --access public --dry-run
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish
+        if: ${{ !inputs.dry-run }}
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
