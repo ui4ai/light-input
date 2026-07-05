@@ -1,5 +1,5 @@
 /* ============================================================
-   HEART v2 — "Кардиомонитор: the reveal IS a heartbeat"
+   HEART — "Кардиомонитор: the reveal IS a heartbeat"
    Not confetti — a cardiac monitor, tender but alive. The field
    is a dark warm burgundy-black vessel (never pink-washed) whose
    rose rim breathes on a LUB-DUB double beat (~1.1s:
@@ -48,7 +48,7 @@
    while the drawn trace rests visible. No capsule anywhere:
    layer-radius 0, every layer and pseudo dissolves through
    intersected left-fade x radial masks whose fades complete
-   INSIDE their boxes. Keyframes: heart-*-v2 only (legacy
+   INSIDE their boxes. Keyframes: heart-* only (legacy
    heart-*, heart-*-new stay untouched for legacy consumers).
    ============================================================ */
 
@@ -92,8 +92,8 @@
 		radial-gradient(ellipse 46% 34% at 26% 66%, rgba(255, 84, 142, 0.1), transparent 78%);
 	--haze-filter: blur(9px) saturate(1.15);
 	--haze-opacity: 0.8;
-	--haze-motion: heart-haze-beat-v2 1.1s cubic-bezier(0.45, 0.05, 0.55, 0.95) 1.3s infinite;
-	--torch-haze-motion: heart-wait-line-v2 3.2s ease-in-out infinite;
+	--haze-motion: heart-haze-beat 1.1s cubic-bezier(0.45, 0.05, 0.55, 0.95) 1.3s infinite;
+	--torch-haze-motion: heart-wait-line 3.2s ease-in-out infinite;
 	--haze-mask: linear-gradient(90deg, transparent 0, black 0.9em), radial-gradient(ellipse 52% 52% at 38% 52%, black 0 46%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
 	--body-width: 11em;
 	--body-height: 2.6em;
@@ -112,8 +112,8 @@
 		radial-gradient(ellipse 0.6em 0.4em at 0.5em 1.62em, rgba(255, 240, 246, 0.4), transparent 76%);
 	--core-filter: blur(4.5px) saturate(1.2);
 	--core-opacity: 0.9;
-	--core-motion: heart-hot-beat-v2 1.1s cubic-bezier(0.45, 0.05, 0.55, 0.95) 1.2s infinite;
-	--torch-core-motion: heart-wait-heart-v2 3.2s ease-in-out infinite;
+	--core-motion: heart-hot-beat 1.1s cubic-bezier(0.45, 0.05, 0.55, 0.95) 1.2s infinite;
+	--torch-core-motion: heart-wait-heart 3.2s ease-in-out infinite;
 	--core-mask: linear-gradient(90deg, transparent 0, black 0.3em), radial-gradient(ellipse 52% 52% at 34% 56%, black 0 48%, rgba(0, 0, 0, 0.5) 74%, transparent 94%);
 	--flow-width: 10em;
 	--flow-height: 2.6em;
@@ -124,7 +124,7 @@
 	--flow-filter: blur(6px) saturate(1.2);
 	--flow-low: 0;
 	--flow-high: 0.7;
-	--flow-motion: heart-draw-sweep-v2 900ms cubic-bezier(0.3, 0.6, 0.3, 1) 200ms both;
+	--flow-motion: heart-draw-sweep 900ms cubic-bezier(0.3, 0.6, 0.3, 1) 200ms both;
 	--flow-mask: linear-gradient(90deg, transparent 0, black 0.8em), radial-gradient(ellipse 50% 52% at 40% 54%, black 0 46%, rgba(0, 0, 0, 0.5) 72%, transparent 96%);
 	--spark-width: 8.5em;
 	--spark-height: 2.6em;
@@ -137,7 +137,7 @@
 	--spark-filter: blur(0.2px) drop-shadow(0 0 4px rgba(255, 100, 150, 0.45));
 	--spark-low: 0.1;
 	--spark-high: 0.75;
-	--spark-motion: heart-glint-v2 3.3s ease-in-out 2.2s infinite;
+	--spark-motion: heart-glint 3.3s ease-in-out 2.2s infinite;
 	--spark-mask: linear-gradient(90deg, transparent 0, black 0.6em), radial-gradient(ellipse 52% 52% at 42% 56%, black 0 50%, rgba(0, 0, 0, 0.5) 76%, transparent 96%);
 	--smoke-width: 12em;
 	--smoke-height: 2.6em;
@@ -148,7 +148,7 @@
 	--smoke-filter: blur(9px);
 	--smoke-opacity: 0.62;
 	--smoke-blend: normal;
-	--smoke-motion: heart-depth-breathe-v2 8.8s ease-in-out 1.4s infinite;
+	--smoke-motion: heart-depth-breathe 8.8s ease-in-out 1.4s infinite;
 	--smoke-mask: linear-gradient(90deg, transparent 0, black 0.9em), radial-gradient(ellipse 52% 54% at 40% 52%, black 0 48%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
 	--aux-width: 12em;
 	--aux-height: 2.6em;
@@ -159,7 +159,7 @@
 	--aux-filter: blur(0.2px);
 	--aux-opacity: 0.5;
 	--aux-blend: screen;
-	--aux-motion: heart-grid-breathe-v2 4.4s ease-in-out 1.1s infinite;
+	--aux-motion: heart-grid-breathe 4.4s ease-in-out 1.1s infinite;
 	--aux-mask: linear-gradient(90deg, transparent 0, black 0.9em), radial-gradient(ellipse 52% 52% at 40% 50%, black 0 44%, rgba(0, 0, 0, 0.5) 72%, transparent 94%);
 	--next-color: rgba(255, 238, 242, 0.96);
 	--next-shadow:
@@ -247,8 +247,8 @@
 .stage[data-glow='heart'] .field[data-glow][data-state='ready']::before {
 	opacity: var(--heart-vessel-o, 0.8);
 	animation:
-		heart-vessel-in-v2 500ms ease-out both,
-		heart-vessel-beat-v2 1.1s cubic-bezier(0.45, 0.05, 0.55, 0.95) 700ms infinite;
+		heart-vessel-in 500ms ease-out both,
+		heart-vessel-beat 1.1s cubic-bezier(0.45, 0.05, 0.55, 0.95) 700ms infinite;
 }
 
 /* Dissolve into the field's rounded clip, not the paint box; edge overlays
@@ -285,7 +285,7 @@
 
 /* Caret: rose-white needle, dipping softly twice per cycle with the beat. */
 .stage[data-glow='heart'] .field[data-glow] .caret.active {
-	animation: heart-caret-beat-v2 1.1s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+	animation: heart-caret-beat 1.1s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
 }
 
 /* THE EKG TRACE: flat lead-in -> P-wave arch -> QRS spike (two mirrored
@@ -345,8 +345,8 @@
 	opacity: var(--heart-trace-o);
 	transform: translateY(-50%);
 	animation:
-		heart-trace-draw-v2 820ms cubic-bezier(0.25, 0.6, 0.3, 1) 180ms both,
-		heart-trace-rest-v2 1.1s cubic-bezier(0.45, 0.05, 0.55, 0.95) 1.35s infinite;
+		heart-trace-draw 820ms cubic-bezier(0.25, 0.6, 0.3, 1) 180ms both,
+		heart-trace-rest 1.1s cubic-bezier(0.45, 0.05, 0.55, 0.95) 1.35s infinite;
 }
 
 /* THE LEADING DOT: one bright bead re-runs the resting line every couple of
@@ -378,7 +378,7 @@
 	mix-blend-mode: screen;
 	opacity: 0;
 	transform: translateY(-50%);
-	animation: heart-dot-travel-v2 2.2s linear 1.55s infinite;
+	animation: heart-dot-travel 2.2s linear 1.55s infinite;
 }
 
 /* ---------- Text is sacred: the word takes its pulse ---------- */
@@ -395,8 +395,8 @@
 	text-shadow: var(--next-shadow);
 	transform-origin: left 60%;
 	animation:
-		heart-word-in-v2 300ms cubic-bezier(0.16, 1, 0.3, 1) both,
-		heart-word-lubdub-v2 1.1s cubic-bezier(0.45, 0.05, 0.55, 0.95) 1.3s infinite;
+		heart-word-in 300ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		heart-word-lubdub 1.1s cubic-bezier(0.45, 0.05, 0.55, 0.95) 1.3s infinite;
 }
 
 /* Burgundy scrim under the glyphs: contrast insurance over the trace. */
@@ -415,7 +415,7 @@
 	mix-blend-mode: normal;
 	opacity: var(--heart-scrim-o);
 	transform: none;
-	animation: heart-scrim-in-v2 420ms ease-out both;
+	animation: heart-scrim-in 420ms ease-out both;
 }
 
 /* ONE HEART: a single glossy heart inflates at the caret with a springy
@@ -439,8 +439,8 @@
 	transform: translateY(-132%) scale(1);
 	transform-origin: 50% 60%;
 	animation:
-		heart-inflate-v2 640ms cubic-bezier(0.34, 1.56, 0.64, 1) 260ms both,
-		heart-organ-beat-v2 1.1s cubic-bezier(0.45, 0.05, 0.55, 0.95) 1.3s infinite;
+		heart-inflate 640ms cubic-bezier(0.34, 1.56, 0.64, 1) 260ms both,
+		heart-organ-beat 1.1s cubic-bezier(0.45, 0.05, 0.55, 0.95) 1.3s infinite;
 }
 
 /* BLUSH WAVE: per glyph via var(--i), staggered to ride under the trace
@@ -457,7 +457,7 @@
 	filter: none;
 	text-shadow: var(--next-shadow);
 	transform-origin: 50% 72%;
-	animation: heart-glyph-flush-v2 720ms cubic-bezier(0.3, 0.7, 0.3, 1) both;
+	animation: heart-glyph-flush 720ms cubic-bezier(0.3, 0.7, 0.3, 1) both;
 	animation-delay: calc(240ms + var(--i) * 80ms);
 }
 
@@ -471,7 +471,7 @@
 	text-shadow: 0 0 0.25em rgba(255, 140, 180, 0.4);
 	transform: none;
 	transform-origin: 50% 30%;
-	animation: heart-alt-sigh-v2 560ms cubic-bezier(0.4, 0.1, 0.6, 1) both;
+	animation: heart-alt-sigh 560ms cubic-bezier(0.4, 0.1, 0.6, 1) both;
 	animation-delay: calc(240ms + var(--i) * 80ms);
 }
 
@@ -491,7 +491,7 @@
 	opacity: 0;
 	transform: translate(0, 0) scale(0.35);
 	transform-origin: 50% 60%;
-	animation: heart-bud-v2 4.4s ease-out 2.6s infinite;
+	animation: heart-bud 4.4s ease-out 2.6s infinite;
 }
 
 /* Tail: dusty rose dim, masked fade completing inside the box — the flat
@@ -525,11 +525,11 @@
    beam-flow/spark, depth and grid ride beam-smoke/aux — the shared flow-off
    rules hide those.) */
 .stage[data-glow='heart'][data-light-flow='off'] .field[data-glow][data-state='ready']::before {
-	animation: heart-vessel-in-v2 500ms ease-out both;
+	animation: heart-vessel-in 500ms ease-out both;
 }
 
 .stage[data-glow='heart'][data-light-flow='off'] .field[data-glow] .prediction::before {
-	animation: heart-trace-draw-v2 820ms cubic-bezier(0.25, 0.6, 0.3, 1) 180ms both;
+	animation: heart-trace-draw 820ms cubic-bezier(0.25, 0.6, 0.3, 1) 180ms both;
 }
 
 .stage[data-glow='heart'][data-light-flow='off'] .field[data-glow] .prediction::after {
@@ -541,24 +541,24 @@
 }
 
 .stage[data-glow='heart'][data-light-flow='off'] .field[data-glow] .next-word {
-	animation: heart-word-in-v2 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
+	animation: heart-word-in 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .stage[data-glow='heart'][data-light-flow='off'] .field[data-glow] .next-word::before {
-	animation: heart-scrim-in-v2 420ms ease-out both;
+	animation: heart-scrim-in 420ms ease-out both;
 }
 
 .stage[data-glow='heart'][data-light-flow='off'] .field[data-glow] .next-word::after {
-	animation: heart-inflate-v2 640ms cubic-bezier(0.34, 1.56, 0.64, 1) 260ms both;
+	animation: heart-inflate 640ms cubic-bezier(0.34, 1.56, 0.64, 1) 260ms both;
 }
 
 .stage[data-glow='heart'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
-	animation: heart-glyph-flush-v2 720ms cubic-bezier(0.3, 0.7, 0.3, 1) both;
+	animation: heart-glyph-flush 720ms cubic-bezier(0.3, 0.7, 0.3, 1) both;
 	animation-delay: calc(240ms + var(--i) * 80ms);
 }
 
 .stage[data-glow='heart'][data-light-flow='off'] .field[data-glow] .next-word .glyph::after {
-	animation: heart-alt-sigh-v2 560ms cubic-bezier(0.4, 0.1, 0.6, 1) both;
+	animation: heart-alt-sigh 560ms cubic-bezier(0.4, 0.1, 0.6, 1) both;
 	animation-delay: calc(240ms + var(--i) * 80ms);
 }
 
@@ -696,8 +696,8 @@
 	text-shadow: var(--next-shadow);
 	transform-origin: left 60%;
 	animation:
-		heart-word-in-v2 300ms cubic-bezier(0.16, 1, 0.3, 1) both,
-		heart-word-lubdub-v2 1.1s cubic-bezier(0.45, 0.05, 0.55, 0.95) 1.3s infinite;
+		heart-word-in 300ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		heart-word-lubdub 1.1s cubic-bezier(0.45, 0.05, 0.55, 0.95) 1.3s infinite;
 }
 
 /* Paper scrim keeps the raspberry ink legible over the washes. */
@@ -706,7 +706,7 @@
 	filter: blur(5px);
 	mix-blend-mode: normal;
 	opacity: var(--heart-scrim-o);
-	animation: heart-scrim-in-v2 420ms ease-out both;
+	animation: heart-scrim-in 420ms ease-out both;
 }
 
 /* The heart as a wet rose-ink drop with a white specular. */
@@ -722,7 +722,7 @@
 .stage[data-theme='light'][data-glow='heart'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
 	color: var(--next-color);
 	text-shadow: var(--next-shadow);
-	animation-name: heart-glyph-flush-light-v2;
+	animation-name: heart-glyph-flush-light;
 }
 
 .stage[data-theme='light'][data-glow='heart'] .field[data-glow] .next-word .glyph::after {
@@ -758,11 +758,11 @@
 
 /* Light theme + flow off: re-win against the higher-specificity kills. */
 .stage[data-theme='light'][data-glow='heart'][data-light-flow='off'] .field[data-glow][data-state='ready']::before {
-	animation: heart-vessel-in-v2 500ms ease-out both;
+	animation: heart-vessel-in 500ms ease-out both;
 }
 
 .stage[data-theme='light'][data-glow='heart'][data-light-flow='off'] .field[data-glow] .prediction::before {
-	animation: heart-trace-draw-v2 820ms cubic-bezier(0.25, 0.6, 0.3, 1) 180ms both;
+	animation: heart-trace-draw 820ms cubic-bezier(0.25, 0.6, 0.3, 1) 180ms both;
 }
 
 .stage[data-theme='light'][data-glow='heart'][data-light-flow='off'] .field[data-glow] .prediction::after {
@@ -770,19 +770,19 @@
 }
 
 .stage[data-theme='light'][data-glow='heart'][data-light-flow='off'] .field[data-glow] .next-word {
-	animation: heart-word-in-v2 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
+	animation: heart-word-in 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .stage[data-theme='light'][data-glow='heart'][data-light-flow='off'] .field[data-glow] .next-word::before {
-	animation: heart-scrim-in-v2 420ms ease-out both;
+	animation: heart-scrim-in 420ms ease-out both;
 }
 
 .stage[data-theme='light'][data-glow='heart'][data-light-flow='off'] .field[data-glow] .next-word::after {
-	animation: heart-inflate-v2 640ms cubic-bezier(0.34, 1.56, 0.64, 1) 260ms both;
+	animation: heart-inflate 640ms cubic-bezier(0.34, 1.56, 0.64, 1) 260ms both;
 }
 
 .stage[data-theme='light'][data-glow='heart'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
-	animation: heart-glyph-flush-light-v2 720ms cubic-bezier(0.3, 0.7, 0.3, 1) both;
+	animation: heart-glyph-flush-light 720ms cubic-bezier(0.3, 0.7, 0.3, 1) both;
 	animation-delay: calc(240ms + var(--i) * 80ms);
 }
 
@@ -814,7 +814,7 @@
 	--flow-filter: blur(0.2px) drop-shadow(0 0 4px rgba(255, 80, 132, 0.45)) drop-shadow(-0.2em 0 4px rgba(255, 100, 150, 0.3));
 	--flow-low: 0;
 	--flow-high: 0.9;
-	--flow-motion: heart-wait-blip-v2 1.6s linear 400ms infinite;
+	--flow-motion: heart-wait-blip 1.6s linear 400ms infinite;
 	--flow-mask: linear-gradient(90deg, transparent 0, black 0.22em), radial-gradient(ellipse 52% 52% at 40% 54%, black 0 50%, rgba(0, 0, 0, 0.5) 74%, transparent 94%);
 	--spark-width: 2.4em;
 	--spark-height: 2.6em;
@@ -830,7 +830,7 @@
 	--smoke-filter: blur(10px);
 	--smoke-opacity: 0.5;
 	--smoke-blend: normal;
-	--smoke-motion: heart-wait-pool-v2 6.4s ease-in-out infinite;
+	--smoke-motion: heart-wait-pool 6.4s ease-in-out infinite;
 	--smoke-mask: linear-gradient(90deg, transparent 0, black 0.22em), radial-gradient(ellipse 50% 50% at 34% 50%, black 0 48%, transparent 94%);
 	--aux-opacity: 0;
 	--aux-motion: none;
@@ -859,9 +859,9 @@
 	--smoke-motion: none;
 }
 
-/* ---------- Keyframes (heart-*-v2) ---------- */
+/* ---------- Keyframes (heart-*) ---------- */
 /* The vessel wakes: rim light rises to its resting level. */
-@keyframes heart-vessel-in-v2 {
+@keyframes heart-vessel-in {
 	0% {
 		opacity: 0;
 	}
@@ -871,7 +871,7 @@
 }
 
 /* Lub-dub: the rim swells twice quickly, then a long diastole. */
-@keyframes heart-vessel-beat-v2 {
+@keyframes heart-vessel-beat {
 	0%,
 	38%,
 	100% {
@@ -891,7 +891,7 @@
 /* THE DRAW: segment widths grow left -> right — flat, P, flat, R upstroke,
    apex glow, S downstroke, flat, T, then the long run under the tail.
    Heights never move; only x extents draw. */
-@keyframes heart-trace-draw-v2 {
+@keyframes heart-trace-draw {
 	0% {
 		opacity: 0;
 		background-size:
@@ -1020,7 +1020,7 @@
 }
 
 /* The resting trace breathes with the beat — luminance only. */
-@keyframes heart-trace-rest-v2 {
+@keyframes heart-trace-rest {
 	0%,
 	40%,
 	100% {
@@ -1039,7 +1039,7 @@
 
 /* The leading dot re-runs the polyline: dips into the P bump, spikes hard
    at the QRS, eases over the T, fades out down the flat run. */
-@keyframes heart-dot-travel-v2 {
+@keyframes heart-dot-travel {
 	0% {
 		opacity: 0;
 		background-position: -0.8em 0em;
@@ -1088,7 +1088,7 @@
 }
 
 /* Warm haze over the trace zone pumps with the beat. */
-@keyframes heart-haze-beat-v2 {
+@keyframes heart-haze-beat {
 	0%,
 	38%,
 	100% {
@@ -1106,7 +1106,7 @@
 }
 
 /* The entry bloom at the caret takes the same pulse. */
-@keyframes heart-hot-beat-v2 {
+@keyframes heart-hot-beat {
 	0%,
 	38%,
 	100% {
@@ -1124,7 +1124,7 @@
 }
 
 /* Finite flash sheet chasing the trace draw, then gone. */
-@keyframes heart-draw-sweep-v2 {
+@keyframes heart-draw-sweep {
 	0% {
 		opacity: 0;
 		transform: translateY(-50%) translateX(-0.5em) scaleX(0.7);
@@ -1139,7 +1139,7 @@
 }
 
 /* Rare glints twinkle along the resting line — one per few beats. */
-@keyframes heart-glint-v2 {
+@keyframes heart-glint {
 	0%,
 	28%,
 	36%,
@@ -1157,7 +1157,7 @@
 }
 
 /* The depth shade never sits quite still. */
-@keyframes heart-depth-breathe-v2 {
+@keyframes heart-depth-breathe {
 	0%,
 	100% {
 		opacity: calc(var(--smoke-opacity, 0.62) * 0.82);
@@ -1168,7 +1168,7 @@
 }
 
 /* Graph paper barely breathing behind everything. */
-@keyframes heart-grid-breathe-v2 {
+@keyframes heart-grid-breathe {
 	0%,
 	100% {
 		opacity: calc(var(--aux-opacity, 0.5) * 0.7);
@@ -1178,7 +1178,7 @@
 	}
 }
 
-@keyframes heart-word-in-v2 {
+@keyframes heart-word-in {
 	0% {
 		opacity: 0;
 		transform: translateX(-0.05em);
@@ -1190,7 +1190,7 @@
 }
 
 /* The word takes its pulse: two quick 1.018 swells, then diastole. */
-@keyframes heart-word-lubdub-v2 {
+@keyframes heart-word-lubdub {
 	0%,
 	38%,
 	100% {
@@ -1207,7 +1207,7 @@
 	}
 }
 
-@keyframes heart-scrim-in-v2 {
+@keyframes heart-scrim-in {
 	0% {
 		opacity: 0;
 	}
@@ -1217,7 +1217,7 @@
 }
 
 /* The heart inflates with a springy overshoot and settles. */
-@keyframes heart-inflate-v2 {
+@keyframes heart-inflate {
 	0% {
 		opacity: 0;
 		transform: translateY(-132%) scale(0.2);
@@ -1236,7 +1236,7 @@
 }
 
 /* ...then beats lub-dub in the shared family. */
-@keyframes heart-organ-beat-v2 {
+@keyframes heart-organ-beat {
 	0%,
 	38%,
 	100% {
@@ -1255,7 +1255,7 @@
 }
 
 /* Every four cycles a bud detaches, floats up and fades. */
-@keyframes heart-bud-v2 {
+@keyframes heart-bud {
 	0% {
 		opacity: 0;
 		transform: translate(0, 0) scale(0.35);
@@ -1274,7 +1274,7 @@
 }
 
 /* Blush wave: pale gray -> rose flush with a 1.03 bump -> warm ivory. */
-@keyframes heart-glyph-flush-v2 {
+@keyframes heart-glyph-flush {
 	0% {
 		opacity: 0.18;
 		color: rgb(122, 106, 114);
@@ -1306,7 +1306,7 @@
 }
 
 /* Valentine stationery: the flush reads as ink blooming into the paper. */
-@keyframes heart-glyph-flush-light-v2 {
+@keyframes heart-glyph-flush-light {
 	0% {
 		opacity: 0.22;
 		color: rgb(206, 186, 192);
@@ -1333,7 +1333,7 @@
 }
 
 /* The alt ghost sighs upward and is gone. */
-@keyframes heart-alt-sigh-v2 {
+@keyframes heart-alt-sigh {
 	0% {
 		opacity: 0.32;
 		transform: translateY(0) scale(1);
@@ -1345,7 +1345,7 @@
 }
 
 /* The caret needle dips softly twice per cycle. */
-@keyframes heart-caret-beat-v2 {
+@keyframes heart-caret-beat {
 	0%,
 	38%,
 	100% {
@@ -1363,7 +1363,7 @@
 }
 
 /* Waiting: the flatline breathes very slowly... */
-@keyframes heart-wait-line-v2 {
+@keyframes heart-wait-line {
 	0%,
 	100% {
 		opacity: calc(var(--haze-opacity, 0.7) * 0.7);
@@ -1374,7 +1374,7 @@
 }
 
 /* ...the tiny heart barely pulses... */
-@keyframes heart-wait-heart-v2 {
+@keyframes heart-wait-heart {
 	0%,
 	100% {
 		opacity: calc(var(--core-opacity, 0.6) * 0.75);
@@ -1391,7 +1391,7 @@
 }
 
 /* ...and every ~1.6s a small blip travels a short stretch of the line. */
-@keyframes heart-wait-blip-v2 {
+@keyframes heart-wait-blip {
 	0% {
 		opacity: 0;
 		background-position: 0.15em 1.36em;
@@ -1415,7 +1415,7 @@
 }
 
 /* The dark pool under the flatline breathes. */
-@keyframes heart-wait-pool-v2 {
+@keyframes heart-wait-pool {
 	0%,
 	100% {
 		opacity: calc(var(--smoke-opacity, 0.5) * 0.75);

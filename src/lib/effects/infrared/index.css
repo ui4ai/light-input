@@ -1,5 +1,5 @@
 /* ============================================================
-   INFRARED v2 — "Тепловизор: предсказание как тепловая сигнатура".
+   INFRARED — "Тепловизор: предсказание как тепловая сигнатура".
    The field is a cold sensor view (near-black blue-charcoal, quiet
    scanline/grain, whisper HUD: one bracket pair + a hairline
    ironbow scale strip); the sensor sees only the FUTURE as heat.
@@ -20,14 +20,14 @@
    bands (white core -> yellow -> orange -> red -> magenta ->
    purple -> transparent) plus a smaller banded hotspot right at
    the caret, edges wavered organically by a low-scale feTurbulence
-   displacement (--ir-warp-v2); it settles in once, then breathes.
+   displacement (--ir-warp); it settles in once, then breathes.
    No gaussian smudge anywhere. HEAT HAZE (prediction::after):
    faint thin streaks above the hot word jitter upward on a
    steps(7) loop — air distortion, not smoke. Caret = white-hot
    needle. Typed text stays cold/neutral: untouched. WAITING: the
    sensor picks up a source warming behind the wall — a small
    banded blob at the caret whose bands sweep purple -> orange as
-   a registered <number> (--ir-heat-v2) breathes 0 -> 1 -> 0 on
+   a registered <number> (--ir-heat) breathes 0 -> 1 -> 0 on
    the torch-core, over a faint cold pool on the torch-haze; all
    other torch layers dead. LIGHT THEME = BLACK-HOT: on paper
    HOT = DARK — next-word glyphs are warm brown-black ink
@@ -37,12 +37,12 @@
    data-light-flow='off': ignite and blob settle still play once;
    wobble, haze, band drift, sensor flicker and warmup freeze.
    Every decorated layer's masks complete INSIDE their boxes
-   (mask-composite: intersect). Keyframes infrared-*-v2 and vars
-   --ir-*-v2 only; legacy infrared-* rules in legacy.css are
+   (mask-composite: intersect). Keyframes infrared-* and vars
+   --ir-* only; legacy infrared-* rules in legacy.css are
    superseded and get deleted.
    ============================================================ */
 
-@property --ir-heat-v2 {
+@property --ir-heat {
 	syntax: '<number>';
 	inherits: false;
 	initial-value: 0;
@@ -51,10 +51,10 @@
 .field[data-glow='infrared'] {
 	--layer-radius: 999px;
 	--layer-clip: inset(0 round 999px);
-	--ir-warp-v2: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='irWarp' x='-20%25' y='-20%25' width='140%25' height='140%25' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='0.02 0.055' numOctaves='2' seed='7'/><feDisplacementMap in='SourceGraphic' scale='9' xChannelSelector='R' yChannelSelector='G'/></filter></svg>#irWarp");
-	--ir-blob-o-v2: 0.92;
-	--ir-blob-blend-v2: screen;
-	--ir-blob-bg-v2:
+	--ir-warp: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='irWarp' x='-20%25' y='-20%25' width='140%25' height='140%25' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='0.02 0.055' numOctaves='2' seed='7'/><feDisplacementMap in='SourceGraphic' scale='9' xChannelSelector='R' yChannelSelector='G'/></filter></svg>#irWarp");
+	--ir-blob-o: 0.92;
+	--ir-blob-blend: screen;
+	--ir-blob-bg:
 		radial-gradient(
 			circle 0.62em at 0.55em 50%,
 			oklch(0.99 0.02 98 / 0.66) 0 26%,
@@ -74,12 +74,12 @@
 			oklch(0.26 0.09 268 / 0.15) 82% 92%,
 			transparent 92%
 		);
-	--ir-haze-o-v2: 0.09;
-	--ir-haze-blend-v2: screen;
-	--ir-haze-bg-v2:
+	--ir-haze-o: 0.09;
+	--ir-haze-blend: screen;
+	--ir-haze-bg:
 		repeating-linear-gradient(86deg, transparent 0 0.24em, oklch(0.93 0.05 92 / 0.4) 0.28em 0.32em, transparent 0.36em 0.58em),
 		repeating-linear-gradient(94deg, transparent 0 0.3em, oklch(0.88 0.06 70 / 0.3) 0.34em 0.37em, transparent 0.41em 0.66em);
-	--ir-hud-bg-v2:
+	--ir-hud-bg:
 		linear-gradient(oklch(0.86 0.02 250 / 0.09), oklch(0.86 0.02 250 / 0.09)) left 30px top 15px / 15px 1px no-repeat,
 		linear-gradient(oklch(0.86 0.02 250 / 0.09), oklch(0.86 0.02 250 / 0.09)) left 30px top 15px / 1px 11px no-repeat,
 		linear-gradient(oklch(0.86 0.02 250 / 0.09), oklch(0.86 0.02 250 / 0.09)) right 30px bottom 15px / 15px 1px no-repeat,
@@ -189,7 +189,7 @@
 /* SENSOR OVERLAY: quiet scanlines + grain, cold vignette, one bracket
    pair and a hairline ironbow scale strip — a whisper of HUD, no text. */
 .stage[data-glow='infrared'] .field[data-glow]::before {
-	background: var(--ir-hud-bg-v2);
+	background: var(--ir-hud-bg);
 	-webkit-mask-image: none;
 	mask-image: none;
 	mix-blend-mode: normal;
@@ -199,7 +199,7 @@
 /* The readout micro-flickers while the sensor is live — steps(1), tiny. */
 .stage[data-glow='infrared'][data-light-flow='on'] .field[data-glow][data-state='ready']::before,
 .stage[data-glow='infrared'][data-light-flow='on'] .field[data-glow][data-state='waiting'][data-loading-glow='field']::before {
-	animation: infrared-sensor-flicker-v2 1.7s steps(1, end) infinite;
+	animation: infrared-sensor-flicker 1.7s steps(1, end) infinite;
 }
 
 /* Dissolve into the field's rounded clip, not the paint box; edge
@@ -252,23 +252,23 @@
 	border-radius: 46% 54% 51% 49% / 55% 45% 57% 43%;
 	clip-path: none;
 	box-shadow: none;
-	background: var(--ir-blob-bg-v2);
+	background: var(--ir-blob-bg);
 	background-size: 100% 100%;
 	background-repeat: no-repeat;
-	filter: var(--ir-warp-v2) blur(0.3px) saturate(1.06);
+	filter: var(--ir-warp) blur(0.3px) saturate(1.06);
 	-webkit-mask-image:
 		radial-gradient(ellipse 56% 55% at 32% 50%, black 0 55%, rgba(0, 0, 0, 0.55) 76%, transparent 96%),
 		linear-gradient(90deg, transparent 0, black 0.3em, black calc(100% - 0.45em), transparent 100%);
 	mask-image:
 		radial-gradient(ellipse 56% 55% at 32% 50%, black 0 55%, rgba(0, 0, 0, 0.55) 76%, transparent 96%),
 		linear-gradient(90deg, transparent 0, black 0.3em, black calc(100% - 0.45em), transparent 100%);
-	mix-blend-mode: var(--ir-blob-blend-v2);
-	opacity: var(--ir-blob-o-v2);
+	mix-blend-mode: var(--ir-blob-blend);
+	opacity: var(--ir-blob-o);
 	transform: translateY(-50%);
 	transform-origin: 34% 50%;
 	animation:
-		infrared-blob-in-v2 760ms cubic-bezier(0.16, 1, 0.3, 1) both,
-		infrared-isotherm-drift-v2 6.4s ease-in-out 760ms infinite;
+		infrared-blob-in 760ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		infrared-isotherm-drift 6.4s ease-in-out 760ms infinite;
 }
 
 /* ---------- HEAT HAZE: air shimmer above the hot word ---------- */
@@ -287,7 +287,7 @@
 	border-radius: 0;
 	clip-path: none;
 	box-shadow: none;
-	background: var(--ir-haze-bg-v2);
+	background: var(--ir-haze-bg);
 	background-repeat: repeat;
 	filter: blur(1px);
 	-webkit-mask-image:
@@ -296,12 +296,12 @@
 	mask-image:
 		linear-gradient(180deg, transparent 0, rgba(0, 0, 0, 0.75) 32%, black 58%, rgba(0, 0, 0, 0.35) 84%, transparent 100%),
 		linear-gradient(90deg, transparent 0, black 0.55em, black calc(100% - 0.6em), transparent 100%);
-	mix-blend-mode: var(--ir-haze-blend-v2);
-	opacity: var(--ir-haze-o-v2);
+	mix-blend-mode: var(--ir-haze-blend);
+	opacity: var(--ir-haze-o);
 	transform: none;
 	animation:
-		infrared-haze-in-v2 560ms ease-out both,
-		infrared-haze-rise-v2 2.7s steps(7, end) 560ms infinite;
+		infrared-haze-in 560ms ease-out both,
+		infrared-haze-rise 2.7s steps(7, end) 560ms infinite;
 }
 
 /* ---------- The word: a heat source resolving out of overexposure ---------- */
@@ -316,7 +316,7 @@
 	filter: none;
 	text-shadow: none;
 	transform: none;
-	animation: infrared-word-in-v2 200ms ease-out both;
+	animation: infrared-word-in 200ms ease-out both;
 }
 
 /* The camera draws temperature, not auras: no legacy word pseudos. */
@@ -356,8 +356,8 @@
 		0 0 0.55em color-mix(in oklab, currentcolor 28%, transparent);
 	transform: none;
 	animation:
-		infrared-ignite-v2 520ms cubic-bezier(0.2, 0.7, 0.3, 1) both,
-		infrared-wobble-v2 3.4s ease-in-out infinite;
+		infrared-ignite 520ms cubic-bezier(0.2, 0.7, 0.3, 1) both,
+		infrared-wobble 3.4s ease-in-out infinite;
 	animation-delay: calc(80ms + var(--i, 0) * 60ms), calc(760ms + var(--i, 0) * 60ms);
 }
 
@@ -385,7 +385,7 @@
 	text-shadow: none;
 	-webkit-mask-image: linear-gradient(90deg, black 0, rgba(0, 0, 0, 0.62) 3.2em, rgba(0, 0, 0, 0.2) 6.8em, transparent 10em);
 	mask-image: linear-gradient(90deg, black 0, rgba(0, 0, 0, 0.62) 3.2em, rgba(0, 0, 0, 0.2) 6.8em, transparent 10em);
-	animation: infrared-tail-in-v2 360ms ease-out 200ms both;
+	animation: infrared-tail-in 360ms ease-out 200ms both;
 }
 
 .stage[data-glow='infrared'] .field[data-glow] .tail .glyph,
@@ -404,7 +404,7 @@
 	filter: none;
 	text-shadow: 0 0 0.4em color-mix(in oklab, currentcolor 22%, transparent);
 	transform: none;
-	animation: infrared-ignite-tail-v2 460ms ease-out both;
+	animation: infrared-ignite-tail 460ms ease-out both;
 	animation-delay: calc(120ms + var(--i, 0) * 55ms);
 }
 
@@ -412,20 +412,20 @@
 /* Ignite and the blob settle still play once (finite); wobble, haze,
    band drift and sensor flicker freeze — a thermal still. */
 .stage[data-glow='infrared'][data-light-flow='off'] .field[data-glow] .prediction::before {
-	animation: infrared-blob-in-v2 760ms cubic-bezier(0.16, 1, 0.3, 1) both;
+	animation: infrared-blob-in 760ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .stage[data-glow='infrared'][data-light-flow='off'] .field[data-glow] .prediction::after {
-	animation: infrared-haze-in-v2 560ms ease-out both;
+	animation: infrared-haze-in 560ms ease-out both;
 }
 
 .stage[data-glow='infrared'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
-	animation: infrared-ignite-v2 520ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
+	animation: infrared-ignite 520ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
 	animation-delay: calc(80ms + var(--i, 0) * 60ms);
 }
 
 .stage[data-glow='infrared'][data-light-flow='off'] .field[data-glow] .tail .glyph {
-	animation: infrared-ignite-tail-v2 460ms ease-out both;
+	animation: infrared-ignite-tail 460ms ease-out both;
 	animation-delay: calc(120ms + var(--i, 0) * 55ms);
 }
 
@@ -434,9 +434,9 @@
    next word is warm brown-black ink, the tail LIGHTENS as it cools
    toward pale gray-blue. Same story, inverted polarity. */
 .field[data-theme='light'][data-glow='infrared'] {
-	--ir-blob-o-v2: 0.85;
-	--ir-blob-blend-v2: multiply;
-	--ir-blob-bg-v2:
+	--ir-blob-o: 0.85;
+	--ir-blob-blend: multiply;
+	--ir-blob-bg:
 		radial-gradient(
 			circle 0.62em at 0.55em 50%,
 			oklch(0.22 0.05 45 / 0.5) 0 26%,
@@ -456,12 +456,12 @@
 			oklch(0.85 0.02 260 / 0.05) 82% 92%,
 			transparent 92%
 		);
-	--ir-haze-o-v2: 0.12;
-	--ir-haze-blend-v2: multiply;
-	--ir-haze-bg-v2:
+	--ir-haze-o: 0.12;
+	--ir-haze-blend: multiply;
+	--ir-haze-bg:
 		repeating-linear-gradient(86deg, transparent 0 0.24em, oklch(0.42 0.03 45 / 0.3) 0.28em 0.32em, transparent 0.36em 0.58em),
 		repeating-linear-gradient(94deg, transparent 0 0.3em, oklch(0.5 0.03 300 / 0.22) 0.34em 0.37em, transparent 0.41em 0.66em);
-	--ir-hud-bg-v2:
+	--ir-hud-bg:
 		linear-gradient(oklch(0.4 0.02 260 / 0.16), oklch(0.4 0.02 260 / 0.16)) left 30px top 15px / 15px 1px no-repeat,
 		linear-gradient(oklch(0.4 0.02 260 / 0.16), oklch(0.4 0.02 260 / 0.16)) left 30px top 15px / 1px 11px no-repeat,
 		linear-gradient(oklch(0.4 0.02 260 / 0.16), oklch(0.4 0.02 260 / 0.16)) right 30px bottom 15px / 15px 1px no-repeat,
@@ -535,14 +535,14 @@
 
 /* Re-pin the overlay against legacy light rules that blend it away. */
 .stage[data-theme='light'][data-glow='infrared'] .field[data-glow]::before {
-	background: var(--ir-hud-bg-v2);
+	background: var(--ir-hud-bg);
 	mix-blend-mode: normal;
 	animation: none;
 }
 
 .stage[data-theme='light'][data-glow='infrared'][data-light-flow='on'] .field[data-glow][data-state='ready']::before,
 .stage[data-theme='light'][data-glow='infrared'][data-light-flow='on'] .field[data-glow][data-state='waiting'][data-loading-glow='field']::before {
-	animation: infrared-sensor-flicker-v2 1.7s steps(1, end) infinite;
+	animation: infrared-sensor-flicker 1.7s steps(1, end) infinite;
 }
 
 /* Ink sits on paper — never screened away. */
@@ -552,17 +552,17 @@
 
 /* Ink isotherm: same banded geometry, multiply paint. */
 .stage[data-theme='light'][data-glow='infrared'] .field[data-glow] .prediction::before {
-	background: var(--ir-blob-bg-v2);
-	filter: var(--ir-warp-v2) blur(0.3px);
-	mix-blend-mode: var(--ir-blob-blend-v2);
-	opacity: var(--ir-blob-o-v2);
+	background: var(--ir-blob-bg);
+	filter: var(--ir-warp) blur(0.3px);
+	mix-blend-mode: var(--ir-blob-blend);
+	opacity: var(--ir-blob-o);
 }
 
 .stage[data-theme='light'][data-glow='infrared'] .field[data-glow] .prediction::after {
-	background: var(--ir-haze-bg-v2);
+	background: var(--ir-haze-bg);
 	filter: blur(0.4px);
-	mix-blend-mode: var(--ir-haze-blend-v2);
-	opacity: var(--ir-haze-o-v2);
+	mix-blend-mode: var(--ir-haze-blend);
+	opacity: var(--ir-haze-o);
 }
 
 .stage[data-theme='light'][data-glow='infrared'] .field[data-glow] .next-word {
@@ -587,8 +587,8 @@
 	filter: none;
 	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
 	animation:
-		infrared-ignite-light-v2 520ms cubic-bezier(0.2, 0.7, 0.3, 1) both,
-		infrared-wobble-v2 3.4s ease-in-out infinite;
+		infrared-ignite-light 520ms cubic-bezier(0.2, 0.7, 0.3, 1) both,
+		infrared-wobble 3.4s ease-in-out infinite;
 	animation-delay: calc(80ms + var(--i, 0) * 60ms), calc(760ms + var(--i, 0) * 60ms);
 }
 
@@ -612,7 +612,7 @@
 	opacity: clamp(0.4, calc(1.05 - var(--i, 0) * 0.04), 0.95);
 	filter: none;
 	text-shadow: none;
-	animation: infrared-ignite-tail-light-v2 460ms ease-out both;
+	animation: infrared-ignite-tail-light 460ms ease-out both;
 	animation-delay: calc(120ms + var(--i, 0) * 55ms);
 }
 
@@ -633,20 +633,20 @@
 /* Light theme + flow off: re-win the finite passes against the
    higher-specificity light rules above. */
 .stage[data-theme='light'][data-glow='infrared'][data-light-flow='off'] .field[data-glow] .prediction::before {
-	animation: infrared-blob-in-v2 760ms cubic-bezier(0.16, 1, 0.3, 1) both;
+	animation: infrared-blob-in 760ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .stage[data-theme='light'][data-glow='infrared'][data-light-flow='off'] .field[data-glow] .prediction::after {
-	animation: infrared-haze-in-v2 560ms ease-out both;
+	animation: infrared-haze-in 560ms ease-out both;
 }
 
 .stage[data-theme='light'][data-glow='infrared'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(n) {
-	animation: infrared-ignite-light-v2 520ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
+	animation: infrared-ignite-light 520ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
 	animation-delay: calc(80ms + var(--i, 0) * 60ms);
 }
 
 .stage[data-theme='light'][data-glow='infrared'][data-light-flow='off'] .field[data-glow] .tail .glyph:nth-child(n) {
-	animation: infrared-ignite-tail-light-v2 460ms ease-out both;
+	animation: infrared-ignite-tail-light 460ms ease-out both;
 	animation-delay: calc(120ms + var(--i, 0) * 55ms);
 }
 
@@ -656,7 +656,7 @@
 
 /* ---------- Waiting: a source warming behind the wall ---------- */
 /* The sensor picks up a small banded blob at the caret; a registered
-   <number> (--ir-heat-v2) breathes 0 -> 1 -> 0 on the torch-core and
+   <number> (--ir-heat) breathes 0 -> 1 -> 0 on the torch-core and
    every band's oklch reads it, so the rings sweep cold purple ->
    orange while the blob swells. A faint cold pool stirs beneath it;
    every other torch layer is dead. */
@@ -667,7 +667,7 @@
 	--haze-bg: radial-gradient(ellipse 1.7em 1.05em at 0.85em 50%, oklch(0.55 0.06 270 / 0.16), transparent 78%);
 	--haze-filter: blur(10px);
 	--haze-opacity: 0.5;
-	--torch-haze-motion: infrared-pool-breathe-v2 4.2s ease-in-out infinite;
+	--torch-haze-motion: infrared-pool-breathe 4.2s ease-in-out infinite;
 	--haze-mask: linear-gradient(90deg, transparent 0, black 0.3em), radial-gradient(ellipse 54% 56% at 30% 50%, black 0 50%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
 	--body-bg: none;
 	--body-opacity: 0;
@@ -676,7 +676,7 @@
 	--core-size: 100% 100%;
 	--core-filter: blur(0.2px) saturate(1.05);
 	--core-opacity: 0.95;
-	--torch-core-motion: infrared-warmup-v2 4.2s ease-in-out infinite;
+	--torch-core-motion: infrared-warmup 4.2s ease-in-out infinite;
 	--core-mask: radial-gradient(circle 0.92em at 0.85em 50%, black 0 84%, rgba(0, 0, 0, 0.4) 93%, transparent 100%);
 	--flow-bg: none;
 	--flow-low: 0;
@@ -697,15 +697,15 @@
 /* The banded source itself: --core-bg is declared ON the torch-core (not
    the field) because var() inside a custom property substitutes where
    that property computes — only here does every band's oklch re-read the
-   ANIMATED --ir-heat-v2 each frame, sweeping the rings purple -> orange
+   ANIMATED --ir-heat each frame, sweeping the rings purple -> orange
    as the warmup breathes. */
 .stage[data-glow='infrared'] .field[data-glow][data-state='waiting'] .torch-core {
 	--core-bg: radial-gradient(
 		circle 0.8em at 0.85em 50%,
-		oklch(calc(0.4 + var(--ir-heat-v2) * 0.55) calc(0.11 + var(--ir-heat-v2) * 0.09) calc(-72deg + var(--ir-heat-v2) * 158deg) / 0.92) 0 20%,
-		oklch(calc(0.34 + var(--ir-heat-v2) * 0.5) calc(0.12 + var(--ir-heat-v2) * 0.08) calc(-86deg + var(--ir-heat-v2) * 140deg) / 0.75) 20% 42%,
-		oklch(calc(0.28 + var(--ir-heat-v2) * 0.42) calc(0.11 + var(--ir-heat-v2) * 0.07) calc(-98deg + var(--ir-heat-v2) * 124deg) / 0.55) 42% 64%,
-		oklch(calc(0.22 + var(--ir-heat-v2) * 0.32) calc(0.09 + var(--ir-heat-v2) * 0.05) calc(-108deg + var(--ir-heat-v2) * 108deg) / 0.36) 64% 84%,
+		oklch(calc(0.4 + var(--ir-heat) * 0.55) calc(0.11 + var(--ir-heat) * 0.09) calc(-72deg + var(--ir-heat) * 158deg) / 0.92) 0 20%,
+		oklch(calc(0.34 + var(--ir-heat) * 0.5) calc(0.12 + var(--ir-heat) * 0.08) calc(-86deg + var(--ir-heat) * 140deg) / 0.75) 20% 42%,
+		oklch(calc(0.28 + var(--ir-heat) * 0.42) calc(0.11 + var(--ir-heat) * 0.07) calc(-98deg + var(--ir-heat) * 124deg) / 0.55) 42% 64%,
+		oklch(calc(0.22 + var(--ir-heat) * 0.32) calc(0.09 + var(--ir-heat) * 0.05) calc(-108deg + var(--ir-heat) * 108deg) / 0.36) 64% 84%,
 		transparent 84%
 	);
 }
@@ -721,10 +721,10 @@
 .stage[data-theme='light'][data-glow='infrared'] .field[data-glow][data-state='waiting'] .torch-core {
 	--core-bg: radial-gradient(
 		circle 0.8em at 0.85em 50%,
-		oklch(calc(0.8 - var(--ir-heat-v2) * 0.58) calc(0.03 + var(--ir-heat-v2) * 0.05) calc(-80deg + var(--ir-heat-v2) * 125deg) / 0.85) 0 20%,
-		oklch(calc(0.85 - var(--ir-heat-v2) * 0.5) calc(0.025 + var(--ir-heat-v2) * 0.045) calc(-88deg + var(--ir-heat-v2) * 118deg) / 0.6) 20% 42%,
-		oklch(calc(0.9 - var(--ir-heat-v2) * 0.42) calc(0.02 + var(--ir-heat-v2) * 0.04) calc(-95deg + var(--ir-heat-v2) * 108deg) / 0.42) 42% 64%,
-		oklch(calc(0.94 - var(--ir-heat-v2) * 0.32) calc(0.015 + var(--ir-heat-v2) * 0.03) calc(-100deg + var(--ir-heat-v2) * 96deg) / 0.26) 64% 84%,
+		oklch(calc(0.8 - var(--ir-heat) * 0.58) calc(0.03 + var(--ir-heat) * 0.05) calc(-80deg + var(--ir-heat) * 125deg) / 0.85) 0 20%,
+		oklch(calc(0.85 - var(--ir-heat) * 0.5) calc(0.025 + var(--ir-heat) * 0.045) calc(-88deg + var(--ir-heat) * 118deg) / 0.6) 20% 42%,
+		oklch(calc(0.9 - var(--ir-heat) * 0.42) calc(0.02 + var(--ir-heat) * 0.04) calc(-95deg + var(--ir-heat) * 108deg) / 0.42) 42% 64%,
+		oklch(calc(0.94 - var(--ir-heat) * 0.32) calc(0.015 + var(--ir-heat) * 0.03) calc(-100deg + var(--ir-heat) * 96deg) / 0.26) 64% 84%,
 		transparent 84%
 	);
 }
@@ -743,9 +743,9 @@
 	--torch-core-motion: none;
 }
 
-/* ---------- Keyframes (infrared-*-v2) ---------- */
+/* ---------- Keyframes (infrared-*) ---------- */
 /* The word row mounts under the signature. */
-@keyframes infrared-word-in-v2 {
+@keyframes infrared-word-in {
 	0% {
 		opacity: 0;
 	}
@@ -755,7 +755,7 @@
 }
 
 /* The cooling strip settles in. */
-@keyframes infrared-tail-in-v2 {
+@keyframes infrared-tail-in {
 	0% {
 		opacity: 0;
 	}
@@ -766,7 +766,7 @@
 
 /* IGNITE: overexposed white flash (blur + scale), then — no 100% frame —
    the glyph cools onto its live slot temperature. */
-@keyframes infrared-ignite-v2 {
+@keyframes infrared-ignite {
 	0% {
 		opacity: 0;
 		color: oklch(1 0.01 100);
@@ -793,7 +793,7 @@
 }
 
 /* Tail glyphs get a weaker flash — already half cold when read. */
-@keyframes infrared-ignite-tail-v2 {
+@keyframes infrared-ignite-tail {
 	0% {
 		opacity: 0;
 		color: oklch(0.9 0.05 95);
@@ -805,7 +805,7 @@
 }
 
 /* BLACK-HOT ignite: the flash is over-inked, not overexposed. */
-@keyframes infrared-ignite-light-v2 {
+@keyframes infrared-ignite-light {
 	0% {
 		opacity: 0;
 		color: oklch(0.06 0.05 40);
@@ -824,7 +824,7 @@
 	}
 }
 
-@keyframes infrared-ignite-tail-light-v2 {
+@keyframes infrared-ignite-tail-light {
 	0% {
 		opacity: 0;
 		color: oklch(0.3 0.04 40);
@@ -836,7 +836,7 @@
 }
 
 /* Settled heat wobble: barely visible, slow. */
-@keyframes infrared-wobble-v2 {
+@keyframes infrared-wobble {
 	0%,
 	100% {
 		transform: translateY(0);
@@ -849,23 +849,23 @@
 }
 
 /* The signature resolves once: bands snap out of a hot point. */
-@keyframes infrared-blob-in-v2 {
+@keyframes infrared-blob-in {
 	0% {
 		opacity: 0;
 		transform: translateY(-50%) scale(0.45);
 	}
 	64% {
-		opacity: var(--ir-blob-o-v2, 0.92);
+		opacity: var(--ir-blob-o, 0.92);
 		transform: translateY(-50%) scale(1.05);
 	}
 	100% {
-		opacity: var(--ir-blob-o-v2, 0.92);
+		opacity: var(--ir-blob-o, 0.92);
 		transform: translateY(-50%) scale(1);
 	}
 }
 
 /* ...then the isotherms breathe — bands drift, never smear. */
-@keyframes infrared-isotherm-drift-v2 {
+@keyframes infrared-isotherm-drift {
 	0%,
 	100% {
 		transform: translateY(-50%) scale(1) rotate(0deg);
@@ -876,36 +876,36 @@
 }
 
 /* The shimmer fades up over the hot word... */
-@keyframes infrared-haze-in-v2 {
+@keyframes infrared-haze-in {
 	0% {
 		opacity: 0;
 	}
 	100% {
-		opacity: var(--ir-haze-o-v2, 0.16);
+		opacity: var(--ir-haze-o, 0.16);
 	}
 }
 
 /* ...and jitters upward in discrete steps — hot air, not smoke. */
-@keyframes infrared-haze-rise-v2 {
+@keyframes infrared-haze-rise {
 	0% {
 		background-position:
 			0 0,
 			0 0;
-		opacity: calc(var(--ir-haze-o-v2, 0.16) * 0.7);
+		opacity: calc(var(--ir-haze-o, 0.16) * 0.7);
 	}
 	50% {
-		opacity: var(--ir-haze-o-v2, 0.16);
+		opacity: var(--ir-haze-o, 0.16);
 	}
 	100% {
 		background-position:
 			0.14em -1.05em,
 			-0.12em -0.8em;
-		opacity: calc(var(--ir-haze-o-v2, 0.16) * 0.7);
+		opacity: calc(var(--ir-haze-o, 0.16) * 0.7);
 	}
 }
 
 /* The readout's electronics breathe — steps(1), whisper amplitude. */
-@keyframes infrared-sensor-flicker-v2 {
+@keyframes infrared-sensor-flicker {
 	0% {
 		opacity: 0.97;
 	}
@@ -931,26 +931,26 @@
 
 /* Waiting: the source heats 0 -> 1 -> 0; every band's oklch reads the
    number, so the rings sweep purple -> orange while the blob swells. */
-@keyframes infrared-warmup-v2 {
+@keyframes infrared-warmup {
 	0% {
-		--ir-heat-v2: 0;
+		--ir-heat: 0;
 		opacity: calc(var(--core-opacity, 0.95) * 0.7);
 		transform: translateY(-50%) scale(0.88);
 	}
 	55% {
-		--ir-heat-v2: 1;
+		--ir-heat: 1;
 		opacity: var(--core-opacity, 0.95);
 		transform: translateY(-50%) scale(1.08);
 	}
 	100% {
-		--ir-heat-v2: 0;
+		--ir-heat: 0;
 		opacity: calc(var(--core-opacity, 0.95) * 0.7);
 		transform: translateY(-50%) scale(0.88);
 	}
 }
 
 /* ...over a cold pool that barely stirs. */
-@keyframes infrared-pool-breathe-v2 {
+@keyframes infrared-pool-breathe {
 	0%,
 	100% {
 		opacity: calc(var(--haze-opacity, 0.5) * 0.7);

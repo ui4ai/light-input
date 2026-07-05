@@ -1,5 +1,5 @@
 /* ============================================================
-   ANDROID v2 — "Сплит-флап табло: a robot works the board"
+   ANDROID — "Сплит-флап табло: a robot works the board"
    Not an LED capsule — a MECHANICAL SPLIT-FLAP DISPLAY (airport
    departure board) operated by a robot. The field is a dark
    graphite-steel vessel with a thin steel rim; the caret is an
@@ -52,7 +52,7 @@
    hold static. Text ends CRISP: no blur ever lands on a settled
    glyph. No capsules: layer-radius 0, every layer and pseudo
    dissolves through intersected left-fade x radial masks whose
-   fades complete INSIDE their boxes. Keyframes: android-*-v2
+   fades complete INSIDE their boxes. Keyframes: android-*
    only (legacy android-* keyframes stay untouched).
    ============================================================ */
 
@@ -113,8 +113,8 @@
 		linear-gradient(180deg, transparent 0 30%, rgba(255, 198, 122, 0.04) 52%, transparent 78%);
 	--haze-filter: blur(11px) saturate(1.1);
 	--haze-opacity: 0.6;
-	--haze-motion: android-air-v2 7.5s ease-in-out 1.5s infinite;
-	--torch-haze-motion: android-wait-halo-v2 4.4s ease-in-out infinite;
+	--haze-motion: android-air 7.5s ease-in-out 1.5s infinite;
+	--torch-haze-motion: android-wait-halo 4.4s ease-in-out infinite;
 	--haze-mask: linear-gradient(90deg, transparent 0, black 0.9em), radial-gradient(ellipse 52% 54% at 36% 50%, black 0 46%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
 	--body-width: 9.5em;
 	--body-height: 2.6em;
@@ -134,7 +134,7 @@
 	--core-filter: blur(4px) saturate(1.1);
 	--core-opacity: 0.9;
 	--core-motion: none;
-	--torch-core-motion: android-wait-led-v2 2.6s ease-in-out infinite;
+	--torch-core-motion: android-wait-led 2.6s ease-in-out infinite;
 	--core-mask: linear-gradient(90deg, transparent 0, black 0.3em), radial-gradient(ellipse 52% 52% at 34% 52%, black 0 48%, rgba(0, 0, 0, 0.5) 74%, transparent 94%);
 	--flow-width: 8em;
 	--flow-height: 2.6em;
@@ -155,7 +155,7 @@
 	--flow-filter: drop-shadow(0 0 0.08em rgba(255, 176, 70, 0.55));
 	--flow-low: 0;
 	--flow-high: 0.92;
-	--flow-motion: android-reticle-v2 540ms cubic-bezier(0.3, 0.6, 0.3, 1) 40ms both;
+	--flow-motion: android-reticle 540ms cubic-bezier(0.3, 0.6, 0.3, 1) 40ms both;
 	--flow-mask: linear-gradient(90deg, transparent 0, black 0.25em), radial-gradient(ellipse 54% 54% at 40% 50%, black 0 52%, rgba(0, 0, 0, 0.5) 78%, transparent 96%);
 	--spark-width: 2em;
 	--spark-height: 2.6em;
@@ -171,8 +171,8 @@
 	--spark-low: 0;
 	--spark-high: 0.95;
 	--spark-motion:
-		android-led-v2 1.6s steps(1, end) 80ms both,
-		android-led-breathe-v2 3.4s ease-in-out 1.8s infinite;
+		android-led 1.6s steps(1, end) 80ms both,
+		android-led-breathe 3.4s ease-in-out 1.8s infinite;
 	--spark-mask: linear-gradient(90deg, transparent 0, black 0.08em), radial-gradient(ellipse 62% 58% at 26% 74%, black 0 56%, rgba(0, 0, 0, 0.5) 80%, transparent 98%);
 	--smoke-width: 10em;
 	--smoke-height: 2.6em;
@@ -356,7 +356,7 @@
 	mix-blend-mode: normal;
 	opacity: var(--and-board-o);
 	transform: translateY(-50%);
-	animation: android-board-in-v2 420ms ease-out 100ms both;
+	animation: android-board-in 420ms ease-out 100ms both;
 }
 
 /* THE AXLE RAIL: the steel spindle every flap card turns on — a hairline
@@ -391,7 +391,7 @@
 	mix-blend-mode: normal;
 	opacity: var(--and-rail-o);
 	transform: translateY(-50%);
-	animation: android-rail-in-v2 420ms ease-out 140ms both;
+	animation: android-rail-in 420ms ease-out 140ms both;
 }
 
 /* ---------- The word row: flap cells under servo power ---------- */
@@ -413,8 +413,8 @@
 	text-shadow: var(--next-shadow);
 	transform-origin: left center;
 	animation:
-		android-word-in-v2 180ms ease-out both,
-		android-servo-v2 1.2s steps(1, end) 340ms both;
+		android-word-in 180ms ease-out both,
+		android-servo 1.2s steps(1, end) 340ms both;
 }
 
 /* FLAP CELL: each glyph is a dark metal card — plate gradient with the seam
@@ -435,7 +435,7 @@
 	filter: none;
 	text-shadow: var(--next-shadow);
 	transform-origin: 50% 50%;
-	animation: android-cell-flip-v2 460ms linear both;
+	animation: android-cell-flip 460ms linear both;
 	animation-delay: calc(340ms + var(--i) * 70ms);
 }
 
@@ -452,7 +452,7 @@
 	background: none;
 	text-shadow: none;
 	opacity: 1;
-	animation: android-flap-a-v2 460ms steps(1, end) both;
+	animation: android-flap-a 460ms steps(1, end) both;
 	animation-delay: calc(340ms + var(--i) * 70ms);
 }
 
@@ -466,7 +466,7 @@
 	text-shadow: none;
 	opacity: 0;
 	transform: none;
-	animation: android-flap-b-v2 460ms steps(1, end) both;
+	animation: android-flap-b 460ms steps(1, end) both;
 	animation-delay: calc(340ms + var(--i) * 70ms);
 }
 
@@ -505,14 +505,14 @@
    the robot keeps the rest of the schedule up to date. */
 .stage[data-glow='android'] .field[data-glow] .tail .glyph:nth-child(9) {
 	transform-origin: 50% 50%;
-	animation: android-tail-reflip-v2 7.2s linear 4.2s infinite;
+	animation: android-tail-reflip 7.2s linear 4.2s infinite;
 }
 
 .stage[data-glow='android'] .field[data-glow] .tail .glyph:nth-child(9)::after {
 	content: attr(data-alt);
 	color: inherit;
 	opacity: 0;
-	animation: android-tail-alt-v2 7.2s steps(1, end) 4.2s infinite;
+	animation: android-tail-alt 7.2s steps(1, end) 4.2s infinite;
 }
 
 /* Light flow off: the mechanical cycle still happens once — board and rail
@@ -526,38 +526,38 @@
 
 .stage[data-glow='android'][data-light-flow='off'] .field[data-glow] .prediction > .beam-flow {
 	display: block;
-	animation: android-reticle-v2 540ms cubic-bezier(0.3, 0.6, 0.3, 1) 40ms both;
+	animation: android-reticle 540ms cubic-bezier(0.3, 0.6, 0.3, 1) 40ms both;
 }
 
 .stage[data-glow='android'][data-light-flow='off'] .field[data-glow] .prediction > .beam-spark {
 	display: block;
-	animation: android-led-v2 1.6s steps(1, end) 80ms both;
+	animation: android-led 1.6s steps(1, end) 80ms both;
 }
 
 .stage[data-glow='android'][data-light-flow='off'] .field[data-glow] .prediction::before {
-	animation: android-board-in-v2 420ms ease-out 100ms both;
+	animation: android-board-in 420ms ease-out 100ms both;
 }
 
 .stage[data-glow='android'][data-light-flow='off'] .field[data-glow] .prediction::after {
-	animation: android-rail-in-v2 420ms ease-out 140ms both;
+	animation: android-rail-in 420ms ease-out 140ms both;
 }
 
 .stage[data-glow='android'][data-light-flow='off'] .field[data-glow] .next-word {
-	animation: android-word-in-v2 180ms ease-out both;
+	animation: android-word-in 180ms ease-out both;
 }
 
 .stage[data-glow='android'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
-	animation: android-cell-flip-v2 460ms linear both;
+	animation: android-cell-flip 460ms linear both;
 	animation-delay: calc(340ms + var(--i) * 70ms);
 }
 
 .stage[data-glow='android'][data-light-flow='off'] .field[data-glow] .next-word .glyph::before {
-	animation: android-flap-a-v2 460ms steps(1, end) both;
+	animation: android-flap-a 460ms steps(1, end) both;
 	animation-delay: calc(340ms + var(--i) * 70ms);
 }
 
 .stage[data-glow='android'][data-light-flow='off'] .field[data-glow] .next-word .glyph::after {
-	animation: android-flap-b-v2 460ms steps(1, end) both;
+	animation: android-flap-b 460ms steps(1, end) both;
 	animation-delay: calc(340ms + var(--i) * 70ms);
 }
 
@@ -703,7 +703,7 @@
 		linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(226, 224, 218, 0.45) 30%, rgba(178, 176, 168, 0.24) 52%, rgba(232, 230, 224, 0.35));
 	mix-blend-mode: normal;
 	opacity: var(--and-board-o);
-	animation: android-board-in-v2 420ms ease-out 100ms both;
+	animation: android-board-in 420ms ease-out 100ms both;
 }
 
 /* Rail as a graphite spindle on paper. */
@@ -714,15 +714,15 @@
 		linear-gradient(180deg, rgba(72, 76, 82, 0.16), transparent);
 	mix-blend-mode: normal;
 	opacity: var(--and-rail-o);
-	animation: android-rail-in-v2 420ms ease-out 140ms both;
+	animation: android-rail-in 420ms ease-out 140ms both;
 }
 
 .stage[data-theme='light'][data-glow='android'] .field[data-glow] .next-word {
 	color: var(--next-color);
 	text-shadow: var(--next-shadow);
 	animation:
-		android-word-in-v2 180ms ease-out both,
-		android-servo-v2 1.2s steps(1, end) 340ms both;
+		android-word-in 180ms ease-out both,
+		android-servo 1.2s steps(1, end) 340ms both;
 }
 
 /* Cell flips on paper: same choreography, the click-flash darkens the plate
@@ -733,7 +733,7 @@
 .stage[data-theme='light'][data-glow='android'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
 	color: var(--next-color);
 	text-shadow: var(--next-shadow);
-	animation-name: android-cell-flip-light-v2;
+	animation-name: android-cell-flip-light;
 }
 
 .stage[data-theme='light'][data-glow='android'] .field[data-glow] .next-word .glyph::before {
@@ -767,29 +767,29 @@
 
 /* Light theme + flow off: re-win against the higher-specificity kills. */
 .stage[data-theme='light'][data-glow='android'][data-light-flow='off'] .field[data-glow] .prediction::before {
-	animation: android-board-in-v2 420ms ease-out 100ms both;
+	animation: android-board-in 420ms ease-out 100ms both;
 }
 
 .stage[data-theme='light'][data-glow='android'][data-light-flow='off'] .field[data-glow] .prediction::after {
-	animation: android-rail-in-v2 420ms ease-out 140ms both;
+	animation: android-rail-in 420ms ease-out 140ms both;
 }
 
 .stage[data-theme='light'][data-glow='android'][data-light-flow='off'] .field[data-glow] .next-word {
-	animation: android-word-in-v2 180ms ease-out both;
+	animation: android-word-in 180ms ease-out both;
 }
 
 .stage[data-theme='light'][data-glow='android'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
-	animation: android-cell-flip-light-v2 460ms linear both;
+	animation: android-cell-flip-light 460ms linear both;
 	animation-delay: calc(340ms + var(--i) * 70ms);
 }
 
 .stage[data-theme='light'][data-glow='android'][data-light-flow='off'] .field[data-glow] .next-word .glyph::before {
-	animation: android-flap-a-v2 460ms steps(1, end) both;
+	animation: android-flap-a 460ms steps(1, end) both;
 	animation-delay: calc(340ms + var(--i) * 70ms);
 }
 
 .stage[data-theme='light'][data-glow='android'][data-light-flow='off'] .field[data-glow] .next-word .glyph::after {
-	animation: android-flap-b-v2 460ms steps(1, end) both;
+	animation: android-flap-b 460ms steps(1, end) both;
 	animation-delay: calc(340ms + var(--i) * 70ms);
 }
 
@@ -835,7 +835,7 @@
 	--flow-filter: drop-shadow(0 0 0.06em rgba(255, 176, 70, 0.4));
 	--flow-low: 0.5;
 	--flow-high: 0.62;
-	--flow-motion: android-wait-scan-v2 3.8s ease-in-out infinite;
+	--flow-motion: android-wait-scan 3.8s ease-in-out infinite;
 	--flow-mask: linear-gradient(90deg, transparent 0, black 0.2em), radial-gradient(ellipse 54% 54% at 42% 50%, black 0 52%, rgba(0, 0, 0, 0.5) 76%, transparent 96%);
 	--spark-width: 2em;
 	--spark-height: 2.6em;
@@ -851,7 +851,7 @@
 	--smoke-filter: blur(5px);
 	--smoke-opacity: 0.55;
 	--smoke-blend: normal;
-	--smoke-motion: android-wait-pool-v2 6s ease-in-out infinite;
+	--smoke-motion: android-wait-pool 6s ease-in-out infinite;
 	--smoke-mask: linear-gradient(90deg, transparent 0, black 0.22em), radial-gradient(ellipse 50% 50% at 36% 56%, black 0 48%, transparent 94%);
 	--aux-opacity: 0;
 	--aux-motion: none;
@@ -886,9 +886,9 @@
 	--smoke-motion: none;
 }
 
-/* ---------- Keyframes (android-*-v2) ---------- */
+/* ---------- Keyframes (android-*) ---------- */
 /* The mounting panel bolts on... */
-@keyframes android-board-in-v2 {
+@keyframes android-board-in {
 	0% {
 		opacity: 0;
 	}
@@ -898,7 +898,7 @@
 }
 
 /* ...and the axle rail catches the light. */
-@keyframes android-rail-in-v2 {
+@keyframes android-rail-in {
 	0% {
 		opacity: 0;
 	}
@@ -908,7 +908,7 @@
 }
 
 /* Warm workshop air barely breathing over the board. */
-@keyframes android-air-v2 {
+@keyframes android-air {
 	0%,
 	100% {
 		opacity: calc(var(--haze-opacity, 0.6) * 0.78);
@@ -920,7 +920,7 @@
 
 /* SCAN RETICLE: the targeting bracket sweeps the word zone in ~430ms, then
    parks faint at the end of the row — the robot keeps it trained there. */
-@keyframes android-reticle-v2 {
+@keyframes android-reticle {
 	0% {
 		opacity: 0;
 		transform: translateY(-50%) translateX(-0.25em);
@@ -939,7 +939,7 @@
 }
 
 /* The row of blank cards snaps onto the rail. */
-@keyframes android-word-in-v2 {
+@keyframes android-word-in {
 	0% {
 		opacity: 0;
 	}
@@ -950,7 +950,7 @@
 
 /* SERVO JITTER: the motors run — the whole row trembles ±0.5px on steps,
    then sits perfectly still. */
-@keyframes android-servo-v2 {
+@keyframes android-servo {
 	0% {
 		transform: translateY(0.5px);
 	}
@@ -993,7 +993,7 @@
    real letter LOCKS — a 0.03em bounce, a brightness click-flash on the
    seam, crisp settle. The real char stays transparent until the last card
    falls. */
-@keyframes android-cell-flip-v2 {
+@keyframes android-cell-flip {
 	0% {
 		color: transparent;
 		filter: brightness(1);
@@ -1047,7 +1047,7 @@
 
 /* Paper version: the click-flash presses INTO the plate — a darker stamp
    instead of a glare. */
-@keyframes android-cell-flip-light-v2 {
+@keyframes android-cell-flip-light {
 	0% {
 		color: transparent;
 		filter: brightness(1);
@@ -1101,7 +1101,7 @@
 
 /* Card track A: the soft look-alike — up first, back mid-cycle, gone at
    the lock. steps(1) holds each card between swap boundaries. */
-@keyframes android-flap-a-v2 {
+@keyframes android-flap-a {
 	0% {
 		opacity: 1;
 	}
@@ -1120,7 +1120,7 @@
 }
 
 /* Card track B: the distant alt flashes through the middle window. */
-@keyframes android-flap-b-v2 {
+@keyframes android-flap-b {
 	0% {
 		opacity: 0;
 	}
@@ -1139,7 +1139,7 @@
    + n*70ms + 450ms lock ≈ a generous fixed 1.6s), then snaps green.
    Position lists: [amber lamp, green lamp, bezel ring] — off-duty lamps
    park offscreen at -3em. */
-@keyframes android-led-v2 {
+@keyframes android-led {
 	0% {
 		opacity: var(--spark-high, 0.95);
 		background-position:
@@ -1221,7 +1221,7 @@
 }
 
 /* ...then the green lamp breathes, barely. */
-@keyframes android-led-breathe-v2 {
+@keyframes android-led-breathe {
 	0%,
 	100% {
 		opacity: calc(var(--spark-high, 0.95) * 0.78);
@@ -1232,7 +1232,7 @@
 }
 
 /* One lazy tail reflip: a single card slaps over, the cell settles. */
-@keyframes android-tail-reflip-v2 {
+@keyframes android-tail-reflip {
 	0%,
 	88% {
 		transform: scaleY(1);
@@ -1250,7 +1250,7 @@
 }
 
 /* ...its alt card shows only inside that squash. */
-@keyframes android-tail-alt-v2 {
+@keyframes android-tail-alt {
 	0% {
 		opacity: 0;
 	}
@@ -1266,7 +1266,7 @@
 }
 
 /* Waiting: the amber LED blinks slowly... */
-@keyframes android-wait-led-v2 {
+@keyframes android-wait-led {
 	0%,
 	42% {
 		opacity: var(--core-opacity, 0.9);
@@ -1282,7 +1282,7 @@
 }
 
 /* ...the idle reticle micro-sweeps around the caret, searching... */
-@keyframes android-wait-scan-v2 {
+@keyframes android-wait-scan {
 	0%,
 	100% {
 		opacity: calc(var(--flow-high, 0.62) * 0.75);
@@ -1295,7 +1295,7 @@
 }
 
 /* ...a warm halo breathes... */
-@keyframes android-wait-halo-v2 {
+@keyframes android-wait-halo {
 	0%,
 	100% {
 		opacity: calc(var(--haze-opacity, 0.6) * 0.7);
@@ -1306,7 +1306,7 @@
 }
 
 /* ...and the little floor pool breathes with it. */
-@keyframes android-wait-pool-v2 {
+@keyframes android-wait-pool {
 	0%,
 	100% {
 		opacity: calc(var(--smoke-opacity, 0.55) * 0.75);

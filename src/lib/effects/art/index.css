@@ -1,5 +1,5 @@
 /* ============================================================
-   ART v2 — "Картина: следующее слово уже написано краской,
+   ART — "Картина: следующее слово уже написано краской,
    дальше — только карандашный набросок". An artist is painting
    the sentence onto a canvas. THE PAINTED WORD (the signature):
    every NEXT-WORD glyph is WET PIGMENT laid down by a BRUSH DAB —
@@ -25,31 +25,31 @@
    the graphite — the brush is coming for them next). BRUSH
    STROKE (prediction::before, z:-1 — pigment ON the canvas,
    under the word): ONE confident wet band swept l->r at ignite
-   (art-stroke-sweep-v2, ~620ms, scaleX from origin left, finite),
+   (art-stroke-sweep, ~620ms, scaleX from origin left, finite),
    organic silhouette from an asymmetric border-radius + a 2-mask
    intersect (horizontal taper x elliptical falloff — every fade
    completes INSIDE the box); its 4 background layers (glisten
    highlight / bristle ridges / end pooling / main wash — COUNT:
    4, every size/position list below counts 4) include a slow
-   low-alpha moving GLISTEN (art-stroke-glisten-v2, 7.5s — wet
+   low-alpha moving GLISTEN (art-stroke-glisten, 7.5s — wet
    paint catching the lamp). PALETTE DABS (prediction::after,
    z:4): four small impasto daubs floating near the caret — each
    an opaque pigment blob with a darker rim and an offset white
    highlight dot (8 radial layers: 4 highlights + 4 blobs —
-   COUNT: 8), popping in once (art-daub-in-v2) and then gently
-   BOBBING on the signature keyframe art-tail-blob-v2 (the
+   COUNT: 8), popping in once (art-daub-in) and then gently
+   BOBBING on the signature keyframe art-tail-blob (the
    artist's palette at hand, never still). VESSEL — THE CANVAS:
    dark theme is studio linen at night: deep warm charcoal with a
    soft easel-lamp warmth from the upper left; the ::before
    overlay carries lamp + vignette + a fine crossed weave (two
    1px-in-4px hairline rasters, 0deg x 90deg — COUNT: 4 layers in
-   both themes, each --art-*-v2 gradient var expands to exactly
+   both themes, each --art-* gradient var expands to exactly
    ONE gradient so the lists never drift). The component gates
    ::before to ready/waiting-field; this module re-implements
    that gating at its own specificity (base opacity 0, the state
    selectors raise it). CARET — A FINE BRUSH TIP: a sable-brown
    sliver whose loaded-paint gleam flickers as the brush turns: a
-   registered <number> (--art-gleam-a-v2) is animated with
+   registered <number> (--art-gleam-a) is animated with
    steps(1, end) ON the .field, where --caret-shadow computes
    (var() in a custom property substitutes where that property
    computes), so the color-mix alpha in the first shadow actually
@@ -57,9 +57,9 @@
    caret where three pigments swirl into each other (torch-core:
    4 radial layers — highlight + 3 pigment pools, COUNT: 4 in
    --core-size — blurred 2.5px and slowly rotated/scaled by
-   art-mix-swirl-v2 around an in-blob transform-origin) inside a
+   art-mix-swirl around an in-blob transform-origin) inside a
    faint thinner ring (torch-haze: 2 layers — COUNT: 2 in
-   --haze-size — pulsing on art-thinner-ring-v2); every other
+   --haze-size — pulsing on art-thinner-ring); every other
    torch layer dead. LIGHT THEME IS THE PRIMARY READING: warm-
    white gesso canvas, gouache pigments at darker readable
    lightness, graphite sketch in dark gray, the wash sinking in
@@ -85,12 +85,12 @@
    Readability: pigments at oklch L 0.62-0.75 on the charcoal
    linen, L 0.44-0.58 on the white canvas; the settled word never
    breathes — wet paint is the stillest, richest thing in the
-   frame. Keyframes art-*-v2 (signature keyframe art-tail-blob-v2
-   on the palette daubs) and vars --art-*-v2 only; legacy art
+   frame. Keyframes art-* (signature keyframe art-tail-blob
+   on the palette daubs) and vars --art-* only; legacy art
    rules in legacy.css are superseded and get deleted.
    ============================================================ */
 
-@property --art-gleam-a-v2 {
+@property --art-gleam-a {
 	syntax: '<number>';
 	inherits: false;
 	initial-value: 0.5;
@@ -101,37 +101,37 @@
 	--layer-clip: inset(0 round 999px);
 	/* The four gouache pigments (muted artist palette, 4-step glyph
 	   cycle) + their deeper pooled versions. */
-	--art-pig1-v2: oklch(0.66 0.16 34);
-	--art-pig1-deep-v2: oklch(0.5 0.15 32 / 0.9);
-	--art-pig2-v2: oklch(0.62 0.13 262);
-	--art-pig2-deep-v2: oklch(0.45 0.13 264 / 0.9);
-	--art-pig3-v2: oklch(0.75 0.11 84);
-	--art-pig3-deep-v2: oklch(0.58 0.1 80 / 0.9);
-	--art-pig4-v2: oklch(0.64 0.09 172);
-	--art-pig4-deep-v2: oklch(0.47 0.08 174 / 0.9);
+	--art-pig1: oklch(0.66 0.16 34);
+	--art-pig1-deep: oklch(0.5 0.15 32 / 0.9);
+	--art-pig2: oklch(0.62 0.13 262);
+	--art-pig2-deep: oklch(0.45 0.13 264 / 0.9);
+	--art-pig3: oklch(0.75 0.11 84);
+	--art-pig3-deep: oklch(0.58 0.1 80 / 0.9);
+	--art-pig4: oklch(0.64 0.09 172);
+	--art-pig4-deep: oklch(0.47 0.08 174 / 0.9);
 	/* Graphite underdrawing (L C H triple — alpha is per-glyph). */
-	--art-graphite-v2: 0.8 0.008 90;
+	--art-graphite: 0.8 0.008 90;
 	/* The wet brush stroke under the word. */
-	--art-wash-v2: oklch(0.68 0.08 52 / 0.2);
-	--art-wash-soft-v2: oklch(0.64 0.07 56 / 0.12);
-	--art-wash-edge-v2: oklch(0.52 0.09 48 / 0.16);
-	--art-bristle-v2: rgba(0, 0, 0, 0.12);
-	--art-glint-v2: rgba(255, 244, 224, 0.09);
-	--art-stroke-blend-v2: normal;
-	--art-stroke-o-v2: 0.9;
+	--art-wash: oklch(0.68 0.08 52 / 0.2);
+	--art-wash-soft: oklch(0.64 0.07 56 / 0.12);
+	--art-wash-edge: oklch(0.52 0.09 48 / 0.16);
+	--art-bristle: rgba(0, 0, 0, 0.12);
+	--art-glint: rgba(255, 244, 224, 0.09);
+	--art-stroke-blend: normal;
+	--art-stroke-o: 0.9;
 	/* Impasto palette daubs. */
-	--art-daub-hi-v2: rgba(255, 251, 240, 0.85);
-	--art-daub-o-v2: 0.92;
-	--art-daub-shadow-v2: drop-shadow(0 0.02em 0.05em rgba(0, 0, 0, 0.4));
+	--art-daub-hi: rgba(255, 251, 240, 0.85);
+	--art-daub-o: 0.92;
+	--art-daub-shadow: drop-shadow(0 0.02em 0.05em rgba(0, 0, 0, 0.4));
 	/* Waiting: thinner ring around the mixing blob. */
-	--art-thinner-v2: oklch(0.78 0.05 70 / 0.14);
-	--art-thinner-soft-v2: oklch(0.74 0.05 75 / 0.08);
+	--art-thinner: oklch(0.78 0.05 70 / 0.14);
+	--art-thinner-soft: oklch(0.74 0.05 75 / 0.08);
 	/* Vessel overlay pieces — each var is exactly ONE gradient in BOTH
 	   themes, so the 4-layer size/position/repeat lists never drift. */
-	--art-lamp-v2: radial-gradient(ellipse 74% 130% at 16% -18%, rgba(255, 216, 150, 0.07), transparent 62%);
-	--art-vignette-v2: radial-gradient(ellipse 94% 150% at 50% 56%, transparent 0 46%, rgba(10, 8, 6, 0.5) 100%);
-	--art-weave-v2: rgba(235, 220, 196, 0.028);
-	--art-caret-hue-v2: oklch(0.68 0.14 40);
+	--art-lamp: radial-gradient(ellipse 74% 130% at 16% -18%, rgba(255, 216, 150, 0.07), transparent 62%);
+	--art-vignette: radial-gradient(ellipse 94% 150% at 50% 56%, transparent 0 46%, rgba(10, 8, 6, 0.5) 100%);
+	--art-weave: rgba(235, 220, 196, 0.028);
+	--art-caret-hue: oklch(0.68 0.14 40);
 	--ready-border: rgba(226, 204, 172, 0.16);
 	--ready-shadow:
 		0 1px 0 rgba(255, 255, 255, 0.045) inset,
@@ -148,7 +148,7 @@
 		rgb(96, 60, 32) 100%
 	);
 	--caret-shadow:
-		0 0 6px color-mix(in oklab, var(--art-caret-hue-v2) calc(var(--art-gleam-a-v2) * 100%), transparent),
+		0 0 6px color-mix(in oklab, var(--art-caret-hue) calc(var(--art-gleam-a) * 100%), transparent),
 		0 0 16px oklch(0.62 0.12 45 / 0.28),
 		0 0 36px oklch(0.55 0.13 40 / 0.14);
 	--haze-bg: none;
@@ -185,7 +185,7 @@
 	--aux-mask: none;
 	--next-color: oklch(0.9 0.02 70 / 0.96);
 	--next-shadow: none;
-	--tail-color: oklch(var(--art-graphite-v2) / 0.42);
+	--tail-color: oklch(var(--art-graphite) / 0.42);
 }
 
 /* The painting lives on the glyphs and the prediction pseudos: every
@@ -215,14 +215,14 @@
 
 /* Studio linen at night: deep warm charcoal with an easel-lamp warmth
    from the upper left. The loaded-paint gleam animates the registered
-   --art-gleam-a-v2 ON the field — the only element where --caret-shadow
+   --art-gleam-a ON the field — the only element where --caret-shadow
    computes, so the color-mix alpha in the caret glow actually re-reads
    it each step. */
 .stage[data-glow='art'] .field[data-glow] {
 	background:
 		radial-gradient(ellipse 70% 130% at 18% -20%, rgba(255, 214, 150, 0.05), transparent 60%),
 		linear-gradient(90deg, rgb(25, 22, 19), rgb(28, 25, 21) 52%, rgb(25, 22, 19));
-	animation: art-gleam-v2 6.8s steps(1, end) infinite;
+	animation: art-gleam 6.8s steps(1, end) infinite;
 }
 
 /* THE CANVAS (vessel overlay): lamp warmth + vignette + fine crossed
@@ -235,10 +235,10 @@
    opacity transition still applies). */
 .stage[data-glow='art'] .field[data-glow]::before {
 	background:
-		var(--art-lamp-v2),
-		var(--art-vignette-v2),
-		repeating-linear-gradient(0deg, var(--art-weave-v2) 0 1px, transparent 1px 4px),
-		repeating-linear-gradient(90deg, var(--art-weave-v2) 0 1px, transparent 1px 4px);
+		var(--art-lamp),
+		var(--art-vignette),
+		repeating-linear-gradient(0deg, var(--art-weave) 0 1px, transparent 1px 4px),
+		repeating-linear-gradient(90deg, var(--art-weave) 0 1px, transparent 1px 4px);
 	background-size:
 		100% 100%,
 		100% 100%,
@@ -324,10 +324,10 @@
 	pointer-events: none;
 	border-radius: 46% 58% 52% 44% / 64% 42% 58% 38%;
 	background:
-		linear-gradient(100deg, transparent 0 42%, var(--art-glint-v2) 50%, transparent 58%),
-		repeating-linear-gradient(180deg, var(--art-bristle-v2) 0 0.045em, transparent 0.045em 0.16em),
-		radial-gradient(ellipse 30% 72% at 86% 56%, var(--art-wash-edge-v2), transparent 74%),
-		linear-gradient(90deg, var(--art-wash-v2) 0 30%, var(--art-wash-soft-v2) 62%, transparent 96%);
+		linear-gradient(100deg, transparent 0 42%, var(--art-glint) 50%, transparent 58%),
+		repeating-linear-gradient(180deg, var(--art-bristle) 0 0.045em, transparent 0.045em 0.16em),
+		radial-gradient(ellipse 30% 72% at 86% 56%, var(--art-wash-edge), transparent 74%),
+		linear-gradient(90deg, var(--art-wash) 0 30%, var(--art-wash-soft) 62%, transparent 96%);
 	background-size:
 		240% 100%,
 		100% 100%,
@@ -355,13 +355,13 @@
 			transparent calc(100% - 0.08em)
 		),
 		radial-gradient(ellipse 96% 74% at 45% 52%, black 0 58%, rgba(0, 0, 0, 0.6) 80%, transparent 97%);
-	mix-blend-mode: var(--art-stroke-blend-v2);
-	opacity: var(--art-stroke-o-v2);
+	mix-blend-mode: var(--art-stroke-blend);
+	opacity: var(--art-stroke-o);
 	transform: rotate(-1.8deg);
 	transform-origin: 0 55%;
 	animation:
-		art-stroke-sweep-v2 620ms cubic-bezier(0.2, 0.8, 0.25, 1) 60ms both,
-		art-stroke-glisten-v2 7.5s ease-in-out 1.4s infinite;
+		art-stroke-sweep 620ms cubic-bezier(0.2, 0.8, 0.25, 1) 60ms both,
+		art-stroke-glisten 7.5s ease-in-out 1.4s infinite;
 }
 
 /* ---------- PALETTE DABS: the artist's palette at hand ---------- */
@@ -370,7 +370,7 @@
    clearance. 8 radial layers — 4 offset highlight dots + 4 pigment
    blobs with darker rims (impasto volume) — single no-repeat applies
    to all 8. Pops in once, then bobs forever on the SIGNATURE keyframe
-   art-tail-blob-v2 (delay 830ms = 350ms + 480ms, exactly the entrance
+   art-tail-blob (delay 830ms = 350ms + 480ms, exactly the entrance
    end, and its 0% pose is identity — the handoff is seamless). */
 .stage[data-glow='art'] .field[data-glow] .prediction::after {
 	position: absolute;
@@ -386,24 +386,24 @@
 	pointer-events: none;
 	border-radius: 0;
 	background:
-		radial-gradient(circle 0.045em at 22% 26%, var(--art-daub-hi-v2), transparent 100%),
-		radial-gradient(circle 0.04em at 60% 18%, var(--art-daub-hi-v2), transparent 100%),
-		radial-gradient(circle 0.04em at 30% 66%, var(--art-daub-hi-v2), transparent 100%),
-		radial-gradient(circle 0.035em at 72% 62%, var(--art-daub-hi-v2), transparent 100%),
-		radial-gradient(circle 0.19em at 26% 30%, var(--art-pig1-v2) 0 52%, var(--art-pig1-deep-v2) 78%, transparent 100%),
-		radial-gradient(circle 0.17em at 64% 22%, var(--art-pig2-v2) 0 52%, var(--art-pig2-deep-v2) 78%, transparent 100%),
-		radial-gradient(circle 0.18em at 34% 70%, var(--art-pig3-v2) 0 52%, var(--art-pig3-deep-v2) 78%, transparent 100%),
-		radial-gradient(circle 0.15em at 74% 66%, var(--art-pig4-v2) 0 52%, var(--art-pig4-deep-v2) 78%, transparent 100%);
+		radial-gradient(circle 0.045em at 22% 26%, var(--art-daub-hi), transparent 100%),
+		radial-gradient(circle 0.04em at 60% 18%, var(--art-daub-hi), transparent 100%),
+		radial-gradient(circle 0.04em at 30% 66%, var(--art-daub-hi), transparent 100%),
+		radial-gradient(circle 0.035em at 72% 62%, var(--art-daub-hi), transparent 100%),
+		radial-gradient(circle 0.19em at 26% 30%, var(--art-pig1) 0 52%, var(--art-pig1-deep) 78%, transparent 100%),
+		radial-gradient(circle 0.17em at 64% 22%, var(--art-pig2) 0 52%, var(--art-pig2-deep) 78%, transparent 100%),
+		radial-gradient(circle 0.18em at 34% 70%, var(--art-pig3) 0 52%, var(--art-pig3-deep) 78%, transparent 100%),
+		radial-gradient(circle 0.15em at 74% 66%, var(--art-pig4) 0 52%, var(--art-pig4-deep) 78%, transparent 100%);
 	background-repeat: no-repeat;
-	filter: var(--art-daub-shadow-v2);
+	filter: var(--art-daub-shadow);
 	-webkit-mask-image: none;
 	mask-image: none;
 	mix-blend-mode: normal;
-	opacity: var(--art-daub-o-v2);
+	opacity: var(--art-daub-o);
 	transform: none;
 	animation:
-		art-daub-in-v2 480ms cubic-bezier(0.3, 1.2, 0.4, 1) 350ms both,
-		art-tail-blob-v2 5.6s ease-in-out 830ms infinite;
+		art-daub-in 480ms cubic-bezier(0.3, 1.2, 0.4, 1) 350ms both,
+		art-tail-blob 5.6s ease-in-out 830ms infinite;
 }
 
 /* ---------- The word: wet pigment, dabbed on ---------- */
@@ -420,7 +420,7 @@
 	filter: none;
 	text-shadow: none;
 	transform: none;
-	animation: art-word-in-v2 140ms ease-out both;
+	animation: art-word-in 140ms ease-out both;
 }
 
 /* THE BRUSH DAB: each glyph is revealed by a quick l->r wipe (clip-path
@@ -430,7 +430,7 @@
    COUNT: 4 in the size/repeat lists. The rasters are px-unit so the
    grain stays paper-fine at any glyph width. Once landed the word is
    utterly still — wet paint does not breathe. The pigment itself flows
-   in through --art-pig-glyph-v2 / --art-pig-glyph-deep-v2 set by the
+   in through --art-pig-glyph / --art-pig-glyph-deep set by the
    4-step cycle below. The nth-child group re-wins legacy tint splits. */
 .stage[data-glow='art'] .field[data-glow] .next-word .glyph,
 .stage[data-glow='art'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
@@ -441,14 +441,14 @@
 	color: transparent;
 	-webkit-text-fill-color: transparent;
 	background:
-		linear-gradient(180deg, transparent 0 58%, var(--art-pig-glyph-deep-v2) 76% 84%, transparent 96%),
+		linear-gradient(180deg, transparent 0 58%, var(--art-pig-glyph-deep) 76% 84%, transparent 96%),
 		radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.1) 0 0.5px, transparent 1px),
-		radial-gradient(circle at 1.5px 2.5px, var(--art-pig-glyph-deep-v2) 0 0.6px, transparent 1.2px),
+		radial-gradient(circle at 1.5px 2.5px, var(--art-pig-glyph-deep) 0 0.6px, transparent 1.2px),
 		linear-gradient(
 			180deg,
-			color-mix(in oklab, var(--art-pig-glyph-v2) 86%, white) 0%,
-			var(--art-pig-glyph-v2) 48%,
-			color-mix(in oklab, var(--art-pig-glyph-v2) 84%, black) 100%
+			color-mix(in oklab, var(--art-pig-glyph) 86%, white) 0%,
+			var(--art-pig-glyph) 48%,
+			color-mix(in oklab, var(--art-pig-glyph) 84%, black) 100%
 		);
 	background-size:
 		100% 100%,
@@ -463,7 +463,7 @@
 	text-shadow: none;
 	transform: none;
 	clip-path: inset(-0.25em -0.12em -0.5em -0.08em);
-	animation: art-dab-wipe-v2 340ms cubic-bezier(0.3, 0.7, 0.2, 1) both;
+	animation: art-dab-wipe 340ms cubic-bezier(0.3, 0.7, 0.2, 1) both;
 	animation-delay: calc(90ms + var(--i, 0) * 95ms);
 }
 
@@ -471,23 +471,23 @@
    Only custom properties — the paint rule above consumes them, and the
    light theme re-tunes the pigments through the theme var block. */
 .stage[data-glow='art'] .field[data-glow] .next-word .glyph:nth-child(4n + 1) {
-	--art-pig-glyph-v2: var(--art-pig1-v2);
-	--art-pig-glyph-deep-v2: var(--art-pig1-deep-v2);
+	--art-pig-glyph: var(--art-pig1);
+	--art-pig-glyph-deep: var(--art-pig1-deep);
 }
 
 .stage[data-glow='art'] .field[data-glow] .next-word .glyph:nth-child(4n + 2) {
-	--art-pig-glyph-v2: var(--art-pig2-v2);
-	--art-pig-glyph-deep-v2: var(--art-pig2-deep-v2);
+	--art-pig-glyph: var(--art-pig2);
+	--art-pig-glyph-deep: var(--art-pig2-deep);
 }
 
 .stage[data-glow='art'] .field[data-glow] .next-word .glyph:nth-child(4n + 3) {
-	--art-pig-glyph-v2: var(--art-pig3-v2);
-	--art-pig-glyph-deep-v2: var(--art-pig3-deep-v2);
+	--art-pig-glyph: var(--art-pig3);
+	--art-pig-glyph-deep: var(--art-pig3-deep);
 }
 
 .stage[data-glow='art'] .field[data-glow] .next-word .glyph:nth-child(4n) {
-	--art-pig-glyph-v2: var(--art-pig4-v2);
-	--art-pig-glyph-deep-v2: var(--art-pig4-deep-v2);
+	--art-pig-glyph: var(--art-pig4);
+	--art-pig-glyph-deep: var(--art-pig4-deep);
 }
 
 /* PAINT DRIP (glyph::before is free per effect): the second glyph loads
@@ -509,12 +509,12 @@
 	pointer-events: none;
 	border-radius: 0.04em 0.04em 0.06em 0.06em / 0.03em 0.03em 0.14em 0.14em;
 	background:
-		radial-gradient(ellipse 100% 22% at 50% 92%, color-mix(in oklab, var(--art-pig-glyph-v2, var(--art-pig2-v2)) 70%, white), transparent 78%),
-		linear-gradient(180deg, transparent 0, var(--art-pig-glyph-v2, var(--art-pig2-v2)) 18% 70%, var(--art-pig-glyph-deep-v2, var(--art-pig2-deep-v2)) 100%);
+		radial-gradient(ellipse 100% 22% at 50% 92%, color-mix(in oklab, var(--art-pig-glyph, var(--art-pig2)) 70%, white), transparent 78%),
+		linear-gradient(180deg, transparent 0, var(--art-pig-glyph, var(--art-pig2)) 18% 70%, var(--art-pig-glyph-deep, var(--art-pig2-deep)) 100%);
 	background-repeat: no-repeat;
 	opacity: 0;
 	transform-origin: 50% 0;
-	animation: art-drip-v2 2.2s cubic-bezier(0.5, 0.05, 0.6, 1) 900ms both;
+	animation: art-drip 2.2s cubic-bezier(0.5, 0.05, 0.6, 1) 900ms both;
 }
 
 /* Paint covers letterforms, not alter egos: no scrambled echoes (kills
@@ -542,7 +542,7 @@
 	transform: none;
 	-webkit-mask-image: linear-gradient(90deg, black 0 6em, rgba(0, 0, 0, 0.45) 9em, transparent 11.5em);
 	mask-image: linear-gradient(90deg, black 0 6em, rgba(0, 0, 0, 0.45) 9em, transparent 11.5em);
-	animation: art-tail-in-v2 300ms ease-out 140ms both;
+	animation: art-tail-in 300ms ease-out 140ms both;
 }
 
 /* Graphite outlines: transparent fill + a thin text-stroke whose alpha
@@ -558,7 +558,7 @@
 	position: relative;
 	color: transparent;
 	-webkit-text-fill-color: transparent;
-	-webkit-text-stroke: 0.016em oklch(var(--art-graphite-v2) / clamp(0.1, calc(0.6 - var(--i, 0) * 0.04), 0.6));
+	-webkit-text-stroke: 0.016em oklch(var(--art-graphite) / clamp(0.1, calc(0.6 - var(--i, 0) * 0.04), 0.6));
 	background: none;
 	-webkit-background-clip: border-box;
 	background-clip: border-box;
@@ -567,8 +567,8 @@
 	text-shadow: none;
 	transform-origin: 50% 82%;
 	animation:
-		art-sketch-in-v2 380ms ease-out both,
-		art-sketch-waver-v2 5.2s ease-in-out infinite;
+		art-sketch-in 380ms ease-out both,
+		art-sketch-waver 5.2s ease-in-out infinite;
 	animation-delay: calc(160ms + var(--i, 0) * 38ms), calc(700ms + var(--i, 0) * 210ms);
 }
 
@@ -589,11 +589,11 @@
 /* FIRST WASH: the brush is coming — the first two sketch glyphs carry a
    faint underpaint tint over the graphite (ochre, then vermilion). */
 .stage[data-glow='art'] .field[data-glow] .tail .glyph:nth-child(1) {
-	-webkit-text-fill-color: color-mix(in oklab, var(--art-pig3-v2) 26%, transparent);
+	-webkit-text-fill-color: color-mix(in oklab, var(--art-pig3) 26%, transparent);
 }
 
 .stage[data-glow='art'] .field[data-glow] .tail .glyph:nth-child(2) {
-	-webkit-text-fill-color: color-mix(in oklab, var(--art-pig1-v2) 18%, transparent);
+	-webkit-text-fill-color: color-mix(in oklab, var(--art-pig1) 18%, transparent);
 }
 
 /* ---------- Light flow off: one sitting, then the easel rests ---------- */
@@ -610,24 +610,24 @@
 }
 
 .stage[data-glow='art'][data-light-flow='off'] .field[data-glow] .prediction::before {
-	animation: art-stroke-sweep-v2 620ms cubic-bezier(0.2, 0.8, 0.25, 1) 60ms both;
+	animation: art-stroke-sweep 620ms cubic-bezier(0.2, 0.8, 0.25, 1) 60ms both;
 }
 
 .stage[data-glow='art'][data-light-flow='off'] .field[data-glow] .prediction::after {
-	animation: art-daub-in-v2 480ms cubic-bezier(0.3, 1.2, 0.4, 1) 350ms both;
+	animation: art-daub-in 480ms cubic-bezier(0.3, 1.2, 0.4, 1) 350ms both;
 }
 
 .stage[data-glow='art'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
-	animation: art-dab-wipe-v2 340ms cubic-bezier(0.3, 0.7, 0.2, 1) both;
+	animation: art-dab-wipe 340ms cubic-bezier(0.3, 0.7, 0.2, 1) both;
 	animation-delay: calc(90ms + var(--i, 0) * 95ms);
 }
 
 .stage[data-glow='art'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(2)::before {
-	animation: art-drip-v2 2.2s cubic-bezier(0.5, 0.05, 0.6, 1) 900ms both;
+	animation: art-drip 2.2s cubic-bezier(0.5, 0.05, 0.6, 1) 900ms both;
 }
 
 .stage[data-glow='art'][data-light-flow='off'] .field[data-glow] .tail .glyph {
-	animation: art-sketch-in-v2 380ms ease-out both;
+	animation: art-sketch-in 380ms ease-out both;
 	animation-delay: calc(160ms + var(--i, 0) * 38ms);
 }
 
@@ -637,31 +637,31 @@
    hairlines. Every gradient var still expands to exactly ONE gradient
    — the 4-layer vessel lists hold. */
 .field[data-theme='light'][data-glow='art'] {
-	--art-pig1-v2: oklch(0.52 0.17 32);
-	--art-pig1-deep-v2: oklch(0.4 0.15 30 / 0.9);
-	--art-pig2-v2: oklch(0.44 0.14 264);
-	--art-pig2-deep-v2: oklch(0.34 0.13 266 / 0.9);
-	--art-pig3-v2: oklch(0.58 0.12 80);
-	--art-pig3-deep-v2: oklch(0.46 0.11 76 / 0.9);
-	--art-pig4-v2: oklch(0.46 0.1 172);
-	--art-pig4-deep-v2: oklch(0.36 0.09 174 / 0.9);
-	--art-graphite-v2: 0.38 0.006 270;
-	--art-wash-v2: oklch(0.6 0.09 52 / 0.26);
-	--art-wash-soft-v2: oklch(0.64 0.08 58 / 0.16);
-	--art-wash-edge-v2: oklch(0.5 0.1 46 / 0.2);
-	--art-bristle-v2: rgba(86, 62, 40, 0.1);
-	--art-glint-v2: rgba(255, 255, 255, 0.28);
-	--art-stroke-blend-v2: multiply;
-	--art-stroke-o-v2: 0.85;
-	--art-daub-hi-v2: rgba(255, 255, 252, 0.95);
-	--art-daub-o-v2: 0.95;
-	--art-daub-shadow-v2: drop-shadow(0 0.018em 0.04em rgba(70, 50, 34, 0.28));
-	--art-thinner-v2: oklch(0.55 0.06 60 / 0.16);
-	--art-thinner-soft-v2: oklch(0.6 0.05 65 / 0.1);
-	--art-lamp-v2: radial-gradient(ellipse 90% 160% at 70% -30%, rgba(255, 255, 255, 0.75), transparent 58%);
-	--art-vignette-v2: radial-gradient(ellipse 94% 150% at 50% 55%, transparent 0 52%, oklch(0.7 0.03 80 / 0.14) 100%);
-	--art-weave-v2: rgba(118, 100, 78, 0.05);
-	--art-caret-hue-v2: oklch(0.52 0.16 34);
+	--art-pig1: oklch(0.52 0.17 32);
+	--art-pig1-deep: oklch(0.4 0.15 30 / 0.9);
+	--art-pig2: oklch(0.44 0.14 264);
+	--art-pig2-deep: oklch(0.34 0.13 266 / 0.9);
+	--art-pig3: oklch(0.58 0.12 80);
+	--art-pig3-deep: oklch(0.46 0.11 76 / 0.9);
+	--art-pig4: oklch(0.46 0.1 172);
+	--art-pig4-deep: oklch(0.36 0.09 174 / 0.9);
+	--art-graphite: 0.38 0.006 270;
+	--art-wash: oklch(0.6 0.09 52 / 0.26);
+	--art-wash-soft: oklch(0.64 0.08 58 / 0.16);
+	--art-wash-edge: oklch(0.5 0.1 46 / 0.2);
+	--art-bristle: rgba(86, 62, 40, 0.1);
+	--art-glint: rgba(255, 255, 255, 0.28);
+	--art-stroke-blend: multiply;
+	--art-stroke-o: 0.85;
+	--art-daub-hi: rgba(255, 255, 252, 0.95);
+	--art-daub-o: 0.95;
+	--art-daub-shadow: drop-shadow(0 0.018em 0.04em rgba(70, 50, 34, 0.28));
+	--art-thinner: oklch(0.55 0.06 60 / 0.16);
+	--art-thinner-soft: oklch(0.6 0.05 65 / 0.1);
+	--art-lamp: radial-gradient(ellipse 90% 160% at 70% -30%, rgba(255, 255, 255, 0.75), transparent 58%);
+	--art-vignette: radial-gradient(ellipse 94% 150% at 50% 55%, transparent 0 52%, oklch(0.7 0.03 80 / 0.14) 100%);
+	--art-weave: rgba(118, 100, 78, 0.05);
+	--art-caret-hue: oklch(0.52 0.16 34);
 	--ready-border: rgba(140, 122, 100, 0.34);
 	--ready-shadow:
 		0 1px 0 rgba(255, 255, 255, 0.95) inset,
@@ -674,7 +674,7 @@
 	--caret-gradient: linear-gradient(180deg, rgb(122, 82, 44) 0%, rgb(152, 104, 58) 42%, rgb(90, 56, 28) 100%);
 	--caret-shadow:
 		0 1px 0 rgba(255, 255, 255, 0.5),
-		0 0 6px color-mix(in oklab, var(--art-caret-hue-v2) calc(var(--art-gleam-a-v2) * 70%), transparent),
+		0 0 6px color-mix(in oklab, var(--art-caret-hue) calc(var(--art-gleam-a) * 70%), transparent),
 		0 6px 14px rgba(96, 62, 36, 0.18);
 	--haze-opacity: 0;
 	--body-opacity: 0;
@@ -687,7 +687,7 @@
 	--aux-opacity: 0;
 	--next-color: oklch(0.28 0.02 60 / 0.96);
 	--next-shadow: none;
-	--tail-color: oklch(var(--art-graphite-v2) / 0.38);
+	--tail-color: oklch(var(--art-graphite) / 0.38);
 }
 
 /* Legacy scopes shared light vars on the stage: re-win the contested
@@ -713,7 +713,7 @@
 	--aux-opacity: 0;
 	--next-color: oklch(0.28 0.02 60 / 0.96);
 	--next-shadow: none;
-	--tail-color: oklch(var(--art-graphite-v2) / 0.38);
+	--tail-color: oklch(var(--art-graphite) / 0.38);
 }
 
 /* Gesso vessel — a primed canvas in daylight. */
@@ -730,13 +730,13 @@
 /* The wet wash and the daubs keep their geometry; paint flips through
    the theme vars to multiply gouache. */
 .stage[data-theme='light'][data-glow='art'] .field[data-glow] .prediction::before {
-	mix-blend-mode: var(--art-stroke-blend-v2);
-	opacity: var(--art-stroke-o-v2);
+	mix-blend-mode: var(--art-stroke-blend);
+	opacity: var(--art-stroke-o);
 }
 
 .stage[data-theme='light'][data-glow='art'] .field[data-glow] .prediction::after {
-	filter: var(--art-daub-shadow-v2);
-	opacity: var(--art-daub-o-v2);
+	filter: var(--art-daub-shadow);
+	opacity: var(--art-daub-o);
 }
 
 /* The mixing blob sinks into the paper, never screened away. */
@@ -760,14 +760,14 @@
 	color: transparent;
 	-webkit-text-fill-color: transparent;
 	background:
-		linear-gradient(180deg, transparent 0 58%, var(--art-pig-glyph-deep-v2) 76% 84%, transparent 96%),
+		linear-gradient(180deg, transparent 0 58%, var(--art-pig-glyph-deep) 76% 84%, transparent 96%),
 		radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.16) 0 0.5px, transparent 1px),
-		radial-gradient(circle at 1.5px 2.5px, var(--art-pig-glyph-deep-v2) 0 0.6px, transparent 1.2px),
+		radial-gradient(circle at 1.5px 2.5px, var(--art-pig-glyph-deep) 0 0.6px, transparent 1.2px),
 		linear-gradient(
 			180deg,
-			color-mix(in oklab, var(--art-pig-glyph-v2) 86%, white) 0%,
-			var(--art-pig-glyph-v2) 48%,
-			color-mix(in oklab, var(--art-pig-glyph-v2) 84%, black) 100%
+			color-mix(in oklab, var(--art-pig-glyph) 86%, white) 0%,
+			var(--art-pig-glyph) 48%,
+			color-mix(in oklab, var(--art-pig-glyph) 84%, black) 100%
 		);
 	background-size:
 		100% 100%,
@@ -780,7 +780,7 @@
 	opacity: 1;
 	filter: none;
 	text-shadow: none;
-	animation: art-dab-wipe-v2 340ms cubic-bezier(0.3, 0.7, 0.2, 1) both;
+	animation: art-dab-wipe 340ms cubic-bezier(0.3, 0.7, 0.2, 1) both;
 	animation-delay: calc(90ms + var(--i, 0) * 95ms);
 }
 
@@ -797,25 +797,25 @@
 .stage[data-theme='light'][data-glow='art'] .field[data-glow] .tail .glyph:nth-child(n) {
 	color: transparent;
 	-webkit-text-fill-color: transparent;
-	-webkit-text-stroke: 0.016em oklch(var(--art-graphite-v2) / clamp(0.09, calc(0.56 - var(--i, 0) * 0.038), 0.56));
+	-webkit-text-stroke: 0.016em oklch(var(--art-graphite) / clamp(0.09, calc(0.56 - var(--i, 0) * 0.038), 0.56));
 	background: none;
 	opacity: 1;
 	filter: blur(clamp(0px, calc((var(--i, 0) - 10) * 0.07px), 0.8px));
 	text-shadow: none;
 	animation:
-		art-sketch-in-v2 380ms ease-out both,
-		art-sketch-waver-v2 5.2s ease-in-out infinite;
+		art-sketch-in 380ms ease-out both,
+		art-sketch-waver 5.2s ease-in-out infinite;
 	animation-delay: calc(160ms + var(--i, 0) * 38ms), calc(700ms + var(--i, 0) * 210ms);
 }
 
 /* Light underpaint re-wins: the :nth-child(n) pass above out-specifies
    the dark-scope first-wash rules — repeat them at light scope. */
 .stage[data-theme='light'][data-glow='art'] .field[data-glow] .tail .glyph:nth-child(1) {
-	-webkit-text-fill-color: color-mix(in oklab, var(--art-pig3-v2) 26%, transparent);
+	-webkit-text-fill-color: color-mix(in oklab, var(--art-pig3) 26%, transparent);
 }
 
 .stage[data-theme='light'][data-glow='art'] .field[data-glow] .tail .glyph:nth-child(2) {
-	-webkit-text-fill-color: color-mix(in oklab, var(--art-pig1-v2) 18%, transparent);
+	-webkit-text-fill-color: color-mix(in oklab, var(--art-pig1) 18%, transparent);
 }
 
 .stage[data-theme='light'][data-glow='art'] .field[data-glow] .edge-left {
@@ -838,28 +838,28 @@
 }
 
 .stage[data-theme='light'][data-glow='art'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(n) {
-	animation: art-dab-wipe-v2 340ms cubic-bezier(0.3, 0.7, 0.2, 1) both;
+	animation: art-dab-wipe 340ms cubic-bezier(0.3, 0.7, 0.2, 1) both;
 	animation-delay: calc(90ms + var(--i, 0) * 95ms);
 }
 
 .stage[data-theme='light'][data-glow='art'][data-light-flow='off'] .field[data-glow] .tail .glyph:nth-child(n) {
-	animation: art-sketch-in-v2 380ms ease-out both;
+	animation: art-sketch-in 380ms ease-out both;
 	animation-delay: calc(160ms + var(--i, 0) * 38ms);
 }
 
 .stage[data-theme='light'][data-glow='art'][data-light-flow='off'] .field[data-glow] .prediction::before {
-	animation: art-stroke-sweep-v2 620ms cubic-bezier(0.2, 0.8, 0.25, 1) 60ms both;
+	animation: art-stroke-sweep 620ms cubic-bezier(0.2, 0.8, 0.25, 1) 60ms both;
 }
 
 .stage[data-theme='light'][data-glow='art'][data-light-flow='off'] .field[data-glow] .prediction::after {
-	animation: art-daub-in-v2 480ms cubic-bezier(0.3, 1.2, 0.4, 1) 350ms both;
+	animation: art-daub-in 480ms cubic-bezier(0.3, 1.2, 0.4, 1) 350ms both;
 }
 
 /* ---------- Waiting: mixing paint on the palette ---------- */
 /* A small palette blob at the caret where three pigments swirl into
    each other: torch-core carries 4 radial layers (highlight dot + 3
    pigment pools — COUNT: 4 in --core-size), blurred 2.5px so the edges
-   bleed like wet media, and rotates/scales on art-mix-swirl-v2 around
+   bleed like wet media, and rotates/scales on art-mix-swirl around
    an in-blob origin (0.77em ~ the 48% blob center of the 1.6em box —
    the torch default origin is left-center, which would swing the blob
    around the caret instead of turning it). torch-haze is a faint
@@ -876,11 +876,11 @@
 		100% 100%,
 		100% 100%;
 	--haze-bg:
-		radial-gradient(circle 0.84em at 42% 50%, transparent 0 74%, var(--art-thinner-v2) 82% 88%, transparent 100%),
-		radial-gradient(ellipse 40% 34% at 42% 52%, var(--art-thinner-soft-v2), transparent 74%);
+		radial-gradient(circle 0.84em at 42% 50%, transparent 0 74%, var(--art-thinner) 82% 88%, transparent 100%),
+		radial-gradient(ellipse 40% 34% at 42% 52%, var(--art-thinner-soft), transparent 74%);
 	--haze-filter: blur(4px);
 	--haze-opacity: 0.7;
-	--torch-haze-motion: art-thinner-ring-v2 4.4s ease-in-out infinite;
+	--torch-haze-motion: art-thinner-ring 4.4s ease-in-out infinite;
 	--haze-mask:
 		linear-gradient(90deg, transparent 0, black 0.2em, black calc(100% - 0.24em), transparent 100%),
 		radial-gradient(circle 1em at 42% 50%, black 0 68%, rgba(0, 0, 0, 0.4) 86%, transparent 100%);
@@ -894,13 +894,13 @@
 		100% 100%,
 		100% 100%;
 	--core-bg:
-		radial-gradient(circle 0.05em at 46% 34%, var(--art-daub-hi-v2), transparent 100%),
-		radial-gradient(circle 0.34em at 36% 42%, var(--art-pig1-v2) 0 42%, transparent 100%),
-		radial-gradient(circle 0.32em at 62% 52%, var(--art-pig2-v2) 0 40%, transparent 100%),
-		radial-gradient(circle 0.36em at 46% 66%, var(--art-pig3-v2) 0 44%, transparent 100%);
+		radial-gradient(circle 0.05em at 46% 34%, var(--art-daub-hi), transparent 100%),
+		radial-gradient(circle 0.34em at 36% 42%, var(--art-pig1) 0 42%, transparent 100%),
+		radial-gradient(circle 0.32em at 62% 52%, var(--art-pig2) 0 40%, transparent 100%),
+		radial-gradient(circle 0.36em at 46% 66%, var(--art-pig3) 0 44%, transparent 100%);
 	--core-filter: blur(2.5px);
 	--core-opacity: 0.92;
-	--torch-core-motion: art-mix-swirl-v2 3.8s ease-in-out infinite;
+	--torch-core-motion: art-mix-swirl 3.8s ease-in-out infinite;
 	--core-mask:
 		linear-gradient(90deg, transparent 0, black 0.14em, black calc(100% - 0.16em), transparent 100%),
 		radial-gradient(circle 0.72em at 48% 50%, black 0 62%, rgba(0, 0, 0, 0.5) 82%, transparent 98%);
@@ -952,9 +952,9 @@
 	--torch-core-motion: none;
 }
 
-/* ---------- Keyframes (art-*-v2) ---------- */
+/* ---------- Keyframes (art-*) ---------- */
 /* The word row mounts onto the canvas. */
-@keyframes art-word-in-v2 {
+@keyframes art-word-in {
 	0% {
 		opacity: 0;
 	}
@@ -964,7 +964,7 @@
 }
 
 /* The sketch strip settles in. */
-@keyframes art-tail-in-v2 {
+@keyframes art-tail-in {
 	0% {
 		opacity: 0;
 	}
@@ -978,7 +978,7 @@
    the fill state is a generously opened inset (bottom -0.5em keeps the
    drip visible) — no discrete clip-path jump. No color in the frames,
    so both themes share it. */
-@keyframes art-dab-wipe-v2 {
+@keyframes art-dab-wipe {
 	0% {
 		opacity: 0;
 		clip-path: inset(-0.25em 100% -0.5em -0.08em);
@@ -998,7 +998,7 @@
 
 /* PAINT DRIP: the droplet stretches down from the glyph's foot, slows,
    and dries to a faint mark (fill both holds the 0.4-alpha residue). */
-@keyframes art-drip-v2 {
+@keyframes art-drip {
 	0% {
 		opacity: 0;
 		transform: scaleY(0.12);
@@ -1019,14 +1019,14 @@
 
 /* THE STROKE SWEEP: one confident band swept l->r at ignite — no 100%
    frame, so it settles onto the live rotated slot and stays. */
-@keyframes art-stroke-sweep-v2 {
+@keyframes art-stroke-sweep {
 	0% {
 		opacity: 0;
 		transform: rotate(-1.8deg) scaleX(0.05);
 		filter: blur(3px);
 	}
 	45% {
-		opacity: var(--art-stroke-o-v2, 0.9);
+		opacity: var(--art-stroke-o, 0.9);
 		filter: blur(1px);
 	}
 	80% {
@@ -1038,7 +1038,7 @@
 /* Wet paint catching the lamp: only the glisten layer (layer 1 of 4)
    wanders — every background-position list counts the SAME 4 layers as
    the stroke's background. Ends match, so the loop is seamless. */
-@keyframes art-stroke-glisten-v2 {
+@keyframes art-stroke-glisten {
 	0%,
 	100% {
 		background-position:
@@ -1058,14 +1058,14 @@
 
 /* The daubs pop onto the palette (no 100% frame — opacity and scale
    settle onto the live slots before the bob takes the transform). */
-@keyframes art-daub-in-v2 {
+@keyframes art-daub-in {
 	0% {
 		opacity: 0;
 		transform: scale(0.55);
 		filter: blur(1.5px);
 	}
 	70% {
-		opacity: var(--art-daub-o-v2, 0.92);
+		opacity: var(--art-daub-o, 0.92);
 		transform: scale(1.04);
 		filter: blur(0);
 	}
@@ -1073,8 +1073,8 @@
 
 /* THE SIGNATURE BOB: the palette daubs ride the artist's steadying hand
    — identity at both ends, so the handoff from the entrance and the
-   loop are both seamless. (Signature keyframe: art-tail-blob-v2.) */
-@keyframes art-tail-blob-v2 {
+   loop are both seamless. (Signature keyframe: art-tail-blob.) */
+@keyframes art-tail-blob {
 	0%,
 	100% {
 		transform: translate(0, 0) rotate(0deg);
@@ -1089,7 +1089,7 @@
 
 /* Sketch glyphs are dashed in by the pencil (no 100% frame — opacity,
    blur and the wobble transform settle onto the live nth-child slots). */
-@keyframes art-sketch-in-v2 {
+@keyframes art-sketch-in {
 	0% {
 		opacity: 0;
 		transform: translateY(0.05em);
@@ -1101,7 +1101,7 @@
 }
 
 /* The underdrawing stays tentative — a slow staggered waver. */
-@keyframes art-sketch-waver-v2 {
+@keyframes art-sketch-waver {
 	0%,
 	100% {
 		opacity: 1;
@@ -1114,28 +1114,28 @@
 /* The loaded brush turns in the light: the caret gleam's alpha snaps
    between held poses — registered <number>, animated on the field
    where --caret-shadow computes. */
-@keyframes art-gleam-v2 {
+@keyframes art-gleam {
 	0%,
 	100% {
-		--art-gleam-a-v2: 0.5;
+		--art-gleam-a: 0.5;
 	}
 	11% {
-		--art-gleam-a-v2: 0.4;
+		--art-gleam-a: 0.4;
 	}
 	16% {
-		--art-gleam-a-v2: 0.56;
+		--art-gleam-a: 0.56;
 	}
 	44% {
-		--art-gleam-a-v2: 0.46;
+		--art-gleam-a: 0.46;
 	}
 	49% {
-		--art-gleam-a-v2: 0.58;
+		--art-gleam-a: 0.58;
 	}
 	74% {
-		--art-gleam-a-v2: 0.36;
+		--art-gleam-a: 0.36;
 	}
 	79% {
-		--art-gleam-a-v2: 0.52;
+		--art-gleam-a: 0.52;
 	}
 }
 
@@ -1143,7 +1143,7 @@
    360deg is seamless) with a gentle knead of scale, all around the
    in-blob origin; the translateY(-50%) keeps the torch layer's own
    centering. */
-@keyframes art-mix-swirl-v2 {
+@keyframes art-mix-swirl {
 	0% {
 		transform: translateY(-50%) rotate(0deg) scale(1);
 	}
@@ -1156,7 +1156,7 @@
 }
 
 /* ...inside a faint ring of thinner, breathing slowly. */
-@keyframes art-thinner-ring-v2 {
+@keyframes art-thinner-ring {
 	0%,
 	100% {
 		opacity: calc(var(--haze-opacity, 0.7) * 0.7);

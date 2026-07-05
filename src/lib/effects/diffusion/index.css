@@ -1,5 +1,5 @@
 /* ============================================================
-   DIFFUSION v2 — "Диффузионная модель денойзит текст". The
+   DIFFUSION — "Диффузионная модель денойзит текст". The
    reveal mimics an image-generation sampler, not a colored
    wash. LATENT NOISE FIELD: the suggestion zone opens as a
    patch of pastel RGB micro-blocks (~0.18em checkerboard: a
@@ -46,7 +46,7 @@
    settled word is perfectly crisp — no blur, no double-vision
    ever lands on it. Every decorated layer dissolves through
    intersected masks whose fades complete INSIDE their boxes.
-   Keyframes: diffusion-*-v2 only (legacy diffusion-* keyframes
+   Keyframes: diffusion-* only (legacy diffusion-* keyframes
    stay untouched).
    ============================================================ */
 
@@ -261,7 +261,7 @@
 	mix-blend-mode: normal;
 	opacity: var(--dif-grid-o);
 	transform: none;
-	animation: diffusion-grid-in-v2 420ms ease-out both;
+	animation: diffusion-grid-in 420ms ease-out both;
 }
 
 /* ---------- LATENT NOISE FIELD: the patch the word condenses from ---------- */
@@ -295,8 +295,8 @@
 	transform: none;
 	transform-origin: 32% 50%;
 	animation:
-		diffusion-latent-shimmer-v2 760ms steps(2, end) infinite,
-		diffusion-latent-collapse-v2 1.4s steps(1, end) 160ms both;
+		diffusion-latent-shimmer 760ms steps(2, end) infinite,
+		diffusion-latent-collapse 1.4s steps(1, end) 160ms both;
 }
 
 /* ---------- The word: five sampler states, one global clock ---------- */
@@ -311,7 +311,7 @@
 	filter: none;
 	text-shadow: var(--next-shadow);
 	transform: none;
-	animation: diffusion-word-in-v2 200ms ease-out both;
+	animation: diffusion-word-in 200ms ease-out both;
 }
 
 /* GUIDANCE AURA: dual-tone magenta-cyan air around the word, tightening
@@ -333,7 +333,7 @@
 	opacity: var(--dif-aura-o);
 	transform: none;
 	transform-origin: 45% 50%;
-	animation: diffusion-aura-v2 1.4s steps(1, end) 160ms both;
+	animation: diffusion-aura 1.4s steps(1, end) 160ms both;
 }
 
 /* STEP TICKS: 5 squares under the word, one filled per denoise step via a
@@ -366,8 +366,8 @@
 	opacity: var(--dif-ticks-o);
 	transform: none;
 	animation:
-		diffusion-ticks-v2 1.4s steps(1, end) 160ms both,
-		diffusion-ticks-out-v2 480ms ease-out 2.56s forwards;
+		diffusion-ticks 1.4s steps(1, end) 160ms both,
+		diffusion-ticks-out 480ms ease-out 2.56s forwards;
 }
 
 /* THE GLOBAL SNAP: every glyph rides the same 1.4s stepped clock — no
@@ -387,7 +387,7 @@
 	filter: none;
 	text-shadow: var(--next-shadow);
 	transform: none;
-	animation: diffusion-real-v2 1.4s steps(1, end) both;
+	animation: diffusion-real 1.4s steps(1, end) both;
 	animation-delay: var(--dif-jit);
 }
 
@@ -419,7 +419,7 @@
 	text-shadow: none;
 	opacity: 0;
 	transform: none;
-	animation: diffusion-alt-v2 1.4s steps(1, end) both;
+	animation: diffusion-alt 1.4s steps(1, end) both;
 	animation-delay: var(--dif-jit);
 }
 
@@ -437,7 +437,7 @@
 	text-shadow: none;
 	opacity: 0;
 	transform: none;
-	animation: diffusion-soft-v2 1.4s steps(1, end) both;
+	animation: diffusion-soft 1.4s steps(1, end) both;
 	animation-delay: var(--dif-jit);
 }
 
@@ -457,7 +457,7 @@
 	text-shadow: none;
 	-webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.85) 0, rgba(0, 0, 0, 0.5) 3em, rgba(0, 0, 0, 0.18) 6.6em, transparent 9.8em);
 	mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.85) 0, rgba(0, 0, 0, 0.5) 3em, rgba(0, 0, 0, 0.18) 6.6em, transparent 9.8em);
-	animation: diffusion-tail-in-v2 420ms ease-out 240ms both;
+	animation: diffusion-tail-in 420ms ease-out 240ms both;
 }
 
 /* Latent residue: low-alpha noise patches pooled behind the tail glyphs,
@@ -485,7 +485,7 @@
 	mix-blend-mode: normal;
 	opacity: var(--dif-tail-noise-o);
 	transform: none;
-	animation: diffusion-tail-noise-v2 1.35s steps(2, end) infinite;
+	animation: diffusion-tail-noise 1.35s steps(2, end) infinite;
 }
 
 /* Real tail chars stay hidden — the future is undecided. A rare stepped
@@ -503,7 +503,7 @@
 	filter: none;
 	text-shadow: none;
 	transform: none;
-	animation: diffusion-tail-real-v2 7.4s steps(1, end) infinite;
+	animation: diffusion-tail-real 7.4s steps(1, end) infinite;
 	animation-delay: calc(var(--i) * -911ms);
 }
 
@@ -519,7 +519,7 @@
 	text-shadow: none;
 	opacity: var(--dif-tail-alt-o);
 	transform: none;
-	animation: diffusion-tail-alt-v2 7.4s steps(1, end) infinite;
+	animation: diffusion-tail-alt 7.4s steps(1, end) infinite;
 	animation-delay: calc(var(--i) * -911ms);
 }
 
@@ -534,44 +534,44 @@
    once (finite); the noise shimmer and tail flicker freeze — a static
    frame of latent noise. */
 .stage[data-glow='diffusion'][data-light-flow='off'] .field[data-glow] .prediction::after {
-	animation: diffusion-grid-in-v2 420ms ease-out both;
+	animation: diffusion-grid-in 420ms ease-out both;
 }
 
 .stage[data-glow='diffusion'][data-light-flow='off'] .field[data-glow] .prediction::before {
-	animation: diffusion-latent-collapse-v2 1.4s steps(1, end) 160ms both;
+	animation: diffusion-latent-collapse 1.4s steps(1, end) 160ms both;
 }
 
 .stage[data-glow='diffusion'][data-light-flow='off'] .field[data-glow] .next-word {
-	animation: diffusion-word-in-v2 200ms ease-out both;
+	animation: diffusion-word-in 200ms ease-out both;
 }
 
 .stage[data-glow='diffusion'][data-light-flow='off'] .field[data-glow] .next-word::before {
-	animation: diffusion-aura-v2 1.4s steps(1, end) 160ms both;
+	animation: diffusion-aura 1.4s steps(1, end) 160ms both;
 }
 
 .stage[data-glow='diffusion'][data-light-flow='off'] .field[data-glow] .next-word::after {
 	animation:
-		diffusion-ticks-v2 1.4s steps(1, end) 160ms both,
-		diffusion-ticks-out-v2 480ms ease-out 2.56s forwards;
+		diffusion-ticks 1.4s steps(1, end) 160ms both,
+		diffusion-ticks-out 480ms ease-out 2.56s forwards;
 }
 
 .stage[data-glow='diffusion'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
-	animation: diffusion-real-v2 1.4s steps(1, end) both;
+	animation: diffusion-real 1.4s steps(1, end) both;
 	animation-delay: var(--dif-jit);
 }
 
 .stage[data-glow='diffusion'][data-light-flow='off'] .field[data-glow] .next-word .glyph::after {
-	animation: diffusion-alt-v2 1.4s steps(1, end) both;
+	animation: diffusion-alt 1.4s steps(1, end) both;
 	animation-delay: var(--dif-jit);
 }
 
 .stage[data-glow='diffusion'][data-light-flow='off'] .field[data-glow] .next-word .glyph::before {
-	animation: diffusion-soft-v2 1.4s steps(1, end) both;
+	animation: diffusion-soft 1.4s steps(1, end) both;
 	animation-delay: var(--dif-jit);
 }
 
 .stage[data-glow='diffusion'][data-light-flow='off'] .field[data-glow] .tail {
-	animation: diffusion-tail-in-v2 420ms ease-out 240ms both;
+	animation: diffusion-tail-in 420ms ease-out 240ms both;
 }
 
 .stage[data-glow='diffusion'][data-light-flow='off'] .field[data-glow] .tail::before {
@@ -781,39 +781,39 @@
 /* Light theme + flow off: re-win the finite passes against the
    higher-specificity light rules above. */
 .stage[data-theme='light'][data-glow='diffusion'][data-light-flow='off'] .field[data-glow] .prediction::after {
-	animation: diffusion-grid-in-v2 420ms ease-out both;
+	animation: diffusion-grid-in 420ms ease-out both;
 }
 
 .stage[data-theme='light'][data-glow='diffusion'][data-light-flow='off'] .field[data-glow] .prediction::before {
-	animation: diffusion-latent-collapse-v2 1.4s steps(1, end) 160ms both;
+	animation: diffusion-latent-collapse 1.4s steps(1, end) 160ms both;
 }
 
 .stage[data-theme='light'][data-glow='diffusion'][data-light-flow='off'] .field[data-glow] .next-word {
-	animation: diffusion-word-in-v2 200ms ease-out both;
+	animation: diffusion-word-in 200ms ease-out both;
 }
 
 .stage[data-theme='light'][data-glow='diffusion'][data-light-flow='off'] .field[data-glow] .next-word::before {
-	animation: diffusion-aura-v2 1.4s steps(1, end) 160ms both;
+	animation: diffusion-aura 1.4s steps(1, end) 160ms both;
 }
 
 .stage[data-theme='light'][data-glow='diffusion'][data-light-flow='off'] .field[data-glow] .next-word::after {
 	animation:
-		diffusion-ticks-v2 1.4s steps(1, end) 160ms both,
-		diffusion-ticks-out-v2 480ms ease-out 2.56s forwards;
+		diffusion-ticks 1.4s steps(1, end) 160ms both,
+		diffusion-ticks-out 480ms ease-out 2.56s forwards;
 }
 
 .stage[data-theme='light'][data-glow='diffusion'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
-	animation: diffusion-real-v2 1.4s steps(1, end) both;
+	animation: diffusion-real 1.4s steps(1, end) both;
 	animation-delay: var(--dif-jit);
 }
 
 .stage[data-theme='light'][data-glow='diffusion'][data-light-flow='off'] .field[data-glow] .next-word .glyph::after {
-	animation: diffusion-alt-v2 1.4s steps(1, end) both;
+	animation: diffusion-alt 1.4s steps(1, end) both;
 	animation-delay: var(--dif-jit);
 }
 
 .stage[data-theme='light'][data-glow='diffusion'][data-light-flow='off'] .field[data-glow] .next-word .glyph::before {
-	animation: diffusion-soft-v2 1.4s steps(1, end) both;
+	animation: diffusion-soft 1.4s steps(1, end) both;
 	animation-delay: var(--dif-jit);
 }
 
@@ -842,7 +842,7 @@
 		radial-gradient(ellipse 1.6em 0.95em at 1.4em 56%, rgba(96, 220, 255, 0.08), transparent 78%);
 	--haze-filter: blur(10px) saturate(1.1);
 	--haze-opacity: 0.6;
-	--torch-haze-motion: diffusion-wait-pool-v2 4.8s ease-in-out infinite;
+	--torch-haze-motion: diffusion-wait-pool 4.8s ease-in-out infinite;
 	--haze-mask: linear-gradient(90deg, transparent 0, black 0.3em), radial-gradient(ellipse 50% 50% at 34% 50%, black 0 46%, rgba(0, 0, 0, 0.5) 72%, transparent 96%);
 	--body-bg: none;
 	--body-opacity: 0;
@@ -852,7 +852,7 @@
 	--core-bg: var(--dif-noise);
 	--core-filter: var(--dif-noise-filter);
 	--core-opacity: 0.5;
-	--torch-core-motion: diffusion-wait-sample-v2 1.15s steps(2, end) infinite;
+	--torch-core-motion: diffusion-wait-sample 1.15s steps(2, end) infinite;
 	--core-mask: linear-gradient(90deg, transparent 0, black 0.18em), radial-gradient(ellipse 46% 34% at 30% 50%, black 0 44%, rgba(0, 0, 0, 0.5) 72%, transparent 94%);
 	--flow-bg: none;
 	--flow-low: 0;
@@ -895,9 +895,9 @@
 	--torch-core-motion: none;
 }
 
-/* ---------- Keyframes (diffusion-*-v2) ---------- */
+/* ---------- Keyframes (diffusion-*) ---------- */
 /* The latent grid fades up under the zone. */
-@keyframes diffusion-grid-in-v2 {
+@keyframes diffusion-grid-in {
 	0% {
 		opacity: 0;
 	}
@@ -908,7 +908,7 @@
 
 /* NOISE SHIMMER: the micro-blocks re-roll on steps — background positions
    jump by whole 0.18em cells and the hue snaps with them. Never smooth. */
-@keyframes diffusion-latent-shimmer-v2 {
+@keyframes diffusion-latent-shimmer {
 	0% {
 		background-position:
 			0 0,
@@ -934,7 +934,7 @@
 
 /* DENOISE, field track: the whole patch loses sigma in five snaps and
    settles as a faint latent aura behind the crisp word. */
-@keyframes diffusion-latent-collapse-v2 {
+@keyframes diffusion-latent-collapse {
 	0% {
 		opacity: var(--dif-noise-o, 0.8);
 		scale: 1 1;
@@ -960,7 +960,7 @@
 
 /* GUIDANCE AURA: loose -> tight in the same five snaps, ending as a
    barely-visible halo hugging the settled word. */
-@keyframes diffusion-aura-v2 {
+@keyframes diffusion-aura {
 	0% {
 		opacity: var(--dif-aura-o, 0.5);
 		scale: 1.32 1.42;
@@ -985,7 +985,7 @@
 }
 
 /* The word row mounts under the noise. */
-@keyframes diffusion-word-in-v2 {
+@keyframes diffusion-word-in {
 	0% {
 		opacity: 0;
 	}
@@ -998,7 +998,7 @@
    (transparent fill, tinted shadows carry the blur) -> hidden while the
    scrambled and soft cards sharpen -> the crisp letter. Nothing blurry
    ever remains: the settled state is plain color + the module shadow. */
-@keyframes diffusion-real-v2 {
+@keyframes diffusion-real {
 	0% {
 		color: transparent;
 		text-shadow: none;
@@ -1022,7 +1022,7 @@
 }
 
 /* STEP2 window: the scrambled char flashes mid-blur, then yields. */
-@keyframes diffusion-alt-v2 {
+@keyframes diffusion-alt {
 	0% {
 		opacity: 0;
 	}
@@ -1036,7 +1036,7 @@
 }
 
 /* STEP3 window: the soft look-alike, one snap from the truth. */
-@keyframes diffusion-soft-v2 {
+@keyframes diffusion-soft {
 	0% {
 		opacity: 0;
 	}
@@ -1050,7 +1050,7 @@
 }
 
 /* STEP TICKS: one square per denoise step — inference progress. */
-@keyframes diffusion-ticks-v2 {
+@keyframes diffusion-ticks {
 	0% {
 		background-size:
 			0.22em 0.22em,
@@ -1080,7 +1080,7 @@
 }
 
 /* ...and the readout switches off a second after the run completes. */
-@keyframes diffusion-ticks-out-v2 {
+@keyframes diffusion-ticks-out {
 	0% {
 		opacity: var(--dif-ticks-o, 0.9);
 	}
@@ -1090,7 +1090,7 @@
 }
 
 /* The undecided strip settles in. */
-@keyframes diffusion-tail-in-v2 {
+@keyframes diffusion-tail-in {
 	0% {
 		opacity: 0;
 	}
@@ -1100,7 +1100,7 @@
 }
 
 /* Residual latents behind the tail keep re-rolling, quietly. */
-@keyframes diffusion-tail-noise-v2 {
+@keyframes diffusion-tail-noise {
 	0% {
 		background-position:
 			0 0,
@@ -1122,7 +1122,7 @@
 }
 
 /* Rare tail flicker, real-char side: one brief stepped window. */
-@keyframes diffusion-tail-real-v2 {
+@keyframes diffusion-tail-real {
 	0%,
 	84% {
 		color: transparent;
@@ -1138,7 +1138,7 @@
 }
 
 /* ...and the alt side blinks out for exactly that window. */
-@keyframes diffusion-tail-alt-v2 {
+@keyframes diffusion-tail-alt {
 	0%,
 	84% {
 		opacity: var(--dif-tail-alt-o, 0.55);
@@ -1154,7 +1154,7 @@
 }
 
 /* Waiting: the sample patch re-rolls its cells on steps... */
-@keyframes diffusion-wait-sample-v2 {
+@keyframes diffusion-wait-sample {
 	0% {
 		opacity: var(--core-opacity, 0.5);
 		background-position:
@@ -1179,7 +1179,7 @@
 }
 
 /* ...over a dual-tone pool that barely breathes. */
-@keyframes diffusion-wait-pool-v2 {
+@keyframes diffusion-wait-pool {
 	0%,
 	100% {
 		opacity: calc(var(--haze-opacity, 0.6) * 0.72);

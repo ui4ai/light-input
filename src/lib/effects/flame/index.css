@@ -1,5 +1,5 @@
 /* ============================================================
-   FLAME v2 — "Gas burner jet from the caret"
+   FLAME — "Gas burner jet from the caret"
    Blue premix nozzle (prediction::after, survives
    data-light-flow='off') + buoyant plume that bends upward via
    a rising spine of offset radials. Tongues live on
@@ -39,8 +39,8 @@
 		radial-gradient(ellipse 3em 1.7em at 0.7em 50%, rgba(120, 160, 255, 0.1), transparent 70%);
 	--haze-filter: blur(22px) saturate(1.25);
 	--haze-opacity: 0.85;
-	--haze-motion: flame-haze-breathe-v2 3.6s ease-in-out 760ms infinite;
-	--torch-haze-motion: flame-pilot-halo-v2 2.8s ease-in-out infinite;
+	--haze-motion: flame-haze-breathe 3.6s ease-in-out 760ms infinite;
+	--torch-haze-motion: flame-pilot-halo 2.8s ease-in-out infinite;
 	--haze-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 95% 92% at 26% 54%, black 0 38%, rgba(0, 0, 0, 0.5) 66%, transparent 96%);
 	--body-width: 9.8em;
 	--body-height: 2.6em;
@@ -66,8 +66,8 @@
 		radial-gradient(ellipse 0.5em 0.22em at 0.42em 60%, rgba(150, 190, 255, 0.5), transparent 80%);
 	--core-filter: blur(3px) saturate(1.25);
 	--core-opacity: 1;
-	--core-motion: flame-core-flicker-v2 1.15s ease-in-out 560ms infinite;
-	--torch-core-motion: flame-pilot-v2 1.7s ease-in-out infinite;
+	--core-motion: flame-core-flicker 1.15s ease-in-out 560ms infinite;
+	--torch-core-motion: flame-pilot 1.7s ease-in-out infinite;
 	--core-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 96% 92% at 26% 58%, black 0 45%, rgba(0, 0, 0, 0.5) 72%, transparent 95%);
 	--flow-width: 10em;
 	--flow-height: 2.2em;
@@ -78,7 +78,7 @@
 	--flow-filter: blur(12px) saturate(1.2);
 	--flow-low: 0.16;
 	--flow-high: 0.5;
-	--flow-motion: flame-flow-v2 2.7s ease-in-out 900ms infinite;
+	--flow-motion: flame-flow 2.7s ease-in-out 900ms infinite;
 	--flow-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 94% 88% at 28% 52%, black 0 40%, rgba(0, 0, 0, 0.5) 68%, transparent 96%);
 	--spark-width: 6.5em;
 	--spark-height: 2.6em;
@@ -93,7 +93,7 @@
 	--spark-filter: blur(0.3px) drop-shadow(0 0 6px rgba(255, 150, 40, 0.7));
 	--spark-low: 0;
 	--spark-high: 0.95;
-	--spark-motion: flame-embers-v2 2.3s cubic-bezier(0.3, 0.1, 0.55, 1) 880ms infinite;
+	--spark-motion: flame-embers 2.3s cubic-bezier(0.3, 0.1, 0.55, 1) 880ms infinite;
 	--spark-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 94% 92% at 35% 55%, black 0 55%, transparent 96%);
 	--smoke-width: 9em;
 	--smoke-height: 2.6em;
@@ -105,7 +105,7 @@
 	--smoke-filter: blur(13px);
 	--smoke-opacity: 0.6;
 	--smoke-blend: normal;
-	--smoke-motion: flame-smoke-v2 6s ease-in-out 1.2s infinite;
+	--smoke-motion: flame-smoke 6s ease-in-out 1.2s infinite;
 	--smoke-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 94% 92% at 62% 34%, black 0 40%, rgba(0, 0, 0, 0.5) 68%, transparent 94%);
 	--aux-width: 6.8em;
 	--aux-height: 2.6em;
@@ -117,7 +117,7 @@
 	--aux-filter: blur(2.5px) saturate(1.3);
 	--aux-opacity: 0.9;
 	--aux-blend: screen;
-	--aux-motion: flame-tongue-dance-v2 1.05s ease-in-out 780ms infinite;
+	--aux-motion: flame-tongue-dance 1.05s ease-in-out 780ms infinite;
 	--aux-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 92% 96% at 45% 34%, black 0 45%, rgba(0, 0, 0, 0.5) 72%, transparent 94%);
 	--next-color: rgba(255, 240, 215, 0.96);
 	--next-shadow:
@@ -164,7 +164,7 @@
 	mask-image: radial-gradient(ellipse 100% 96% at 30% 55%, black 0 44%, rgba(0, 0, 0, 0.5) 72%, transparent 100%);
 	mix-blend-mode: screen;
 	opacity: 0.88;
-	animation: flame-wash-v2 6.8s ease-in-out infinite;
+	animation: flame-wash 6.8s ease-in-out infinite;
 }
 
 /* Dissolve into the field's rounded clip, not the paint box; edge overlays
@@ -218,8 +218,8 @@
 	transform: translateY(-50%);
 	transform-origin: 16% 74%;
 	animation:
-		flame-layer-in-v2 480ms cubic-bezier(0.16, 1, 0.3, 1) both,
-		flame-tongue-sway-v2 1.5s ease-in-out 620ms infinite;
+		flame-layer-in 480ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		flame-tongue-sway 1.5s ease-in-out 620ms infinite;
 }
 
 /* The nozzle: blue premix cone with a white-hot throat, crisp, above the
@@ -249,15 +249,15 @@
 	transform: translateY(-50%);
 	transform-origin: left center;
 	animation:
-		flame-nozzle-in-v2 520ms cubic-bezier(0.16, 1, 0.3, 1) both,
-		flame-nozzle-flicker-v2 1.3s ease-in-out 520ms infinite;
+		flame-nozzle-in 520ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		flame-nozzle-flicker 1.3s ease-in-out 520ms infinite;
 }
 
 /* Plume buoyancy: a slow waver layered after the shared entrance. */
 .stage[data-glow='flame'] .field[data-glow] .beam-body {
 	animation:
 		beam-open 650ms cubic-bezier(0.16, 1, 0.3, 1) both,
-		flame-plume-live-v2 2.9s ease-in-out 700ms infinite;
+		flame-plume-live 2.9s ease-in-out 700ms infinite;
 }
 
 /* ---------- Text is sacred ---------- */
@@ -269,8 +269,8 @@
 	filter: none;
 	text-shadow: var(--next-shadow);
 	animation:
-		flame-word-settle-v2 320ms cubic-bezier(0.16, 1, 0.3, 1) both,
-		flame-word-simmer-v2 4.8s ease-in-out 1.2s infinite;
+		flame-word-settle 320ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		flame-word-simmer 4.8s ease-in-out 1.2s infinite;
 }
 
 /* Dark scrim between the flame body and the glyphs: contrast insurance. */
@@ -290,7 +290,7 @@
 	mix-blend-mode: normal;
 	opacity: 0.85;
 	transform: none;
-	animation: flame-scrim-in-v2 420ms ease-out both;
+	animation: flame-scrim-in 420ms ease-out both;
 }
 
 /* Per-glyph ignition; nth-child variants grouped to outrank legacy tints. */
@@ -301,7 +301,7 @@
 .stage[data-glow='flame'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
 	color: var(--next-color);
 	transform-origin: 55% 85%;
-	animation: flame-glyph-ignite-v2 560ms cubic-bezier(0.2, 0.85, 0.3, 1.05) both;
+	animation: flame-glyph-ignite 560ms cubic-bezier(0.2, 0.85, 0.3, 1.05) both;
 	animation-delay: calc(120ms + var(--i) * 58ms);
 }
 
@@ -333,11 +333,11 @@
 }
 
 .stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .prediction::before {
-	animation: flame-layer-in-v2 480ms cubic-bezier(0.16, 1, 0.3, 1) both;
+	animation: flame-layer-in 480ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .prediction::after {
-	animation: flame-nozzle-in-v2 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+	animation: flame-nozzle-in 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .beam-veil {
@@ -353,11 +353,11 @@
 }
 
 .stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .next-word {
-	animation: flame-word-settle-v2 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+	animation: flame-word-settle 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .next-word::before {
-	animation: flame-scrim-in-v2 420ms ease-out both;
+	animation: flame-scrim-in 420ms ease-out both;
 }
 
 .stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .next-word .glyph,
@@ -365,7 +365,7 @@
 .stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(3n),
 .stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
 .stage[data-glow='flame'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
-	animation: flame-glyph-ignite-v2 560ms cubic-bezier(0.2, 0.85, 0.3, 1.05) both;
+	animation: flame-glyph-ignite 560ms cubic-bezier(0.2, 0.85, 0.3, 1.05) both;
 	animation-delay: calc(120ms + var(--i) * 58ms);
 }
 
@@ -477,8 +477,8 @@
 
 .stage[data-theme='light'][data-glow='flame'] .field[data-glow] .next-word {
 	animation:
-		flame-word-settle-v2 320ms cubic-bezier(0.16, 1, 0.3, 1) both,
-		flame-word-simmer-light-v2 4.8s ease-in-out 1.2s infinite;
+		flame-word-settle 320ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		flame-word-simmer-light 4.8s ease-in-out 1.2s infinite;
 }
 
 .stage[data-theme='light'][data-glow='flame'] .field[data-glow] .next-word .glyph,
@@ -487,7 +487,7 @@
 .stage[data-theme='light'][data-glow='flame'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
 .stage[data-theme='light'][data-glow='flame'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
 	color: var(--next-color);
-	animation: flame-glyph-ignite-light-v2 560ms cubic-bezier(0.2, 0.85, 0.3, 1.05) both;
+	animation: flame-glyph-ignite-light 560ms cubic-bezier(0.2, 0.85, 0.3, 1.05) both;
 	animation-delay: calc(120ms + var(--i) * 58ms);
 }
 
@@ -536,7 +536,7 @@
 	--flow-filter: blur(10px) saturate(1.1);
 	--flow-low: 0.05;
 	--flow-high: 0.16;
-	--flow-motion: flame-flow-v2 6s ease-in-out infinite;
+	--flow-motion: flame-flow 6s ease-in-out infinite;
 	--flow-mask: linear-gradient(90deg, transparent 0, black 0.35em), radial-gradient(ellipse 92% 88% at 28% 52%, black 0 44%, transparent 96%);
 	--spark-width: 2.4em;
 	--spark-height: 1.7em;
@@ -546,7 +546,7 @@
 	--spark-filter: blur(0.3px) drop-shadow(0 0 5px rgba(255, 170, 60, 0.5));
 	--spark-low: 0;
 	--spark-high: 0.4;
-	--spark-motion: flame-embers-v2 3.8s cubic-bezier(0.3, 0.1, 0.55, 1) infinite;
+	--spark-motion: flame-embers 3.8s cubic-bezier(0.3, 0.1, 0.55, 1) infinite;
 	--spark-mask: linear-gradient(90deg, transparent 0, black 0.35em), radial-gradient(ellipse 92% 90% at 32% 55%, black 0 55%, transparent 96%);
 	--smoke-width: 3.6em;
 	--smoke-height: 2em;
@@ -559,7 +559,7 @@
 	--aux-bg: radial-gradient(ellipse 0.2em 0.5em at 0.45em 0.55em, rgba(255, 178, 66, 0.32), rgba(255, 120, 26, 0.14) 58%, transparent 82%);
 	--aux-filter: blur(2px) saturate(1.2);
 	--aux-opacity: 0.55;
-	--aux-motion: flame-tongue-dance-v2 2.1s ease-in-out infinite;
+	--aux-motion: flame-tongue-dance 2.1s ease-in-out infinite;
 	--aux-mask: linear-gradient(90deg, transparent 0, black 0.35em), radial-gradient(ellipse 90% 94% at 34% 38%, black 0 48%, transparent 94%);
 }
 
@@ -575,8 +575,8 @@
 	--aux-opacity: 0.4;
 }
 
-/* ---------- Keyframes (flame-*-v2) ---------- */
-@keyframes flame-haze-breathe-v2 {
+/* ---------- Keyframes (flame-*) ---------- */
+@keyframes flame-haze-breathe {
 	0%,
 	100% {
 		opacity: calc(var(--haze-opacity) * 0.78);
@@ -588,7 +588,7 @@
 	}
 }
 
-@keyframes flame-plume-live-v2 {
+@keyframes flame-plume-live {
 	0%,
 	100% {
 		transform: translateY(-50%) scaleY(0.965) skewX(-0.5deg);
@@ -601,7 +601,7 @@
 	}
 }
 
-@keyframes flame-core-flicker-v2 {
+@keyframes flame-core-flicker {
 	0%,
 	100% {
 		opacity: calc(var(--core-opacity) * 0.82);
@@ -621,7 +621,7 @@
 	}
 }
 
-@keyframes flame-flow-v2 {
+@keyframes flame-flow {
 	0% {
 		opacity: var(--flow-low);
 		background-position: 0% 50%;
@@ -638,7 +638,7 @@
 	}
 }
 
-@keyframes flame-embers-v2 {
+@keyframes flame-embers {
 	0% {
 		opacity: 0;
 		transform: translateY(-46%) translateX(-0.1em) scale(0.9);
@@ -656,7 +656,7 @@
 	}
 }
 
-@keyframes flame-smoke-v2 {
+@keyframes flame-smoke {
 	0%,
 	100% {
 		opacity: calc(var(--smoke-opacity) * 0.7);
@@ -672,7 +672,7 @@
 	}
 }
 
-@keyframes flame-tongue-sway-v2 {
+@keyframes flame-tongue-sway {
 	0%,
 	100% {
 		opacity: 0.85;
@@ -692,7 +692,7 @@
 	}
 }
 
-@keyframes flame-tongue-dance-v2 {
+@keyframes flame-tongue-dance {
 	0%,
 	100% {
 		opacity: calc(var(--aux-opacity) * 0.7);
@@ -712,7 +712,7 @@
 	}
 }
 
-@keyframes flame-nozzle-in-v2 {
+@keyframes flame-nozzle-in {
 	0% {
 		opacity: 0;
 		transform: translateY(-50%) scaleX(0.2) scaleY(0.55);
@@ -727,7 +727,7 @@
 	}
 }
 
-@keyframes flame-nozzle-flicker-v2 {
+@keyframes flame-nozzle-flicker {
 	0%,
 	100% {
 		opacity: 0.94;
@@ -751,7 +751,7 @@
 	}
 }
 
-@keyframes flame-layer-in-v2 {
+@keyframes flame-layer-in {
 	0% {
 		opacity: 0;
 		transform: translateY(-50%) scaleY(0.7);
@@ -762,7 +762,7 @@
 	}
 }
 
-@keyframes flame-scrim-in-v2 {
+@keyframes flame-scrim-in {
 	0% {
 		opacity: 0;
 	}
@@ -771,7 +771,7 @@
 	}
 }
 
-@keyframes flame-wash-v2 {
+@keyframes flame-wash {
 	0%,
 	100% {
 		opacity: 0.78;
@@ -784,7 +784,7 @@
 	}
 }
 
-@keyframes flame-glyph-ignite-v2 {
+@keyframes flame-glyph-ignite {
 	0% {
 		opacity: 0;
 		color: rgb(255, 255, 250);
@@ -809,7 +809,7 @@
 	}
 }
 
-@keyframes flame-glyph-ignite-light-v2 {
+@keyframes flame-glyph-ignite-light {
 	0% {
 		opacity: 0;
 		color: rgb(250, 150, 30);
@@ -834,7 +834,7 @@
 	}
 }
 
-@keyframes flame-word-settle-v2 {
+@keyframes flame-word-settle {
 	0% {
 		opacity: 0;
 		transform: translateX(-0.1em);
@@ -845,7 +845,7 @@
 	}
 }
 
-@keyframes flame-word-simmer-v2 {
+@keyframes flame-word-simmer {
 	0%,
 	100% {
 		text-shadow:
@@ -873,7 +873,7 @@
 	}
 }
 
-@keyframes flame-word-simmer-light-v2 {
+@keyframes flame-word-simmer-light {
 	0%,
 	100% {
 		text-shadow:
@@ -889,7 +889,7 @@
 	}
 }
 
-@keyframes flame-pilot-v2 {
+@keyframes flame-pilot {
 	0%,
 	100% {
 		opacity: calc(var(--core-opacity) * 0.85);
@@ -905,7 +905,7 @@
 	}
 }
 
-@keyframes flame-pilot-halo-v2 {
+@keyframes flame-pilot-halo {
 	0%,
 	100% {
 		opacity: calc(var(--haze-opacity) * 0.72);

@@ -14,7 +14,8 @@
 //   getAnimations({subtree:true}).pause() + currentTime=1200; setInterval stubbed to no-op so
 //   MatrixRain's 92ms flips never fire; input scrollLeft forced to 0; two rAFs before reading.
 // animation-* are dumped as LONGHANDS (shorthand skipped) and animation-name is normalized
-// through a strip-'-v2' map so the same baseline survives the later -v2 keyframe rename.
+// through the legacy suffix-strip map so a baseline captured before the W3 keyframe rename still
+// diffs clean (the rename has since landed, so the strip is an idempotent no-op today).
 //
 // Usage:
 //   node scripts/qa/style-oracle.mjs [--out qa/baseline] [--only torch,matrix] [--concurrency 1]

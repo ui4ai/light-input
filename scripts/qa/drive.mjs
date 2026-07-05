@@ -521,8 +521,10 @@ export function anatomyNodes({ state }) {
 // We dump ALL longhand computed properties EXCEPT the skip-list below. Rationale (from the
 // critique): even with animations frozen, a handful of properties are inherently unstable or
 // pure noise (per-run resource URLs, layout timing that survived the freeze). animation-* are
-// dumped as LONGHANDS (never the shorthand). animation-name is normalized through a -v2 strip
-// map so the same baseline survives the later -v2 keyframe rename in W3.
+// dumped as LONGHANDS (never the shorthand). animation-name is normalized through the legacy
+// suffix-strip map below so a pre-W3 baseline still diffs clean against post-W3 output. W3 has
+// since removed that suffix from every effect identifier, so on the current tree the strip map
+// is an idempotent no-op — it is retained as a belt-and-suspenders guard, not a live convention.
 
 // Properties to skip: the animation SHORTHAND (we keep longhands), and a few known-unstable /
 // redundant computed values. Kept deliberately small — do NOT loosen to hide real diffs.
@@ -534,18 +536,21 @@ export const SKIP_PROPERTIES = new Set([
 ]);
 
 /**
- * Strip a trailing `-v2` from every whitespace/comma-delimited token in a VALUE string.
+ * Strip the legacy migration suffix from every whitespace/comma-delimited token in a VALUE string.
  *
- * The `-v2` suffix marks W3's renamed keyframes/vars. It surfaces in computed-style VALUES in:
- *   1. the resolved `animation-name` longhand (e.g. "beam-open, flame-haze-breathe-v2"), and
+ * That suffix once marked the redesigned modules' keyframes/vars before the W3 rename. It used to
+ * surface in computed-style VALUES in:
+ *   1. the resolved `animation-name` longhand (e.g. "beam-open, flame-haze-breathe"), and
  *   2. the effect's `--*-motion` custom-property values (animation shorthands that name the
- *      keyframe, e.g. "--haze-motion: flame-haze-breathe-v2 3.6s ...").
- * Both change identically when W3 removes the `-v2` suffix. Normalizing ALL string values (not
- * just animation-name) is what lets a pre-W3 baseline diff clean against post-W3 output.
+ *      keyframe, e.g. "--haze-motion: flame-haze-breathe 3.6s ...").
+ * Normalizing ALL string values (not just animation-name) is what let a pre-rename baseline diff
+ * clean against post-rename output. W3 has since removed the suffix from every effect identifier,
+ * so on the current tree this strip is an idempotent no-op — retained only so an older baseline
+ * (captured before the rename) still compares equal.
  *
- * Audited safe: across the full 156-combo baseline, `-v2` appears in values ONLY as a
- * keyframe-name suffix at a token boundary (0 mid-token occurrences, never inside colors/urls).
- * For W0's own self-diff it is a no-op — identical runs stay equal. See critique fatalFlaws[1].
+ * Audited safe: the suffix only ever appeared as a keyframe/var-name suffix at a token boundary
+ * (0 mid-token occurrences, never inside colors/urls). For a self-diff it is a no-op — identical
+ * runs stay equal. See critique fatalFlaws[1].
  */
 export function stripV2(value) {
 	if (typeof value !== 'string' || !value.includes('-v2')) return value;
@@ -554,13 +559,14 @@ export function stripV2(value) {
 }
 
 /**
- * Strip a trailing `-v2` from a custom-property NAME (dump key).
+ * Strip the legacy migration suffix from a custom-property NAME (dump key).
  *
- * getComputedStyle enumerates every custom property, so W3's `-v2`-suffixed vars (registered
- * @property names AND plain `--x-v2` custom props — 230 distinct across the baseline) appear as
- * dump keys. W3 renames them, so keys must be normalized too or the baseline shows false diffs.
- * Audited safe: 0 key collisions — stripping `-v2` never yields a key already present in the
- * same node. Only custom-property keys (`--…`) end in `-v2`; standard longhands never do.
+ * getComputedStyle enumerates every custom property, so before the W3 rename the suffixed vars
+ * (registered @property names AND plain custom props — 230 distinct across the baseline) appeared
+ * as dump keys; normalizing keys too kept an old baseline from showing false diffs. Audited safe:
+ * 0 key collisions — stripping the suffix never yielded a key already present in the same node.
+ * Only custom-property keys (`--…`) ever carried it; standard longhands never do. Post-rename this
+ * is an idempotent no-op, retained only for cross-baseline comparison.
  */
 export function stripV2Key(key) {
 	return key.endsWith('-v2') ? key.slice(0, -3) : key;
@@ -569,7 +575,7 @@ export function stripV2Key(key) {
 /** Back-compat alias (older name). */
 export const normalizeAnimationName = stripV2;
 
-/** Apply -v2 normalization to a full node dump (keys + values). Returns a new object. */
+/** Apply the legacy suffix normalization to a full node dump (keys + values). New object. */
 export function normalizeDumpNode(dump) {
 	if (!dump) return dump;
 	const out = {};
@@ -582,7 +588,7 @@ export function normalizeDumpNode(dump) {
 /**
  * In-page dumper. For a given selector (+optional pseudo), return an object of
  * { property: value } for every longhand, minus the skip-list, or null if the node is absent.
- * Runs inside the browser; must be a pure function string for page.evaluate. The -v2
+ * Runs inside the browser; must be a pure function string for page.evaluate. The legacy-suffix
  * normalization is applied AFTER capture (out-of-page) so the raw computed values are
  * transformed by one canonical implementation.
  */
@@ -606,8 +612,8 @@ export async function dumpNode(page, { sel, pseudo }, skipList) {
 		[sel, pseudo || '', [...skipList]]
 	);
 	if (!raw) return null;
-	// Normalize both keys (custom-property names) and values through the -v2 strip map so the
-	// baseline survives W3's keyframe/@property/custom-prop rename.
+	// Normalize both keys (custom-property names) and values through the legacy suffix-strip map so
+	// a baseline captured before the W3 keyframe/@property/custom-prop rename still compares equal.
 	return normalizeDumpNode(raw);
 }
 

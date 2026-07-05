@@ -12,7 +12,7 @@
 // browser-truth observation of the two split-and-restrengthened waiting ::before arms.
 //
 // It captures into <out>/oracle-field/<effect>-<theme>-waiting-field.json using the SAME frozen-
-// animation + -v2-normalized dump path as the main oracle, so its output is diffable with
+// animation + suffix-normalized dump path as the main oracle, so its output is diffable with
 // diff-oracle.mjs. Run it against a HEAD baseline and the W1b tree; diff MUST be clean.
 //
 // Usage:

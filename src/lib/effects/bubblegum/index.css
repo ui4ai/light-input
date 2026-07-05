@@ -1,12 +1,12 @@
 /* ============================================================
-   BUBBLE GUM v2 — "Blowing bubble gum at the caret"
+   BUBBLE GUM — "Blowing bubble gum at the caret"
    The reveal IS the bubble. A glossy translucent gum sphere
    inflates from the caret on ignite (elastic 0.15 -> 1.08 -> 1)
    and sits breathing behind the revealed word: prediction::after
    (survives flow-off as a frozen sphere) carries the radial gum
    body with a dense darker rim, one big top-left specular
    crescent, a small secondary glint and a slow conic sheen
-   sliding on the registered --bblg-gloss-v2 angle. Every ~7.2s
+   sliding on the registered --bblg-gloss angle. Every ~7.2s
    the bubble tenses and POPS — a quick collapse — while beam-aux
    flashes a thin expanding ring and beam-spark throws 3-4 gum
    bits outward; the bubble re-inflates smaller and keeps
@@ -32,11 +32,11 @@
    No capsule anywhere: layer-radius 0, every layer and pseudo
    dissolves through intersected left-fade x radial masks whose
    fades complete INSIDE their boxes. Chrome-only tech is
-   intentional. Keyframes: bubblegum-*-v2 only (legacy gum-* stay
+   intentional. Keyframes: bubblegum-* only (legacy gum-* stay
    untouched for biolume QA consumers).
    ============================================================ */
 
-@property --bblg-gloss-v2 {
+@property --bblg-gloss {
 	syntax: '<angle>';
 	inherits: false;
 	initial-value: 226deg;
@@ -73,8 +73,8 @@
 		radial-gradient(ellipse 2em 1em at 0.9em 46%, rgba(255, 226, 242, 0.09), transparent 72%);
 	--haze-filter: blur(20px) saturate(1.25);
 	--haze-opacity: 0.82;
-	--haze-motion: bubblegum-underglow-v2 5.6s ease-in-out 720ms infinite;
-	--torch-haze-motion: bubblegum-waiting-glow-v2 3s ease-in-out infinite;
+	--haze-motion: bubblegum-underglow 5.6s ease-in-out 720ms infinite;
+	--torch-haze-motion: bubblegum-waiting-glow 3s ease-in-out infinite;
 	--haze-mask: linear-gradient(90deg, transparent 0, black 1em), radial-gradient(ellipse 52% 50% at 34% 50%, black 0 42%, rgba(0, 0, 0, 0.5) 70%, transparent 96%);
 	--body-width: 7.2em;
 	--body-height: 2.4em;
@@ -95,8 +95,8 @@
 		radial-gradient(circle at 0.58em 0.95em, rgba(255, 240, 250, 0.6), rgba(255, 168, 222, 0.42) 0.2em, rgba(250, 96, 186, 0.2) 0.38em, transparent 0.6em);
 	--core-filter: blur(6px) saturate(1.3);
 	--core-opacity: 0.95;
-	--core-motion: bubblegum-knot-v2 2.7s ease-in-out 620ms infinite;
-	--torch-core-motion: bubblegum-waiting-breathe-v2 3.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+	--core-motion: bubblegum-knot 2.7s ease-in-out 620ms infinite;
+	--torch-core-motion: bubblegum-waiting-breathe 3.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
 	--core-mask: linear-gradient(90deg, transparent 0, black 0.35em), radial-gradient(ellipse 52% 50% at 40% 50%, black 0 44%, rgba(0, 0, 0, 0.5) 72%, transparent 94%);
 	--flow-width: 7em;
 	--flow-height: 2.2em;
@@ -107,7 +107,7 @@
 	--flow-filter: blur(9px) saturate(1.2);
 	--flow-low: 0.14;
 	--flow-high: 0.42;
-	--flow-motion: bubblegum-shimmer-v2 5.2s ease-in-out 900ms infinite;
+	--flow-motion: bubblegum-shimmer 5.2s ease-in-out 900ms infinite;
 	--flow-mask: linear-gradient(90deg, transparent 0, black 0.9em), radial-gradient(ellipse 54% 48% at 34% 50%, black 0 42%, rgba(0, 0, 0, 0.5) 70%, transparent 96%);
 	--spark-width: 4.2em;
 	--spark-height: 2.6em;
@@ -119,7 +119,7 @@
 	--spark-filter: blur(0.3px) drop-shadow(0 0 7px rgba(255, 140, 210, 0.6));
 	--spark-low: 0;
 	--spark-high: 0.95;
-	--spark-motion: bubblegum-bits-v2 7.2s cubic-bezier(0.22, 0.9, 0.4, 1) 700ms infinite;
+	--spark-motion: bubblegum-bits 7.2s cubic-bezier(0.22, 0.9, 0.4, 1) 700ms infinite;
 	--spark-mask: linear-gradient(90deg, transparent 0, black 0.4em), radial-gradient(ellipse 54% 50% at 46% 50%, black 0 52%, rgba(0, 0, 0, 0.5) 76%, transparent 96%);
 	--smoke-width: 5.2em;
 	--smoke-height: 2.7em;
@@ -131,7 +131,7 @@
 	--smoke-filter: blur(0.4px) drop-shadow(0 0 5px rgba(255, 160, 216, 0.4));
 	--smoke-opacity: 0.6;
 	--smoke-blend: screen;
-	--smoke-motion: bubblegum-motes-v2 5.8s ease-in-out 1.3s infinite;
+	--smoke-motion: bubblegum-motes 5.8s ease-in-out 1.3s infinite;
 	--smoke-mask: linear-gradient(90deg, transparent 0, black 0.4em), radial-gradient(ellipse 52% 48% at 42% 50%, black 0 50%, rgba(0, 0, 0, 0.5) 76%, transparent 96%);
 	--aux-width: 4.2em;
 	--aux-height: 2.6em;
@@ -139,7 +139,7 @@
 	--aux-filter: blur(0.6px) drop-shadow(0 0 8px rgba(255, 130, 205, 0.5));
 	--aux-opacity: 0.9;
 	--aux-blend: screen;
-	--aux-motion: bubblegum-popring-v2 7.2s cubic-bezier(0.3, 0.7, 0.4, 1) 700ms infinite;
+	--aux-motion: bubblegum-popring 7.2s cubic-bezier(0.3, 0.7, 0.4, 1) 700ms infinite;
 	--aux-mask: linear-gradient(90deg, transparent 0, black 0.4em), radial-gradient(ellipse 54% 50% at 46% 50%, black 0 52%, rgba(0, 0, 0, 0.5) 76%, transparent 96%);
 	--next-color: rgba(255, 235, 242, 0.96);
 	--next-shadow:
@@ -199,7 +199,7 @@
 	mask-image: radial-gradient(ellipse 100% 94% at 36% 50%, black 0 46%, rgba(0, 0, 0, 0.5) 72%, transparent 100%);
 	mix-blend-mode: normal;
 	opacity: 0.85;
-	animation: bubblegum-wash-v2 8.5s ease-in-out infinite;
+	animation: bubblegum-wash 8.5s ease-in-out infinite;
 }
 
 /* Dissolve into the field's rounded clip, not the paint box; edge overlays
@@ -238,7 +238,7 @@
 .stage[data-glow='bubblegum'] .field[data-glow] .beam-body {
 	animation:
 		beam-open 650ms cubic-bezier(0.16, 1, 0.3, 1) both,
-		bubblegum-strand-v2 3.8s cubic-bezier(0.45, 0.05, 0.35, 1) 760ms infinite;
+		bubblegum-strand 3.8s cubic-bezier(0.45, 0.05, 0.35, 1) 760ms infinite;
 }
 
 /* Chocolate-plum pool: a normal-blend darkening under the bubble with a
@@ -268,8 +268,8 @@
 	transform: translateY(-50%);
 	transform-origin: 1.4em center;
 	animation:
-		bubblegum-pool-in-v2 520ms cubic-bezier(0.16, 1, 0.3, 1) both,
-		bubblegum-pool-breathe-v2 7.2s ease-in-out 700ms infinite;
+		bubblegum-pool-in 520ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		bubblegum-pool-breathe 7.2s ease-in-out 700ms infinite;
 }
 
 /* THE BUBBLE: translucent gum sphere with a dense darker rim, big top-left
@@ -292,7 +292,7 @@
 		radial-gradient(ellipse 0.64em 0.32em at 1.56em 0.72em, rgba(255, 255, 255, 0.7), transparent 78%),
 		radial-gradient(circle at 2.74em 1.8em, rgba(255, 255, 255, 0.55) 0 0.045em, transparent 0.12em),
 		radial-gradient(circle at 2.1em 1.3em, transparent 0 0.9em, rgba(255, 214, 240, 0.5) 0.98em 1.02em, transparent 1.1em),
-		conic-gradient(from var(--bblg-gloss-v2) at 2.1em 1.3em, transparent 0deg, rgba(255, 255, 255, 0.1) 30deg, transparent 74deg, transparent 208deg, rgba(255, 240, 250, 0.07) 244deg, transparent 300deg 360deg),
+		conic-gradient(from var(--bblg-gloss) at 2.1em 1.3em, transparent 0deg, rgba(255, 255, 255, 0.1) 30deg, transparent 74deg, transparent 208deg, rgba(255, 240, 250, 0.07) 244deg, transparent 300deg 360deg),
 		radial-gradient(circle at 2.1em 1.3em, rgba(255, 172, 222, 0.2) 0 0.34em, rgba(255, 140, 208, 0.3) 0.62em, rgba(250, 104, 186, 0.38) 0.84em, rgba(196, 44, 132, 0.5) 0.97em, rgba(112, 14, 76, 0.55) 1.03em, transparent 1.09em);
 	filter: blur(0.3px) saturate(1.15) drop-shadow(0 0 12px rgba(255, 110, 196, 0.4)) drop-shadow(0 0 30px rgba(220, 70, 190, 0.18));
 	-webkit-mask-image: linear-gradient(90deg, transparent 0, black 0.5em), radial-gradient(ellipse 50% 50% at 50% 50%, black 0 55%, rgba(0, 0, 0, 0.6) 78%, transparent 98%);
@@ -304,9 +304,9 @@
 	transform: translateY(-50%);
 	transform-origin: 14% 64%;
 	animation:
-		bubblegum-inflate-v2 700ms cubic-bezier(0.34, 1.56, 0.64, 1) both,
-		bubblegum-bubble-live-v2 7.2s ease-in-out 700ms infinite,
-		bubblegum-gloss-v2 11s linear 700ms infinite;
+		bubblegum-inflate 700ms cubic-bezier(0.34, 1.56, 0.64, 1) both,
+		bubblegum-bubble-live 7.2s ease-in-out 700ms infinite,
+		bubblegum-gloss 11s linear 700ms infinite;
 }
 
 /* ---------- Text is sacred: cartoon elastic landing ---------- */
@@ -321,8 +321,8 @@
 	filter: none;
 	text-shadow: var(--next-shadow);
 	animation:
-		bubblegum-word-in-v2 320ms cubic-bezier(0.16, 1, 0.3, 1) both,
-		bubblegum-word-breathe-v2 6.4s ease-in-out 1.4s infinite;
+		bubblegum-word-in 320ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		bubblegum-word-breathe 6.4s ease-in-out 1.4s infinite;
 }
 
 /* Plum scrim between the gum glare and the glyphs: contrast insurance. */
@@ -341,7 +341,7 @@
 	mix-blend-mode: normal;
 	opacity: var(--bblg-scrim-o);
 	transform: none;
-	animation: bubblegum-scrim-in-v2 420ms ease-out both;
+	animation: bubblegum-scrim-in 420ms ease-out both;
 }
 
 /* Per-glyph squash-and-stretch: drop in, squash on landing, rebound past,
@@ -352,7 +352,7 @@
 	color: var(--next-color);
 	background: none;
 	transform-origin: 50% 88%;
-	animation: bubblegum-glyph-land-v2 560ms cubic-bezier(0.3, 0.9, 0.4, 1) both;
+	animation: bubblegum-glyph-land 560ms cubic-bezier(0.3, 0.9, 0.4, 1) both;
 	animation-delay: calc(150ms + var(--i) * 58ms);
 }
 
@@ -370,7 +370,7 @@
 	text-shadow: 0 0 0.28em rgba(255, 130, 205, 0.6);
 	transform: none;
 	transform-origin: 50% 30%;
-	animation: bubblegum-alt-pop-v2 460ms cubic-bezier(0.4, 0.1, 0.6, 1) both;
+	animation: bubblegum-alt-pop 460ms cubic-bezier(0.4, 0.1, 0.6, 1) both;
 	animation-delay: calc(150ms + var(--i) * 58ms);
 }
 
@@ -401,11 +401,11 @@
 }
 
 .stage[data-glow='bubblegum'][data-light-flow='off'] .field[data-glow] .prediction::before {
-	animation: bubblegum-pool-in-v2 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+	animation: bubblegum-pool-in 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .stage[data-glow='bubblegum'][data-light-flow='off'] .field[data-glow] .prediction::after {
-	animation: bubblegum-inflate-v2 700ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+	animation: bubblegum-inflate 700ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
 .stage[data-glow='bubblegum'][data-light-flow='off'] .field[data-glow] .beam-veil {
@@ -421,11 +421,11 @@
 }
 
 .stage[data-glow='bubblegum'][data-light-flow='off'] .field[data-glow] .next-word {
-	animation: bubblegum-word-in-v2 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+	animation: bubblegum-word-in 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .stage[data-glow='bubblegum'][data-light-flow='off'] .field[data-glow] .next-word::before {
-	animation: bubblegum-scrim-in-v2 420ms ease-out both;
+	animation: bubblegum-scrim-in 420ms ease-out both;
 }
 
 /* ---------- Light theme: candy-shop paper ---------- */
@@ -506,7 +506,7 @@
 .stage[data-theme='light'][data-glow='bubblegum'] .field[data-glow]::before {
 	mix-blend-mode: normal;
 	opacity: 0.6;
-	animation: bubblegum-wash-v2 8.5s ease-in-out infinite;
+	animation: bubblegum-wash 8.5s ease-in-out infinite;
 }
 
 /* Candy ink must darken the paper, never screen into it. */
@@ -522,8 +522,8 @@
 	filter: blur(12px) saturate(1);
 	mix-blend-mode: normal;
 	animation:
-		bubblegum-pool-in-v2 520ms cubic-bezier(0.16, 1, 0.3, 1) both,
-		bubblegum-pool-breathe-v2 7.2s ease-in-out 700ms infinite;
+		bubblegum-pool-in 520ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		bubblegum-pool-breathe 7.2s ease-in-out 700ms infinite;
 }
 
 /* Light bubble: saturated wet pink, darker rim, paper-white speculars. */
@@ -533,14 +533,14 @@
 		radial-gradient(ellipse 0.64em 0.32em at 1.56em 0.72em, rgba(255, 255, 255, 0.85), transparent 78%),
 		radial-gradient(circle at 2.74em 1.8em, rgba(255, 255, 255, 0.7) 0 0.045em, transparent 0.12em),
 		radial-gradient(circle at 2.1em 1.3em, transparent 0 0.9em, rgba(255, 214, 236, 0.6) 0.98em 1.02em, transparent 1.1em),
-		conic-gradient(from var(--bblg-gloss-v2) at 2.1em 1.3em, transparent 0deg, rgba(255, 255, 255, 0.22) 30deg, transparent 74deg, transparent 208deg, rgba(255, 244, 250, 0.14) 244deg, transparent 300deg 360deg),
+		conic-gradient(from var(--bblg-gloss) at 2.1em 1.3em, transparent 0deg, rgba(255, 255, 255, 0.22) 30deg, transparent 74deg, transparent 208deg, rgba(255, 244, 250, 0.14) 244deg, transparent 300deg 360deg),
 		radial-gradient(circle at 2.1em 1.3em, rgba(255, 168, 212, 0.4) 0 0.34em, rgba(250, 122, 186, 0.48) 0.62em, rgba(232, 74, 154, 0.55) 0.84em, rgba(178, 30, 108, 0.58) 0.97em, rgba(112, 10, 66, 0.6) 1.03em, transparent 1.09em);
 	filter: blur(0.3px) saturate(1.1) drop-shadow(0 0.06em 0.3em rgba(178, 40, 112, 0.28));
 	mix-blend-mode: normal;
 	animation:
-		bubblegum-inflate-v2 700ms cubic-bezier(0.34, 1.56, 0.64, 1) both,
-		bubblegum-bubble-live-v2 7.2s ease-in-out 700ms infinite,
-		bubblegum-gloss-v2 11s linear 700ms infinite;
+		bubblegum-inflate 700ms cubic-bezier(0.34, 1.56, 0.64, 1) both,
+		bubblegum-bubble-live 7.2s ease-in-out 700ms infinite,
+		bubblegum-gloss 11s linear 700ms infinite;
 }
 
 .stage[data-theme='light'][data-glow='bubblegum'] .field[data-glow] .next-word {
@@ -549,7 +549,7 @@
 	-webkit-background-clip: border-box;
 	background-clip: border-box;
 	text-shadow: var(--next-shadow);
-	animation: bubblegum-word-in-v2 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+	animation: bubblegum-word-in 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .stage[data-theme='light'][data-glow='bubblegum'] .field[data-glow] .next-word::before {
@@ -557,14 +557,14 @@
 	filter: blur(5px);
 	mix-blend-mode: normal;
 	opacity: var(--bblg-scrim-o);
-	animation: bubblegum-scrim-in-v2 420ms ease-out both;
+	animation: bubblegum-scrim-in 420ms ease-out both;
 }
 
 .stage[data-theme='light'][data-glow='bubblegum'] .field[data-glow] .next-word .glyph,
 .stage[data-theme='light'][data-glow='bubblegum'] .field[data-glow] .next-word .glyph:nth-child(even) {
 	color: var(--next-color);
 	text-shadow: var(--next-shadow);
-	animation-name: bubblegum-glyph-land-light-v2;
+	animation-name: bubblegum-glyph-land-light;
 }
 
 .stage[data-theme='light'][data-glow='bubblegum'] .field[data-glow] .next-word .glyph::after {
@@ -598,15 +598,15 @@
 }
 
 .stage[data-theme='light'][data-glow='bubblegum'][data-light-flow='off'] .field[data-glow] .prediction::before {
-	animation: bubblegum-pool-in-v2 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+	animation: bubblegum-pool-in 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .stage[data-theme='light'][data-glow='bubblegum'][data-light-flow='off'] .field[data-glow] .prediction::after {
-	animation: bubblegum-inflate-v2 700ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+	animation: bubblegum-inflate 700ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
 .stage[data-theme='light'][data-glow='bubblegum'][data-light-flow='off'] .field[data-glow] .next-word::before {
-	animation: bubblegum-scrim-in-v2 420ms ease-out both;
+	animation: bubblegum-scrim-in 420ms ease-out both;
 }
 
 /* ---------- Waiting state: a tiny gum bubble breathing at the caret ---------- */
@@ -635,7 +635,7 @@
 	--flow-filter: blur(0.5px) saturate(1.15) drop-shadow(0 0 5px rgba(255, 130, 205, 0.35));
 	--flow-low: 0.3;
 	--flow-high: 0.55;
-	--flow-motion: bubblegum-waiting-quiver-v2 2.2s ease-in-out infinite;
+	--flow-motion: bubblegum-waiting-quiver 2.2s ease-in-out infinite;
 	--flow-mask: linear-gradient(90deg, transparent 0, black 0.3em), radial-gradient(ellipse 54% 50% at 36% 50%, black 0 46%, rgba(0, 0, 0, 0.5) 72%, transparent 96%);
 	--spark-width: 2.4em;
 	--spark-height: 2.4em;
@@ -645,7 +645,7 @@
 	--spark-filter: blur(0.3px) drop-shadow(0 0 5px rgba(255, 150, 214, 0.5));
 	--spark-low: 0;
 	--spark-high: 0.85;
-	--spark-motion: bubblegum-waiting-glint-v2 4.6s ease-in-out infinite;
+	--spark-motion: bubblegum-waiting-glint 4.6s ease-in-out infinite;
 	--spark-mask: linear-gradient(90deg, transparent 0, black 0.22em), radial-gradient(ellipse 54% 52% at 40% 50%, black 0 52%, rgba(0, 0, 0, 0.5) 76%, transparent 94%);
 	--smoke-width: 3em;
 	--smoke-height: 2.4em;
@@ -689,8 +689,8 @@
 	--smoke-motion: none;
 }
 
-/* ---------- Keyframes (bubblegum-*-v2) ---------- */
-@keyframes bubblegum-wash-v2 {
+/* ---------- Keyframes (bubblegum-*) ---------- */
+@keyframes bubblegum-wash {
 	0%,
 	100% {
 		opacity: 0.72;
@@ -700,7 +700,7 @@
 	}
 }
 
-@keyframes bubblegum-underglow-v2 {
+@keyframes bubblegum-underglow {
 	0%,
 	100% {
 		opacity: calc(var(--haze-opacity) * 0.78);
@@ -712,7 +712,7 @@
 	}
 }
 
-@keyframes bubblegum-pool-in-v2 {
+@keyframes bubblegum-pool-in {
 	0% {
 		opacity: 0;
 		transform: translateY(-50%) scaleX(0.4) scaleY(0.7);
@@ -723,7 +723,7 @@
 	}
 }
 
-@keyframes bubblegum-pool-breathe-v2 {
+@keyframes bubblegum-pool-breathe {
 	0%,
 	100% {
 		opacity: var(--bblg-pool-o, 0.9);
@@ -742,7 +742,7 @@
 	}
 }
 
-@keyframes bubblegum-inflate-v2 {
+@keyframes bubblegum-inflate {
 	0% {
 		opacity: 0;
 		transform: translateY(-50%) scale(0.15);
@@ -761,7 +761,7 @@
 }
 
 /* Breath, tension swell, POP collapse, smaller re-inflate, breathe back. */
-@keyframes bubblegum-bubble-live-v2 {
+@keyframes bubblegum-bubble-live {
 	0% {
 		opacity: var(--bblg-bubble-o, 0.96);
 		transform: translateY(-50%) scaleX(1) scaleY(1);
@@ -808,17 +808,17 @@
 	}
 }
 
-@keyframes bubblegum-gloss-v2 {
+@keyframes bubblegum-gloss {
 	from {
-		--bblg-gloss-v2: 226deg;
+		--bblg-gloss: 226deg;
 	}
 	to {
-		--bblg-gloss-v2: 586deg;
+		--bblg-gloss: 586deg;
 	}
 }
 
 /* Strands pulled thin toward the word, then snapped back with overshoot. */
-@keyframes bubblegum-strand-v2 {
+@keyframes bubblegum-strand {
 	0%,
 	100% {
 		opacity: calc(var(--body-opacity, 0.9) * 0.88);
@@ -837,7 +837,7 @@
 	}
 }
 
-@keyframes bubblegum-knot-v2 {
+@keyframes bubblegum-knot {
 	0%,
 	100% {
 		opacity: calc(var(--core-opacity) * 0.78);
@@ -849,7 +849,7 @@
 	}
 }
 
-@keyframes bubblegum-shimmer-v2 {
+@keyframes bubblegum-shimmer {
 	0% {
 		opacity: var(--flow-low);
 		background-position: 0% 50%;
@@ -867,7 +867,7 @@
 }
 
 /* Gum bits fly out on the pop beat, sugar dust settles. */
-@keyframes bubblegum-bits-v2 {
+@keyframes bubblegum-bits {
 	0%,
 	5.5% {
 		opacity: 0;
@@ -888,7 +888,7 @@
 	}
 }
 
-@keyframes bubblegum-motes-v2 {
+@keyframes bubblegum-motes {
 	0% {
 		opacity: 0;
 		transform: translateY(-46%) translateX(0) scale(0.82);
@@ -906,7 +906,7 @@
 	}
 }
 
-@keyframes bubblegum-popring-v2 {
+@keyframes bubblegum-popring {
 	0%,
 	5.5% {
 		opacity: 0;
@@ -927,7 +927,7 @@
 	}
 }
 
-@keyframes bubblegum-scrim-in-v2 {
+@keyframes bubblegum-scrim-in {
 	0% {
 		opacity: 0;
 	}
@@ -936,7 +936,7 @@
 	}
 }
 
-@keyframes bubblegum-word-in-v2 {
+@keyframes bubblegum-word-in {
 	0% {
 		opacity: 0;
 		transform: translateX(-0.08em);
@@ -947,7 +947,7 @@
 	}
 }
 
-@keyframes bubblegum-word-breathe-v2 {
+@keyframes bubblegum-word-breathe {
 	0%,
 	100% {
 		text-shadow:
@@ -967,7 +967,7 @@
 
 /* Cartoon landing: drop in, squash, rebound past, settle. Parity flips
    the tilt through --bblg-tilt. */
-@keyframes bubblegum-glyph-land-v2 {
+@keyframes bubblegum-glyph-land {
 	0% {
 		opacity: 0;
 		color: rgb(255, 198, 233);
@@ -995,7 +995,7 @@
 	}
 }
 
-@keyframes bubblegum-glyph-land-light-v2 {
+@keyframes bubblegum-glyph-land-light {
 	0% {
 		opacity: 0;
 		color: rgb(250, 172, 212);
@@ -1023,7 +1023,7 @@
 	}
 }
 
-@keyframes bubblegum-alt-pop-v2 {
+@keyframes bubblegum-alt-pop {
 	0% {
 		opacity: 0.8;
 		transform: translateY(0.06em) scale(0.92);
@@ -1041,7 +1041,7 @@
 	}
 }
 
-@keyframes bubblegum-waiting-glow-v2 {
+@keyframes bubblegum-waiting-glow {
 	0%,
 	100% {
 		opacity: calc(var(--haze-opacity, 0.8) * 0.7);
@@ -1054,7 +1054,7 @@
 }
 
 /* The tiny bubble slowly inflates... and lets the air back out. */
-@keyframes bubblegum-waiting-breathe-v2 {
+@keyframes bubblegum-waiting-breathe {
 	0%,
 	100% {
 		opacity: calc(var(--core-opacity, 0.95) * 0.7);
@@ -1073,7 +1073,7 @@
 	}
 }
 
-@keyframes bubblegum-waiting-quiver-v2 {
+@keyframes bubblegum-waiting-quiver {
 	0%,
 	100% {
 		opacity: var(--flow-low, 0.3);
@@ -1092,7 +1092,7 @@
 	}
 }
 
-@keyframes bubblegum-waiting-glint-v2 {
+@keyframes bubblegum-waiting-glint {
 	0%,
 	62%,
 	100% {

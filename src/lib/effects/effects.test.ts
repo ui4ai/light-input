@@ -161,17 +161,17 @@ describe('glow inventory', () => {
 		const css = readPresetCss();
 
 		expect(css).toContain(".field[data-glow='spoiler']");
-		expect(css).toContain('spoiler-veil-twinkle-v2');
+		expect(css).toContain('spoiler-veil-twinkle');
 		expect(css).toContain(".field[data-glow='ghosttext']");
-		expect(css).toContain('ghost-wisp-crawl-v2');
+		expect(css).toContain('ghost-wisp-crawl');
 		expect(css).toContain(".field[data-glow='drift']");
-		expect(css).toContain('drift-smoke-sweep-v2');
+		expect(css).toContain('drift-smoke-sweep');
 		expect(css).toContain(".field[data-glow='art']");
-		expect(css).toContain('art-tail-blob-v2');
+		expect(css).toContain('art-tail-blob');
 		expect(css).toContain(".field[data-glow='scratch']");
-		expect(css).toContain('scratch-foil-shimmer-v2');
+		expect(css).toContain('scratch-foil-shimmer');
 		expect(css).toContain(".field[data-glow='kaleidoscope']");
-		expect(css).toContain('kaleidoscope-shard-orbit-v2');
+		expect(css).toContain('kaleidoscope-shard-orbit');
 	});
 
 	it('ships a dedicated DOM layer for the kaleidoscope effect', () => {

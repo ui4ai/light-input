@@ -1,5 +1,5 @@
 /* ============================================================
-   GHOST TEXT v2 — "Призрак: предсказание ещё не перешло на эту
+   GHOST TEXT — "Призрак: предсказание ещё не перешло на эту
    сторону". A spectral apparition materializing in a dark séance
    room. THE APPARITION (the signature): each glyph of the NEXT
    WORD wafts in like a ghost stepping through a wall — it starts
@@ -14,7 +14,7 @@
    ECTOPLASM WISPS (prediction::before): five tiled ellipse-chain
    layers (tiles 6.4em / 9.6em / 4.8em) read as 2-3 wavy ribbons
    CRAWLING rightward with vertical undulation — the signature
-   keyframe ghost-wisp-crawl-v2 moves each layer a whole multiple
+   keyframe ghost-wisp-crawl moves each layer a whole multiple
    of its tile per 8s cycle (A: 12.8em = 2x6.4, B: 9.6em = 1x9.6,
    C: 9.6em = 2x4.8) so the loop is seamless; a 3-mask intersect
    (caret-bright envelope x right-edge fade x vertical falloff)
@@ -31,7 +31,7 @@
    stands. VESSEL: near-black neutral with the faintest cold
    vignette; the caret is a sliver of cold white light whose glow
    flickers VERY subtly like a candle in a draft — a registered
-   <number> (--gh-candle-a-v2) is animated with steps(1, end) ON
+   <number> (--gh-candle-a) is animated with steps(1, end) ON
    the .field, where --caret-shadow computes (var() in a custom
    property substitutes where that property computes), so the
    color-mix alpha in the first shadow actually updates. WAITING:
@@ -54,12 +54,12 @@
    — every box inside the pill, every mask fade completes INSIDE
    its box (mask-composite: intersect where masks combine).
    Readability floor: dark ink alpha 0.95 x breathe min 0.84 =
-   0.8; light ink alpha 0.9 x 0.84 = 0.76. Keyframes ghost-*-v2
-   and vars --gh-*-v2 only; legacy ghosttext rules in legacy.css
+   0.8; light ink alpha 0.9 x 0.84 = 0.76. Keyframes ghost-*
+   and vars --gh-* only; legacy ghosttext rules in legacy.css
    are superseded and get deleted.
    ============================================================ */
 
-@property --gh-candle-a-v2 {
+@property --gh-candle-a {
 	syntax: '<number>';
 	inherits: false;
 	initial-value: 0.62;
@@ -68,27 +68,27 @@
 .field[data-glow='ghosttext'] {
 	--layer-radius: 999px;
 	--layer-clip: inset(0 round 999px);
-	--gh-ink-v2: oklch(0.93 0.02 205 / 0.95);
-	--gh-echo-v2:
+	--gh-ink: oklch(0.93 0.02 205 / 0.95);
+	--gh-echo:
 		-0.045em -0.05em 0.02em oklch(0.87 0.06 200 / 0.4),
 		0.05em 0.06em 0.05em oklch(0.8 0.05 220 / 0.22),
 		0 0 0.5em oklch(0.85 0.05 210 / 0.16);
-	--gh-tail-hue-v2: 0.88 0.03 210;
-	--gh-wisp-hot-v2: oklch(0.92 0.05 200 / 0.3);
-	--gh-wisp-mid-v2: oklch(0.84 0.06 215 / 0.2);
-	--gh-wisp-soft-v2: oklch(0.78 0.06 230 / 0.13);
-	--gh-wisp-blend-v2: screen;
-	--gh-wisp-o-v2: 0.85;
-	--gh-cold-v2: oklch(0.8 0.06 215 / 0.13);
-	--gh-cold-blend-v2: screen;
-	--gh-cold-o-v2: 0.8;
-	--gh-orb-core-v2: oklch(0.98 0.015 195 / 0.85);
-	--gh-orb-mid-v2: oklch(0.9 0.05 203 / 0.42);
-	--gh-orb-halo-v2: oklch(0.85 0.06 210 / 0.22);
-	--gh-orb-trail-v2: oklch(0.86 0.05 210 / 0.16);
-	--gh-orb-trail-soft-v2: oklch(0.8 0.05 220 / 0.1);
-	--gh-candle-hue-v2: oklch(0.94 0.04 200);
-	--gh-vessel-bg-v2:
+	--gh-tail-hue: 0.88 0.03 210;
+	--gh-wisp-hot: oklch(0.92 0.05 200 / 0.3);
+	--gh-wisp-mid: oklch(0.84 0.06 215 / 0.2);
+	--gh-wisp-soft: oklch(0.78 0.06 230 / 0.13);
+	--gh-wisp-blend: screen;
+	--gh-wisp-o: 0.85;
+	--gh-cold: oklch(0.8 0.06 215 / 0.13);
+	--gh-cold-blend: screen;
+	--gh-cold-o: 0.8;
+	--gh-orb-core: oklch(0.98 0.015 195 / 0.85);
+	--gh-orb-mid: oklch(0.9 0.05 203 / 0.42);
+	--gh-orb-halo: oklch(0.85 0.06 210 / 0.22);
+	--gh-orb-trail: oklch(0.86 0.05 210 / 0.16);
+	--gh-orb-trail-soft: oklch(0.8 0.05 220 / 0.1);
+	--gh-candle-hue: oklch(0.94 0.04 200);
+	--gh-vessel-bg:
 		radial-gradient(ellipse 94% 155% at 50% 54%, transparent 0 46%, rgba(4, 8, 10, 0.55) 100%),
 		linear-gradient(180deg, rgba(210, 235, 240, 0.025), transparent 30%),
 		linear-gradient(90deg, rgba(196, 228, 234, 0.016), transparent 28%);
@@ -108,7 +108,7 @@
 		rgb(82, 110, 122) 100%
 	);
 	--caret-shadow:
-		0 0 6px color-mix(in oklab, var(--gh-candle-hue-v2) calc(var(--gh-candle-a-v2) * 100%), transparent),
+		0 0 6px color-mix(in oklab, var(--gh-candle-hue) calc(var(--gh-candle-a) * 100%), transparent),
 		0 0 18px oklch(0.86 0.05 205 / 0.32),
 		0 0 40px oklch(0.75 0.06 215 / 0.14);
 	--haze-bg: none;
@@ -143,9 +143,9 @@
 	--aux-opacity: 0;
 	--aux-motion: none;
 	--aux-mask: none;
-	--next-color: var(--gh-ink-v2);
-	--next-shadow: var(--gh-echo-v2);
-	--tail-color: oklch(var(--gh-tail-hue-v2) / 0.4);
+	--next-color: var(--gh-ink);
+	--next-shadow: var(--gh-echo);
+	--tail-color: oklch(var(--gh-tail-hue) / 0.4);
 }
 
 /* The apparition lives on the glyphs and the prediction pseudos: every
@@ -172,21 +172,21 @@
 }
 
 /* Séance room vessel: near-black neutral with the faintest cold cast.
-   The candle-in-a-draft flicker animates the registered --gh-candle-a-v2
+   The candle-in-a-draft flicker animates the registered --gh-candle-a
    ON the field — the only element where --caret-shadow computes, so the
    color-mix alpha in the caret glow actually re-reads it each step. */
 .stage[data-glow='ghosttext'] .field[data-glow] {
 	background:
 		linear-gradient(180deg, rgba(212, 238, 242, 0.014), transparent 32%),
 		linear-gradient(90deg, rgb(13, 14, 16), rgb(15, 16, 19) 52%, rgb(14, 15, 18));
-	animation: ghost-candle-flicker-v2 6.4s steps(1, end) infinite;
+	animation: ghost-candle-flicker 6.4s steps(1, end) infinite;
 }
 
 /* VESSEL OVERLAY: cold edge vignette + a whisper of cold sheen — utterly
    still. Re-pins over the legacy ghost-field-drift animation, the shared
    210% background-size and the component field-flow gating. */
 .stage[data-glow='ghosttext'] .field[data-glow]::before {
-	background: var(--gh-vessel-bg-v2);
+	background: var(--gh-vessel-bg);
 	background-size: auto;
 	-webkit-mask-image: none;
 	mask-image: none;
@@ -247,11 +247,11 @@
 	pointer-events: none;
 	border-radius: 0;
 	background:
-		radial-gradient(ellipse 30% 10% at 26% 38%, var(--gh-wisp-hot-v2), transparent 72%),
-		radial-gradient(ellipse 26% 9% at 74% 58%, var(--gh-wisp-mid-v2), transparent 74%),
-		radial-gradient(ellipse 32% 8% at 30% 62%, var(--gh-wisp-mid-v2), transparent 74%),
-		radial-gradient(ellipse 28% 7% at 72% 34%, var(--gh-wisp-soft-v2), transparent 76%),
-		radial-gradient(ellipse 34% 6% at 50% 48%, var(--gh-wisp-soft-v2), transparent 78%);
+		radial-gradient(ellipse 30% 10% at 26% 38%, var(--gh-wisp-hot), transparent 72%),
+		radial-gradient(ellipse 26% 9% at 74% 58%, var(--gh-wisp-mid), transparent 74%),
+		radial-gradient(ellipse 32% 8% at 30% 62%, var(--gh-wisp-mid), transparent 74%),
+		radial-gradient(ellipse 28% 7% at 72% 34%, var(--gh-wisp-soft), transparent 76%),
+		radial-gradient(ellipse 34% 6% at 50% 48%, var(--gh-wisp-soft), transparent 78%);
 	background-size:
 		6.4em 100%,
 		6.4em 100%,
@@ -284,12 +284,12 @@
 		),
 		linear-gradient(90deg, black 0 calc(100% - 1.2em), transparent 100%),
 		linear-gradient(180deg, transparent 0, rgba(0, 0, 0, 0.75) 26%, black 42% 62%, rgba(0, 0, 0, 0.75) 78%, transparent 100%);
-	mix-blend-mode: var(--gh-wisp-blend-v2);
-	opacity: var(--gh-wisp-o-v2);
+	mix-blend-mode: var(--gh-wisp-blend);
+	opacity: var(--gh-wisp-o);
 	transform: none;
 	animation:
-		ghost-wisp-in-v2 700ms ease-out 150ms both,
-		ghost-wisp-crawl-v2 8s linear infinite;
+		ghost-wisp-in 700ms ease-out 150ms both,
+		ghost-wisp-crawl 8s linear infinite;
 }
 
 /* COLD SPOT: the vessel is coldest where the ghost stands — a low-alpha
@@ -310,16 +310,16 @@
 	content: '';
 	pointer-events: none;
 	border-radius: 0;
-	background: radial-gradient(ellipse 46% 52% at 30% 50%, var(--gh-cold-v2), transparent 78%);
+	background: radial-gradient(ellipse 46% 52% at 30% 50%, var(--gh-cold), transparent 78%);
 	filter: blur(10px);
 	-webkit-mask-image: radial-gradient(ellipse 86% 90% at 32% 50%, black 0 52%, rgba(0, 0, 0, 0.45) 76%, transparent 96%);
 	mask-image: radial-gradient(ellipse 86% 90% at 32% 50%, black 0 52%, rgba(0, 0, 0, 0.45) 76%, transparent 96%);
-	mix-blend-mode: var(--gh-cold-blend-v2);
-	opacity: var(--gh-cold-o-v2);
+	mix-blend-mode: var(--gh-cold-blend);
+	opacity: var(--gh-cold-o);
 	transform: none;
 	animation:
-		ghost-cold-in-v2 600ms ease-out both,
-		ghost-cold-breathe-v2 7.4s ease-in-out 600ms infinite;
+		ghost-cold-in 600ms ease-out both,
+		ghost-cold-breathe 7.4s ease-in-out 600ms infinite;
 }
 
 /* ---------- The word: a ghost stepping through the wall ---------- */
@@ -336,7 +336,7 @@
 	filter: none;
 	text-shadow: none;
 	transform: none;
-	animation: ghost-word-in-v2 180ms ease-out both;
+	animation: ghost-word-in 180ms ease-out both;
 }
 
 /* THE MATERIALIZE + BREATHE: each glyph wafts in from 0.12em below as a
@@ -353,19 +353,19 @@
 .stage[data-glow='ghosttext'] .field[data-glow] .next-word .glyph:nth-child(3n) {
 	display: inline-block;
 	position: relative;
-	color: var(--gh-ink-v2);
+	color: var(--gh-ink);
 	background: none;
 	-webkit-background-clip: border-box;
 	background-clip: border-box;
 	-webkit-text-fill-color: currentColor;
 	opacity: 0.96;
 	filter: none;
-	text-shadow: var(--gh-echo-v2);
+	text-shadow: var(--gh-echo);
 	transform: none;
 	transform-origin: 50% 85%;
 	animation:
-		ghost-materialize-v2 620ms cubic-bezier(0.22, 0.75, 0.3, 1) both,
-		ghost-breathe-v2 5.6s ease-in-out infinite;
+		ghost-materialize 620ms cubic-bezier(0.22, 0.75, 0.3, 1) both,
+		ghost-breathe 5.6s ease-in-out infinite;
 	animation-delay: calc(100ms + var(--i, 0) * 70ms), calc(720ms + var(--i, 0) * 70ms);
 }
 
@@ -394,7 +394,7 @@
 	text-shadow: none;
 	-webkit-mask-image: linear-gradient(90deg, black 0 6.5em, rgba(0, 0, 0, 0.4) 9.5em, transparent 12em);
 	mask-image: linear-gradient(90deg, black 0 6.5em, rgba(0, 0, 0, 0.4) 9.5em, transparent 12em);
-	animation: ghost-tail-in-v2 320ms ease-out 140ms both;
+	animation: ghost-tail-in 320ms ease-out 140ms both;
 }
 
 /* Departing souls: var(--i) continues from the next word into the tail,
@@ -408,7 +408,7 @@
 .stage[data-glow='ghosttext'] .field[data-glow] .tail .glyph:nth-child(3n) {
 	display: inline-block;
 	position: relative;
-	color: oklch(var(--gh-tail-hue-v2) / clamp(0.07, calc(0.66 - var(--i, 0) * 0.052), 0.66));
+	color: oklch(var(--gh-tail-hue) / clamp(0.07, calc(0.66 - var(--i, 0) * 0.052), 0.66));
 	background: none;
 	-webkit-background-clip: border-box;
 	background-clip: border-box;
@@ -418,8 +418,8 @@
 	text-shadow: none;
 	transform: translateY(clamp(-0.16em, calc(var(--i, 0) * -0.011em), 0em));
 	animation:
-		ghost-soul-in-v2 480ms ease-out both,
-		ghost-soul-drift-v2 6.8s ease-in-out infinite;
+		ghost-soul-in 480ms ease-out both,
+		ghost-soul-drift 6.8s ease-in-out infinite;
 	animation-delay: calc(200ms + var(--i, 0) * 45ms), calc(680ms + var(--i, 0) * 230ms);
 }
 
@@ -437,20 +437,20 @@
 }
 
 .stage[data-glow='ghosttext'][data-light-flow='off'] .field[data-glow] .prediction::before {
-	animation: ghost-wisp-in-v2 700ms ease-out 150ms both;
+	animation: ghost-wisp-in 700ms ease-out 150ms both;
 }
 
 .stage[data-glow='ghosttext'][data-light-flow='off'] .field[data-glow] .prediction::after {
-	animation: ghost-cold-in-v2 600ms ease-out both;
+	animation: ghost-cold-in 600ms ease-out both;
 }
 
 .stage[data-glow='ghosttext'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
-	animation: ghost-materialize-v2 620ms cubic-bezier(0.22, 0.75, 0.3, 1) both;
+	animation: ghost-materialize 620ms cubic-bezier(0.22, 0.75, 0.3, 1) both;
 	animation-delay: calc(100ms + var(--i, 0) * 70ms);
 }
 
 .stage[data-glow='ghosttext'][data-light-flow='off'] .field[data-glow] .tail .glyph {
-	animation: ghost-soul-in-v2 480ms ease-out both;
+	animation: ghost-soul-in 480ms ease-out both;
 	animation-delay: calc(200ms + var(--i, 0) * 45ms);
 }
 
@@ -459,27 +459,27 @@
    echo, wisps as barely-there gray breath sunk in with multiply, the
    tail dissolving into the paper. */
 .field[data-theme='light'][data-glow='ghosttext'] {
-	--gh-ink-v2: oklch(0.38 0.018 240 / 0.9);
-	--gh-echo-v2:
+	--gh-ink: oklch(0.38 0.018 240 / 0.9);
+	--gh-echo:
 		-0.04em -0.045em 0.02em oklch(0.74 0.012 240 / 0.55),
 		0.045em 0.05em 0.05em oklch(0.68 0.015 240 / 0.32),
 		0 1px 0 rgba(255, 255, 255, 0.6);
-	--gh-tail-hue-v2: 0.42 0.015 240;
-	--gh-wisp-hot-v2: oklch(0.5 0.02 235 / 0.2);
-	--gh-wisp-mid-v2: oklch(0.58 0.02 235 / 0.14);
-	--gh-wisp-soft-v2: oklch(0.66 0.015 235 / 0.1);
-	--gh-wisp-blend-v2: multiply;
-	--gh-wisp-o-v2: 0.9;
-	--gh-cold-v2: oklch(0.6 0.03 230 / 0.12);
-	--gh-cold-blend-v2: multiply;
-	--gh-cold-o-v2: 0.85;
-	--gh-orb-core-v2: oklch(0.4 0.03 230 / 0.55);
-	--gh-orb-mid-v2: oklch(0.5 0.03 230 / 0.3);
-	--gh-orb-halo-v2: oklch(0.55 0.03 230 / 0.16);
-	--gh-orb-trail-v2: oklch(0.5 0.02 235 / 0.14);
-	--gh-orb-trail-soft-v2: oklch(0.58 0.02 235 / 0.09);
-	--gh-candle-hue-v2: oklch(0.45 0.04 225);
-	--gh-vessel-bg-v2:
+	--gh-tail-hue: 0.42 0.015 240;
+	--gh-wisp-hot: oklch(0.5 0.02 235 / 0.2);
+	--gh-wisp-mid: oklch(0.58 0.02 235 / 0.14);
+	--gh-wisp-soft: oklch(0.66 0.015 235 / 0.1);
+	--gh-wisp-blend: multiply;
+	--gh-wisp-o: 0.9;
+	--gh-cold: oklch(0.6 0.03 230 / 0.12);
+	--gh-cold-blend: multiply;
+	--gh-cold-o: 0.85;
+	--gh-orb-core: oklch(0.4 0.03 230 / 0.55);
+	--gh-orb-mid: oklch(0.5 0.03 230 / 0.3);
+	--gh-orb-halo: oklch(0.55 0.03 230 / 0.16);
+	--gh-orb-trail: oklch(0.5 0.02 235 / 0.14);
+	--gh-orb-trail-soft: oklch(0.58 0.02 235 / 0.09);
+	--gh-candle-hue: oklch(0.45 0.04 225);
+	--gh-vessel-bg:
 		radial-gradient(ellipse 90% 160% at 70% -30%, rgba(255, 255, 255, 0.72), transparent 58%),
 		radial-gradient(ellipse 94% 155% at 50% 54%, transparent 0 55%, oklch(0.62 0.02 235 / 0.09) 100%);
 	--ready-border: rgba(112, 126, 136, 0.3);
@@ -494,7 +494,7 @@
 	--caret-gradient: linear-gradient(180deg, rgb(38, 44, 52) 0%, rgb(76, 90, 102) 55%, rgb(126, 146, 158) 100%);
 	--caret-shadow:
 		0 1px 0 rgba(255, 255, 255, 0.5),
-		0 0 6px color-mix(in oklab, var(--gh-candle-hue-v2) calc(var(--gh-candle-a-v2) * 60%), transparent),
+		0 0 6px color-mix(in oklab, var(--gh-candle-hue) calc(var(--gh-candle-a) * 60%), transparent),
 		0 6px 14px rgba(48, 60, 70, 0.16);
 	--haze-opacity: 0;
 	--body-opacity: 0;
@@ -505,9 +505,9 @@
 	--spark-high: 0;
 	--smoke-opacity: 0;
 	--aux-opacity: 0;
-	--next-color: var(--gh-ink-v2);
-	--next-shadow: var(--gh-echo-v2);
-	--tail-color: oklch(var(--gh-tail-hue-v2) / 0.36);
+	--next-color: var(--gh-ink);
+	--next-shadow: var(--gh-echo);
+	--tail-color: oklch(var(--gh-tail-hue) / 0.36);
 }
 
 /* Legacy scopes shared light vars on the stage: re-win the contested
@@ -531,9 +531,9 @@
 	--spark-high: 0;
 	--smoke-opacity: 0;
 	--aux-opacity: 0;
-	--next-color: var(--gh-ink-v2);
-	--next-shadow: var(--gh-echo-v2);
-	--tail-color: oklch(var(--gh-tail-hue-v2) / 0.36);
+	--next-color: var(--gh-ink);
+	--next-shadow: var(--gh-echo);
+	--tail-color: oklch(var(--gh-tail-hue) / 0.36);
 }
 
 /* Paper vessel — the photograph album page. */
@@ -549,7 +549,7 @@
 
 /* Re-pin the vessel overlay against legacy light rules that multiply it. */
 .stage[data-theme='light'][data-glow='ghosttext'] .field[data-glow]::before {
-	background: var(--gh-vessel-bg-v2);
+	background: var(--gh-vessel-bg);
 	background-size: auto;
 	mix-blend-mode: normal;
 	animation: none;
@@ -562,13 +562,13 @@
 
 /* Wisps and cold spot keep their geometry; paint flips through the vars. */
 .stage[data-theme='light'][data-glow='ghosttext'] .field[data-glow] .prediction::before {
-	mix-blend-mode: var(--gh-wisp-blend-v2);
-	opacity: var(--gh-wisp-o-v2);
+	mix-blend-mode: var(--gh-wisp-blend);
+	opacity: var(--gh-wisp-o);
 }
 
 .stage[data-theme='light'][data-glow='ghosttext'] .field[data-glow] .prediction::after {
-	mix-blend-mode: var(--gh-cold-blend-v2);
-	opacity: var(--gh-cold-o-v2);
+	mix-blend-mode: var(--gh-cold-blend);
+	opacity: var(--gh-cold-o);
 }
 
 .stage[data-theme='light'][data-glow='ghosttext'] .field[data-glow] .next-word {
@@ -584,17 +584,17 @@
    color, so both themes share them; nth-child(n) matches the legacy
    light specificity. */
 .stage[data-theme='light'][data-glow='ghosttext'] .field[data-glow] .next-word .glyph:nth-child(n) {
-	color: var(--gh-ink-v2);
+	color: var(--gh-ink);
 	background: none;
 	-webkit-background-clip: border-box;
 	background-clip: border-box;
 	-webkit-text-fill-color: currentColor;
 	opacity: 0.96;
 	filter: none;
-	text-shadow: var(--gh-echo-v2);
+	text-shadow: var(--gh-echo);
 	animation:
-		ghost-materialize-v2 620ms cubic-bezier(0.22, 0.75, 0.3, 1) both,
-		ghost-breathe-v2 5.6s ease-in-out infinite;
+		ghost-materialize 620ms cubic-bezier(0.22, 0.75, 0.3, 1) both,
+		ghost-breathe 5.6s ease-in-out infinite;
 	animation-delay: calc(100ms + var(--i, 0) * 70ms), calc(720ms + var(--i, 0) * 70ms);
 }
 
@@ -609,15 +609,15 @@
 }
 
 .stage[data-theme='light'][data-glow='ghosttext'] .field[data-glow] .tail .glyph:nth-child(n) {
-	color: oklch(var(--gh-tail-hue-v2) / clamp(0.06, calc(0.6 - var(--i, 0) * 0.048), 0.6));
+	color: oklch(var(--gh-tail-hue) / clamp(0.06, calc(0.6 - var(--i, 0) * 0.048), 0.6));
 	background: none;
 	opacity: 1;
 	filter: blur(clamp(0.2px, calc(var(--i, 0) * 0.16px), 2.4px));
 	text-shadow: none;
 	transform: translateY(clamp(-0.16em, calc(var(--i, 0) * -0.011em), 0em));
 	animation:
-		ghost-soul-in-v2 480ms ease-out both,
-		ghost-soul-drift-v2 6.8s ease-in-out infinite;
+		ghost-soul-in 480ms ease-out both,
+		ghost-soul-drift 6.8s ease-in-out infinite;
 	animation-delay: calc(200ms + var(--i, 0) * 45ms), calc(680ms + var(--i, 0) * 230ms);
 }
 
@@ -633,21 +633,21 @@
 /* Light theme + flow off: re-win the finite passes against the
    higher-specificity light rules above. */
 .stage[data-theme='light'][data-glow='ghosttext'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(n) {
-	animation: ghost-materialize-v2 620ms cubic-bezier(0.22, 0.75, 0.3, 1) both;
+	animation: ghost-materialize 620ms cubic-bezier(0.22, 0.75, 0.3, 1) both;
 	animation-delay: calc(100ms + var(--i, 0) * 70ms);
 }
 
 .stage[data-theme='light'][data-glow='ghosttext'][data-light-flow='off'] .field[data-glow] .tail .glyph:nth-child(n) {
-	animation: ghost-soul-in-v2 480ms ease-out both;
+	animation: ghost-soul-in 480ms ease-out both;
 	animation-delay: calc(200ms + var(--i, 0) * 45ms);
 }
 
 .stage[data-theme='light'][data-glow='ghosttext'][data-light-flow='off'] .field[data-glow] .prediction::before {
-	animation: ghost-wisp-in-v2 700ms ease-out 150ms both;
+	animation: ghost-wisp-in 700ms ease-out 150ms both;
 }
 
 .stage[data-theme='light'][data-glow='ghosttext'][data-light-flow='off'] .field[data-glow] .prediction::after {
-	animation: ghost-cold-in-v2 600ms ease-out both;
+	animation: ghost-cold-in 600ms ease-out both;
 }
 
 .stage[data-theme='light'][data-glow='ghosttext'][data-light-flow='off'] .field[data-glow]::before {
@@ -671,11 +671,11 @@
 		100% 100%,
 		100% 100%;
 	--haze-bg:
-		radial-gradient(ellipse 34% 26% at 34% 56%, var(--gh-orb-trail-v2), transparent 76%),
-		radial-gradient(ellipse 26% 18% at 62% 40%, var(--gh-orb-trail-soft-v2), transparent 78%);
+		radial-gradient(ellipse 34% 26% at 34% 56%, var(--gh-orb-trail), transparent 76%),
+		radial-gradient(ellipse 26% 18% at 62% 40%, var(--gh-orb-trail-soft), transparent 78%);
 	--haze-filter: blur(7px);
 	--haze-opacity: 0.8;
-	--torch-haze-motion: ghost-wisp-trail-v2 4.6s ease-in-out -1.2s infinite;
+	--torch-haze-motion: ghost-wisp-trail 4.6s ease-in-out -1.2s infinite;
 	--haze-mask:
 		linear-gradient(90deg, transparent 0, black 0.3em, black calc(100% - 0.35em), transparent 100%),
 		radial-gradient(ellipse 60% 62% at 32% 50%, black 0 55%, rgba(0, 0, 0, 0.5) 78%, transparent 98%);
@@ -687,13 +687,13 @@
 		100% 100%,
 		100% 100%;
 	--core-bg:
-		radial-gradient(circle 0.19em at 0.6em 50%, var(--gh-orb-core-v2), var(--gh-orb-mid-v2) 62%, transparent 100%),
-		radial-gradient(circle 0.62em at 0.6em 50%, var(--gh-orb-halo-v2), transparent 100%);
+		radial-gradient(circle 0.19em at 0.6em 50%, var(--gh-orb-core), var(--gh-orb-mid) 62%, transparent 100%),
+		radial-gradient(circle 0.62em at 0.6em 50%, var(--gh-orb-halo), transparent 100%);
 	--core-filter: blur(1.5px);
 	--core-opacity: 0.95;
 	--torch-core-motion:
-		ghost-orb-bob-v2 3.4s ease-in-out infinite,
-		ghost-orb-flicker-v2 6.2s steps(1, end) infinite;
+		ghost-orb-bob 3.4s ease-in-out infinite,
+		ghost-orb-flicker 6.2s steps(1, end) infinite;
 	--core-mask:
 		linear-gradient(90deg, transparent 0, black 0.16em, black calc(100% - 0.18em), transparent 100%),
 		radial-gradient(circle 0.85em at 0.6em 50%, black 0 62%, rgba(0, 0, 0, 0.4) 84%, transparent 100%);
@@ -734,9 +734,9 @@
 	--torch-core-motion: none;
 }
 
-/* ---------- Keyframes (ghost-*-v2) ---------- */
+/* ---------- Keyframes (ghost-*) ---------- */
 /* The word row mounts in the cold. */
-@keyframes ghost-word-in-v2 {
+@keyframes ghost-word-in {
 	0% {
 		opacity: 0;
 	}
@@ -746,7 +746,7 @@
 }
 
 /* The soul strip settles in. */
-@keyframes ghost-tail-in-v2 {
+@keyframes ghost-tail-in {
 	0% {
 		opacity: 0;
 	}
@@ -759,7 +759,7 @@
    (blur 3.6 -> 0), overshoots a hair above the baseline, and — no 100%
    frame — settles onto the live pale-cold slot. No color in the frames,
    so both themes share it. */
-@keyframes ghost-materialize-v2 {
+@keyframes ghost-materialize {
 	0% {
 		opacity: 0;
 		transform: translateY(0.12em) scaleY(1.15);
@@ -781,7 +781,7 @@
 /* SPECTRAL BREATHE: the settled word hovers, never perfectly still —
    its 0% equals the live 0.96 slot, so the handoff from materialize is
    seamless. Floor 0.84 keeps the ink readable in both themes. */
-@keyframes ghost-breathe-v2 {
+@keyframes ghost-breathe {
 	0%,
 	100% {
 		opacity: 0.96;
@@ -795,7 +795,7 @@
 
 /* Tail souls fade up into their risen slots (no 100% frame — opacity,
    blur and translateY settle onto the live var(--i) ramps). */
-@keyframes ghost-soul-in-v2 {
+@keyframes ghost-soul-in {
 	0% {
 		opacity: 0;
 		transform: translateY(0.08em);
@@ -807,7 +807,7 @@
 }
 
 /* The far tail is barely a cold shimmer — a slow desynced pulse. */
-@keyframes ghost-soul-drift-v2 {
+@keyframes ghost-soul-drift {
 	0%,
 	100% {
 		opacity: 1;
@@ -818,7 +818,7 @@
 }
 
 /* The mist arrives (no 100% frame; settles onto the live opacity). */
-@keyframes ghost-wisp-in-v2 {
+@keyframes ghost-wisp-in {
 	0% {
 		opacity: 0;
 	}
@@ -828,7 +828,7 @@
    its tile per cycle (A: 2 x 6.4em, B: 1 x 9.6em, C: 2 x 4.8em), so the
    loop is seamless; the y offsets undulate and return to their 0% pose.
    Linear timing keeps the crawl constant while the ribbons wave. */
-@keyframes ghost-wisp-crawl-v2 {
+@keyframes ghost-wisp-crawl {
 	0% {
 		background-position:
 			0 0,
@@ -872,54 +872,54 @@
 }
 
 /* The cold spot blooms on (no 100% frame). */
-@keyframes ghost-cold-in-v2 {
+@keyframes ghost-cold-in {
 	0% {
 		opacity: 0;
 	}
 }
 
 /* ...then the chill slowly deepens and eases. */
-@keyframes ghost-cold-breathe-v2 {
+@keyframes ghost-cold-breathe {
 	0%,
 	100% {
-		opacity: var(--gh-cold-o-v2, 0.8);
+		opacity: var(--gh-cold-o, 0.8);
 	}
 	50% {
-		opacity: calc(var(--gh-cold-o-v2, 0.8) * 0.68);
+		opacity: calc(var(--gh-cold-o, 0.8) * 0.68);
 	}
 }
 
 /* A candle in a draft: the caret glow's alpha snaps between held poses
    — registered <number>, animated on the field where --caret-shadow
    computes. */
-@keyframes ghost-candle-flicker-v2 {
+@keyframes ghost-candle-flicker {
 	0%,
 	100% {
-		--gh-candle-a-v2: 0.62;
+		--gh-candle-a: 0.62;
 	}
 	9% {
-		--gh-candle-a-v2: 0.54;
+		--gh-candle-a: 0.54;
 	}
 	13% {
-		--gh-candle-a-v2: 0.66;
+		--gh-candle-a: 0.66;
 	}
 	38% {
-		--gh-candle-a-v2: 0.58;
+		--gh-candle-a: 0.58;
 	}
 	43% {
-		--gh-candle-a-v2: 0.64;
+		--gh-candle-a: 0.64;
 	}
 	71% {
-		--gh-candle-a-v2: 0.48;
+		--gh-candle-a: 0.48;
 	}
 	76% {
-		--gh-candle-a-v2: 0.62;
+		--gh-candle-a: 0.62;
 	}
 }
 
 /* WAITING: the orb bobs up-down and drifts a breath left-right (the
    translateY(-50%) keeps the torch layer's own centering)... */
-@keyframes ghost-orb-bob-v2 {
+@keyframes ghost-orb-bob {
 	0%,
 	100% {
 		transform: translate(0em, calc(-50% + 0.02em));
@@ -936,7 +936,7 @@
 }
 
 /* ...with an occasional slow flicker (held poses, then snaps)... */
-@keyframes ghost-orb-flicker-v2 {
+@keyframes ghost-orb-flicker {
 	0%,
 	57%,
 	100% {
@@ -957,7 +957,7 @@
 }
 
 /* ...while the trailing wisp lags behind on a slower, offset beat. */
-@keyframes ghost-wisp-trail-v2 {
+@keyframes ghost-wisp-trail {
 	0%,
 	100% {
 		opacity: calc(var(--haze-opacity, 0.8) * 0.75);

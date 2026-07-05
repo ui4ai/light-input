@@ -1,5 +1,5 @@
 /* ============================================================
-   RORSCHACH v2 — "Тест Роршаха: слово — это то, что вы видите
+   RORSCHACH — "Тест Роршаха: слово — это то, что вы видите
    в пятне". BILATERAL SYMMETRY IS EVERYTHING: one irregular
    multi-lobe ink half (an inline SVG data-URI path — three big
    lobes, a wing, satellite specks, and a translucent stroke halo
@@ -41,7 +41,7 @@
    Shared beams stay dead; torch layers serve waiting only. No
    color anywhere — ink and card only; text ends crisp; every
    decorated layer dissolves through intersected masks whose
-   fades complete INSIDE their boxes. Keyframes: rorschach-*-v2
+   fades complete INSIDE their boxes. Keyframes: rorschach-*
    only (legacy rorschach-* keyframes stay untouched).
    ============================================================ */
 
@@ -248,10 +248,10 @@
 	opacity: var(--ro-blot-o);
 	transform-origin: 50% 50%;
 	animation:
-		rorschach-stamp-v2 620ms cubic-bezier(0.22, 1.1, 0.32, 1) 80ms both,
-		rorschach-bleed-v2 2s cubic-bezier(0.25, 0.6, 0.3, 1) 760ms forwards,
-		rorschach-drip-v2 2.4s cubic-bezier(0.3, 0.7, 0.4, 1) 1.4s both,
-		rorschach-breath-v2 7s ease-in-out 2.9s infinite;
+		rorschach-stamp 620ms cubic-bezier(0.22, 1.1, 0.32, 1) 80ms both,
+		rorschach-bleed 2s cubic-bezier(0.25, 0.6, 0.3, 1) 760ms forwards,
+		rorschach-drip 2.4s cubic-bezier(0.3, 0.7, 0.4, 1) 1.4s both,
+		rorschach-breath 7s ease-in-out 2.9s infinite;
 }
 
 /* Left half: as authored, dense fold edge on its right; crease shadow. */
@@ -280,7 +280,7 @@
 	background-clip: border-box;
 	filter: none;
 	text-shadow: var(--next-shadow);
-	animation: rorschach-word-in-v2 220ms ease-out both;
+	animation: rorschach-word-in 220ms ease-out both;
 }
 
 /* Card-tone scrim: the ink parts around the letters — the figure you see
@@ -300,7 +300,7 @@
 	mix-blend-mode: normal;
 	opacity: var(--ro-scrim-o);
 	transform: none;
-	animation: rorschach-scrim-in-v2 520ms ease-out 340ms both;
+	animation: rorschach-scrim-in 520ms ease-out 340ms both;
 }
 
 /* The legacy mirror-strip pseudo retires: this blot never doubles the word. */
@@ -324,7 +324,7 @@
 	text-shadow: var(--next-shadow);
 	transform: none;
 	transform-origin: 50% 62%;
-	animation: rorschach-read-v2 640ms cubic-bezier(0.3, 0.7, 0.25, 1) both;
+	animation: rorschach-read 640ms cubic-bezier(0.3, 0.7, 0.25, 1) both;
 	animation-delay: calc(560ms + var(--i) * 70ms);
 }
 
@@ -351,7 +351,7 @@
 	text-shadow: 0 1px 1px rgba(6, 7, 10, 0.35);
 	-webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0, rgba(0, 0, 0, 0.5) 3.2em, rgba(0, 0, 0, 0.2) 7em, transparent 10.5em);
 	mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0, rgba(0, 0, 0, 0.5) 3.2em, rgba(0, 0, 0, 0.2) 7em, transparent 10.5em);
-	animation: rorschach-tail-in-v2 460ms ease-out 200ms both;
+	animation: rorschach-tail-in 460ms ease-out 200ms both;
 }
 
 /* Crisp dimmed letters — the legacy warp/blur loops are retired. */
@@ -416,26 +416,26 @@
 .stage[data-glow='rorschach'][data-light-flow='off'] .field[data-glow] .prediction::before,
 .stage[data-glow='rorschach'][data-light-flow='off'] .field[data-glow] .prediction::after {
 	animation:
-		rorschach-stamp-v2 620ms cubic-bezier(0.22, 1.1, 0.32, 1) 80ms both,
-		rorschach-bleed-v2 2s cubic-bezier(0.25, 0.6, 0.3, 1) 760ms forwards,
-		rorschach-drip-v2 2.4s cubic-bezier(0.3, 0.7, 0.4, 1) 1.4s both;
+		rorschach-stamp 620ms cubic-bezier(0.22, 1.1, 0.32, 1) 80ms both,
+		rorschach-bleed 2s cubic-bezier(0.25, 0.6, 0.3, 1) 760ms forwards,
+		rorschach-drip 2.4s cubic-bezier(0.3, 0.7, 0.4, 1) 1.4s both;
 }
 
 .stage[data-glow='rorschach'][data-light-flow='off'] .field[data-glow] .next-word {
-	animation: rorschach-word-in-v2 220ms ease-out both;
+	animation: rorschach-word-in 220ms ease-out both;
 }
 
 .stage[data-glow='rorschach'][data-light-flow='off'] .field[data-glow] .next-word::before {
-	animation: rorschach-scrim-in-v2 520ms ease-out 340ms both;
+	animation: rorschach-scrim-in 520ms ease-out 340ms both;
 }
 
 .stage[data-glow='rorschach'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
-	animation: rorschach-read-v2 640ms cubic-bezier(0.3, 0.7, 0.25, 1) both;
+	animation: rorschach-read 640ms cubic-bezier(0.3, 0.7, 0.25, 1) both;
 	animation-delay: calc(560ms + var(--i) * 70ms);
 }
 
 .stage[data-glow='rorschach'][data-light-flow='off'] .field[data-glow] .tail {
-	animation: rorschach-tail-in-v2 460ms ease-out 200ms both;
+	animation: rorschach-tail-in 460ms ease-out 200ms both;
 }
 
 /* ---------- Light theme: the classic card ---------- */
@@ -616,26 +616,26 @@
 .stage[data-theme='light'][data-glow='rorschach'][data-light-flow='off'] .field[data-glow] .prediction::before,
 .stage[data-theme='light'][data-glow='rorschach'][data-light-flow='off'] .field[data-glow] .prediction::after {
 	animation:
-		rorschach-stamp-v2 620ms cubic-bezier(0.22, 1.1, 0.32, 1) 80ms both,
-		rorschach-bleed-v2 2s cubic-bezier(0.25, 0.6, 0.3, 1) 760ms forwards,
-		rorschach-drip-v2 2.4s cubic-bezier(0.3, 0.7, 0.4, 1) 1.4s both;
+		rorschach-stamp 620ms cubic-bezier(0.22, 1.1, 0.32, 1) 80ms both,
+		rorschach-bleed 2s cubic-bezier(0.25, 0.6, 0.3, 1) 760ms forwards,
+		rorschach-drip 2.4s cubic-bezier(0.3, 0.7, 0.4, 1) 1.4s both;
 }
 
 .stage[data-theme='light'][data-glow='rorschach'][data-light-flow='off'] .field[data-glow] .next-word {
-	animation: rorschach-word-in-v2 220ms ease-out both;
+	animation: rorschach-word-in 220ms ease-out both;
 }
 
 .stage[data-theme='light'][data-glow='rorschach'][data-light-flow='off'] .field[data-glow] .next-word::before {
-	animation: rorschach-scrim-in-v2 520ms ease-out 340ms both;
+	animation: rorschach-scrim-in 520ms ease-out 340ms both;
 }
 
 .stage[data-theme='light'][data-glow='rorschach'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
-	animation: rorschach-read-v2 640ms cubic-bezier(0.3, 0.7, 0.25, 1) both;
+	animation: rorschach-read 640ms cubic-bezier(0.3, 0.7, 0.25, 1) both;
 	animation-delay: calc(560ms + var(--i) * 70ms);
 }
 
 .stage[data-theme='light'][data-glow='rorschach'][data-light-flow='off'] .field[data-glow] .tail {
-	animation: rorschach-tail-in-v2 460ms ease-out 200ms both;
+	animation: rorschach-tail-in 460ms ease-out 200ms both;
 }
 
 /* ---------- Waiting state: the test forming ---------- */
@@ -651,7 +651,7 @@
 	--haze-bg: radial-gradient(ellipse 1.7em 1em at 1em 50%, var(--ro-pool-ink), transparent 78%);
 	--haze-filter: blur(10px);
 	--haze-opacity: 0.75;
-	--torch-haze-motion: rorschach-wait-pool-v2 5.2s ease-in-out infinite;
+	--torch-haze-motion: rorschach-wait-pool 5.2s ease-in-out infinite;
 	--haze-mask: linear-gradient(90deg, transparent 0, black 0.3em), radial-gradient(ellipse 50% 50% at 36% 50%, black 0 46%, rgba(0, 0, 0, 0.5) 72%, transparent 96%);
 	--body-bg: none;
 	--body-opacity: 0;
@@ -667,7 +667,7 @@
 		radial-gradient(ellipse at 50% 50%, var(--ro-wait-ink) 0 40%, transparent 72%) 1.05em 1.42em no-repeat;
 	--core-filter: blur(1.2px);
 	--core-opacity: 0.9;
-	--torch-core-motion: rorschach-wait-morph-v2 3.8s ease-in-out infinite;
+	--torch-core-motion: rorschach-wait-morph 3.8s ease-in-out infinite;
 	--core-mask: linear-gradient(90deg, transparent 0, black 0.16em), radial-gradient(ellipse 56% 56% at 40% 50%, black 0 52%, rgba(0, 0, 0, 0.5) 78%, transparent 96%);
 	--flow-bg: none;
 	--flow-low: 0;
@@ -707,11 +707,11 @@
 	--torch-core-motion: none;
 }
 
-/* ---------- Keyframes (rorschach-*-v2) ---------- */
+/* ---------- Keyframes (rorschach-*) ---------- */
 /* THE STAMP: folded paper squeezed — both halves squish in from a thin
    band, overshoot, settle. Runs on the independent `scale` property so
    the mirrored half's transform flip never breaks. */
-@keyframes rorschach-stamp-v2 {
+@keyframes rorschach-stamp {
 	0% {
 		opacity: 0;
 		scale: 0.94 0.15;
@@ -733,7 +733,7 @@
 }
 
 /* Wet ink settles: a one-shot 3% spread after the stamp. */
-@keyframes rorschach-bleed-v2 {
+@keyframes rorschach-bleed {
 	0% {
 		scale: 1 1;
 	}
@@ -744,7 +744,7 @@
 
 /* SYMMETRY BREATH: the same scaleX swell on both halves — one is flipped,
    so the pair breathes in perfect mirror sync about the fold. */
-@keyframes rorschach-breath-v2 {
+@keyframes rorschach-breath {
 	0%,
 	100% {
 		scale: 1.03 1.03;
@@ -756,7 +756,7 @@
 
 /* The drip draws downward from the bottom lobe and stays; crease and blot
    sizes ride along unchanged. */
-@keyframes rorschach-drip-v2 {
+@keyframes rorschach-drip {
 	0% {
 		background-size:
 			1px 2.6em,
@@ -772,7 +772,7 @@
 }
 
 /* The word surfaces under the reading. */
-@keyframes rorschach-word-in-v2 {
+@keyframes rorschach-word-in {
 	0% {
 		opacity: 0;
 	}
@@ -783,7 +783,7 @@
 
 /* WORD FROM INK: blob -> letter. Heavy blur and a squashed inkdrop shape
    sharpen with a small overshoot — the eye suddenly reads the word. */
-@keyframes rorschach-read-v2 {
+@keyframes rorschach-read {
 	0% {
 		opacity: 0;
 		filter: blur(8px);
@@ -810,7 +810,7 @@
 }
 
 /* The card tone parts the ink under the letters. */
-@keyframes rorschach-scrim-in-v2 {
+@keyframes rorschach-scrim-in {
 	0% {
 		opacity: 0;
 	}
@@ -820,7 +820,7 @@
 }
 
 /* The tail settles onto the card. */
-@keyframes rorschach-tail-in-v2 {
+@keyframes rorschach-tail-in {
 	0% {
 		opacity: 0;
 	}
@@ -831,7 +831,7 @@
 
 /* Waiting: the small blot morphs — lobes flatten as the bridge swells,
    every value shared by both lobes so the mirror never slips. */
-@keyframes rorschach-wait-morph-v2 {
+@keyframes rorschach-wait-morph {
 	0%,
 	100% {
 		opacity: calc(var(--core-opacity, 0.9) * 0.8);
@@ -850,7 +850,7 @@
 }
 
 /* ...over a quiet pool of ink air. */
-@keyframes rorschach-wait-pool-v2 {
+@keyframes rorschach-wait-pool {
 	0%,
 	100% {
 		opacity: calc(var(--haze-opacity, 0.75) * 0.7);

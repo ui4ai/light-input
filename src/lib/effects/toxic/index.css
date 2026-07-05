@@ -1,5 +1,5 @@
 /* ============================================================
-   TOXIC v2 — "Radioactive acid spill at the caret"
+   TOXIC — "Radioactive acid spill at the caret"
    A luminous acid puddle spreads rightward under the suggestion
    with a living, irregular meniscus: two puddle phases (beam-body
    = phase A, prediction::before = phase B) are warped by two
@@ -62,8 +62,8 @@
 		radial-gradient(ellipse 2.6em 1.4em at 0.8em 56%, rgba(230, 255, 150, 0.1), transparent 72%);
 	--haze-filter: blur(22px) saturate(1.3);
 	--haze-opacity: 0.8;
-	--haze-motion: toxic-underglow-v2 4.4s ease-in-out 760ms infinite;
-	--torch-haze-motion: toxic-waiting-glow-v2 2.4s ease-in-out infinite;
+	--haze-motion: toxic-underglow 4.4s ease-in-out 760ms infinite;
+	--torch-haze-motion: toxic-waiting-glow 2.4s ease-in-out infinite;
 	--haze-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 96% 94% at 26% 58%, black 0 40%, rgba(0, 0, 0, 0.5) 68%, transparent 96%);
 	--body-width: 12.5em;
 	--body-height: 2.5em;
@@ -85,8 +85,8 @@
 		radial-gradient(ellipse 1.9em 0.4em at 1.5em 68%, rgba(214, 255, 90, 0.6), rgba(150, 255, 40, 0.24) 62%, transparent 90%);
 	--core-filter: blur(3px) saturate(1.35);
 	--core-opacity: 1;
-	--core-motion: toxic-seethe-v2 1.9s ease-in-out 620ms infinite;
-	--torch-core-motion: toxic-drop-v2 2.4s cubic-bezier(0.42, 0.06, 0.58, 0.94) infinite;
+	--core-motion: toxic-seethe 1.9s ease-in-out 620ms infinite;
+	--torch-core-motion: toxic-drop 2.4s cubic-bezier(0.42, 0.06, 0.58, 0.94) infinite;
 	--core-mask: linear-gradient(90deg, transparent 0, black 0.6em), radial-gradient(ellipse 96% 92% at 26% 62%, black 0 45%, rgba(0, 0, 0, 0.5) 72%, transparent 95%);
 	--flow-width: 11em;
 	--flow-height: 1.7em;
@@ -97,7 +97,7 @@
 	--flow-filter: blur(10px) saturate(1.25);
 	--flow-low: 0.12;
 	--flow-high: 0.4;
-	--flow-motion: toxic-sheen-v2 4.6s ease-in-out 900ms infinite;
+	--flow-motion: toxic-sheen 4.6s ease-in-out 900ms infinite;
 	--flow-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 96% 80% at 28% 68%, black 0 40%, rgba(0, 0, 0, 0.5) 68%, transparent 96%);
 	--spark-width: 8em;
 	--spark-height: 2.6em;
@@ -112,7 +112,7 @@
 	--spark-filter: blur(0.3px) drop-shadow(0 0 6px rgba(190, 255, 70, 0.6));
 	--spark-low: 0;
 	--spark-high: 0.95;
-	--spark-motion: toxic-bubble-rise-v2 3.6s cubic-bezier(0.35, 0.1, 0.5, 1) 900ms infinite;
+	--spark-motion: toxic-bubble-rise 3.6s cubic-bezier(0.35, 0.1, 0.5, 1) 900ms infinite;
 	--spark-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 96% 94% at 32% 62%, black 0 52%, rgba(0, 0, 0, 0.5) 76%, transparent 98%);
 	--smoke-width: 7.5em;
 	--smoke-height: 2.8em;
@@ -124,7 +124,7 @@
 	--smoke-filter: blur(12px) saturate(1.1);
 	--smoke-opacity: 0.55;
 	--smoke-blend: screen;
-	--smoke-motion: toxic-fume-rise-v2 6.4s ease-in-out 1.1s infinite;
+	--smoke-motion: toxic-fume-rise 6.4s ease-in-out 1.1s infinite;
 	--smoke-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 94% 94% at 45% 32%, black 0 42%, rgba(0, 0, 0, 0.5) 70%, transparent 94%);
 	--aux-width: 8em;
 	--aux-height: 2.6em;
@@ -136,7 +136,7 @@
 	--aux-filter: blur(0.4px) drop-shadow(0 0 5px rgba(190, 255, 80, 0.5));
 	--aux-opacity: 0.85;
 	--aux-blend: screen;
-	--aux-motion: toxic-bubble-pop-v2 3.6s cubic-bezier(0.3, 0.2, 0.5, 1) 900ms infinite;
+	--aux-motion: toxic-bubble-pop 3.6s cubic-bezier(0.3, 0.2, 0.5, 1) 900ms infinite;
 	--aux-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 96% 94% at 34% 55%, black 0 48%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
 	--next-color: rgba(230, 255, 210, 0.95);
 	--next-shadow:
@@ -185,7 +185,7 @@
 	mask-image: radial-gradient(ellipse 100% 96% at 28% 60%, black 0 44%, rgba(0, 0, 0, 0.5) 72%, transparent 100%);
 	mix-blend-mode: screen;
 	opacity: var(--wash-o);
-	animation: toxic-geiger-v2 2.6s steps(1, end) infinite;
+	animation: toxic-geiger 2.6s steps(1, end) infinite;
 }
 
 /* Dissolve into the field's rounded clip, not the paint box; edge overlays
@@ -247,8 +247,8 @@
 	transform: translateY(-50%);
 	transform-origin: 0.7em center;
 	animation:
-		toxic-spill-in-v2 560ms cubic-bezier(0.16, 1, 0.3, 1) both,
-		toxic-churn-b-v2 5.6s ease-in-out 640ms infinite;
+		toxic-spill-in 560ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		toxic-churn-b 5.6s ease-in-out 640ms infinite;
 }
 
 /* The meniscus: crisp undulating surface line + hero bubbles with dark
@@ -282,15 +282,15 @@
 	transform: translateY(-50%);
 	transform-origin: 0.55em center;
 	animation:
-		toxic-menis-in-v2 620ms cubic-bezier(0.16, 1, 0.3, 1) both,
-		toxic-meniscus-v2 4.2s ease-in-out 620ms infinite;
+		toxic-menis-in 620ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		toxic-meniscus 4.2s ease-in-out 620ms infinite;
 }
 
 /* Puddle phase A churn, layered after the shared entrance. */
 .stage[data-glow='toxic'] .field[data-glow] .beam-body {
 	animation:
 		beam-open 650ms cubic-bezier(0.16, 1, 0.3, 1) both,
-		toxic-churn-a-v2 5.6s ease-in-out 640ms infinite;
+		toxic-churn-a 5.6s ease-in-out 640ms infinite;
 }
 
 /* ---------- Text is sacred: corrosion etch ---------- */
@@ -302,7 +302,7 @@
 	background: none;
 	filter: none;
 	text-shadow: var(--next-shadow);
-	animation: toxic-word-in-v2 340ms cubic-bezier(0.16, 1, 0.3, 1) both;
+	animation: toxic-word-in 340ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 /* Swamp-dark scrim between the acid glare and the glyphs: contrast insurance. */
@@ -321,7 +321,7 @@
 	mix-blend-mode: normal;
 	opacity: var(--scrim-o);
 	transform: none;
-	animation: toxic-scrim-in-v2 420ms ease-out both;
+	animation: toxic-scrim-in 420ms ease-out both;
 }
 
 /* Per-glyph corrosion: dark silhouette -> lime acid bite -> pale settle.
@@ -334,7 +334,7 @@
 	color: var(--next-color);
 	background: none;
 	transform-origin: 50% 78%;
-	animation: toxic-glyph-etch-v2 640ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+	animation: toxic-glyph-etch 640ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
 	animation-delay: calc(140ms + var(--i) * 62ms);
 }
 
@@ -348,7 +348,7 @@
 	text-shadow: 0 0 0.3em rgba(180, 255, 60, 0.65);
 	transform: none;
 	transform-origin: 50% 12%;
-	animation: toxic-glyph-melt-v2 540ms cubic-bezier(0.4, 0.2, 0.6, 1) both;
+	animation: toxic-glyph-melt 540ms cubic-bezier(0.4, 0.2, 0.6, 1) both;
 	animation-delay: calc(140ms + var(--i) * 62ms);
 }
 
@@ -359,8 +359,8 @@
 	background-size: 0.05em 0.05em;
 	background-position: 52% 70%;
 	animation:
-		toxic-glyph-etch-v2 640ms cubic-bezier(0.2, 0.8, 0.3, 1) both,
-		toxic-drip-v2 3.4s ease-in infinite;
+		toxic-glyph-etch 640ms cubic-bezier(0.2, 0.8, 0.3, 1) both,
+		toxic-drip 3.4s ease-in infinite;
 	animation-delay: calc(140ms + var(--i) * 62ms), calc(900ms + var(--i) * 210ms);
 }
 
@@ -389,11 +389,11 @@
 }
 
 .stage[data-glow='toxic'][data-light-flow='off'] .field[data-glow] .prediction::before {
-	animation: toxic-spill-in-v2 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+	animation: toxic-spill-in 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .stage[data-glow='toxic'][data-light-flow='off'] .field[data-glow] .prediction::after {
-	animation: toxic-menis-in-v2 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+	animation: toxic-menis-in 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .stage[data-glow='toxic'][data-light-flow='off'] .field[data-glow] .beam-veil {
@@ -409,7 +409,7 @@
 }
 
 .stage[data-glow='toxic'][data-light-flow='off'] .field[data-glow] .next-word::before {
-	animation: toxic-scrim-in-v2 420ms ease-out both;
+	animation: toxic-scrim-in 420ms ease-out both;
 }
 
 .stage[data-glow='toxic'][data-light-flow='off'] .field[data-glow] .next-word .glyph,
@@ -417,7 +417,7 @@
 .stage[data-glow='toxic'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(3n),
 .stage[data-glow='toxic'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
 .stage[data-glow='toxic'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
-	animation: toxic-glyph-etch-v2 640ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+	animation: toxic-glyph-etch 640ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
 	animation-delay: calc(140ms + var(--i) * 62ms);
 }
 
@@ -496,7 +496,7 @@
 .stage[data-theme='light'][data-glow='toxic'] .field[data-glow]::before {
 	mix-blend-mode: normal;
 	opacity: var(--wash-o);
-	animation: toxic-geiger-v2 2.6s steps(1, end) infinite;
+	animation: toxic-geiger 2.6s steps(1, end) infinite;
 }
 
 /* The wet stain must darken the paper, not screen into it. */
@@ -514,8 +514,8 @@
 	filter: var(--warp-b) blur(5px) saturate(1.3);
 	mix-blend-mode: normal;
 	animation:
-		toxic-spill-in-v2 560ms cubic-bezier(0.16, 1, 0.3, 1) both,
-		toxic-churn-b-v2 5.6s ease-in-out 640ms infinite;
+		toxic-spill-in 560ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		toxic-churn-b 5.6s ease-in-out 640ms infinite;
 }
 
 .stage[data-theme='light'][data-glow='toxic'] .field[data-glow] .prediction::after {
@@ -529,15 +529,15 @@
 	filter: var(--warp-c) blur(0.3px) saturate(1.2) drop-shadow(0 0.05em 0.2em rgba(70, 120, 20, 0.25));
 	mix-blend-mode: normal;
 	animation:
-		toxic-menis-in-v2 620ms cubic-bezier(0.16, 1, 0.3, 1) both,
-		toxic-meniscus-v2 4.2s ease-in-out 620ms infinite;
+		toxic-menis-in 620ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		toxic-meniscus 4.2s ease-in-out 620ms infinite;
 }
 
 .stage[data-theme='light'][data-glow='toxic'] .field[data-glow] .next-word {
 	color: var(--next-color);
 	background: none;
 	text-shadow: var(--next-shadow);
-	animation: toxic-word-in-v2 340ms cubic-bezier(0.16, 1, 0.3, 1) both;
+	animation: toxic-word-in 340ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .stage[data-theme='light'][data-glow='toxic'] .field[data-glow] .next-word::before {
@@ -545,7 +545,7 @@
 	filter: blur(5px);
 	mix-blend-mode: normal;
 	opacity: var(--scrim-o);
-	animation: toxic-scrim-in-v2 420ms ease-out both;
+	animation: toxic-scrim-in 420ms ease-out both;
 }
 
 .stage[data-theme='light'][data-glow='toxic'] .field[data-glow] .next-word .glyph,
@@ -555,7 +555,7 @@
 .stage[data-theme='light'][data-glow='toxic'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
 	color: var(--next-color);
 	text-shadow: var(--next-shadow);
-	animation-name: toxic-glyph-etch-light-v2;
+	animation-name: toxic-glyph-etch-light;
 }
 
 .stage[data-theme='light'][data-glow='toxic'] .field[data-glow] .next-word .glyph::after {
@@ -566,8 +566,8 @@
 .stage[data-theme='light'][data-glow='toxic'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
 	background-image: radial-gradient(closest-side, rgba(96, 160, 20, 0.85), rgba(66, 124, 14, 0.4) 62%, transparent);
 	animation:
-		toxic-glyph-etch-light-v2 640ms cubic-bezier(0.2, 0.8, 0.3, 1) both,
-		toxic-drip-v2 3.4s ease-in infinite;
+		toxic-glyph-etch-light 640ms cubic-bezier(0.2, 0.8, 0.3, 1) both,
+		toxic-drip 3.4s ease-in infinite;
 	animation-delay: calc(140ms + var(--i) * 62ms), calc(900ms + var(--i) * 210ms);
 }
 
@@ -604,15 +604,15 @@
 }
 
 .stage[data-theme='light'][data-glow='toxic'][data-light-flow='off'] .field[data-glow] .prediction::before {
-	animation: toxic-spill-in-v2 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+	animation: toxic-spill-in 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .stage[data-theme='light'][data-glow='toxic'][data-light-flow='off'] .field[data-glow] .prediction::after {
-	animation: toxic-menis-in-v2 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+	animation: toxic-menis-in 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .stage[data-theme='light'][data-glow='toxic'][data-light-flow='off'] .field[data-glow] .next-word::before {
-	animation: toxic-scrim-in-v2 420ms ease-out both;
+	animation: toxic-scrim-in 420ms ease-out both;
 }
 
 .stage[data-theme='light'][data-glow='toxic'][data-light-flow='off'] .field[data-glow] .next-word .glyph,
@@ -620,7 +620,7 @@
 .stage[data-theme='light'][data-glow='toxic'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(3n),
 .stage[data-theme='light'][data-glow='toxic'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
 .stage[data-theme='light'][data-glow='toxic'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
-	animation: toxic-glyph-etch-light-v2 640ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+	animation: toxic-glyph-etch-light 640ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
 	animation-delay: calc(140ms + var(--i) * 62ms);
 }
 
@@ -635,7 +635,7 @@
 	--haze-filter: blur(14px) saturate(1.2);
 	--haze-opacity: 0.8;
 	--haze-mask: linear-gradient(90deg, transparent 0, black 0.35em), radial-gradient(ellipse 92% 92% at 28% 55%, black 0 44%, rgba(0, 0, 0, 0.5) 70%, transparent 96%);
-	--torch-haze-motion: toxic-waiting-glow-v2 2.4s ease-in-out infinite;
+	--torch-haze-motion: toxic-waiting-glow 2.4s ease-in-out infinite;
 	--core-width: 1.5em;
 	--core-height: 2.5em;
 	--core-size: auto;
@@ -645,7 +645,7 @@
 	--core-filter: blur(0.8px) drop-shadow(0 0 8px rgba(190, 255, 80, 0.55));
 	--core-opacity: 1;
 	--core-mask: linear-gradient(90deg, transparent 0, black 0.3em), radial-gradient(ellipse 94% 98% at 30% 50%, black 0 55%, transparent 96%);
-	--torch-core-motion: toxic-drop-v2 2.4s cubic-bezier(0.42, 0.06, 0.58, 0.94) infinite;
+	--torch-core-motion: toxic-drop 2.4s cubic-bezier(0.42, 0.06, 0.58, 0.94) infinite;
 	--flow-width: 3.2em;
 	--flow-height: 2.4em;
 	--flow-size: 220% 100%;
@@ -653,7 +653,7 @@
 	--flow-filter: blur(9px);
 	--flow-low: 0.05;
 	--flow-high: 0.16;
-	--flow-motion: toxic-sheen-v2 5.2s ease-in-out infinite;
+	--flow-motion: toxic-sheen 5.2s ease-in-out infinite;
 	--flow-mask: linear-gradient(90deg, transparent 0, black 0.35em), radial-gradient(ellipse 92% 76% at 28% 72%, black 0 44%, transparent 96%);
 	--spark-width: 2.4em;
 	--spark-height: 2.5em;
@@ -665,7 +665,7 @@
 	--spark-filter: blur(0.3px) drop-shadow(0 0 5px rgba(200, 255, 100, 0.5));
 	--spark-low: 0;
 	--spark-high: 0.9;
-	--spark-motion: toxic-splash-v2 2.4s linear infinite;
+	--spark-motion: toxic-splash 2.4s linear infinite;
 	--spark-mask: linear-gradient(90deg, transparent 0, black 0.3em), radial-gradient(ellipse 94% 96% at 30% 60%, black 0 55%, transparent 96%);
 	--smoke-width: 3em;
 	--smoke-height: 2.4em;
@@ -673,7 +673,7 @@
 	--smoke-bg: radial-gradient(ellipse 0.4em 0.8em at 0.7em 0.9em, rgba(180, 215, 90, 0.22), transparent 78%);
 	--smoke-filter: blur(10px);
 	--smoke-opacity: 0.32;
-	--smoke-motion: toxic-waiting-fume-v2 5.2s ease-in-out infinite;
+	--smoke-motion: toxic-waiting-fume 5.2s ease-in-out infinite;
 	--smoke-mask: linear-gradient(90deg, transparent 0, black 0.3em), radial-gradient(ellipse 92% 94% at 32% 38%, black 0 46%, transparent 94%);
 	--aux-opacity: 0;
 }
@@ -708,8 +708,8 @@
 	--smoke-motion: none;
 }
 
-/* ---------- Keyframes (toxic-*-v2) ---------- */
-@keyframes toxic-geiger-v2 {
+/* ---------- Keyframes (toxic-*) ---------- */
+@keyframes toxic-geiger {
 	0% {
 		opacity: calc(var(--wash-o, 0.9) * 0.84);
 	}
@@ -754,7 +754,7 @@
 	}
 }
 
-@keyframes toxic-underglow-v2 {
+@keyframes toxic-underglow {
 	0%,
 	100% {
 		opacity: calc(var(--haze-opacity) * 0.8);
@@ -766,7 +766,7 @@
 	}
 }
 
-@keyframes toxic-churn-a-v2 {
+@keyframes toxic-churn-a {
 	0%,
 	100% {
 		opacity: 0.95;
@@ -782,7 +782,7 @@
 	}
 }
 
-@keyframes toxic-churn-b-v2 {
+@keyframes toxic-churn-b {
 	0%,
 	100% {
 		opacity: calc(var(--spill-o, 0.55) * 0.8);
@@ -798,7 +798,7 @@
 	}
 }
 
-@keyframes toxic-meniscus-v2 {
+@keyframes toxic-meniscus {
 	0%,
 	100% {
 		opacity: var(--menis-o, 0.95);
@@ -818,7 +818,7 @@
 	}
 }
 
-@keyframes toxic-spill-in-v2 {
+@keyframes toxic-spill-in {
 	0% {
 		opacity: 0;
 		transform: translateY(-50%) scaleX(0.18) scaleY(0.6);
@@ -829,7 +829,7 @@
 	}
 }
 
-@keyframes toxic-menis-in-v2 {
+@keyframes toxic-menis-in {
 	0% {
 		opacity: 0;
 		transform: translateY(-50%) scaleX(0.2);
@@ -840,7 +840,7 @@
 	}
 }
 
-@keyframes toxic-seethe-v2 {
+@keyframes toxic-seethe {
 	0%,
 	100% {
 		opacity: calc(var(--core-opacity) * 0.8);
@@ -860,7 +860,7 @@
 	}
 }
 
-@keyframes toxic-sheen-v2 {
+@keyframes toxic-sheen {
 	0% {
 		opacity: var(--flow-low);
 		background-position: 0% 50%;
@@ -877,7 +877,7 @@
 	}
 }
 
-@keyframes toxic-bubble-rise-v2 {
+@keyframes toxic-bubble-rise {
 	0% {
 		opacity: 0;
 		transform: translateY(-45%) translateX(0) scale(0.9);
@@ -900,7 +900,7 @@
 	}
 }
 
-@keyframes toxic-bubble-pop-v2 {
+@keyframes toxic-bubble-pop {
 	0%,
 	72% {
 		opacity: 0;
@@ -921,7 +921,7 @@
 	}
 }
 
-@keyframes toxic-fume-rise-v2 {
+@keyframes toxic-fume-rise {
 	0% {
 		opacity: 0;
 		transform: translateY(-42%) translateX(0) scaleY(0.8);
@@ -939,7 +939,7 @@
 	}
 }
 
-@keyframes toxic-scrim-in-v2 {
+@keyframes toxic-scrim-in {
 	0% {
 		opacity: 0;
 	}
@@ -948,7 +948,7 @@
 	}
 }
 
-@keyframes toxic-word-in-v2 {
+@keyframes toxic-word-in {
 	0% {
 		opacity: 0;
 		transform: translateX(-0.08em);
@@ -959,7 +959,7 @@
 	}
 }
 
-@keyframes toxic-glyph-etch-v2 {
+@keyframes toxic-glyph-etch {
 	0% {
 		opacity: 0;
 		color: rgb(8, 20, 8);
@@ -990,7 +990,7 @@
 	}
 }
 
-@keyframes toxic-glyph-etch-light-v2 {
+@keyframes toxic-glyph-etch-light {
 	0% {
 		opacity: 0;
 		color: rgb(206, 232, 150);
@@ -1015,7 +1015,7 @@
 	}
 }
 
-@keyframes toxic-glyph-melt-v2 {
+@keyframes toxic-glyph-melt {
 	0% {
 		opacity: 0.9;
 		filter: blur(0.02em);
@@ -1033,7 +1033,7 @@
 	}
 }
 
-@keyframes toxic-drip-v2 {
+@keyframes toxic-drip {
 	0%,
 	18% {
 		background-size: 0.05em 0.05em;
@@ -1053,7 +1053,7 @@
 	}
 }
 
-@keyframes toxic-drop-v2 {
+@keyframes toxic-drop {
 	0% {
 		opacity: 0;
 		transform: translateY(-62%) scale(0.5);
@@ -1086,7 +1086,7 @@
 	}
 }
 
-@keyframes toxic-splash-v2 {
+@keyframes toxic-splash {
 	0%,
 	58% {
 		opacity: 0;
@@ -1107,7 +1107,7 @@
 	}
 }
 
-@keyframes toxic-waiting-glow-v2 {
+@keyframes toxic-waiting-glow {
 	0%,
 	100% {
 		opacity: calc(var(--haze-opacity) * 0.7);
@@ -1119,7 +1119,7 @@
 	}
 }
 
-@keyframes toxic-waiting-fume-v2 {
+@keyframes toxic-waiting-fume {
 	0% {
 		opacity: 0;
 		transform: translateY(-40%) scale(0.7);

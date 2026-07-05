@@ -1,13 +1,13 @@
 /* ============================================================
-   VORTEX v2 — "Spacetime whirlpool at the caret"
+   VORTEX — "Spacetime whirlpool at the caret"
    Everything rotates. Two interfering spiral-arm decks spin on
    registered @property angles (blackhole conic technique, new
-   names): beam-hot = 3 uneven cyan arms clockwise on --vx-spin-v2,
-   beam-aux = 2 violet arms counter-clockwise on --vx-spin-b-v2.
+   names): beam-hot = 3 uneven cyan arms clockwise on --vx-spin,
+   beam-aux = 2 violet arms counter-clockwise on --vx-spin-b.
    beam-body carries thin caustic streamline ribbons orbiting at a
-   larger ring radius on --vx-orbit-v2 (slow cw, parallax against
+   larger ring radius on --vx-orbit (slow cw, parallax against
    the ccw arm deck). beam-flow is the wind sheen: one soft comet
-   arc circling the whole suggestion zone on --vx-wind-v2. Captured
+   arc circling the whole suggestion zone on --vx-wind. Captured
    debris = beam-spark + beam-smoke, two staggered speck trains on
    an orbit-and-infall keyframe (whole-layer rotate around the
    funnel center while scale shrinks and opacity dies at the eye).
@@ -28,25 +28,25 @@
    arms that darken at normal blend. Chrome-only tech intentional.
    ============================================================ */
 
-@property --vx-spin-v2 {
+@property --vx-spin {
 	syntax: '<angle>';
 	inherits: false;
 	initial-value: 0deg;
 }
 
-@property --vx-spin-b-v2 {
+@property --vx-spin-b {
 	syntax: '<angle>';
 	inherits: false;
 	initial-value: 210deg;
 }
 
-@property --vx-orbit-v2 {
+@property --vx-orbit {
 	syntax: '<angle>';
 	inherits: false;
 	initial-value: 40deg;
 }
 
-@property --vx-wind-v2 {
+@property --vx-wind {
 	syntax: '<angle>';
 	inherits: false;
 	initial-value: 0deg;
@@ -83,13 +83,13 @@
 		linear-gradient(90deg, transparent 0%, rgba(76, 112, 255, 0.06) 30%, transparent 78%);
 	--haze-filter: blur(20px) saturate(1.2);
 	--haze-opacity: 0.8;
-	--haze-motion: vortex-haze-swirl-v2 7.8s ease-in-out 720ms infinite;
-	--torch-haze-motion: vortex-waiting-breathe-v2 3.2s ease-in-out infinite;
+	--haze-motion: vortex-haze-swirl 7.8s ease-in-out 720ms infinite;
+	--torch-haze-motion: vortex-waiting-breathe 3.2s ease-in-out infinite;
 	--haze-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 94% 94% at 28% 50%, black 0 42%, rgba(0, 0, 0, 0.55) 68%, transparent 98%);
 	--body-width: 7.6em;
 	--body-height: 2.6em;
 	--body-bg:
-		conic-gradient(from var(--vx-orbit-v2) at 1.67em 50%, transparent 0deg, rgba(216, 248, 255, 0.42) 9deg, transparent 21deg, transparent 88deg, rgba(128, 226, 255, 0.3) 98deg, transparent 112deg, transparent 176deg, rgba(168, 150, 255, 0.26) 187deg, transparent 201deg, transparent 262deg, rgba(120, 230, 255, 0.2) 272deg, transparent 285deg 360deg),
+		conic-gradient(from var(--vx-orbit) at 1.67em 50%, transparent 0deg, rgba(216, 248, 255, 0.42) 9deg, transparent 21deg, transparent 88deg, rgba(128, 226, 255, 0.3) 98deg, transparent 112deg, transparent 176deg, rgba(168, 150, 255, 0.26) 187deg, transparent 201deg, transparent 262deg, rgba(120, 230, 255, 0.2) 272deg, transparent 285deg 360deg),
 		radial-gradient(ellipse 3.6em 1.35em at 1.67em 50%, transparent 0 58%, rgba(70, 150, 255, 0.06) 74%, transparent 94%);
 	--body-filter: blur(0.7px) saturate(1.35) drop-shadow(0 0 10px rgba(110, 220, 255, 0.35));
 	--body-opacity: 0.92;
@@ -98,20 +98,20 @@
 	--core-height: 2.5em;
 	--core-bg:
 		radial-gradient(ellipse 0.9em 0.42em at 1.67em 50%, rgba(214, 246, 255, 0.42), rgba(120, 220, 255, 0.16) 55%, transparent 80%),
-		conic-gradient(from var(--vx-spin-v2) at 1.67em 50%, transparent 0deg, rgba(198, 244, 255, 0.55) 22deg, rgba(120, 215, 255, 0.16) 52deg, transparent 84deg, rgba(158, 132, 255, 0.36) 122deg, rgba(112, 96, 235, 0.1) 152deg, transparent 182deg, rgba(150, 232, 255, 0.46) 224deg, rgba(90, 190, 255, 0.12) 262deg, transparent 296deg, rgba(214, 248, 255, 0.2) 322deg, transparent 360deg);
+		conic-gradient(from var(--vx-spin) at 1.67em 50%, transparent 0deg, rgba(198, 244, 255, 0.55) 22deg, rgba(120, 215, 255, 0.16) 52deg, transparent 84deg, rgba(158, 132, 255, 0.36) 122deg, rgba(112, 96, 235, 0.1) 152deg, transparent 182deg, rgba(150, 232, 255, 0.46) 224deg, rgba(90, 190, 255, 0.12) 262deg, transparent 296deg, rgba(214, 248, 255, 0.2) 322deg, transparent 360deg);
 	--core-filter: blur(2px) saturate(1.3) contrast(1.06);
 	--core-opacity: 0.94;
-	--core-motion: vortex-funnel-spin-v2 4.8s linear infinite;
-	--torch-core-motion: vortex-funnel-spin-v2 3.4s linear infinite;
+	--core-motion: vortex-funnel-spin 4.8s linear infinite;
+	--torch-core-motion: vortex-funnel-spin 3.4s linear infinite;
 	--core-mask: linear-gradient(90deg, transparent 0, black 0.85em), radial-gradient(ellipse 2.15em 1em at 1.67em 50%, transparent 0 10%, rgba(0, 0, 0, 0.9) 24%, black 40% 62%, rgba(0, 0, 0, 0.4) 82%, transparent 98%);
 	--flow-width: 10.5em;
 	--flow-height: 2.6em;
 	--flow-size: 100% 100%;
-	--flow-bg: conic-gradient(from var(--vx-wind-v2) at 1.67em 50%, transparent 0deg 286deg, rgba(140, 230, 255, 0.1) 312deg, rgba(206, 244, 255, 0.26) 344deg, rgba(235, 252, 255, 0.36) 355deg, transparent 360deg);
+	--flow-bg: conic-gradient(from var(--vx-wind) at 1.67em 50%, transparent 0deg 286deg, rgba(140, 230, 255, 0.1) 312deg, rgba(206, 244, 255, 0.26) 344deg, rgba(235, 252, 255, 0.36) 355deg, transparent 360deg);
 	--flow-filter: blur(6px) saturate(1.2);
 	--flow-low: 0.3;
 	--flow-high: 0.52;
-	--flow-motion: vortex-wind-arc-v2 8.6s linear infinite;
+	--flow-motion: vortex-wind-arc 8.6s linear infinite;
 	--flow-mask: linear-gradient(90deg, transparent 0, black 1.05em), radial-gradient(ellipse 94% 88% at 30% 50%, black 0 40%, rgba(0, 0, 0, 0.5) 68%, transparent 96%);
 	--spark-width: 4.2em;
 	--spark-height: 2.5em;
@@ -123,7 +123,7 @@
 	--spark-filter: blur(0.3px) drop-shadow(0 0 7px rgba(140, 230, 255, 0.6));
 	--spark-low: 0;
 	--spark-high: 0.9;
-	--spark-motion: vortex-debris-v2 3.6s cubic-bezier(0.5, 0.05, 0.8, 0.4) 700ms infinite;
+	--spark-motion: vortex-debris 3.6s cubic-bezier(0.5, 0.05, 0.8, 0.4) 700ms infinite;
 	--spark-mask: linear-gradient(90deg, transparent 0, black 0.6em), radial-gradient(ellipse 94% 94% at 40% 50%, black 0 58%, rgba(0, 0, 0, 0.5) 80%, transparent 100%);
 	--smoke-width: 4.6em;
 	--smoke-height: 2.5em;
@@ -134,15 +134,15 @@
 	--smoke-filter: blur(0.5px) drop-shadow(0 0 6px rgba(150, 190, 255, 0.4));
 	--smoke-opacity: 0.6;
 	--smoke-blend: screen;
-	--smoke-motion: vortex-debris-far-v2 5s cubic-bezier(0.5, 0.05, 0.8, 0.4) 2.1s infinite;
+	--smoke-motion: vortex-debris-far 5s cubic-bezier(0.5, 0.05, 0.8, 0.4) 2.1s infinite;
 	--smoke-mask: linear-gradient(90deg, transparent 0, black 0.6em), radial-gradient(ellipse 94% 94% at 40% 50%, black 0 58%, rgba(0, 0, 0, 0.5) 80%, transparent 100%);
 	--aux-width: 5.4em;
 	--aux-height: 2.5em;
-	--aux-bg: conic-gradient(from var(--vx-spin-b-v2) at 1.67em 50%, transparent 0deg, rgba(150, 128, 255, 0.3) 36deg, rgba(96, 84, 235, 0.08) 80deg, transparent 120deg, rgba(110, 225, 255, 0.26) 198deg, rgba(70, 180, 255, 0.07) 246deg, transparent 286deg 360deg);
+	--aux-bg: conic-gradient(from var(--vx-spin-b) at 1.67em 50%, transparent 0deg, rgba(150, 128, 255, 0.3) 36deg, rgba(96, 84, 235, 0.08) 80deg, transparent 120deg, rgba(110, 225, 255, 0.26) 198deg, rgba(70, 180, 255, 0.07) 246deg, transparent 286deg 360deg);
 	--aux-filter: blur(1.1px) saturate(1.3) drop-shadow(0 0 10px rgba(140, 120, 255, 0.35));
 	--aux-opacity: 0.85;
 	--aux-blend: screen;
-	--aux-motion: vortex-funnel-spin-b-v2 7.6s linear infinite;
+	--aux-motion: vortex-funnel-spin-b 7.6s linear infinite;
 	--aux-mask: linear-gradient(90deg, transparent 0, black 0.9em), radial-gradient(ellipse 2.7em 1.2em at 1.67em 50%, transparent 0 30%, black 44% 66%, rgba(0, 0, 0, 0.35) 84%, transparent 98%);
 	--next-color: rgba(225, 245, 255, 0.95);
 	--next-shadow:
@@ -198,7 +198,7 @@
 	mask-image: radial-gradient(ellipse 100% 94% at 36% 50%, black 0 46%, rgba(0, 0, 0, 0.5) 72%, transparent 100%);
 	mix-blend-mode: normal;
 	opacity: 0.85;
-	animation: vortex-wash-v2 9s ease-in-out infinite;
+	animation: vortex-wash 9s ease-in-out infinite;
 }
 
 /* Dissolve into the field's rounded clip, not the paint box; edge overlays
@@ -237,7 +237,7 @@
 .stage[data-glow='vortex'] .field[data-glow] .beam-body {
 	animation:
 		beam-open 650ms cubic-bezier(0.16, 1, 0.3, 1) both,
-		vortex-stream-spin-v2 11s linear infinite;
+		vortex-stream-spin 11s linear infinite;
 }
 
 /* Gravity-well depression: a normal-blend darkening under every deck,
@@ -267,8 +267,8 @@
 	transform: translateY(-50%);
 	transform-origin: 2.72em center;
 	animation:
-		vortex-well-in-v2 560ms cubic-bezier(0.16, 1, 0.3, 1) both,
-		vortex-well-breathe-v2 8.4s ease-in-out 560ms infinite;
+		vortex-well-in 560ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		vortex-well-breathe 8.4s ease-in-out 560ms infinite;
 }
 
 /* The eye: dark core, bright inner rim, squashed halos and STATIC
@@ -299,8 +299,8 @@
 	transform: translateY(-50%);
 	transform-origin: 50% 50%;
 	animation:
-		vortex-eye-in-v2 620ms cubic-bezier(0.16, 1, 0.3, 1) both,
-		vortex-eye-live-v2 6.4s ease-in-out 620ms infinite;
+		vortex-eye-in 620ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		vortex-eye-live 6.4s ease-in-out 620ms infinite;
 }
 
 /* ---------- Text is sacred: pulled out of the funnel ---------- */
@@ -315,8 +315,8 @@
 	filter: none;
 	text-shadow: var(--next-shadow);
 	animation:
-		vortex-word-in-v2 320ms cubic-bezier(0.16, 1, 0.3, 1) both,
-		vortex-word-breathe-v2 6.2s ease-in-out 1.2s infinite;
+		vortex-word-in 320ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		vortex-word-breathe 6.2s ease-in-out 1.2s infinite;
 }
 
 /* Indigo-black scrim between the arm glare and the glyphs: contrast insurance. */
@@ -335,7 +335,7 @@
 	mix-blend-mode: normal;
 	opacity: var(--vx-scrim-o);
 	transform: none;
-	animation: vortex-scrim-in-v2 420ms ease-out both;
+	animation: vortex-scrim-in 420ms ease-out both;
 }
 
 /* Per-glyph suction: start displaced toward the eye, rotated and shrunken,
@@ -345,12 +345,12 @@
 	color: var(--next-color);
 	background: none;
 	transform-origin: 40% 60%;
-	animation: vortex-glyph-spiral-v2 620ms cubic-bezier(0.22, 0.9, 0.3, 1.05) both;
+	animation: vortex-glyph-spiral 620ms cubic-bezier(0.22, 0.9, 0.3, 1.05) both;
 	animation-delay: calc(120ms + var(--i) * 56ms);
 }
 
 .stage[data-glow='vortex'] .field[data-glow] .next-word .glyph:nth-child(even) {
-	animation-name: vortex-glyph-spiral-ccw-v2;
+	animation-name: vortex-glyph-spiral-ccw;
 }
 
 /* The data-alt ghost sheds off in a counter whirl and dissolves. */
@@ -363,7 +363,7 @@
 	text-shadow: 0 0 0.28em rgba(120, 225, 255, 0.55);
 	transform: none;
 	transform-origin: 45% 55%;
-	animation: vortex-alt-shed-v2 480ms cubic-bezier(0.4, 0.1, 0.6, 1) both;
+	animation: vortex-alt-shed 480ms cubic-bezier(0.4, 0.1, 0.6, 1) both;
 	animation-delay: calc(120ms + var(--i) * 56ms);
 }
 
@@ -394,11 +394,11 @@
 }
 
 .stage[data-glow='vortex'][data-light-flow='off'] .field[data-glow] .prediction::before {
-	animation: vortex-well-in-v2 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+	animation: vortex-well-in 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .stage[data-glow='vortex'][data-light-flow='off'] .field[data-glow] .prediction::after {
-	animation: vortex-eye-in-v2 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+	animation: vortex-eye-in 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .stage[data-glow='vortex'][data-light-flow='off'] .field[data-glow] .beam-veil {
@@ -414,11 +414,11 @@
 }
 
 .stage[data-glow='vortex'][data-light-flow='off'] .field[data-glow] .next-word {
-	animation: vortex-word-in-v2 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+	animation: vortex-word-in 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .stage[data-glow='vortex'][data-light-flow='off'] .field[data-glow] .next-word::before {
-	animation: vortex-scrim-in-v2 420ms ease-out both;
+	animation: vortex-scrim-in 420ms ease-out both;
 }
 
 /* ---------- Light theme: ink whirlpool on paper ---------- */
@@ -445,16 +445,16 @@
 	--haze-filter: blur(18px) saturate(1.05);
 	--haze-opacity: 0.5;
 	--body-bg:
-		conic-gradient(from var(--vx-orbit-v2) at 1.67em 50%, transparent 0deg, rgba(58, 70, 128, 0.36) 9deg, transparent 21deg, transparent 88deg, rgba(52, 88, 150, 0.28) 98deg, transparent 112deg, transparent 176deg, rgba(84, 74, 160, 0.24) 187deg, transparent 201deg, transparent 262deg, rgba(48, 96, 156, 0.18) 272deg, transparent 285deg 360deg),
+		conic-gradient(from var(--vx-orbit) at 1.67em 50%, transparent 0deg, rgba(58, 70, 128, 0.36) 9deg, transparent 21deg, transparent 88deg, rgba(52, 88, 150, 0.28) 98deg, transparent 112deg, transparent 176deg, rgba(84, 74, 160, 0.24) 187deg, transparent 201deg, transparent 262deg, rgba(48, 96, 156, 0.18) 272deg, transparent 285deg 360deg),
 		radial-gradient(ellipse 3.6em 1.35em at 1.67em 50%, transparent 0 58%, rgba(70, 88, 160, 0.05) 74%, transparent 94%);
 	--body-filter: blur(0.6px) saturate(0.95) drop-shadow(0 0.05em 0.24em rgba(60, 74, 140, 0.18));
 	--body-opacity: 0.85;
 	--core-bg:
 		radial-gradient(ellipse 0.9em 0.42em at 1.67em 50%, rgba(72, 88, 156, 0.3), rgba(64, 78, 150, 0.12) 55%, transparent 80%),
-		conic-gradient(from var(--vx-spin-v2) at 1.67em 50%, transparent 0deg, rgba(52, 62, 118, 0.5) 22deg, rgba(58, 72, 136, 0.14) 52deg, transparent 84deg, rgba(78, 68, 152, 0.32) 122deg, rgba(80, 74, 156, 0.09) 152deg, transparent 182deg, rgba(46, 84, 146, 0.42) 224deg, rgba(54, 92, 156, 0.1) 262deg, transparent 296deg, rgba(64, 76, 140, 0.18) 322deg, transparent 360deg);
+		conic-gradient(from var(--vx-spin) at 1.67em 50%, transparent 0deg, rgba(52, 62, 118, 0.5) 22deg, rgba(58, 72, 136, 0.14) 52deg, transparent 84deg, rgba(78, 68, 152, 0.32) 122deg, rgba(80, 74, 156, 0.09) 152deg, transparent 182deg, rgba(46, 84, 146, 0.42) 224deg, rgba(54, 92, 156, 0.1) 262deg, transparent 296deg, rgba(64, 76, 140, 0.18) 322deg, transparent 360deg);
 	--core-filter: blur(1.8px) saturate(0.95);
 	--core-opacity: 0.9;
-	--flow-bg: conic-gradient(from var(--vx-wind-v2) at 1.67em 50%, transparent 0deg 286deg, rgba(74, 96, 170, 0.08) 312deg, rgba(60, 80, 150, 0.18) 344deg, rgba(52, 70, 136, 0.24) 355deg, transparent 360deg);
+	--flow-bg: conic-gradient(from var(--vx-wind) at 1.67em 50%, transparent 0deg 286deg, rgba(74, 96, 170, 0.08) 312deg, rgba(60, 80, 150, 0.18) 344deg, rgba(52, 70, 136, 0.24) 355deg, transparent 360deg);
 	--flow-filter: blur(5px) saturate(0.95);
 	--flow-low: 0.18;
 	--flow-high: 0.32;
@@ -472,7 +472,7 @@
 	--smoke-filter: blur(0.4px) drop-shadow(0 0 4px rgba(70, 92, 170, 0.3));
 	--smoke-opacity: 0.5;
 	--smoke-blend: normal;
-	--aux-bg: conic-gradient(from var(--vx-spin-b-v2) at 1.67em 50%, transparent 0deg, rgba(82, 72, 156, 0.26) 36deg, rgba(86, 80, 160, 0.07) 80deg, transparent 120deg, rgba(50, 90, 152, 0.22) 198deg, rgba(58, 98, 160, 0.06) 246deg, transparent 286deg 360deg);
+	--aux-bg: conic-gradient(from var(--vx-spin-b) at 1.67em 50%, transparent 0deg, rgba(82, 72, 156, 0.26) 36deg, rgba(86, 80, 160, 0.07) 80deg, transparent 120deg, rgba(50, 90, 152, 0.22) 198deg, rgba(58, 98, 160, 0.06) 246deg, transparent 286deg 360deg);
 	--aux-filter: blur(1px) saturate(0.95) drop-shadow(0 0 8px rgba(84, 78, 160, 0.22));
 	--aux-opacity: 0.75;
 	--aux-blend: normal;
@@ -494,7 +494,7 @@
 .stage[data-theme='light'][data-glow='vortex'] .field[data-glow]::before {
 	mix-blend-mode: normal;
 	opacity: 0.55;
-	animation: vortex-wash-v2 9s ease-in-out infinite;
+	animation: vortex-wash 9s ease-in-out infinite;
 }
 
 /* Ink must darken the paper, never screen into it. */
@@ -510,8 +510,8 @@
 	filter: blur(12px) saturate(1);
 	mix-blend-mode: normal;
 	animation:
-		vortex-well-in-v2 560ms cubic-bezier(0.16, 1, 0.3, 1) both,
-		vortex-well-breathe-v2 8.4s ease-in-out 560ms infinite;
+		vortex-well-in 560ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		vortex-well-breathe 8.4s ease-in-out 560ms infinite;
 }
 
 .stage[data-theme='light'][data-glow='vortex'] .field[data-glow] .prediction::after {
@@ -531,7 +531,7 @@
 	-webkit-background-clip: border-box;
 	background-clip: border-box;
 	text-shadow: var(--next-shadow);
-	animation: vortex-word-in-v2 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+	animation: vortex-word-in 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .stage[data-theme='light'][data-glow='vortex'] .field[data-glow] .next-word::before {
@@ -539,7 +539,7 @@
 	filter: blur(5px);
 	mix-blend-mode: normal;
 	opacity: var(--vx-scrim-o);
-	animation: vortex-scrim-in-v2 420ms ease-out both;
+	animation: vortex-scrim-in 420ms ease-out both;
 }
 
 .stage[data-theme='light'][data-glow='vortex'] .field[data-glow] .next-word .glyph,
@@ -579,15 +579,15 @@
 }
 
 .stage[data-theme='light'][data-glow='vortex'][data-light-flow='off'] .field[data-glow] .prediction::before {
-	animation: vortex-well-in-v2 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+	animation: vortex-well-in 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .stage[data-theme='light'][data-glow='vortex'][data-light-flow='off'] .field[data-glow] .prediction::after {
-	animation: vortex-eye-in-v2 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+	animation: vortex-eye-in 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .stage[data-theme='light'][data-glow='vortex'][data-light-flow='off'] .field[data-glow] .next-word::before {
-	animation: vortex-scrim-in-v2 420ms ease-out both;
+	animation: vortex-scrim-in 420ms ease-out both;
 }
 
 /* ---------- Waiting state: a small quiet whirl at the caret ---------- */
@@ -603,7 +603,7 @@
 	--core-width: 2.6em;
 	--core-height: 1.8em;
 	--core-bg:
-		conic-gradient(from var(--vx-spin-v2) at 0.9em 50%, transparent 0deg 208deg, rgba(140, 230, 255, 0.14) 252deg, rgba(220, 248, 255, 0.8) 318deg, rgba(242, 252, 255, 0.95) 336deg, transparent 342deg 360deg),
+		conic-gradient(from var(--vx-spin) at 0.9em 50%, transparent 0deg 208deg, rgba(140, 230, 255, 0.14) 252deg, rgba(220, 248, 255, 0.8) 318deg, rgba(242, 252, 255, 0.95) 336deg, transparent 342deg 360deg),
 		radial-gradient(circle at 0.9em 50%, rgba(180, 240, 255, 0.35) 0 0.05em, transparent 0.13em);
 	--core-filter: blur(0.4px) drop-shadow(0 0 8px rgba(140, 230, 255, 0.5));
 	--core-opacity: 0.95;
@@ -611,11 +611,11 @@
 	--flow-width: 3.6em;
 	--flow-height: 2em;
 	--flow-size: 100% 100%;
-	--flow-bg: conic-gradient(from var(--vx-wind-v2) at 0.9em 50%, transparent 0deg 300deg, rgba(140, 230, 255, 0.1) 330deg, rgba(210, 246, 255, 0.22) 354deg, transparent 360deg);
+	--flow-bg: conic-gradient(from var(--vx-wind) at 0.9em 50%, transparent 0deg 300deg, rgba(140, 230, 255, 0.1) 330deg, rgba(210, 246, 255, 0.22) 354deg, transparent 360deg);
 	--flow-filter: blur(5px) saturate(1.15);
 	--flow-low: 0.16;
 	--flow-high: 0.32;
-	--flow-motion: vortex-wind-arc-v2 7s linear infinite;
+	--flow-motion: vortex-wind-arc 7s linear infinite;
 	--flow-mask: linear-gradient(90deg, transparent 0, black 0.3em), radial-gradient(ellipse 92% 86% at 28% 50%, black 0 44%, transparent 96%);
 	--spark-width: 2.6em;
 	--spark-height: 2.2em;
@@ -625,7 +625,7 @@
 	--spark-filter: blur(0.3px) drop-shadow(0 0 6px rgba(150, 232, 255, 0.5));
 	--spark-low: 0;
 	--spark-high: 0.85;
-	--spark-motion: vortex-waiting-orbit-v2 4.8s linear infinite;
+	--spark-motion: vortex-waiting-orbit 4.8s linear infinite;
 	--spark-mask: linear-gradient(90deg, transparent 0, black 0.25em), radial-gradient(ellipse 94% 94% at 34% 50%, black 0 58%, transparent 96%);
 	--smoke-width: 3em;
 	--smoke-height: 2.2em;
@@ -644,7 +644,7 @@
 		radial-gradient(ellipse 3em 0.8em at 1.6em 50%, rgba(70, 150, 210, 0.07), transparent 74%);
 	--haze-opacity: 0.5;
 	--core-bg:
-		conic-gradient(from var(--vx-spin-v2) at 0.9em 50%, transparent 0deg 208deg, rgba(70, 96, 176, 0.16) 252deg, rgba(44, 60, 120, 0.7) 318deg, rgba(34, 44, 96, 0.9) 336deg, transparent 342deg 360deg),
+		conic-gradient(from var(--vx-spin) at 0.9em 50%, transparent 0deg 208deg, rgba(70, 96, 176, 0.16) 252deg, rgba(44, 60, 120, 0.7) 318deg, rgba(34, 44, 96, 0.9) 336deg, transparent 342deg 360deg),
 		radial-gradient(circle at 0.9em 50%, rgba(60, 84, 160, 0.3) 0 0.05em, transparent 0.13em);
 	--core-filter: blur(0.4px) drop-shadow(0 0 6px rgba(84, 110, 200, 0.35));
 	--core-opacity: 0.9;
@@ -666,49 +666,49 @@
 	--smoke-motion: none;
 }
 
-/* ---------- Keyframes (vortex-*-v2) ---------- */
-@keyframes vortex-funnel-spin-v2 {
+/* ---------- Keyframes (vortex-*) ---------- */
+@keyframes vortex-funnel-spin {
 	from {
-		--vx-spin-v2: 0deg;
+		--vx-spin: 0deg;
 	}
 	to {
-		--vx-spin-v2: 360deg;
+		--vx-spin: 360deg;
 	}
 }
 
-@keyframes vortex-funnel-spin-b-v2 {
+@keyframes vortex-funnel-spin-b {
 	from {
-		--vx-spin-b-v2: 570deg;
+		--vx-spin-b: 570deg;
 	}
 	to {
-		--vx-spin-b-v2: 210deg;
+		--vx-spin-b: 210deg;
 	}
 }
 
-@keyframes vortex-stream-spin-v2 {
+@keyframes vortex-stream-spin {
 	from {
-		--vx-orbit-v2: 40deg;
+		--vx-orbit: 40deg;
 	}
 	to {
-		--vx-orbit-v2: 400deg;
+		--vx-orbit: 400deg;
 	}
 }
 
-@keyframes vortex-wind-arc-v2 {
+@keyframes vortex-wind-arc {
 	0% {
-		--vx-wind-v2: 0deg;
+		--vx-wind: 0deg;
 		opacity: var(--flow-low);
 	}
 	45% {
 		opacity: var(--flow-high);
 	}
 	100% {
-		--vx-wind-v2: 360deg;
+		--vx-wind: 360deg;
 		opacity: var(--flow-low);
 	}
 }
 
-@keyframes vortex-haze-swirl-v2 {
+@keyframes vortex-haze-swirl {
 	0%,
 	100% {
 		opacity: calc(var(--haze-opacity) * 0.78);
@@ -720,7 +720,7 @@
 	}
 }
 
-@keyframes vortex-debris-v2 {
+@keyframes vortex-debris {
 	0% {
 		opacity: 0;
 		transform: translateY(-50%) rotate(0deg) scale(1.12);
@@ -741,7 +741,7 @@
 	}
 }
 
-@keyframes vortex-debris-far-v2 {
+@keyframes vortex-debris-far {
 	0% {
 		opacity: 0;
 		transform: translateY(-50%) rotate(0deg) scale(1.16);
@@ -759,7 +759,7 @@
 	}
 }
 
-@keyframes vortex-well-in-v2 {
+@keyframes vortex-well-in {
 	0% {
 		opacity: 0;
 		transform: translateY(-50%) scale(0.55);
@@ -770,7 +770,7 @@
 	}
 }
 
-@keyframes vortex-well-breathe-v2 {
+@keyframes vortex-well-breathe {
 	0%,
 	100% {
 		opacity: calc(var(--vx-well-o, 0.85) * 0.84);
@@ -782,7 +782,7 @@
 	}
 }
 
-@keyframes vortex-eye-in-v2 {
+@keyframes vortex-eye-in {
 	0% {
 		opacity: 0;
 		transform: translateY(-50%) rotate(-70deg) scale(0.2);
@@ -797,7 +797,7 @@
 	}
 }
 
-@keyframes vortex-eye-live-v2 {
+@keyframes vortex-eye-live {
 	0%,
 	100% {
 		opacity: calc(var(--vx-eye-o, 1) * 0.94);
@@ -809,7 +809,7 @@
 	}
 }
 
-@keyframes vortex-wash-v2 {
+@keyframes vortex-wash {
 	0%,
 	100% {
 		opacity: 0.74;
@@ -819,7 +819,7 @@
 	}
 }
 
-@keyframes vortex-scrim-in-v2 {
+@keyframes vortex-scrim-in {
 	0% {
 		opacity: 0;
 	}
@@ -828,7 +828,7 @@
 	}
 }
 
-@keyframes vortex-word-in-v2 {
+@keyframes vortex-word-in {
 	0% {
 		opacity: 0;
 		transform: translateX(-0.1em);
@@ -839,7 +839,7 @@
 	}
 }
 
-@keyframes vortex-word-breathe-v2 {
+@keyframes vortex-word-breathe {
 	0%,
 	100% {
 		text-shadow:
@@ -857,7 +857,7 @@
 	}
 }
 
-@keyframes vortex-glyph-spiral-v2 {
+@keyframes vortex-glyph-spiral {
 	0% {
 		opacity: 0;
 		transform: translate(-0.85em, 0.2em) rotate(58deg) scale(0.58);
@@ -875,7 +875,7 @@
 	}
 }
 
-@keyframes vortex-glyph-spiral-ccw-v2 {
+@keyframes vortex-glyph-spiral-ccw {
 	0% {
 		opacity: 0;
 		transform: translate(-0.85em, -0.2em) rotate(-58deg) scale(0.58);
@@ -893,7 +893,7 @@
 	}
 }
 
-@keyframes vortex-alt-shed-v2 {
+@keyframes vortex-alt-shed {
 	0% {
 		opacity: 0.85;
 		transform: translate(-0.3em, 0.1em) rotate(-30deg) scale(0.92);
@@ -911,7 +911,7 @@
 	}
 }
 
-@keyframes vortex-waiting-breathe-v2 {
+@keyframes vortex-waiting-breathe {
 	0%,
 	100% {
 		opacity: calc(var(--haze-opacity, 0.85) * 0.72);
@@ -923,7 +923,7 @@
 	}
 }
 
-@keyframes vortex-waiting-orbit-v2 {
+@keyframes vortex-waiting-orbit {
 	0% {
 		opacity: var(--spark-high, 0.85);
 		transform: translateY(-50%) rotate(0deg) scale(1);

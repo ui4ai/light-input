@@ -1,5 +1,5 @@
 /* ============================================================
-   MATRIX v2 — "Digital rain at the caret"
+   MATRIX — "Digital rain at the caret"
    True falling code: 20 glyph columns (span.matrix-col >
    span.matrix-cell, column-major DOM). One shared keyframe
    (opacity + color only) plays per cell with a negative delay
@@ -70,7 +70,7 @@
 	mask-image: radial-gradient(ellipse 100% 96% at 32% 52%, black 0 46%, rgba(0, 0, 0, 0.5) 74%, transparent 100%);
 	mix-blend-mode: screen;
 	opacity: 0.92;
-	animation: matrix-crt-hum-v2 5.4s linear infinite;
+	animation: matrix-crt-hum 5.4s linear infinite;
 }
 
 /* Dissolve into the field's rounded clip, not the paint box; edge overlays
@@ -140,8 +140,8 @@
 	transform: translateY(-50%);
 	transform-origin: 1.4em center;
 	animation:
-		matrix-bloom-in-v2 520ms cubic-bezier(0.16, 1, 0.3, 1) both,
-		matrix-bloom-breathe-v2 4.6s ease-in-out 520ms infinite;
+		matrix-bloom-in 520ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		matrix-bloom-breathe 4.6s ease-in-out 520ms infinite;
 }
 
 .stage[data-glow='matrix'] .field[data-glow] .prediction::after {
@@ -178,7 +178,7 @@
 	mask-composite: intersect;
 	mix-blend-mode: screen;
 	transform: translateY(-50%) translateZ(0);
-	animation: matrix-rain-boot-v2 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+	animation: matrix-rain-boot 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .stage[data-glow='matrix'] .field[data-glow] .matrix-col {
@@ -217,14 +217,14 @@
 	color: rgb(30, 148, 72);
 	text-align: center;
 	opacity: calc(var(--cell-base, 0.45) * 0.6);
-	animation: matrix-rain-fall-v2 var(--fall, 2400ms) linear infinite;
+	animation: matrix-rain-fall var(--fall, 2400ms) linear infinite;
 	animation-delay: calc(var(--row, 0) * (var(--fall, 2400ms) / var(--rows, 10)) - var(--fall, 2400ms) - var(--phase, 0ms));
 }
 
 /* JS churn: the flash burst is APPENDED so the fall clock never restarts. */
 .stage[data-glow='matrix'] .field[data-glow] .matrix-cell.flash {
 	text-shadow: 0 0 0.3em, 0 0 0.8em;
-	animation-name: matrix-rain-fall-v2, matrix-cell-flash-v2;
+	animation-name: matrix-rain-fall, matrix-cell-flash;
 	animation-duration: var(--fall, 2400ms), 320ms;
 	animation-timing-function: linear, ease-out;
 	animation-delay: calc(var(--row, 0) * (var(--fall, 2400ms) / var(--rows, 10)) - var(--fall, 2400ms) - var(--phase, 0ms)), 0ms;
@@ -245,11 +245,11 @@
 }
 
 .stage[data-glow='matrix'][data-light-flow='off'] .field[data-glow] .prediction::before {
-	animation: matrix-bloom-in-v2 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+	animation: matrix-bloom-in 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .stage[data-glow='matrix'][data-light-flow='off'] .field[data-glow] .next-word::before {
-	animation: matrix-scrim-in-v2 380ms ease-out both;
+	animation: matrix-scrim-in 380ms ease-out both;
 }
 
 /* ---------- Text is sacred: terminal decode ---------- */
@@ -262,7 +262,7 @@
 	border-radius: 0;
 	filter: none;
 	text-shadow: var(--next-shadow);
-	animation: matrix-word-boot-v2 340ms cubic-bezier(0.16, 1, 0.3, 1) both;
+	animation: matrix-word-boot 340ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 /* Dark scrim between the rain and the glyphs: contrast insurance. */
@@ -284,7 +284,7 @@
 	mix-blend-mode: normal;
 	opacity: var(--scrim-o);
 	transform: none;
-	animation: matrix-scrim-in-v2 380ms ease-out both;
+	animation: matrix-scrim-in 380ms ease-out both;
 }
 
 /* Per-glyph decode; nth-child variants grouped to outrank legacy tints. */
@@ -294,7 +294,7 @@
 .stage[data-glow='matrix'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
 .stage[data-glow='matrix'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
 	color: var(--next-color);
-	animation: matrix-glyph-decode-v2 460ms steps(2, end) both;
+	animation: matrix-glyph-decode 460ms steps(2, end) both;
 	animation-delay: calc(40ms + var(--i) * 46ms);
 }
 
@@ -307,7 +307,7 @@
 	filter: none;
 	text-shadow: 0 0 0.5em rgba(60, 255, 130, 0.55);
 	transform: none;
-	animation: matrix-glyph-cipher-v2 460ms steps(3, end) both;
+	animation: matrix-glyph-cipher 460ms steps(3, end) both;
 	animation-delay: calc(40ms + var(--i) * 46ms);
 }
 
@@ -374,8 +374,8 @@
 	mix-blend-mode: normal;
 	opacity: var(--bloom-o);
 	animation:
-		matrix-bloom-in-v2 520ms cubic-bezier(0.16, 1, 0.3, 1) both,
-		matrix-bloom-breathe-v2 4.6s ease-in-out 520ms infinite;
+		matrix-bloom-in 520ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		matrix-bloom-breathe 4.6s ease-in-out 520ms infinite;
 }
 
 /* Ink rain: crisp, no glow, normal paint. */
@@ -393,12 +393,12 @@
 .stage[data-theme='light'][data-glow='matrix'] .field[data-glow] .matrix-cell {
 	color: rgb(96, 146, 116);
 	text-shadow: none;
-	animation-name: matrix-rain-fall-light-v2;
+	animation-name: matrix-rain-fall-light;
 }
 
 .stage[data-theme='light'][data-glow='matrix'] .field[data-glow] .matrix-cell.flash {
 	text-shadow: none;
-	animation-name: matrix-rain-fall-light-v2, matrix-cell-flash-light-v2;
+	animation-name: matrix-rain-fall-light, matrix-cell-flash-light;
 }
 
 .stage[data-theme='light'][data-glow='matrix'][data-light-flow='off'] .field[data-glow] .matrix-cell {
@@ -419,7 +419,7 @@
 	background: radial-gradient(ellipse 80% 100% at 34% 52%, rgba(252, 251, 246, 0.85), rgba(252, 251, 246, 0.45) 60%, transparent 88%);
 	filter: blur(5px);
 	opacity: var(--scrim-o);
-	animation: matrix-scrim-in-v2 380ms ease-out both;
+	animation: matrix-scrim-in 380ms ease-out both;
 }
 
 .stage[data-theme='light'][data-glow='matrix'] .field[data-glow] .next-word .glyph,
@@ -428,7 +428,7 @@
 .stage[data-theme='light'][data-glow='matrix'] .field[data-glow] .next-word .glyph:nth-child(3n + 1),
 .stage[data-theme='light'][data-glow='matrix'] .field[data-glow] .next-word .glyph:nth-child(3n + 2) {
 	color: var(--next-color);
-	animation-name: matrix-glyph-decode-light-v2;
+	animation-name: matrix-glyph-decode-light;
 }
 
 .stage[data-theme='light'][data-glow='matrix'] .field[data-glow] .next-word .glyph::after {
@@ -465,7 +465,7 @@
 	--haze-filter: blur(13px) saturate(1.25);
 	--haze-opacity: 0.92;
 	--haze-mask: radial-gradient(ellipse 96% 96% at 22% 50%, black 0 46%, rgba(0, 0, 0, 0.5) 72%, transparent 98%);
-	--torch-haze-motion: matrix-pool-breathe-v2 2.7s ease-in-out infinite;
+	--torch-haze-motion: matrix-pool-breathe 2.7s ease-in-out infinite;
 	--core-width: 0.85em;
 	--core-height: 1.06em;
 	--core-size: auto;
@@ -473,7 +473,7 @@
 	--core-filter: blur(0.5px) drop-shadow(0 0 9px rgba(70, 255, 130, 0.65));
 	--core-opacity: 0.95;
 	--core-mask: linear-gradient(180deg, transparent 0, black 14% 86%, transparent 100%);
-	--torch-core-motion: matrix-cursor-blink-v2 1.12s steps(1, end) infinite;
+	--torch-core-motion: matrix-cursor-blink 1.12s steps(1, end) infinite;
 	--flow-width: 0.52em;
 	--flow-height: 2.6em;
 	--flow-size: auto;
@@ -482,7 +482,7 @@
 	--flow-low: 0.22;
 	--flow-high: 0.62;
 	--flow-mask: linear-gradient(180deg, transparent 0, black 20% 78%, transparent 100%);
-	--flow-motion: matrix-trickle-v2 1.25s linear infinite;
+	--flow-motion: matrix-trickle 1.25s linear infinite;
 	--spark-width: 0.8em;
 	--spark-height: 2.6em;
 	--spark-size: auto;
@@ -494,7 +494,7 @@
 	--spark-low: 0;
 	--spark-high: 0.8;
 	--spark-mask: linear-gradient(180deg, transparent 0, black 18% 82%, transparent 100%);
-	--spark-motion: matrix-spark-blink-v2 1.9s steps(2, end) infinite;
+	--spark-motion: matrix-spark-blink 1.9s steps(2, end) infinite;
 	--smoke-opacity: 0;
 	--aux-opacity: 0;
 }
@@ -511,8 +511,8 @@
 	--spark-high: 0.4;
 }
 
-/* ---------- Keyframes (matrix-*-v2) ---------- */
-@keyframes matrix-rain-fall-v2 {
+/* ---------- Keyframes (matrix-*) ---------- */
+@keyframes matrix-rain-fall {
 	0% {
 		color: rgb(24, 132, 64);
 		opacity: calc(var(--cell-base, 0.45) * 0.5);
@@ -539,7 +539,7 @@
 	}
 }
 
-@keyframes matrix-rain-fall-light-v2 {
+@keyframes matrix-rain-fall-light {
 	0% {
 		color: rgb(112, 152, 128);
 		opacity: calc(var(--cell-base, 0.45) * 0.5);
@@ -566,7 +566,7 @@
 	}
 }
 
-@keyframes matrix-cell-flash-v2 {
+@keyframes matrix-cell-flash {
 	0% {
 		color: rgb(255, 255, 255);
 		opacity: 1;
@@ -581,7 +581,7 @@
 	}
 }
 
-@keyframes matrix-cell-flash-light-v2 {
+@keyframes matrix-cell-flash-light {
 	0% {
 		color: rgb(2, 24, 11);
 		opacity: 1;
@@ -596,7 +596,7 @@
 	}
 }
 
-@keyframes matrix-rain-boot-v2 {
+@keyframes matrix-rain-boot {
 	from {
 		opacity: 0;
 	}
@@ -605,7 +605,7 @@
 	}
 }
 
-@keyframes matrix-bloom-in-v2 {
+@keyframes matrix-bloom-in {
 	from {
 		opacity: 0;
 		transform: translateY(-50%) scaleX(0.28);
@@ -616,7 +616,7 @@
 	}
 }
 
-@keyframes matrix-bloom-breathe-v2 {
+@keyframes matrix-bloom-breathe {
 	0%,
 	100% {
 		opacity: calc(var(--bloom-o, 0.85) * 0.84);
@@ -626,7 +626,7 @@
 	}
 }
 
-@keyframes matrix-crt-hum-v2 {
+@keyframes matrix-crt-hum {
 	0%,
 	100% {
 		opacity: calc(var(--crt-o, 0.92) * 0.94);
@@ -645,7 +645,7 @@
 	}
 }
 
-@keyframes matrix-word-boot-v2 {
+@keyframes matrix-word-boot {
 	from {
 		opacity: 0;
 	}
@@ -654,7 +654,7 @@
 	}
 }
 
-@keyframes matrix-scrim-in-v2 {
+@keyframes matrix-scrim-in {
 	from {
 		opacity: 0;
 	}
@@ -663,7 +663,7 @@
 	}
 }
 
-@keyframes matrix-glyph-decode-v2 {
+@keyframes matrix-glyph-decode {
 	0%,
 	54% {
 		opacity: 0;
@@ -682,7 +682,7 @@
 	}
 }
 
-@keyframes matrix-glyph-decode-light-v2 {
+@keyframes matrix-glyph-decode-light {
 	0%,
 	54% {
 		opacity: 0;
@@ -701,7 +701,7 @@
 	}
 }
 
-@keyframes matrix-glyph-cipher-v2 {
+@keyframes matrix-glyph-cipher {
 	0% {
 		opacity: 0.9;
 	}
@@ -717,7 +717,7 @@
 	}
 }
 
-@keyframes matrix-pool-breathe-v2 {
+@keyframes matrix-pool-breathe {
 	0%,
 	100% {
 		opacity: calc(var(--haze-opacity) * 0.78);
@@ -727,7 +727,7 @@
 	}
 }
 
-@keyframes matrix-cursor-blink-v2 {
+@keyframes matrix-cursor-blink {
 	0%,
 	58% {
 		opacity: var(--core-opacity);
@@ -738,7 +738,7 @@
 	}
 }
 
-@keyframes matrix-trickle-v2 {
+@keyframes matrix-trickle {
 	0% {
 		opacity: var(--flow-low);
 		background-position: 0 -0.88em;
@@ -752,7 +752,7 @@
 	}
 }
 
-@keyframes matrix-spark-blink-v2 {
+@keyframes matrix-spark-blink {
 	0%,
 	100% {
 		opacity: var(--spark-low);

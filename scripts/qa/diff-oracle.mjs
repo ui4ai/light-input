@@ -11,10 +11,11 @@
 //   - property value changes on a shared node
 //
 // Flags:
-//   --normalize-names   apply the strip-'-v2' map to animation-name values on BOTH sides before
-//                       comparing (so an un-normalized 'after' set still matches a baseline that
-//                       was written normalized). The oracle already normalizes on write, so this
-//                       is a belt-and-suspenders switch for W3's keyframe rename.
+//   --normalize-names   apply the legacy suffix-strip map to animation-name values on BOTH sides
+//                       before comparing (so an un-normalized 'after' set still matches a baseline
+//                       that was written normalized). The oracle already normalizes on write, so
+//                       this is a belt-and-suspenders switch for the W3 keyframe rename (now done;
+//                       on the current tree it is an idempotent no-op).
 //   --allowlist <file>  JSON { "ignore": [ { combo?, node?, property? } ] }; any omitted field is
 //                       a wildcard. Matching (combo,node,property) diffs are suppressed. Use ONLY
 //                       for provably-acceptable residue — do NOT loosen the gate to hide a bug.
@@ -62,9 +63,10 @@ async function resolveOracleDir(dir) {
 	return dir;
 }
 
-// Mirror of drive.mjs stripV2 / stripV2Key: strip a trailing `-v2` from value tokens (at a
-// token boundary) and from custom-property keys. Used by --normalize-names so an un-normalized
-// candidate still matches a normalized baseline (belt-and-suspenders for W3's rename).
+// Mirror of drive.mjs stripV2 / stripV2Key: strip the legacy migration suffix from value tokens
+// (at a token boundary) and from custom-property keys. Used by --normalize-names so an
+// un-normalized candidate still matches a normalized baseline (belt-and-suspenders for the W3
+// rename, now complete — an idempotent no-op on the current tree).
 function stripV2Value(value) {
 	if (typeof value !== 'string' || !value.includes('-v2')) return value;
 	return value.replace(/-v2(?=[\s,]|$)/g, '');
@@ -103,7 +105,8 @@ function isAllowed(allow, combo, node, property) {
 
 function normDump(dump, normalizeNames) {
 	if (!normalizeNames || !dump) return dump;
-	// Normalize each node's property map: strip -v2 from custom-property keys and all values.
+	// Normalize each node's property map: strip the legacy suffix from custom-property keys and
+	// all values (idempotent no-op now that the W3 rename has landed).
 	const out = {};
 	for (const [node, props] of Object.entries(dump)) {
 		if (!props) {

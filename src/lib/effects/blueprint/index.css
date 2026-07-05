@@ -1,5 +1,5 @@
 /* ============================================================
-   BLUEPRINT v2 — "Чертёж: будущее сначала чертят, потом строят".
+   BLUEPRINT — "Чертёж: будущее сначала чертят, потом строят".
    The field is a draftsman's board: deep blueprint cyan-navy
    vessel with a fine two-level grid (minor 20px hairlines, major
    every 100px), corner registration L-brackets and a faint top
@@ -26,7 +26,7 @@
    fill, dimension mark last. WAITING: a CAD compass at the caret
    — a dashed circle (repeating-conic dash ring read through a
    ring mask) slowly ROTATING via a registered <angle>
-   (--bp-angle-v2) animated ON the torch-core (var() in a custom
+   (--bp-angle) animated ON the torch-core (var() in a custom
    property substitutes where that property computes), a STATIC
    crosshair + faint blue pool on the torch-haze; every other
    torch layer dead. LIGHT THEME — WHITE DRAFTING PAPER: the true
@@ -36,12 +36,12 @@
    once (finite); the crosshair breathe and the compass rotation
    freeze. Every decorated layer's masks complete INSIDE their
    boxes (mask-composite: intersect where two masks combine).
-   Keyframes blueprint-*-v2 and vars --bp-*-v2 only; legacy
+   Keyframes blueprint-* and vars --bp-* only; legacy
    blueprint-* rules in legacy.css are superseded and get
    deleted.
    ============================================================ */
 
-@property --bp-angle-v2 {
+@property --bp-angle {
 	syntax: '<angle>';
 	inherits: false;
 	initial-value: 0deg;
@@ -50,36 +50,36 @@
 .field[data-glow='blueprint'] {
 	--layer-radius: 999px;
 	--layer-clip: inset(0 round 999px);
-	--bp-grid-minor-v2: rgba(126, 208, 255, 0.05);
-	--bp-grid-major-v2: rgba(148, 220, 255, 0.1);
-	--bp-mark-v2: oklch(0.86 0.06 218 / 0.22);
-	--bp-vignette-v2: rgba(2, 9, 24, 0.5);
-	--bp-sheen-v2: rgba(214, 242, 255, 0.035);
-	--bp-board-bg-v2:
-		linear-gradient(var(--bp-mark-v2), var(--bp-mark-v2)) left 26px top 13px / 14px 1px no-repeat,
-		linear-gradient(var(--bp-mark-v2), var(--bp-mark-v2)) left 26px top 13px / 1px 14px no-repeat,
-		linear-gradient(var(--bp-mark-v2), var(--bp-mark-v2)) right 26px top 13px / 14px 1px no-repeat,
-		linear-gradient(var(--bp-mark-v2), var(--bp-mark-v2)) right 26px top 13px / 1px 14px no-repeat,
-		linear-gradient(var(--bp-mark-v2), var(--bp-mark-v2)) left 26px bottom 13px / 14px 1px no-repeat,
-		linear-gradient(var(--bp-mark-v2), var(--bp-mark-v2)) left 26px bottom 13px / 1px 14px no-repeat,
-		linear-gradient(var(--bp-mark-v2), var(--bp-mark-v2)) right 26px bottom 13px / 14px 1px no-repeat,
-		linear-gradient(var(--bp-mark-v2), var(--bp-mark-v2)) right 26px bottom 13px / 1px 14px no-repeat,
-		radial-gradient(ellipse 94% 160% at 50% 52%, transparent 0 52%, var(--bp-vignette-v2) 100%) 0 0 / 100% 100% no-repeat,
-		repeating-linear-gradient(0deg, transparent 0 99px, var(--bp-grid-major-v2) 99px 100px) 0 0 / 100% 100% repeat,
-		repeating-linear-gradient(90deg, transparent 0 99px, var(--bp-grid-major-v2) 99px 100px) 0 0 / 100% 100% repeat,
-		repeating-linear-gradient(0deg, var(--bp-grid-minor-v2) 0 1px, transparent 1px 20px) 0 0 / 100% 100% repeat,
-		repeating-linear-gradient(90deg, var(--bp-grid-minor-v2) 0 1px, transparent 1px 20px) 0 0 / 100% 100% repeat,
-		linear-gradient(180deg, var(--bp-sheen-v2), transparent 36%) 0 0 / 100% 100% no-repeat;
-	--bp-guide-v2: oklch(0.84 0.09 218 / 0.5);
-	--bp-guides-o-v2: 0.85;
-	--bp-dim-v2: oklch(0.88 0.08 215 / 0.62);
-	--bp-dim-o-v2: 0.9;
-	--bp-snap-v2: oklch(0.87 0.09 216 / 0.55);
-	--bp-snap-o-v2: 0.9;
-	--bp-ring-v2: oklch(0.88 0.09 213 / 0.85);
-	--bp-ink-fill-v2: oklch(0.95 0.045 205 / 0.98);
-	--bp-ink-stroke-v2: oklch(0.87 0.1 213 / 0.55);
-	--bp-ink-glow-v2:
+	--bp-grid-minor: rgba(126, 208, 255, 0.05);
+	--bp-grid-major: rgba(148, 220, 255, 0.1);
+	--bp-mark: oklch(0.86 0.06 218 / 0.22);
+	--bp-vignette: rgba(2, 9, 24, 0.5);
+	--bp-sheen: rgba(214, 242, 255, 0.035);
+	--bp-board-bg:
+		linear-gradient(var(--bp-mark), var(--bp-mark)) left 26px top 13px / 14px 1px no-repeat,
+		linear-gradient(var(--bp-mark), var(--bp-mark)) left 26px top 13px / 1px 14px no-repeat,
+		linear-gradient(var(--bp-mark), var(--bp-mark)) right 26px top 13px / 14px 1px no-repeat,
+		linear-gradient(var(--bp-mark), var(--bp-mark)) right 26px top 13px / 1px 14px no-repeat,
+		linear-gradient(var(--bp-mark), var(--bp-mark)) left 26px bottom 13px / 14px 1px no-repeat,
+		linear-gradient(var(--bp-mark), var(--bp-mark)) left 26px bottom 13px / 1px 14px no-repeat,
+		linear-gradient(var(--bp-mark), var(--bp-mark)) right 26px bottom 13px / 14px 1px no-repeat,
+		linear-gradient(var(--bp-mark), var(--bp-mark)) right 26px bottom 13px / 1px 14px no-repeat,
+		radial-gradient(ellipse 94% 160% at 50% 52%, transparent 0 52%, var(--bp-vignette) 100%) 0 0 / 100% 100% no-repeat,
+		repeating-linear-gradient(0deg, transparent 0 99px, var(--bp-grid-major) 99px 100px) 0 0 / 100% 100% repeat,
+		repeating-linear-gradient(90deg, transparent 0 99px, var(--bp-grid-major) 99px 100px) 0 0 / 100% 100% repeat,
+		repeating-linear-gradient(0deg, var(--bp-grid-minor) 0 1px, transparent 1px 20px) 0 0 / 100% 100% repeat,
+		repeating-linear-gradient(90deg, var(--bp-grid-minor) 0 1px, transparent 1px 20px) 0 0 / 100% 100% repeat,
+		linear-gradient(180deg, var(--bp-sheen), transparent 36%) 0 0 / 100% 100% no-repeat;
+	--bp-guide: oklch(0.84 0.09 218 / 0.5);
+	--bp-guides-o: 0.85;
+	--bp-dim: oklch(0.88 0.08 215 / 0.62);
+	--bp-dim-o: 0.9;
+	--bp-snap: oklch(0.87 0.09 216 / 0.55);
+	--bp-snap-o: 0.9;
+	--bp-ring: oklch(0.88 0.09 213 / 0.85);
+	--bp-ink-fill: oklch(0.95 0.045 205 / 0.98);
+	--bp-ink-stroke: oklch(0.87 0.1 213 / 0.55);
+	--bp-ink-glow:
 		0 0 0.28em oklch(0.85 0.1 213 / 0.3),
 		0 0 0.7em oklch(0.7 0.12 220 / 0.14);
 	--ready-border: rgba(108, 190, 255, 0.3);
@@ -135,8 +135,8 @@
 	--aux-opacity: 0;
 	--aux-motion: none;
 	--aux-mask: none;
-	--next-color: var(--bp-ink-fill-v2);
-	--next-shadow: var(--bp-ink-glow-v2);
+	--next-color: var(--bp-ink-fill);
+	--next-shadow: var(--bp-ink-glow);
 	--tail-color: oklch(0.8 0.07 220 / 0.3);
 }
 
@@ -173,7 +173,7 @@
 /* BOARD OVERLAY: registration brackets, edge vignette, major + minor
    grid, top sheen. The grid is utterly still — never animated. */
 .stage[data-glow='blueprint'] .field[data-glow]::before {
-	background: var(--bp-board-bg-v2);
+	background: var(--bp-board-bg);
 	-webkit-mask-image: none;
 	mask-image: none;
 	mix-blend-mode: normal;
@@ -228,20 +228,20 @@
 	clip-path: none;
 	box-shadow: none;
 	background:
-		radial-gradient(circle 0.27em at 0.55em 0.48em, transparent 0 0.2em, var(--bp-snap-v2) 0.212em 0.258em, transparent 0.27em),
-		linear-gradient(var(--bp-snap-v2), var(--bp-snap-v2)) left 0 top 0.475em / 100% 1px no-repeat,
-		linear-gradient(var(--bp-snap-v2), var(--bp-snap-v2)) left 0.545em top 0 / 1px 100% no-repeat;
+		radial-gradient(circle 0.27em at 0.55em 0.48em, transparent 0 0.2em, var(--bp-snap) 0.212em 0.258em, transparent 0.27em),
+		linear-gradient(var(--bp-snap), var(--bp-snap)) left 0 top 0.475em / 100% 1px no-repeat,
+		linear-gradient(var(--bp-snap), var(--bp-snap)) left 0.545em top 0 / 1px 100% no-repeat;
 	background-repeat: no-repeat;
 	filter: none;
 	-webkit-mask-image: radial-gradient(ellipse 68% 68% at 50% 50%, black 0 55%, rgba(0, 0, 0, 0.5) 80%, transparent 98%);
 	mask-image: radial-gradient(ellipse 68% 68% at 50% 50%, black 0 55%, rgba(0, 0, 0, 0.5) 80%, transparent 98%);
 	mix-blend-mode: normal;
-	opacity: var(--bp-snap-o-v2);
+	opacity: var(--bp-snap-o);
 	transform: none;
 	transform-origin: 50% 50%;
 	animation:
-		blueprint-snap-in-v2 380ms cubic-bezier(0.16, 1, 0.3, 1) both,
-		blueprint-snap-breathe-v2 4.6s ease-in-out 380ms infinite;
+		blueprint-snap-in 380ms cubic-bezier(0.16, 1, 0.3, 1) both,
+		blueprint-snap-breathe 4.6s ease-in-out 380ms infinite;
 }
 
 /* The legacy draft sheet is gone — the guides live on the word itself. */
@@ -266,7 +266,7 @@
 	text-shadow: none;
 	transform: none;
 	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-	animation: blueprint-word-in-v2 200ms ease-out both;
+	animation: blueprint-word-in 200ms ease-out both;
 }
 
 /* CONSTRUCTION LINES: baseline rule under the word (full box, extends
@@ -284,14 +284,14 @@
 	content: '';
 	pointer-events: none;
 	background:
-		linear-gradient(var(--bp-guide-v2), var(--bp-guide-v2)) left 0.24em top 0.3em no-repeat,
-		linear-gradient(var(--bp-guide-v2), var(--bp-guide-v2)) left 0 top 0.98em no-repeat;
+		linear-gradient(var(--bp-guide), var(--bp-guide)) left 0.24em top 0.3em no-repeat,
+		linear-gradient(var(--bp-guide), var(--bp-guide)) left 0 top 0.98em no-repeat;
 	background-size:
 		calc(100% - 0.48em) 1px,
 		100% 1px;
 	filter: none;
-	opacity: var(--bp-guides-o-v2);
-	animation: blueprint-guides-in-v2 320ms ease-out 60ms both;
+	opacity: var(--bp-guides-o);
+	animation: blueprint-guides-in 320ms ease-out 60ms both;
 }
 
 /* DIMENSION MARK: one 1px line above the word with 45deg drafting ticks
@@ -306,18 +306,18 @@
 	content: '';
 	pointer-events: none;
 	background:
-		linear-gradient(45deg, transparent calc(50% - 0.8px), var(--bp-dim-v2) calc(50% - 0.8px) calc(50% + 0.8px), transparent calc(50% + 0.8px))
+		linear-gradient(45deg, transparent calc(50% - 0.8px), var(--bp-dim) calc(50% - 0.8px) calc(50% + 0.8px), transparent calc(50% + 0.8px))
 			left 0 top 0.09em no-repeat,
-		linear-gradient(45deg, transparent calc(50% - 0.8px), var(--bp-dim-v2) calc(50% - 0.8px) calc(50% + 0.8px), transparent calc(50% + 0.8px))
+		linear-gradient(45deg, transparent calc(50% - 0.8px), var(--bp-dim) calc(50% - 0.8px) calc(50% + 0.8px), transparent calc(50% + 0.8px))
 			right 0 top 0.09em no-repeat,
-		linear-gradient(var(--bp-dim-v2), var(--bp-dim-v2)) left 0 top 0.215em no-repeat;
+		linear-gradient(var(--bp-dim), var(--bp-dim)) left 0 top 0.215em no-repeat;
 	background-size:
 		0.26em 0.26em,
 		0.26em 0.26em,
 		100% 1px;
 	filter: none;
-	opacity: var(--bp-dim-o-v2);
-	animation: blueprint-dim-in-v2 340ms ease-out 1150ms both;
+	opacity: var(--bp-dim-o);
+	animation: blueprint-dim-in 340ms ease-out 1150ms both;
 }
 
 /* THE BUILD: each glyph traces in as a thin cyan outline (transparent
@@ -330,17 +330,17 @@
 .stage[data-glow='blueprint'] .field[data-glow] .next-word .glyph:nth-child(3n) {
 	display: inline-block;
 	position: relative;
-	color: var(--bp-ink-fill-v2);
-	-webkit-text-stroke: 1px var(--bp-ink-stroke-v2);
+	color: var(--bp-ink-fill);
+	-webkit-text-stroke: 1px var(--bp-ink-stroke);
 	-webkit-text-fill-color: currentColor;
 	background: none;
 	-webkit-background-clip: border-box;
 	background-clip: border-box;
 	opacity: 1;
 	filter: none;
-	text-shadow: var(--bp-ink-glow-v2);
+	text-shadow: var(--bp-ink-glow);
 	transform: none;
-	animation: blueprint-build-v2 680ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+	animation: blueprint-build 680ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
 	animation-delay: calc(300ms + var(--i, 0) * 70ms);
 }
 
@@ -369,7 +369,7 @@
 	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 	-webkit-mask-image: linear-gradient(90deg, black 0, rgba(0, 0, 0, 0.6) 4em, rgba(0, 0, 0, 0.2) 8em, transparent 11em);
 	mask-image: linear-gradient(90deg, black 0, rgba(0, 0, 0, 0.6) 4em, rgba(0, 0, 0, 0.2) 8em, transparent 11em);
-	animation: blueprint-tail-in-v2 360ms ease-out 200ms both;
+	animation: blueprint-tail-in 360ms ease-out 200ms both;
 }
 
 .stage[data-glow='blueprint'] .field[data-glow] .tail .glyph,
@@ -388,7 +388,7 @@
 	filter: none;
 	text-shadow: none;
 	transform: none;
-	animation: blueprint-sketch-in-v2 420ms ease-out both;
+	animation: blueprint-sketch-in 420ms ease-out both;
 	animation-delay: calc(420ms + var(--i, 0) * 45ms);
 }
 
@@ -397,7 +397,7 @@
    These re-win the legacy blueprint flow-off group that blanket-kills
    the same animations. */
 .stage[data-glow='blueprint'][data-light-flow='off'] .field[data-glow] .prediction::before {
-	animation: blueprint-snap-in-v2 380ms cubic-bezier(0.16, 1, 0.3, 1) both;
+	animation: blueprint-snap-in 380ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .stage[data-glow='blueprint'][data-light-flow='off'] .field[data-glow]::before {
@@ -405,20 +405,20 @@
 }
 
 .stage[data-glow='blueprint'][data-light-flow='off'] .field[data-glow] .next-word::before {
-	animation: blueprint-guides-in-v2 320ms ease-out 60ms both;
+	animation: blueprint-guides-in 320ms ease-out 60ms both;
 }
 
 .stage[data-glow='blueprint'][data-light-flow='off'] .field[data-glow] .next-word::after {
-	animation: blueprint-dim-in-v2 340ms ease-out 1150ms both;
+	animation: blueprint-dim-in 340ms ease-out 1150ms both;
 }
 
 .stage[data-glow='blueprint'][data-light-flow='off'] .field[data-glow] .next-word .glyph {
-	animation: blueprint-build-v2 680ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+	animation: blueprint-build 680ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
 	animation-delay: calc(300ms + var(--i, 0) * 70ms);
 }
 
 .stage[data-glow='blueprint'][data-light-flow='off'] .field[data-glow] .tail .glyph {
-	animation: blueprint-sketch-in-v2 420ms ease-out both;
+	animation: blueprint-sketch-in 420ms ease-out both;
 	animation-delay: calc(420ms + var(--i, 0) * 45ms);
 }
 
@@ -426,21 +426,21 @@
 /* The cyanotype inverted: near-white paper, pale blue grid, navy ink
    fills, light blue wireframe tail, medium blue guides. */
 .field[data-theme='light'][data-glow='blueprint'] {
-	--bp-grid-minor-v2: rgba(84, 146, 212, 0.13);
-	--bp-grid-major-v2: rgba(58, 122, 196, 0.19);
-	--bp-mark-v2: oklch(0.5 0.08 252 / 0.34);
-	--bp-vignette-v2: rgba(96, 128, 168, 0.12);
-	--bp-sheen-v2: rgba(255, 255, 255, 0.7);
-	--bp-guide-v2: oklch(0.52 0.11 252 / 0.55);
-	--bp-guides-o-v2: 0.9;
-	--bp-dim-v2: oklch(0.45 0.12 255 / 0.6);
-	--bp-dim-o-v2: 0.92;
-	--bp-snap-v2: oklch(0.48 0.12 254 / 0.55);
-	--bp-snap-o-v2: 0.85;
-	--bp-ring-v2: oklch(0.4 0.11 255 / 0.8);
-	--bp-ink-fill-v2: oklch(0.3 0.09 258 / 0.97);
-	--bp-ink-stroke-v2: oklch(0.36 0.11 255 / 0.45);
-	--bp-ink-glow-v2:
+	--bp-grid-minor: rgba(84, 146, 212, 0.13);
+	--bp-grid-major: rgba(58, 122, 196, 0.19);
+	--bp-mark: oklch(0.5 0.08 252 / 0.34);
+	--bp-vignette: rgba(96, 128, 168, 0.12);
+	--bp-sheen: rgba(255, 255, 255, 0.7);
+	--bp-guide: oklch(0.52 0.11 252 / 0.55);
+	--bp-guides-o: 0.9;
+	--bp-dim: oklch(0.45 0.12 255 / 0.6);
+	--bp-dim-o: 0.92;
+	--bp-snap: oklch(0.48 0.12 254 / 0.55);
+	--bp-snap-o: 0.85;
+	--bp-ring: oklch(0.4 0.11 255 / 0.8);
+	--bp-ink-fill: oklch(0.3 0.09 258 / 0.97);
+	--bp-ink-stroke: oklch(0.36 0.11 255 / 0.45);
+	--bp-ink-glow:
 		0 0 0.14em oklch(0.5 0.1 252 / 0.18),
 		0 1px 0 rgba(255, 255, 255, 0.55);
 	--ready-border: rgba(74, 138, 202, 0.36);
@@ -466,8 +466,8 @@
 	--spark-high: 0;
 	--smoke-opacity: 0;
 	--aux-opacity: 0;
-	--next-color: var(--bp-ink-fill-v2);
-	--next-shadow: var(--bp-ink-glow-v2);
+	--next-color: var(--bp-ink-fill);
+	--next-shadow: var(--bp-ink-glow);
 	--tail-color: oklch(0.58 0.07 250 / 0.4);
 }
 
@@ -492,8 +492,8 @@
 	--spark-high: 0;
 	--smoke-opacity: 0;
 	--aux-opacity: 0;
-	--next-color: var(--bp-ink-fill-v2);
-	--next-shadow: var(--bp-ink-glow-v2);
+	--next-color: var(--bp-ink-fill);
+	--next-shadow: var(--bp-ink-glow);
 	--tail-color: oklch(0.58 0.07 250 / 0.4);
 }
 
@@ -510,7 +510,7 @@
 
 /* Re-pin the board overlay against legacy light rules that multiply it. */
 .stage[data-theme='light'][data-glow='blueprint'] .field[data-glow]::before {
-	background: var(--bp-board-bg-v2);
+	background: var(--bp-board-bg);
 	mix-blend-mode: normal;
 	animation: none;
 }
@@ -523,7 +523,7 @@
 /* Snap cursor on paper: same geometry, ink colors from the vars. */
 .stage[data-theme='light'][data-glow='blueprint'] .field[data-glow] .prediction::before {
 	mix-blend-mode: normal;
-	opacity: var(--bp-snap-o-v2);
+	opacity: var(--bp-snap-o);
 }
 
 .stage[data-theme='light'][data-glow='blueprint'] .field[data-glow] .next-word {
@@ -537,15 +537,15 @@
 
 /* Navy ink build: nth-child(n) matches the legacy light specificity. */
 .stage[data-theme='light'][data-glow='blueprint'] .field[data-glow] .next-word .glyph:nth-child(n) {
-	color: var(--bp-ink-fill-v2);
-	-webkit-text-stroke: 1px var(--bp-ink-stroke-v2);
+	color: var(--bp-ink-fill);
+	-webkit-text-stroke: 1px var(--bp-ink-stroke);
 	-webkit-text-fill-color: currentColor;
 	background: none;
 	-webkit-background-clip: border-box;
 	background-clip: border-box;
 	filter: none;
-	text-shadow: var(--bp-ink-glow-v2);
-	animation: blueprint-build-light-v2 680ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+	text-shadow: var(--bp-ink-glow);
+	animation: blueprint-build-light 680ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
 	animation-delay: calc(300ms + var(--i, 0) * 70ms);
 }
 
@@ -568,7 +568,7 @@
 	opacity: 1;
 	filter: none;
 	text-shadow: none;
-	animation: blueprint-sketch-in-v2 420ms ease-out both;
+	animation: blueprint-sketch-in 420ms ease-out both;
 	animation-delay: calc(420ms + var(--i, 0) * 45ms);
 }
 
@@ -584,16 +584,16 @@
 /* Light theme + flow off: re-win the finite passes against the
    higher-specificity light rules above. */
 .stage[data-theme='light'][data-glow='blueprint'][data-light-flow='off'] .field[data-glow] .prediction::before {
-	animation: blueprint-snap-in-v2 380ms cubic-bezier(0.16, 1, 0.3, 1) both;
+	animation: blueprint-snap-in 380ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .stage[data-theme='light'][data-glow='blueprint'][data-light-flow='off'] .field[data-glow] .next-word .glyph:nth-child(n) {
-	animation: blueprint-build-light-v2 680ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+	animation: blueprint-build-light 680ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
 	animation-delay: calc(300ms + var(--i, 0) * 70ms);
 }
 
 .stage[data-theme='light'][data-glow='blueprint'][data-light-flow='off'] .field[data-glow] .tail .glyph:nth-child(n) {
-	animation: blueprint-sketch-in-v2 420ms ease-out both;
+	animation: blueprint-sketch-in 420ms ease-out both;
 	animation-delay: calc(420ms + var(--i, 0) * 45ms);
 }
 
@@ -615,8 +615,8 @@
 		1px 1.2em;
 	--haze-bg:
 		radial-gradient(ellipse 1.5em 0.95em at 0.72em 50%, oklch(0.62 0.1 235 / 0.16), transparent 76%),
-		linear-gradient(var(--bp-snap-v2), var(--bp-snap-v2)) left 0.12em center no-repeat,
-		linear-gradient(var(--bp-snap-v2), var(--bp-snap-v2)) left 0.715em center no-repeat;
+		linear-gradient(var(--bp-snap), var(--bp-snap)) left 0.12em center no-repeat,
+		linear-gradient(var(--bp-snap), var(--bp-snap)) left 0.715em center no-repeat;
 	--haze-filter: none;
 	--haze-opacity: 0.9;
 	--torch-haze-motion: none;
@@ -630,7 +630,7 @@
 	--core-size: 100% 100%;
 	--core-filter: none;
 	--core-opacity: 0.92;
-	--torch-core-motion: blueprint-compass-v2 10s linear infinite;
+	--torch-core-motion: blueprint-compass 10s linear infinite;
 	--core-mask:
 		linear-gradient(90deg, transparent 0, black 0.16em, black calc(100% - 0.16em), transparent 100%),
 		radial-gradient(circle 0.6em at 0.72em 50%, transparent 0 0.47em, black 0.49em 0.545em, transparent 0.565em);
@@ -653,15 +653,15 @@
 /* The dash ring itself: --core-bg is declared ON the torch-core (not the
    field) because var() inside a custom property substitutes where that
    property computes — only here does the repeating-conic re-read the
-   ANIMATED --bp-angle-v2 each frame, so the compass actually turns.
+   ANIMATED --bp-angle each frame, so the compass actually turns.
    Soft 3-4deg angular stop transitions keep the dashes crisp without
    blur; the ring mask cuts the pie into a circle. */
 .stage[data-glow='blueprint'] .field[data-glow][data-state='waiting'] .torch-core {
 	--core-bg: repeating-conic-gradient(
-		from var(--bp-angle-v2) at 0.72em 50%,
-		var(--bp-ring-v2) 0deg 13deg,
+		from var(--bp-angle) at 0.72em 50%,
+		var(--bp-ring) 0deg 13deg,
 		transparent 17deg 27deg,
-		var(--bp-ring-v2) 30deg
+		var(--bp-ring) 30deg
 	);
 }
 
@@ -670,8 +670,8 @@
 .field[data-theme='light'][data-state='waiting'][data-glow='blueprint'] {
 	--haze-bg:
 		radial-gradient(ellipse 1.5em 0.95em at 0.72em 50%, oklch(0.55 0.09 250 / 0.14), transparent 76%),
-		linear-gradient(var(--bp-snap-v2), var(--bp-snap-v2)) left 0.12em center no-repeat,
-		linear-gradient(var(--bp-snap-v2), var(--bp-snap-v2)) left 0.715em center no-repeat;
+		linear-gradient(var(--bp-snap), var(--bp-snap)) left 0.12em center no-repeat,
+		linear-gradient(var(--bp-snap), var(--bp-snap)) left 0.715em center no-repeat;
 	--haze-opacity: 0.85;
 	--core-opacity: 0.9;
 }
@@ -690,9 +690,9 @@
 	--torch-core-motion: none;
 }
 
-/* ---------- Keyframes (blueprint-*-v2) ---------- */
+/* ---------- Keyframes (blueprint-*) ---------- */
 /* The word row mounts on the board. */
-@keyframes blueprint-word-in-v2 {
+@keyframes blueprint-word-in {
 	0% {
 		opacity: 0;
 	}
@@ -702,7 +702,7 @@
 }
 
 /* The sketch strip settles in. */
-@keyframes blueprint-tail-in-v2 {
+@keyframes blueprint-tail-in {
 	0% {
 		opacity: 0;
 	}
@@ -713,7 +713,7 @@
 
 /* Construction lines draw from nothing onto their live slot sizes:
    verticals grow down, horizontals sweep right (no 100% frame). */
-@keyframes blueprint-guides-in-v2 {
+@keyframes blueprint-guides-in {
 	0% {
 		opacity: 0;
 		background-size:
@@ -721,12 +721,12 @@
 			0% 1px;
 	}
 	28% {
-		opacity: var(--bp-guides-o-v2, 0.85);
+		opacity: var(--bp-guides-o, 0.85);
 	}
 }
 
 /* The dimension line sweeps across while its end ticks grow in. */
-@keyframes blueprint-dim-in-v2 {
+@keyframes blueprint-dim-in {
 	0% {
 		opacity: 0;
 		background-size:
@@ -735,36 +735,36 @@
 			0% 1px;
 	}
 	40% {
-		opacity: var(--bp-dim-o-v2, 0.9);
+		opacity: var(--bp-dim-o, 0.9);
 	}
 }
 
 /* The snap cursor locks onto the caret... */
-@keyframes blueprint-snap-in-v2 {
+@keyframes blueprint-snap-in {
 	0% {
 		opacity: 0;
 		transform: scale(1.6);
 	}
 	55% {
-		opacity: var(--bp-snap-o-v2, 0.9);
+		opacity: var(--bp-snap-o, 0.9);
 	}
 }
 
 /* ...then keeps the drawing's only settled whisper. */
-@keyframes blueprint-snap-breathe-v2 {
+@keyframes blueprint-snap-breathe {
 	0%,
 	100% {
-		opacity: calc(var(--bp-snap-o-v2, 0.9) * 0.72);
+		opacity: calc(var(--bp-snap-o, 0.9) * 0.72);
 	}
 	50% {
-		opacity: var(--bp-snap-o-v2, 0.9);
+		opacity: var(--bp-snap-o, 0.9);
 	}
 }
 
 /* THE BUILD: outline traced first, then the fill sweeps in, a brief
    just-inked flash, and — no 100% frame — the glyph settles onto the
    live filled slot. */
-@keyframes blueprint-build-v2 {
+@keyframes blueprint-build {
 	0% {
 		opacity: 0;
 		color: transparent;
@@ -791,7 +791,7 @@
 
 /* Paper build: the outline is blue pencil, the fill deep navy ink,
    the flash over-inked. */
-@keyframes blueprint-build-light-v2 {
+@keyframes blueprint-build-light {
 	0% {
 		opacity: 0;
 		color: transparent;
@@ -818,7 +818,7 @@
 
 /* Tail wireframes are sketched in: a faint blur resolving to a crisp
    outline (no 100% frame; the stroke alpha is the live slot's). */
-@keyframes blueprint-sketch-in-v2 {
+@keyframes blueprint-sketch-in {
 	0% {
 		opacity: 0;
 		filter: blur(1.2px);
@@ -830,11 +830,11 @@
 }
 
 /* Waiting: the compass turns — dashes crawl around the ring. */
-@keyframes blueprint-compass-v2 {
+@keyframes blueprint-compass {
 	0% {
-		--bp-angle-v2: 0deg;
+		--bp-angle: 0deg;
 	}
 	100% {
-		--bp-angle-v2: 360deg;
+		--bp-angle: 360deg;
 	}
 }
