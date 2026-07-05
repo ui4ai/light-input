@@ -4,7 +4,7 @@ import {
 	parseDemoSettings,
 	serializeDemoSettings,
 	type DemoSettings
-} from './demo-settings';
+} from './settings';
 
 describe('demo settings', () => {
 	it('parses valid persisted settings', () => {

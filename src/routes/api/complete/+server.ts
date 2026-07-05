@@ -1,14 +1,14 @@
 import { env } from '$env/dynamic/private';
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { fixedTextCompletion, type CompletionMode } from '$lib/autocomplete';
-import { complete } from '$lib/server/complete';
+import { fixedTextCompletion, type CompletionMode } from '@ui4ai/light-input';
+import { complete } from '../server/complete';
 import {
 	isCompletionRequestError,
 	readCompletionRequestBody,
 	validateJsonContentType
-} from '$lib/server/completion-request';
-import { checkRateLimit } from '$lib/server/rate-limit';
+} from '../server/completion-request';
+import { checkRateLimit } from '../server/rate-limit';
 
 const JSON_HEADERS = {
 	'Cache-Control': 'no-store',

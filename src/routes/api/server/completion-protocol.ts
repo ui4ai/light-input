@@ -1,4 +1,4 @@
-import { MAX_COMPLETION_CHARS, MAX_COMPLETION_WORDS } from '$lib/autocomplete';
+import { MAX_COMPLETION_CHARS, MAX_COMPLETION_WORDS } from '@ui4ai/light-input';
 
 type JoinMode = 'join' | 'space';
 

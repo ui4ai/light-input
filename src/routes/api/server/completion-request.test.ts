@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { MAX_INPUT_CHARS } from '$lib/autocomplete';
+import { MAX_INPUT_CHARS } from '@ui4ai/light-input';
 import { readCompletionRequestBody, validateJsonContentType } from './completion-request';
 
 function jsonRequest(body: unknown, headers: Record<string, string> = {}) {

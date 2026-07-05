@@ -10,16 +10,25 @@
 	import Waves from '@lucide/svelte/icons/waves';
 	import { env } from '$env/dynamic/public';
 	import { onMount, tick } from 'svelte';
-	import type { CompletionMode, GlowVariant, LoadingGlow, ThemeMode } from '$lib/autocomplete';
+	// Dogfood the published package: the demo resolves these exactly as external consumers do (root
+	// for the component + contract, '/effects' for the full registry). The svelte.config alias points
+	// the specifiers at src/lib in dev/build.
+	import {
+		GhostInput,
+		type CompletionMode,
+		type GlowVariant,
+		type LoadingGlow,
+		type ThemeMode
+	} from '@ui4ai/light-input';
+	import { glowOptions } from '@ui4ai/light-input/effects';
 	import {
 		DEMO_SETTINGS_STORAGE_KEY,
 		DEFAULT_DEMO_SETTINGS,
 		parseDemoSettings,
 		serializeDemoSettings,
 		type DemoSettings
-	} from '$lib/demo-settings';
-	import GhostInput from '$lib/GhostInput.svelte';
-	import { glowOptions } from '$lib/effects';
+	} from './demo/settings';
+	import { glowIcon } from './demo/icons';
 
 	const DEMO_ONLY = env.PUBLIC_LIGHT_INPUT_DEMO_ONLY === 'true';
 
@@ -276,7 +285,7 @@
 					onclick={toggleGlowMenu}
 				>
 					{#if selectedGlow}
-						{@const SelectedIcon = selectedGlow.icon}
+						{@const SelectedIcon = glowIcon(selectedGlow.value)}
 						<SelectedIcon size={17} strokeWidth={2.25} aria-hidden="true" />
 						<span>{selectedGlow.label}</span>
 					{/if}
@@ -288,7 +297,7 @@
 				{#if glowMenuOpen}
 					<div class="glow-menu" role="listbox" aria-label="Glow style">
 						{#each glowOptions as option}
-							{@const Icon = option.icon}
+							{@const Icon = glowIcon(option.value)}
 							<button
 								type="button"
 								class="glow-option"

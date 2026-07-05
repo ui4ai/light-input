@@ -1,4 +1,9 @@
 <script lang="ts">
+	// core.css carries the beam/torch anatomy every effect builds on. Importing it here means a bare
+	// <GhostInput> (no effect selected) still renders the Torch default; effect entries import the
+	// same file, and bundlers dedupe it to one copy so nothing loads twice. Relative imports only —
+	// this component ships in the package, so it must not depend on the $lib alias.
+	import './effects/core.css';
 	import { tick } from 'svelte';
 	import {
 		DEFAULT_DEBOUNCE_MS,
@@ -13,11 +18,11 @@
 		type LoadingGlow,
 		type ThemeMode,
 		type VisualState
-	} from '$lib/autocomplete';
-	import { CompletionEngine } from '$lib/input/completion.svelte';
-	import { isScriptedInput, scriptedKeyInput } from '$lib/input/demo-script';
-	import { ghostGlyphs } from '$lib/input/glyphs';
-	import { SelectionTracker } from '$lib/input/selection.svelte';
+	} from './autocomplete';
+	import { CompletionEngine } from './input/completion.svelte';
+	import { isScriptedInput, scriptedKeyInput } from './input/demo-script';
+	import { ghostGlyphs } from './input/glyphs';
+	import { SelectionTracker } from './input/selection.svelte';
 	import type { Component } from 'svelte';
 
 	interface Props {

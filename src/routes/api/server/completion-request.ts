@@ -1,4 +1,4 @@
-import { COMPLETION_MODES, MAX_INPUT_CHARS, type CompletionMode } from '$lib/autocomplete';
+import { COMPLETION_MODES, MAX_INPUT_CHARS, type CompletionMode } from '@ui4ai/light-input';
 
 export const MAX_COMPLETION_BODY_BYTES = 8_192;
 

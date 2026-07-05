@@ -1,102 +1,129 @@
-import Activity from '@lucide/svelte/icons/activity';
-import Atom from '@lucide/svelte/icons/atom';
-import Aperture from '@lucide/svelte/icons/aperture';
-import Asterisk from '@lucide/svelte/icons/asterisk';
-import Binary from '@lucide/svelte/icons/binary';
-import Blend from '@lucide/svelte/icons/blend';
-import Bot from '@lucide/svelte/icons/bot';
-import Candy from '@lucide/svelte/icons/candy';
-import Clapperboard from '@lucide/svelte/icons/clapperboard';
-import CloudFog from '@lucide/svelte/icons/cloud-fog';
-import Droplets from '@lucide/svelte/icons/droplets';
-import Eclipse from '@lucide/svelte/icons/eclipse';
-import Eraser from '@lucide/svelte/icons/eraser';
-import Flashlight from '@lucide/svelte/icons/flashlight';
-import Flame from '@lucide/svelte/icons/flame';
-import FlameKindling from '@lucide/svelte/icons/flame-kindling';
-import Gem from '@lucide/svelte/icons/gem';
-import Ghost from '@lucide/svelte/icons/ghost';
-import HeartPulse from '@lucide/svelte/icons/heart-pulse';
-import Orbit from '@lucide/svelte/icons/orbit';
-import Palette from '@lucide/svelte/icons/palette';
-import Radiation from '@lucide/svelte/icons/radiation';
-import Rainbow from '@lucide/svelte/icons/rainbow';
-import ScanEye from '@lucide/svelte/icons/scan-eye';
-import Snowflake from '@lucide/svelte/icons/snowflake';
-import ScanText from '@lucide/svelte/icons/scan-text';
-import Shapes from '@lucide/svelte/icons/shapes';
-import Sparkles from '@lucide/svelte/icons/sparkles';
-import SwatchBook from '@lucide/svelte/icons/swatch-book';
-import Sun from '@lucide/svelte/icons/sun';
-import Tornado from '@lucide/svelte/icons/tornado';
-import Type from '@lucide/svelte/icons/type';
-import VenetianMask from '@lucide/svelte/icons/venetian-mask';
-import Waves from '@lucide/svelte/icons/waves';
-import Wind from '@lucide/svelte/icons/wind';
-import Zap from '@lucide/svelte/icons/zap';
+// The ALL-39 effect registry (the `@ui4ai/light-input/effects` entry). Importing this pulls every
+// effect's CSS + both DOM layer components — intended for galleries/pickers that show the full set.
+// Single-effect consumers import '@ui4ai/light-input/effects/<name>' instead and pay only for that
+// effect. Icons deliberately live nowhere in the package: the demo keeps its own name → icon map in
+// src/routes/demo/icons.ts.
+//
+// Import order below mirrors GLOW_VARIANTS and the former index.css aggregate: core anatomy arrives
+// via each entry's `import '../core.css'` (first statement, deduped to one copy), then the classics
+// in GLOW_VARIANTS order, then the 27 redesigned effects — preserving the cascade the oracle pins.
 import type { Component } from 'svelte';
-import type { GlowVariant } from '$lib/autocomplete';
-import Kaleidoscope from './kaleidoscope/Kaleidoscope.svelte';
-import MatrixRain from './matrix/MatrixRain.svelte';
-import './index.css';
+import type { GlowVariant } from '../autocomplete';
+import type { EffectDefinition, GlowLayerProps } from './types';
 
-/** Props every effect layer component receives from GhostInput. */
-export interface GlowLayerProps {
-	suggestion: string;
-	lightFlow: boolean;
+import torch from './torch/index';
+import candle from './candle/index';
+import lightning from './lightning/index';
+import aurora from './aurora/index';
+import plasma from './plasma/index';
+import prism from './prism/index';
+import ember from './ember/index';
+import neon from './neon/index';
+import nebula from './nebula/index';
+import smoke from './smoke/index';
+import solar from './solar/index';
+import holo from './holo/index';
+import blackhole from './blackhole/index';
+import flame from './flame/index';
+import matrix from './matrix/index';
+import snow from './snow/index';
+import toxic from './toxic/index';
+import vortex from './vortex/index';
+import bubblegum from './bubblegum/index';
+import optic from './optic/index';
+import biolume from './biolume/index';
+import ocean from './ocean/index';
+import horror from './horror/index';
+import heart from './heart/index';
+import liquidglass from './liquidglass/index';
+import android from './android/index';
+import fontshift from './fontshift/index';
+import rorschach from './rorschach/index';
+import diffusion from './diffusion/index';
+import chromabloom from './chromabloom/index';
+import infrared from './infrared/index';
+import staged from './staged/index';
+import blueprint from './blueprint/index';
+import spoiler from './spoiler/index';
+import ghosttext from './ghosttext/index';
+import drift from './drift/index';
+import art from './art/index';
+import scratch from './scratch/index';
+import kaleidoscope from './kaleidoscope/index';
+
+export type { EffectDefinition, EffectMeta, EffectName, GlowLayerProps } from './types';
+export { defineEffect } from './define';
+
+/**
+ * Every built-in effect, in canonical UI order (=== GLOW_VARIANTS). A contract test asserts the
+ * order and that each `meta.name` matches its folder.
+ */
+export const effects: readonly EffectDefinition[] = [
+	torch,
+	candle,
+	lightning,
+	aurora,
+	plasma,
+	prism,
+	ember,
+	neon,
+	nebula,
+	smoke,
+	solar,
+	holo,
+	blackhole,
+	flame,
+	matrix,
+	snow,
+	toxic,
+	vortex,
+	bubblegum,
+	optic,
+	biolume,
+	ocean,
+	horror,
+	heart,
+	liquidglass,
+	android,
+	fontshift,
+	rorschach,
+	diffusion,
+	chromabloom,
+	infrared,
+	staged,
+	blueprint,
+	spoiler,
+	ghosttext,
+	drift,
+	art,
+	scratch,
+	kaleidoscope
+];
+
+/** Look up a built-in effect by its `data-glow` name. */
+export function effectByName(name: string): EffectDefinition | undefined {
+	return effects.find((effect) => effect.meta.name === name);
 }
 
+/**
+ * Demo/gallery-facing option shape. Icon-free — pickers pair this with their own icon map keyed on
+ * `value`. Kept as a thin projection of {@link effects} so back-compat consumers of `glowOptions`
+ * keep working.
+ */
 export interface GlowEffect {
 	value: GlowVariant;
 	label: string;
-	icon: typeof Flashlight;
 	/** Optional extra DOM layer rendered inside the prediction while a suggestion is live. */
 	layer?: Component<GlowLayerProps>;
 }
 
-export const glowOptions: readonly GlowEffect[] = [
-	{ value: 'torch', label: 'Torch', icon: Flashlight },
-	{ value: 'candle', label: 'Candle', icon: Flame },
-	{ value: 'lightning', label: 'Bolt', icon: Zap },
-	{ value: 'aurora', label: 'Aurora', icon: Orbit },
-	{ value: 'plasma', label: 'Plasma', icon: Atom },
-	{ value: 'prism', label: 'Prism', icon: Rainbow },
-	{ value: 'ember', label: 'Ember', icon: Sparkles },
-	{ value: 'neon', label: 'Neon', icon: Asterisk },
-	{ value: 'nebula', label: 'Nebula', icon: Wind },
-	{ value: 'smoke', label: 'Smoke', icon: CloudFog },
-	{ value: 'solar', label: 'Solar', icon: Sun },
-	{ value: 'holo', label: 'Holo', icon: Gem },
-	{ value: 'blackhole', label: 'Blackhole', icon: Eclipse },
-	{ value: 'flame', label: 'Flame', icon: FlameKindling },
-	{ value: 'matrix', label: 'Matrix', icon: Binary, layer: MatrixRain },
-	{ value: 'snow', label: 'Snow', icon: Snowflake },
-	{ value: 'toxic', label: 'Toxic', icon: Radiation },
-	{ value: 'vortex', label: 'Vortex', icon: Tornado },
-	{ value: 'bubblegum', label: 'Bubble Gum', icon: Candy },
-	{ value: 'optic', label: 'Optic', icon: Aperture },
-	{ value: 'biolume', label: 'Biolume', icon: Waves },
-	{ value: 'ocean', label: 'Ocean', icon: Droplets },
-	{ value: 'horror', label: 'Horror', icon: Ghost },
-	{ value: 'heart', label: 'Heart', icon: HeartPulse },
-	{ value: 'liquidglass', label: 'Liquid Glass', icon: Blend },
-	{ value: 'android', label: 'Android', icon: Bot },
-	{ value: 'fontshift', label: 'Font Shift', icon: Type },
-	{ value: 'rorschach', label: 'Rorschach', icon: VenetianMask },
-	{ value: 'diffusion', label: 'Diffusion', icon: ScanEye },
-	{ value: 'chromabloom', label: 'Chroma Bloom', icon: SwatchBook },
-	{ value: 'infrared', label: 'Infrared', icon: Activity },
-	{ value: 'staged', label: 'Staged', icon: Clapperboard },
-	{ value: 'blueprint', label: 'Blueprint', icon: ScanText },
-	{ value: 'spoiler', label: 'Spoiler', icon: ScanEye },
-	{ value: 'ghosttext', label: 'Ghost Text', icon: Ghost },
-	{ value: 'drift', label: 'Drift', icon: Wind },
-	{ value: 'art', label: 'Art', icon: Palette },
-	{ value: 'scratch', label: 'Scratch', icon: Eraser },
-	{ value: 'kaleidoscope', label: 'Kaleidoscope', icon: Shapes, layer: Kaleidoscope }
-];
-
 export type GlowOption = GlowEffect;
+
+export const glowOptions: readonly GlowEffect[] = effects.map((effect) => ({
+	value: effect.meta.name as GlowVariant,
+	label: effect.meta.label,
+	layer: effect.layer
+}));
 
 export function glowLayer(glow: GlowVariant): Component<GlowLayerProps> | undefined {
 	return glowOptions.find((option) => option.value === glow)?.layer;

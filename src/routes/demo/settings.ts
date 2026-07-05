@@ -5,7 +5,7 @@ import {
 	type GlowVariant,
 	type LoadingGlow,
 	type ThemeMode
-} from '$lib/autocomplete';
+} from '@ui4ai/light-input';
 
 export const DEMO_SETTINGS_STORAGE_KEY = 'light-input-demo-settings';
 

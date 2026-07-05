@@ -1,5 +1,5 @@
 import { env } from '$env/dynamic/private';
-import { MAX_INPUT_CHARS, MIN_INPUT_CHARS } from '$lib/autocomplete';
+import { MAX_INPUT_CHARS, MIN_INPUT_CHARS } from '@ui4ai/light-input';
 import { completionMessages, sanitizeCompletion } from './completion-protocol';
 
 const ENDPOINT = 'https://openrouter.ai/api/v1/chat/completions';
