@@ -6,7 +6,17 @@ import { glowOptions, glowLayer } from './index';
 
 const PRESET_CSS_FILES = [
 	'src/lib/effects/core.css',
-	'src/lib/effects/legacy.css',
+	'src/lib/effects/candle/index.css',
+	'src/lib/effects/lightning/index.css',
+	'src/lib/effects/aurora/index.css',
+	'src/lib/effects/plasma/index.css',
+	'src/lib/effects/prism/index.css',
+	'src/lib/effects/ember/index.css',
+	'src/lib/effects/neon/index.css',
+	'src/lib/effects/nebula/index.css',
+	'src/lib/effects/smoke/index.css',
+	'src/lib/effects/solar/index.css',
+	'src/lib/effects/holo/index.css',
 	'src/lib/effects/blackhole/index.css',
 	'src/lib/effects/flame/index.css',
 	'src/lib/effects/matrix/index.css',
@@ -85,11 +95,20 @@ describe('glow inventory', () => {
 		expect(GLOW_VARIANTS).toHaveLength(39);
 	});
 
-	it('keeps legacy presets out of clipped special-effect layer rules', () => {
+	it('keeps classic presets out of clipped special-effect layer rules', () => {
 		const css = readPresetCss();
+		// The blackhole edge-polish block now lives at the top of blackhole/index.css, carrying its
+		// '/* Edge polish' banner. The first match of that banner must still be a rule block that
+		// sets the clip/radius on blackhole (and only blackhole).
 		const edgePolishBlock = css.match(/\/\* Edge polish[\s\S]*?\n\}/u)?.[0] ?? '';
 
 		expect(edgePolishBlock).toContain(".field[data-glow='blackhole']");
+
+		// The classic presets (torch has no block; candle..holo each own one) graduated out of
+		// legacy.css into per-effect modules. Prove the scan is NOT vacuous by counting the classic
+		// var-pack blocks it actually finds — every classic that ships a module contributes exactly
+		// one `.field[data-glow='<name>'] {` block, so we must locate at least 11.
+		let classicBlocksFound = 0;
 
 		for (const variant of beforeBlackholeVariants) {
 			expect(edgePolishBlock).not.toContain(`data-glow='${variant}'`);
@@ -110,6 +129,8 @@ describe('glow inventory', () => {
 				searchFrom = blockEnd + 2;
 			}
 
+			classicBlocksFound += variantBlocks.length;
+
 			const maskOrClipLeaks = variantBlocks.flatMap((block) => {
 				return (
 					block.match(
@@ -120,6 +141,11 @@ describe('glow inventory', () => {
 
 			expect(maskOrClipLeaks).toEqual([]);
 		}
+
+		// Non-vacuous guard: the 11 classic modules (candle..holo) must each have been located and
+		// scanned. Without this, dropping the classic module files from PRESET_CSS_FILES would make
+		// the loop above find zero blocks and pass silently.
+		expect(classicBlocksFound).toBeGreaterThanOrEqual(11);
 	});
 
 	it('keeps Matrix binary code in one live DOM layer instead of CSS image tiles', () => {

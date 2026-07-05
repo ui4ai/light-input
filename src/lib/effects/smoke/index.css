@@ -1,0 +1,112 @@
+/* ============================================================
+   SMOKE — thick billows curling up from the caret. Owns the
+   smoke-roll keyframe (relocated from core.css; ember and nebula
+   carry their own prefixed copies) which drives haze/flow/smoke;
+   the spark layer rides the core-default smoke-drift motion. A
+   classic preset split out of legacy.css. Var-packs + keyframe.
+   ============================================================ */
+
+.field[data-glow='smoke'] {
+	--ready-border: rgba(226, 240, 248, 0.28);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.08) inset,
+		0 -34px 86px rgba(8, 10, 12, 0.58) inset,
+		0 32px 68px rgba(0, 0, 0, 0.46),
+		0 0 118px rgba(188, 220, 240, 0.18);
+	--field-wash:
+		radial-gradient(ellipse 42% 92% at 22% 50%, rgba(229, 242, 248, 0.12), transparent 72%),
+		linear-gradient(90deg, rgba(198, 221, 235, 0.085), rgba(85, 106, 126, 0.056) 56%, transparent 84%);
+	--caret-gradient: linear-gradient(180deg, rgb(255, 255, 252), rgb(232, 242, 247) 30%, rgb(164, 190, 207) 66%, rgb(82, 100, 116));
+	--caret-shadow:
+		0 0 8px rgba(255, 255, 250, 0.68),
+		0 0 26px rgba(202, 226, 240, 0.38),
+		0 0 48px rgba(128, 158, 178, 0.24);
+	--haze-width: 9.8em;
+	--haze-height: 3.15em;
+	--haze-bg:
+		radial-gradient(ellipse 28% 54% at 6% 48%, rgba(255, 255, 250, 0.34), transparent 68%),
+		radial-gradient(ellipse 44% 74% at 38% 42%, rgba(202, 222, 236, 0.24), transparent 76%),
+		linear-gradient(90deg, rgba(218, 230, 238, 0.16), rgba(115, 134, 150, 0.12) 58%, transparent 90%);
+	--haze-filter: blur(30px);
+	--haze-opacity: 0.82;
+	--haze-motion: smoke-roll 7.2s ease-in-out 700ms infinite;
+	--torch-haze-motion: smoke-roll 5.8s ease-in-out infinite;
+	--body-width: 7.2em;
+	--body-height: 2.05em;
+	--body-bg: radial-gradient(ellipse 74% 60% at 0% 50%, rgba(255, 255, 250, 0.5), rgba(188, 207, 220, 0.28) 42%, rgba(72, 86, 102, 0.08) 78%, transparent);
+	--body-filter: blur(21px);
+	--body-opacity: 0.78;
+	--core-width: 3.2em;
+	--core-height: 1em;
+	--core-bg: radial-gradient(ellipse 66% 50% at 0% 50%, rgba(255, 255, 248, 0.76), rgba(216, 228, 235, 0.38) 44%, rgba(112, 134, 152, 0) 82%);
+	--core-filter: blur(8px);
+	--core-opacity: 0.84;
+	--flow-width: 9em;
+	--flow-height: 1.8em;
+	--flow-bg: linear-gradient(90deg, transparent, rgba(238, 245, 248, 0.16) 16%, rgba(166, 188, 204, 0.18) 52%, rgba(74, 88, 104, 0.1) 78%, transparent);
+	--flow-filter: blur(25px);
+	--flow-low: 0.08;
+	--flow-high: 0.34;
+	--flow-motion: smoke-roll 8.4s ease-in-out infinite;
+	--spark-width: 8em;
+	--spark-height: 1.8em;
+	--spark-bg:
+		radial-gradient(circle at 12% 47%, rgba(255, 255, 252, 0.36), transparent 4%),
+		radial-gradient(circle at 34% 56%, rgba(207, 224, 235, 0.24), transparent 5%),
+		radial-gradient(circle at 65% 43%, rgba(155, 175, 194, 0.18), transparent 5%);
+	--spark-filter: blur(2.8px) drop-shadow(0 0 10px rgba(214, 232, 242, 0.32));
+	--spark-high: 0.28;
+	--spark-motion: smoke-drift 7.4s ease-in-out infinite;
+	--smoke-width: 10.4em;
+	--smoke-height: 4.1em;
+	--smoke-bg:
+		radial-gradient(ellipse 28% 54% at 8% 50%, rgba(250, 252, 250, 0.32), transparent 72%),
+		radial-gradient(ellipse 44% 78% at 36% 36%, rgba(172, 190, 204, 0.32), transparent 78%),
+		radial-gradient(ellipse 58% 84% at 64% 60%, rgba(88, 104, 120, 0.28), transparent 82%),
+		radial-gradient(ellipse 72% 92% at 92% 52%, rgba(34, 39, 47, 0.2), transparent 84%);
+	--smoke-opacity: 0.82;
+	--smoke-filter: blur(26px);
+	--smoke-motion: smoke-roll 8.8s ease-in-out infinite;
+	--next-color: rgba(244, 249, 251, 0.94);
+	--next-shadow:
+		0 0 12px rgba(232, 241, 246, 0.34),
+		0 0 34px rgba(142, 164, 184, 0.18);
+	--tail-color: rgba(215, 224, 230, 0.36);
+}
+
+.field[data-theme='light'][data-glow='smoke'] {
+	--ready-border: rgba(78, 99, 119, 0.3);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.98) inset,
+		0 -18px 50px rgba(93, 116, 136, 0.1) inset,
+		0 18px 46px rgba(42, 52, 74, 0.14),
+		0 0 68px rgba(105, 132, 154, 0.12);
+	--haze-opacity: 0.5;
+	--body-opacity: 0.6;
+	--core-opacity: 0.72;
+	--smoke-opacity: 0.3;
+	--next-color: rgba(48, 62, 74, 0.82);
+	--next-shadow:
+		0 0 9px rgba(172, 190, 204, 0.2),
+		0 0 24px rgba(98, 118, 136, 0.1);
+	--tail-color: rgba(48, 60, 72, 0.28);
+}
+
+@keyframes smoke-roll {
+	0%,
+	100% {
+		opacity: calc(var(--smoke-opacity) * 0.42);
+		background-position: 0% 50%;
+		transform: translateY(-50%) translateX(-0.22em) scaleX(0.78) scaleY(0.96) rotate(-1deg);
+	}
+	42% {
+		opacity: var(--smoke-opacity);
+		background-position: 100% 50%;
+		transform: translateY(-57%) translateX(0.52em) scaleX(1.16) scaleY(1.08) rotate(2deg);
+	}
+	72% {
+		opacity: calc(var(--smoke-opacity) * 0.62);
+		background-position: 58% 50%;
+		transform: translateY(-45%) translateX(0.86em) scaleX(0.96) scaleY(1.04) rotate(-2deg);
+	}
+}

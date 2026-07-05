@@ -1,0 +1,77 @@
+/* ============================================================
+   NEON — a buzzing tube of light at the caret. One neon-scan
+   keyframe drives haze/flow/spark; smoke inherits the core-default
+   smoke-drift motion. A classic preset split out of legacy.css.
+   Var-packs + keyframe.
+   ============================================================ */
+
+.field[data-glow='neon'] {
+	--ready-border: rgba(96, 244, 192, 0.23);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.06) inset,
+		0 -34px 86px rgba(6, 22, 19, 0.52) inset,
+		0 32px 68px rgba(0, 0, 0, 0.45),
+		0 0 90px rgba(57, 225, 178, 0.12);
+	--field-wash:
+		linear-gradient(90deg, rgba(66, 244, 184, 0.075), rgba(238, 68, 198, 0.04) 56%, transparent 84%),
+		radial-gradient(ellipse 34% 84% at 18% 50%, rgba(235, 255, 247, 0.08), transparent 74%);
+	--caret-gradient: linear-gradient(180deg, rgb(250, 255, 253), rgb(105, 244, 192) 34%, rgb(57, 205, 238) 62%, rgb(228, 93, 194));
+	--caret-shadow:
+		0 0 7px rgba(232, 255, 248, 0.62),
+		0 0 22px rgba(80, 236, 184, 0.38),
+		0 0 42px rgba(230, 83, 196, 0.18);
+	--haze-width: 7.4em;
+	--haze-height: 1.72em;
+	--haze-bg: linear-gradient(90deg, rgba(210, 255, 241, 0.26), rgba(64, 240, 184, 0.17) 28%, rgba(60, 206, 238, 0.13) 52%, rgba(230, 82, 198, 0.09) 76%, transparent 92%);
+	--haze-filter: blur(19px);
+	--haze-motion: neon-scan 4.8s ease-in-out 680ms infinite;
+	--torch-haze-motion: neon-scan 3.8s ease-in-out infinite;
+	--body-bg: linear-gradient(90deg, rgba(235, 255, 248, 0.46), rgba(76, 242, 187, 0.28) 34%, rgba(230, 82, 198, 0.11) 74%, transparent);
+	--body-filter: blur(10px);
+	--core-bg: linear-gradient(90deg, rgba(255, 255, 255, 0.82), rgba(93, 248, 195, 0.46) 38%, rgba(238, 86, 202, 0) 86%);
+	--core-filter: blur(5px);
+	--flow-bg: linear-gradient(90deg, transparent, rgba(85, 244, 191, 0.18) 18%, rgba(58, 214, 238, 0.16) 46%, rgba(230, 84, 198, 0.12) 72%, transparent);
+	--flow-filter: blur(13px);
+	--flow-motion: neon-scan 4.8s ease-in-out infinite;
+	--spark-bg: radial-gradient(circle at 14% 45%, rgba(102, 255, 202, 0.42), transparent 4%), radial-gradient(circle at 46% 58%, rgba(71, 219, 244, 0.28), transparent 5%), radial-gradient(circle at 76% 42%, rgba(235, 94, 204, 0.2), transparent 5%);
+	--spark-filter: blur(2px) drop-shadow(0 0 8px rgba(76, 240, 190, 0.4));
+	--spark-high: 0.32;
+	--spark-motion: neon-scan 3.8s ease-in-out infinite;
+	--smoke-opacity: 0.13;
+	--smoke-bg:
+		radial-gradient(ellipse 38% 62% at 26% 48%, rgba(78, 236, 190, 0.07), transparent 72%),
+		radial-gradient(ellipse 46% 70% at 70% 58%, rgba(80, 56, 88, 0.08), transparent 78%);
+	--next-color: rgba(224, 255, 246, 0.9);
+	--next-shadow:
+		0 0 10px rgba(83, 236, 190, 0.3),
+		0 0 28px rgba(230, 80, 198, 0.13);
+	--tail-color: rgba(202, 228, 222, 0.29);
+}
+
+.field[data-theme='light'][data-glow='neon'] {
+	--ready-border: rgba(45, 150, 126, 0.26);
+	--next-color: rgba(25, 88, 76, 0.76);
+	--next-shadow:
+		0 0 8px rgba(57, 196, 151, 0.18),
+		0 0 20px rgba(87, 130, 210, 0.08);
+	--smoke-opacity: 0.1;
+}
+
+@keyframes neon-scan {
+	0%,
+	100% {
+		opacity: calc(var(--haze-opacity) * 0.58);
+		background-position: 0% 50%;
+		transform: translateY(-50%) translateX(-0.2em) scaleX(0.88);
+	}
+	48% {
+		opacity: var(--haze-opacity);
+		background-position: 100% 50%;
+		transform: translateY(-50%) translateX(0.42em) scaleX(1.08);
+	}
+	70% {
+		opacity: calc(var(--haze-opacity) * 0.72);
+		background-position: 58% 50%;
+		transform: translateY(-49%) translateX(0.18em) scaleX(0.98);
+	}
+}

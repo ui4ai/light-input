@@ -1,0 +1,74 @@
+/* ============================================================
+   AURORA — a slow curtain of light across the caret. One
+   aurora-drift keyframe animates haze/flow/spark; smoke inherits
+   the core-default smoke-drift motion (no per-module override).
+   A classic preset split out of legacy.css. Var-packs + keyframe.
+   ============================================================ */
+
+.field[data-glow='aurora'] {
+	--ready-border: rgba(111, 231, 202, 0.22);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.06) inset,
+		0 -34px 86px rgba(7, 19, 23, 0.5) inset,
+		0 32px 68px rgba(0, 0, 0, 0.44),
+		0 0 100px rgba(64, 225, 190, 0.1);
+	--field-wash:
+		linear-gradient(92deg, rgba(69, 255, 188, 0.07), rgba(101, 142, 255, 0.055) 42%, rgba(220, 110, 255, 0.035) 68%, transparent 86%),
+		radial-gradient(ellipse 54% 90% at 24% 48%, rgba(111, 255, 211, 0.075), transparent 74%);
+	--caret-gradient: linear-gradient(180deg, rgb(246, 255, 250), rgb(143, 248, 211) 35%, rgb(102, 176, 242) 68%, rgb(171, 117, 236));
+	--caret-shadow:
+		0 0 7px rgba(222, 255, 245, 0.56),
+		0 0 22px rgba(70, 228, 188, 0.32),
+		0 0 38px rgba(121, 126, 235, 0.18);
+	--haze-width: 8.8em;
+	--haze-height: 2.25em;
+	--haze-bg: linear-gradient(90deg, rgba(163, 255, 222, 0.24), rgba(54, 222, 180, 0.16) 24%, rgba(88, 137, 255, 0.14) 52%, rgba(219, 103, 255, 0.08) 74%, transparent 92%);
+	--haze-filter: blur(28px);
+	--haze-motion: aurora-drift 6.6s ease-in-out 780ms infinite;
+	--torch-haze-motion: aurora-drift 5.4s ease-in-out infinite;
+	--body-bg: radial-gradient(ellipse 72% 54% at 0% 50%, rgba(232, 255, 245, 0.42), rgba(84, 241, 195, 0.22) 34%, rgba(93, 139, 248, 0.1) 66%, transparent 88%);
+	--body-filter: blur(16px);
+	--core-bg: radial-gradient(ellipse 70% 50% at 0% 50%, rgba(235, 255, 244, 0.76), rgba(115, 244, 206, 0.34) 36%, rgba(95, 143, 238, 0.12) 66%, transparent 86%);
+	--flow-bg: linear-gradient(90deg, transparent, rgba(91, 245, 198, 0.16) 20%, rgba(86, 143, 238, 0.15) 50%, rgba(207, 112, 238, 0.1) 72%, transparent);
+	--flow-width: 8.4em;
+	--flow-filter: blur(22px);
+	--flow-motion: aurora-drift 7s ease-in-out infinite;
+	--spark-bg:
+		radial-gradient(circle at 22% 46%, rgba(174, 255, 223, 0.26), transparent 8%),
+		radial-gradient(circle at 58% 55%, rgba(107, 150, 240, 0.16), transparent 10%);
+	--spark-filter: blur(5px);
+	--spark-high: 0.24;
+	--spark-motion: aurora-drift 5.8s ease-in-out infinite;
+	--smoke-opacity: 0.13;
+	--smoke-bg:
+		radial-gradient(ellipse 40% 60% at 20% 50%, rgba(121, 248, 209, 0.08), transparent 72%),
+		radial-gradient(ellipse 48% 70% at 62% 58%, rgba(81, 104, 154, 0.07), transparent 78%);
+	--next-color: rgba(221, 255, 245, 0.88);
+	--next-shadow:
+		0 0 10px rgba(91, 236, 197, 0.28),
+		0 0 26px rgba(114, 137, 235, 0.14);
+	--tail-color: rgba(198, 226, 225, 0.29);
+}
+
+.field[data-theme='light'][data-glow='aurora'] {
+	--ready-border: rgba(45, 150, 126, 0.26);
+	--next-color: rgba(25, 88, 76, 0.76);
+	--next-shadow:
+		0 0 8px rgba(57, 196, 151, 0.18),
+		0 0 20px rgba(87, 130, 210, 0.08);
+	--smoke-opacity: 0.1;
+}
+
+@keyframes aurora-drift {
+	0%,
+	100% {
+		opacity: 0.22;
+		background-position: 0% 50%;
+		transform: translateY(-52%) translateX(-0.24em) scaleX(0.94) skewX(-3deg);
+	}
+	50% {
+		opacity: 0.5;
+		background-position: 100% 50%;
+		transform: translateY(-48%) translateX(0.38em) scaleX(1.08) skewX(4deg);
+	}
+}

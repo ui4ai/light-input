@@ -1,0 +1,75 @@
+/* ============================================================
+   PLASMA — an electric magenta/cyan bloom at the caret. One
+   plasma-pulse keyframe drives haze/flow/spark; smoke inherits
+   the core-default smoke-drift motion. A classic preset split
+   out of legacy.css. Var-packs + keyframe.
+   ============================================================ */
+
+.field[data-glow='plasma'] {
+	--ready-border: rgba(234, 112, 208, 0.22);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.06) inset,
+		0 -34px 86px rgba(21, 8, 27, 0.52) inset,
+		0 32px 68px rgba(0, 0, 0, 0.46),
+		0 0 88px rgba(221, 72, 198, 0.12);
+	--field-wash:
+		radial-gradient(ellipse 42% 90% at 20% 48%, rgba(232, 76, 197, 0.1), transparent 74%),
+		linear-gradient(90deg, rgba(58, 222, 244, 0.06), rgba(232, 76, 197, 0.075) 48%, rgba(146, 88, 238, 0.055) 76%, transparent);
+	--caret-gradient: linear-gradient(180deg, rgb(255, 250, 255), rgb(108, 231, 244) 32%, rgb(238, 94, 203) 66%, rgb(136, 103, 236));
+	--caret-shadow:
+		0 0 7px rgba(236, 254, 255, 0.62),
+		0 0 22px rgba(230, 91, 203, 0.36),
+		0 0 40px rgba(74, 214, 236, 0.18);
+	--haze-width: 7.8em;
+	--haze-height: 2.05em;
+	--haze-bg:
+		radial-gradient(ellipse 32% 56% at 16% 48%, rgba(238, 255, 255, 0.26), transparent 64%),
+		linear-gradient(90deg, rgba(67, 222, 244, 0.16), rgba(232, 82, 203, 0.18) 42%, rgba(145, 91, 238, 0.12) 68%, transparent 88%);
+	--haze-filter: blur(23px);
+	--haze-motion: plasma-pulse 3.6s ease-in-out 700ms infinite;
+	--torch-haze-motion: plasma-pulse 2.6s ease-in-out infinite;
+	--core-bg: radial-gradient(ellipse 66% 50% at 0% 50%, rgba(246, 255, 255, 0.78), rgba(71, 222, 244, 0.28) 34%, rgba(232, 72, 203, 0.2) 62%, transparent 84%);
+	--flow-bg: linear-gradient(90deg, transparent, rgba(56, 222, 244, 0.17) 18%, rgba(232, 77, 205, 0.2) 44%, rgba(139, 92, 238, 0.14) 68%, transparent);
+	--flow-filter: blur(18px);
+	--flow-motion: plasma-pulse 4.8s ease-in-out infinite;
+	--spark-bg: radial-gradient(circle at 18% 48%, rgba(109, 231, 244, 0.28), transparent 7%), radial-gradient(circle at 48% 54%, rgba(238, 94, 205, 0.24), transparent 8%), radial-gradient(circle at 72% 42%, rgba(155, 113, 238, 0.16), transparent 7%);
+	--spark-filter: blur(6px);
+	--spark-high: 0.34;
+	--spark-motion: plasma-pulse 4.8s ease-in-out infinite;
+	--smoke-opacity: 0.14;
+	--smoke-bg:
+		radial-gradient(ellipse 42% 64% at 22% 48%, rgba(73, 210, 230, 0.07), transparent 72%),
+		radial-gradient(ellipse 54% 72% at 60% 58%, rgba(116, 64, 146, 0.08), transparent 80%);
+	--next-color: rgba(250, 238, 255, 0.89);
+	--next-shadow:
+		0 0 10px rgba(235, 94, 212, 0.3),
+		0 0 26px rgba(62, 217, 238, 0.14);
+	--tail-color: rgba(225, 202, 232, 0.29);
+}
+
+.field[data-theme='light'][data-glow='plasma'] {
+	--ready-border: rgba(169, 75, 154, 0.26);
+	--next-color: rgba(98, 48, 98, 0.76);
+	--next-shadow:
+		0 0 8px rgba(218, 86, 192, 0.18),
+		0 0 20px rgba(70, 192, 218, 0.08);
+}
+
+@keyframes plasma-pulse {
+	0%,
+	100% {
+		opacity: 0.22;
+		background-position: 0% 50%;
+		transform: translateY(-50%) translateX(-0.1em) scaleX(0.88) scaleY(0.94);
+	}
+	42% {
+		opacity: 0.56;
+		background-position: 100% 50%;
+		transform: translateY(-49%) translateX(0.24em) scaleX(1.06) scaleY(1.08);
+	}
+	70% {
+		opacity: 0.36;
+		background-position: 58% 50%;
+		transform: translateY(-51%) translateX(0.08em) scaleX(0.98) scaleY(0.98);
+	}
+}

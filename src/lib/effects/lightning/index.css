@@ -1,0 +1,142 @@
+/* ============================================================
+   LIGHTNING — a strike across the caret: bolt haze, surging
+   flow, crackling particles. A classic preset split out of
+   legacy.css. Smoke drifts on the core-shared smoke-drift
+   keyframe (kept in core.css). Var-packs + keyframes only.
+   ============================================================ */
+
+.field[data-glow='lightning'] {
+	--ready-border: rgba(142, 228, 255, 0.22);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.06) inset,
+		0 -34px 86px rgba(6, 14, 22, 0.5) inset,
+		0 32px 68px rgba(0, 0, 0, 0.45),
+		0 0 88px rgba(64, 205, 255, 0.12);
+	--field-wash:
+		radial-gradient(ellipse 24% 74% at 17% 50%, rgba(218, 250, 255, 0.11), transparent 70%),
+		linear-gradient(92deg, rgba(90, 213, 255, 0.08), rgba(139, 151, 255, 0.045) 48%, transparent 82%);
+	--caret-gradient: linear-gradient(180deg, rgb(255, 255, 255), rgb(220, 252, 255) 30%, rgb(110, 219, 255) 66%, rgb(72, 143, 235));
+	--caret-shadow:
+		0 0 7px rgba(244, 253, 255, 0.78),
+		0 0 18px rgba(88, 213, 255, 0.48),
+		0 0 36px rgba(67, 122, 234, 0.22);
+	--haze-width: 7.2em;
+	--haze-height: 1.32em;
+	--haze-bg:
+		linear-gradient(90deg, rgba(242, 253, 255, 0.28), rgba(97, 221, 255, 0.18) 30%, rgba(96, 137, 255, 0.1) 58%, transparent 86%),
+		radial-gradient(ellipse 30% 72% at 16% 50%, rgba(255, 255, 255, 0.18), transparent 66%);
+	--haze-filter: blur(15px);
+	--haze-motion: bolt-pulse 2.35s ease-in-out 620ms infinite;
+	--torch-haze-motion: bolt-pulse 1.8s ease-in-out infinite;
+	--body-width: 5.8em;
+	--body-height: 0.98em;
+	--body-bg: linear-gradient(90deg, rgba(245, 254, 255, 0.48), rgba(89, 220, 255, 0.3) 36%, rgba(95, 143, 255, 0.11) 68%, transparent 86%);
+	--body-filter: blur(9px);
+	--core-width: 3.4em;
+	--core-height: 0.68em;
+	--core-bg: linear-gradient(90deg, rgba(255, 255, 255, 0.9), rgba(130, 235, 255, 0.58) 34%, rgba(74, 137, 238, 0) 86%);
+	--core-filter: blur(4px);
+	--flow-bg: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22) 12%, rgba(75, 218, 255, 0.22) 34%, rgba(73, 126, 238, 0.13) 58%, transparent 82%);
+	--flow-filter: blur(8px);
+	--flow-low: 0.04;
+	--flow-high: 0.62;
+	--flow-motion: bolt-surge 2.8s ease-in-out infinite;
+	--spark-width: 6.8em;
+	--spark-height: 1.72em;
+	--spark-bg:
+		radial-gradient(circle at 8% 44%, rgba(255, 255, 255, 0.96), transparent 4.2%),
+		radial-gradient(circle at 16% 62%, rgba(138, 234, 255, 0.74), transparent 4.8%),
+		radial-gradient(circle at 28% 35%, rgba(255, 255, 255, 0.82), transparent 3.6%),
+		radial-gradient(circle at 41% 58%, rgba(91, 214, 255, 0.66), transparent 4.4%),
+		radial-gradient(circle at 55% 43%, rgba(156, 184, 255, 0.5), transparent 4.2%),
+		radial-gradient(circle at 70% 57%, rgba(238, 252, 255, 0.46), transparent 3.8%),
+		radial-gradient(circle at 87% 39%, rgba(100, 221, 255, 0.34), transparent 3.5%);
+	--spark-filter: blur(0.15px) drop-shadow(0 0 10px rgba(92, 220, 255, 0.82));
+	--spark-low: 0.16;
+	--spark-high: 0.78;
+	--spark-motion: bolt-particles 2.15s ease-in-out infinite;
+	--smoke-bg:
+		radial-gradient(ellipse 30% 54% at 12% 52%, rgba(214, 249, 255, 0.11), transparent 68%),
+		radial-gradient(ellipse 44% 64% at 48% 44%, rgba(80, 154, 211, 0.09), transparent 74%),
+		radial-gradient(ellipse 58% 74% at 72% 58%, rgba(38, 52, 78, 0.07), transparent 80%);
+	--smoke-filter: blur(17px);
+	--smoke-opacity: 0.18;
+	--smoke-motion: smoke-drift 5.2s ease-in-out infinite;
+	--next-color: rgba(228, 252, 255, 0.9);
+	--next-shadow:
+		0 0 9px rgba(124, 231, 255, 0.36),
+		0 0 24px rgba(70, 126, 235, 0.16);
+	--tail-color: rgba(194, 222, 232, 0.3);
+}
+
+.field[data-theme='light'][data-glow='lightning'] {
+	--ready-border: rgba(48, 138, 177, 0.28);
+	--next-color: rgba(25, 82, 112, 0.76);
+	--next-shadow:
+		0 0 8px rgba(70, 190, 235, 0.2),
+		0 0 20px rgba(74, 126, 235, 0.08);
+	--smoke-opacity: 0.1;
+}
+
+@keyframes bolt-pulse {
+	0%,
+	100% {
+		opacity: calc(var(--haze-opacity) * 0.42);
+		transform: translateY(-50%) translateX(-0.08em) scaleX(0.82);
+	}
+	46% {
+		opacity: var(--haze-opacity);
+		transform: translateY(-50%) translateX(0.22em) scaleX(1.06);
+	}
+	50% {
+		opacity: calc(var(--haze-opacity) * 0.62);
+		transform: translateY(-49%) translateX(0.05em) scaleX(0.92);
+	}
+	57% {
+		opacity: calc(var(--haze-opacity) * 0.94);
+		transform: translateY(-51%) translateX(0.35em) scaleX(1.12);
+	}
+}
+
+@keyframes bolt-surge {
+	0%,
+	100% {
+		opacity: var(--flow-low);
+		background-position: 0% 50%;
+		transform: translateY(-50%) translateX(-0.12em) scaleX(0.76);
+	}
+	43% {
+		opacity: var(--flow-high);
+		background-position: 100% 50%;
+		transform: translateY(-50%) translateX(0.48em) scaleX(1.12);
+	}
+	47% {
+		opacity: calc(var(--flow-high) * 0.35);
+		transform: translateY(-49%) translateX(0.22em) scaleX(0.86);
+	}
+	63% {
+		opacity: calc(var(--flow-high) * 0.72);
+		background-position: 78% 50%;
+		transform: translateY(-51%) translateX(0.6em) scaleX(1.02);
+	}
+}
+
+@keyframes bolt-particles {
+	0%,
+	100% {
+		opacity: var(--spark-low);
+		transform: translateY(-50%) translateX(-0.1em) scaleX(0.78);
+	}
+	34% {
+		opacity: calc(var(--spark-high) * 0.62);
+		transform: translateY(-57%) translateX(0.16em) scaleX(0.95);
+	}
+	46% {
+		opacity: var(--spark-high);
+		transform: translateY(-44%) translateX(0.5em) scaleX(1.08);
+	}
+	62% {
+		opacity: calc(var(--spark-high) * 0.46);
+		transform: translateY(-53%) translateX(0.86em) scaleX(0.92);
+	}
+}

@@ -15,12 +15,14 @@
 // with an added [data-glow].
 //
 // This script is the automated guard the plan requires. It:
-//   1. Flattens the effect CSS bundle (core.css -> legacy.css -> 27 modules, in @import order)
-//      into an ordered rule list with real specificities and declared-property sets.
-//   2. Builds the SAME bundle for the OLD arrangement from git HEAD: the OLD component chrome is
-//      read from HEAD's GhostInput.svelte <style> and its selectors are given the +1 scope class
-//      Svelte adds, placed BEFORE HEAD's core.css (which still held the consumers), then legacy,
-//      then modules — reproducing today's real cascade order (component CSS precedes core).
+//   1. Flattens the NEW effect CSS bundle (working tree: core.css -> 11 classic modules -> 27
+//      redesigned modules, in @import order) into an ordered rule list with real specificities
+//      and declared-property sets.
+//   2. Builds the OLD bundle from git HEAD in HEAD's own @import order (core.css -> legacy.css ->
+//      27 redesigned modules). Both W1b and W2 have landed at HEAD, so the component chrome
+//      already lives at the top of HEAD's core.css and HEAD's classics still live in legacy.css;
+//      this script splits HEAD's core.css the same way as NEW so the 'chrome' tag is populated on
+//      both sides (it also keeps a fallback that lifts the component <style> for a pre-W1b HEAD).
 //   3. Finds every equal-specificity pair whose selectors can match a common element and that
 //      share >=1 declared property, restricted to pairs touching a COMPONENT-CHROME rule.
 //   4. For each such collision, resolves the winner by document order and asserts the winner
@@ -259,12 +261,18 @@ function splitCoreCss(css) {
 // Bundle assembly (NEW = working tree, OLD = git HEAD)
 // ---------------------------------------------------------------------------
 
-function moduleImportOrder() {
-	// Read effects/index.css @import order (core + legacy + modules). We handle core/legacy
-	// specially; return the module list after legacy.
-	const indexCss = readFileSync(path.join(EFFECTS_DIR, 'index.css'), 'utf8');
+function moduleImportOrder(which) {
+	// Read effects/index.css @import order for the given arrangement. NEW reads the working-tree
+	// list (post-W2: core.css + 11 classic modules + 27 redesigned modules, NO legacy.css); OLD
+	// reads git HEAD's list (pre-W2: core.css + legacy.css + 27 redesigned modules, NO classic
+	// modules). The two lists genuinely differ now that the classics graduated out of legacy.css,
+	// so each side must use its own @import order for a faithful cascade reconstruction.
+	const indexCss =
+		which === 'new'
+			? readFileSync(path.join(EFFECTS_DIR, 'index.css'), 'utf8')
+			: gitShow('HEAD', 'src/lib/effects/index.css');
 	const imports = [...indexCss.matchAll(/@import\s+'\.\/([^']+)'/g)].map((m) => m[1]);
-	return imports; // e.g. ['core.css','legacy.css','blackhole/index.css', ...]
+	return imports; // e.g. NEW: ['core.css','candle/index.css', ...]; OLD: ['core.css','legacy.css', ...]
 }
 
 function gitShow(ref, relPath) {
@@ -276,12 +284,18 @@ function extractComponentStyle(svelteSource) {
 	return m ? m[1] : '';
 }
 
-// Build the ordered rule list for a given arrangement.
-//   NEW: core.css (chrome section tagged 'chrome', rest tagged 'core') -> legacy -> modules.
-//   OLD: HEAD GhostInput <style> (tagged 'chrome', scopeBump) -> HEAD core.css (tagged 'core')
-//        -> HEAD legacy -> HEAD modules.
+// Build the ordered rule list for a given arrangement. Both sides use their OWN @import order
+// (they differ now that the classics graduated out of legacy.css into per-effect modules):
+//   NEW (working tree): core.css (chrome section tagged 'chrome', rest tagged 'core') ->
+//        11 classic modules -> 27 redesigned modules. NO legacy.css.
+//   OLD (git HEAD):     HEAD core.css (which W1b already holds the component chrome in; tagged
+//        wholly 'core') -> HEAD legacy.css (the classic var-packs) -> 27 redesigned modules.
+// The section tags let collisions be restricted to moved component chrome; because the classic
+// var-packs are (0,2,0)/(0,3,0) custom-property-only blocks that live in the SAME cascade band on
+// both sides (after core, before the redesigned modules), relocating them cannot flip any tie the
+// scan cares about — this run proves that structurally.
 function buildArrangement(which) {
-	const importOrder = moduleImportOrder(); // module file list is stable across HEAD..working
+	const importOrder = moduleImportOrder(which);
 	const modules = importOrder.filter((f) => f !== 'core.css' && f !== 'legacy.css');
 	const read = which === 'new'
 		? (rel) => readFileSync(path.join(EFFECTS_DIR, rel), 'utf8')
@@ -298,24 +312,36 @@ function buildArrangement(which) {
 		all.push(...c1.rules, ...c2.rules);
 		guards.push(c1.guard, c2.guard);
 	} else {
-		// OLD: component chrome from HEAD's GhostInput.svelte <style>, Svelte-scope-bumped.
-		const svelte = gitShow('HEAD', 'src/lib/GhostInput.svelte');
-		const chromeCss = extractComponentStyle(svelte).replace(/@keyframes -global-/g, '@keyframes ');
-		const c1 = extractRules(chromeCss, { file: 'GhostInput.svelte', section: 'chrome', scopeBump: true });
+		// OLD: at git HEAD the component chrome already lives inside core.css (moved by W1b), and
+		// HEAD's GhostInput.svelte has no <style> block. We split HEAD's core.css the same way the
+		// NEW side does so the 'chrome' tag is populated on both sides; if HEAD predates W1b (no
+		// marker) we fall back to tagging all of core as 'core' and lifting the component <style>.
 		const coreCss = gitShow('HEAD', 'src/lib/effects/core.css');
-		const c2 = extractRules(coreCss, { file: 'core.css', section: 'core' });
-		all.push(...c1.rules, ...c2.rules);
-		guards.push(c1.guard, c2.guard);
+		if (coreCss.includes('/* Core ghost-input light anatomy')) {
+			const { chrome, rest } = splitCoreCss(coreCss);
+			const c1 = extractRules(chrome, { file: 'core.css', section: 'chrome' });
+			const c2 = extractRules(rest, { file: 'core.css', section: 'core' });
+			all.push(...c1.rules, ...c2.rules);
+			guards.push(c1.guard, c2.guard);
+		} else {
+			const svelte = gitShow('HEAD', 'src/lib/GhostInput.svelte');
+			const chromeCss = extractComponentStyle(svelte).replace(/@keyframes -global-/g, '@keyframes ');
+			const c1 = extractRules(chromeCss, { file: 'GhostInput.svelte', section: 'chrome', scopeBump: true });
+			const c2 = extractRules(coreCss, { file: 'core.css', section: 'core' });
+			all.push(...c1.rules, ...c2.rules);
+			guards.push(c1.guard, c2.guard);
+		}
+
+		// legacy.css (only OLD/HEAD has it — the classics live here pre-W2).
+		const legacyCss = read('legacy.css');
+		const lg = extractRules(legacyCss, { file: 'legacy.css', section: 'legacy' });
+		all.push(...lg.rules);
+		guards.push(lg.guard);
 	}
 
-	// legacy.css
-	const legacyCss = read('legacy.css');
-	const lg = extractRules(legacyCss, { file: 'legacy.css', section: 'legacy' });
-	all.push(...lg.rules);
-	guards.push(lg.guard);
-
 	// modules (order is load-bearing but between-module order does not matter for ties; we keep
-	// the @import order for determinism).
+	// the @import order for determinism). For NEW this includes the 11 classic modules; for OLD
+	// it is the 27 redesigned modules only.
 	for (const rel of modules) {
 		const css = read(rel);
 		const r = extractRules(css, { file: rel, section: 'module' });

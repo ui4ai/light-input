@@ -1,3 +1,9 @@
+/* Edge polish for high-energy variants: dissolve light before layer bounds. */
+.field[data-glow='blackhole'] {
+	--layer-radius: 999px;
+	--layer-clip: inset(0 round 999px);
+}
+
 /* ============================================================
    BLACK HOLE v2 — "Gargantua at the caret"
    Void + photon ring live on .prediction::after (blend: normal,

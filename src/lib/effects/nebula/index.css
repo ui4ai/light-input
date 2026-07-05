@@ -1,0 +1,105 @@
+/* ============================================================
+   NEBULA — a slow galactic swirl at the caret. One nebula-swirl
+   keyframe drives haze/flow/spark; a module-local copy of the
+   shared smoke-roll keyframe (nebula-smoke-roll) rolls its smoke.
+   A classic preset split out of legacy.css. Var-packs + keyframes.
+   ============================================================ */
+
+.field[data-glow='nebula'] {
+	--ready-border: rgba(174, 142, 255, 0.22);
+	--ready-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.06) inset,
+		0 -34px 86px rgba(15, 9, 28, 0.52) inset,
+		0 32px 68px rgba(0, 0, 0, 0.46),
+		0 0 96px rgba(136, 93, 238, 0.13);
+	--field-wash:
+		radial-gradient(ellipse 38% 90% at 22% 50%, rgba(148, 109, 255, 0.1), transparent 72%),
+		linear-gradient(90deg, rgba(92, 75, 180, 0.055), rgba(255, 169, 82, 0.045) 56%, transparent 84%);
+	--caret-gradient: linear-gradient(180deg, rgb(255, 252, 246), rgb(201, 182, 255) 30%, rgb(137, 104, 236) 62%, rgb(242, 158, 89));
+	--caret-shadow:
+		0 0 7px rgba(246, 238, 255, 0.58),
+		0 0 22px rgba(145, 110, 238, 0.34),
+		0 0 40px rgba(235, 151, 82, 0.16);
+	--haze-width: 8.6em;
+	--haze-height: 2.32em;
+	--haze-bg:
+		radial-gradient(ellipse 34% 56% at 12% 48%, rgba(243, 236, 255, 0.24), transparent 66%),
+		linear-gradient(90deg, rgba(113, 91, 221, 0.16), rgba(160, 104, 236, 0.16) 42%, rgba(255, 158, 82, 0.08) 70%, transparent 90%);
+	--haze-filter: blur(27px);
+	--haze-motion: nebula-swirl 7s ease-in-out 700ms infinite;
+	--torch-haze-motion: nebula-swirl 5.8s ease-in-out infinite;
+	--body-bg: radial-gradient(ellipse 70% 58% at 0% 50%, rgba(240, 232, 255, 0.4), rgba(136, 103, 238, 0.24) 42%, rgba(237, 151, 83, 0.08) 74%, transparent);
+	--body-filter: blur(17px);
+	--core-bg: radial-gradient(ellipse 66% 50% at 0% 50%, rgba(255, 249, 236, 0.7), rgba(174, 142, 255, 0.34) 38%, rgba(235, 151, 82, 0.16) 70%, transparent 88%);
+	--flow-bg: linear-gradient(90deg, transparent, rgba(139, 104, 238, 0.16) 18%, rgba(203, 113, 236, 0.14) 46%, rgba(242, 160, 83, 0.1) 74%, transparent);
+	--flow-filter: blur(22px);
+	--flow-motion: nebula-swirl 7s ease-in-out infinite;
+	--spark-bg:
+		radial-gradient(circle at 12% 44%, rgba(255, 248, 236, 0.38), transparent 3%),
+		radial-gradient(circle at 38% 60%, rgba(174, 142, 255, 0.32), transparent 4%),
+		radial-gradient(circle at 66% 38%, rgba(237, 158, 84, 0.22), transparent 4%),
+		radial-gradient(circle at 84% 54%, rgba(224, 202, 255, 0.18), transparent 3%);
+	--spark-filter: blur(1.8px);
+	--spark-high: 0.3;
+	--spark-motion: nebula-swirl 6.4s ease-in-out infinite;
+	--smoke-bg:
+		radial-gradient(ellipse 36% 58% at 16% 46%, rgba(212, 204, 230, 0.16), transparent 72%),
+		radial-gradient(ellipse 50% 72% at 48% 58%, rgba(74, 58, 100, 0.18), transparent 78%),
+		radial-gradient(ellipse 58% 78% at 78% 48%, rgba(116, 73, 65, 0.1), transparent 82%);
+	--smoke-opacity: 0.4;
+	--smoke-motion: nebula-smoke-roll 8s ease-in-out infinite;
+	--next-color: rgba(242, 234, 255, 0.9);
+	--next-shadow:
+		0 0 10px rgba(174, 142, 255, 0.3),
+		0 0 28px rgba(237, 151, 82, 0.13);
+	--tail-color: rgba(220, 206, 232, 0.29);
+}
+
+.field[data-theme='light'][data-glow='nebula'] {
+	--ready-border: rgba(122, 94, 190, 0.26);
+	--next-color: rgba(70, 52, 110, 0.76);
+	--next-shadow:
+		0 0 8px rgba(150, 116, 238, 0.18),
+		0 0 20px rgba(220, 124, 74, 0.07);
+	--smoke-opacity: 0.17;
+}
+
+@keyframes nebula-swirl {
+	0%,
+	100% {
+		opacity: calc(var(--haze-opacity) * 0.58);
+		background-position: 0% 50%;
+		transform: translateY(-51%) translateX(-0.2em) scaleX(0.88) skewX(-2deg);
+	}
+	45% {
+		opacity: var(--haze-opacity);
+		background-position: 100% 50%;
+		transform: translateY(-47%) translateX(0.4em) scaleX(1.1) skewX(4deg);
+	}
+	72% {
+		opacity: calc(var(--haze-opacity) * 0.68);
+		background-position: 54% 50%;
+		transform: translateY(-53%) translateX(0.16em) scaleX(0.98) skewX(-3deg);
+	}
+}
+
+/* Nebula-local copy of the shared smoke-roll keyframe (byte-identical body),
+   renamed so the classic split gives nebula its own private smoke motion. */
+@keyframes nebula-smoke-roll {
+	0%,
+	100% {
+		opacity: calc(var(--smoke-opacity) * 0.42);
+		background-position: 0% 50%;
+		transform: translateY(-50%) translateX(-0.22em) scaleX(0.78) scaleY(0.96) rotate(-1deg);
+	}
+	42% {
+		opacity: var(--smoke-opacity);
+		background-position: 100% 50%;
+		transform: translateY(-57%) translateX(0.52em) scaleX(1.16) scaleY(1.08) rotate(2deg);
+	}
+	72% {
+		opacity: calc(var(--smoke-opacity) * 0.62);
+		background-position: 58% 50%;
+		transform: translateY(-45%) translateX(0.86em) scaleX(0.96) scaleY(1.04) rotate(-2deg);
+	}
+}

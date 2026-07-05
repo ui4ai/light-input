@@ -1,7 +1,18 @@
 /* UI4AI light-input effect styles. Import order = cascade order:
-   core anatomy first, legacy presets next, redesigned modules last. */
+   core anatomy first, then the classic presets (GLOW_VARIANTS order),
+   then the redesigned modules last. */
 @import './core.css';
-@import './legacy.css';
+@import './candle/index.css';
+@import './lightning/index.css';
+@import './aurora/index.css';
+@import './plasma/index.css';
+@import './prism/index.css';
+@import './ember/index.css';
+@import './neon/index.css';
+@import './nebula/index.css';
+@import './smoke/index.css';
+@import './solar/index.css';
+@import './holo/index.css';
 @import './blackhole/index.css';
 @import './flame/index.css';
 @import './matrix/index.css';
